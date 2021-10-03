@@ -15,21 +15,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 
     <!-- CSS Implementing Plugins -->
-    <link rel="stylesheet" href="assets/vendor/icon-set/style.css">
-    <link rel="stylesheet" href="assets/vendor/select2/dist/css/select2.min.css">
-    <link rel="stylesheet" href="assets/vendor/chart.js/dist/Chart.min.css">
-    <link rel="stylesheet" href="assets/vendor/daterangepicker/daterangepicker.css">
-    <link rel="stylesheet" type="text/css" href="assets/vendor/sweetalert2/sweetalert2.min.css">
+    <link rel="stylesheet" href="assets/dashboard/vendor/icon-set/style.css">
+    <link rel="stylesheet" href="assets/dashboard/vendor/select2/dist/css/select2.min.css">
+    <link rel="stylesheet" href="assets/dashboard/vendor/chart.js/dist/Chart.min.css">
+    <link rel="stylesheet" href="assets/dashboard/vendor/daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" type="text/css" href="assets/dashboard/vendor/sweetalert2/sweetalert2.min.css">
 
     <!-- CSS Front Template -->
-    <link rel="stylesheet" href="assets/css/theme.min.css">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/vendor/toastr/toastr.css">
-    <!--<link rel="stylesheet" href="assets/vendor/toastr/plugin/toastr.css">-->
-    <link rel="stylesheet" href="assets/vendor/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="assets/dashboard/css/theme.min.css">
+    <link rel="stylesheet" href="assets/dashboard/css/style.css">
+    <link rel="stylesheet" href="assets/dashboard/vendor/toastr/toastr.css">
+    <!--<link rel="stylesheet" href="assets/dashboard/vendor/toastr/plugin/toastr.css">-->
+    <link rel="stylesheet" href="assets/dashboard/vendor/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css" />
-    <link rel="stylesheet" href="assets/css/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/css/custom.css">
+    <link rel="stylesheet" href="assets/dashboard/css/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/dashboard/css/custom.css">
     @yield('style')
 
     <script>
@@ -46,7 +46,7 @@
       </div>
       <h4 class="text-danger">Loading...</h4>
     </div>
-  <script src="assets/vendor/hs-navbar-vertical-aside/hs-navbar-vertical-aside-mini-cache.js"></script>
+  <script src="assets/dashboard/vendor/hs-navbar-vertical-aside/hs-navbar-vertical-aside-mini-cache.js"></script>
     @if(Auth::check())
     @include(roleFolder().'.layouts.header')
     @include(roleFolder().'.layouts.sidebar')
@@ -100,32 +100,32 @@
     </div>
 
     <!-- JS Global Compulsory  -->
-    <script src="assets/vendor/jquery/dist/jquery.min.js"></script>
-    <script src="assets/vendor/jquery-migrate/dist/jquery-migrate.min.js"></script>
-    <script src="assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/dashboard/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="assets/dashboard/vendor/jquery-migrate/dist/jquery-migrate.min.js"></script>
+    <script src="assets/dashboard/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- JS Implementing Plugins -->
-    <script src="assets/vendor/hs-navbar-vertical-aside/hs-navbar-vertical-aside.min.js"></script>
-    <script src="assets/vendor/hs-unfold/dist/hs-unfold.min.js"></script>
-    <script src="assets/vendor/hs-form-search/dist/hs-form-search.min.js"></script>
-    <script src="assets/vendor/select2/dist/js/select2.full.min.js"></script>
-    <script src="assets/vendor/chart.js/dist/Chart.min.js"></script>
-    <script src="assets/vendor/chart.js.extensions/chartjs-extensions.js"></script>
-    <script src="assets/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js"></script>
-    <script src="assets/vendor/daterangepicker/moment.min.js"></script>
-    <script src="assets/vendor/daterangepicker/daterangepicker.js"></script>
-    <script src="assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
-    <script src="assets/vendor/datatables.net.extensions/select/select.min.js"></script>
-    <script src="assets/vendor/clipboard/dist/clipboard.min.js"></script>
-    <script src="assets/vendor/toastr/toastr.min.js"></script>
-    <script src="assets/vendor/flatpickr/dist/flatpickr.min.js"></script>
+    <script src="assets/dashboard/vendor/hs-navbar-vertical-aside/hs-navbar-vertical-aside.min.js"></script>
+    <script src="assets/dashboard/vendor/hs-unfold/dist/hs-unfold.min.js"></script>
+    <script src="assets/dashboard/vendor/hs-form-search/dist/hs-form-search.min.js"></script>
+    <script src="assets/dashboard/vendor/select2/dist/js/select2.full.min.js"></script>
+    <script src="assets/dashboard/vendor/chart.js/dist/Chart.min.js"></script>
+    <script src="assets/dashboard/vendor/chart.js.extensions/chartjs-extensions.js"></script>
+    <script src="assets/dashboard/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js"></script>
+    <script src="assets/dashboard/vendor/daterangepicker/moment.min.js"></script>
+    <script src="assets/dashboard/vendor/daterangepicker/daterangepicker.js"></script>
+    <script src="assets/dashboard/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
+    <script src="assets/dashboard/vendor/datatables.net.extensions/select/select.min.js"></script>
+    <script src="assets/dashboard/vendor/clipboard/dist/clipboard.min.js"></script>
+    <script src="assets/dashboard/vendor/toastr/toastr.min.js"></script>
+    <script src="assets/dashboard/vendor/flatpickr/dist/flatpickr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <!-- JS Front -->
-    <script src="assets/vendor/hs-file-attach/dist/hs-file-attach.min.js"></script>
-    <script src="assets/vendor/ckeditor/ckeditor.js"></script>
-    <script src="assets/vendor/sweetalert2/sweetalert2.all.min.js"></script>
-    <script src="assets/js/theme.min.js"></script>
-    <script src="assets/js/theme-custom.js"></script>
+    <script src="assets/dashboard/vendor/hs-file-attach/dist/hs-file-attach.min.js"></script>
+    <script src="assets/dashboard/vendor/ckeditor/ckeditor.js"></script>
+    <script src="assets/dashboard/vendor/sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="assets/dashboard/js/theme.min.js"></script>
+    <script src="assets/dashboard/js/theme-custom.js"></script>
 
     <!-- JS Plugins Init. -->
     @if(Session::has('success'))
