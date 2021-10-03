@@ -1,0 +1,1075 @@
+@extends('layouts.master')
+
+@section('style')
+<link rel="stylesheet" href="assets/vendor/quill/dist/quill.snow.css">
+<style type="text/css">
+.page-header-tabs {
+    margin-bottom: 0px !important;
+}
+</style>
+@endsection
+
+@section('content')
+
+<!-- Content -->
+<div class="bg-dark">
+    <div class="content container-fluid" style="height: 25rem;">
+        <!-- Page Header -->
+        <div class="page-header page-header-light">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h1 class="page-header-title">{{$pageTitle}}</h1>
+                </div>
+            </div>
+            <!-- End Row -->
+
+            <!-- Nav Scroller -->
+            <div class="js-nav-scroller hs-nav-scroller-horizontal">
+                <span class="hs-nav-scroller-arrow-prev hs-nav-scroller-arrow-dark-prev" style="display: none;">
+                    <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                        <i class="tio-chevron-left"></i>
+                    </a>
+                </span>
+
+                <span class="hs-nav-scroller-arrow-next hs-nav-scroller-arrow-dark-next" style="display: none;">
+                    <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                        <i class="tio-chevron-right"></i>
+                    </a>
+                </span>
+                <div class="row">
+                    <div class="col-md-9">
+                      <!-- Nav -->
+                      <ul class="nav nav-tabs nav-tabs-light page-header-tabs" id="pageHeaderTab" role="tablist">
+                          <li class="nav-item">
+                              <a class="nav-link active" href="javascript:;">Complete Profile</a>
+                          </li>
+                          <li class="nav-item">
+                              <a class="nav-link disabled" href="javascript:;">
+                                  Verification Status
+                                  @if($profile_status == 0)
+                                  <span class="badge badge-warning badge-pill ml-1">
+                                      <i class="tio-warning mr-1"></i> Verification Pending
+                                  </span>
+                                  @elseif($profile_status == 1)
+                                  <span class="badge badge-warning badge-pill ml-1">
+                                      <i class="tio-time mr-1"></i> Waiting for approval
+                                  </span>
+                                  @elseif($profile_status == 2)
+                                  <span class="badge badge-success badge-pill ml-1">
+                                      <i class="tio-checkmark-circle-outlined mr-1"></i> Profile Verified
+                                  </span>
+                                  @endif
+                              </a>
+                          </li>
+                      </ul>
+                      <!-- End Nav -->
+                    </div>
+                    <div class="col-md-3">
+                      <div class="col-sm-auto text-right">
+                        <a onclick="fetchChats()" class="btn btn-primary js-hs-unfold-invoker" href="javascript:;"
+                                    data-hs-unfold-options='{
+                                    "target": "#activitySidebar",
+                                    "type": "css-animation",
+                                    "animationIn": "fadeInRight",
+                                    "animationOut": "fadeOutRight",
+                                    "hasOverlay": true,
+                                    "smartPositionOff": true
+                                    }'>
+                          <i class="tio-chat mr-1"></i> Chat with Support
+                          @if($unread_chats > 0)
+                                <span class="badge badge-danger">{{$unread_chats}}</span>
+                          @endif
+                        </a>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Nav Scroller -->
+        </div>
+        <!-- End Page Header -->
+    </div>
+</div>
+<!-- End Content -->
+
+
+<!-- Content -->
+<div class="content container-fluid" style="margin-top: -17rem;">
+    <!-- Card -->
+    @if($profile_status == 0)
+    <form id="profile_form" class="js-step-form js-validate" data-hs-step-form-options='{
+        "progressSelector": "#validationFormProgress",
+        "stepsSelector": "#validationFormContent",
+        "endSelector": "#validationFormFinishBtn",
+        "isValidate": true
+      }'>
+      @csrf
+      <div class="card mb-3 mb-lg-5">
+        <div class="card-header">
+         <h2> Personal Info </h2>
+        </div>
+        <div class="card-body">
+            <div class="row justify-content-md-between">
+                <div class="col-md-4">
+                    <!-- Logo -->
+                    <label class="custom-file-boxed custom-file-boxed-sm" for="logoUploader">
+                        @if($user->profile_image != '' &&
+                        file_exists(professionalDir().'/profile/'.$user->profile_image))
+                        <img id="logoImg" class="avatar avatar-xl avatar-4by3 avatar-centered h-100 mb-2"
+                            src="{{ professionalDirUrl().'/profile/'.$user->profile_image }}"
+                            alt="Profile Image">
+                        @else
+                        <img id="logoImg" class="avatar avatar-xl avatar-4by3 avatar-centered h-100 mb-2"
+                            src="./assets/svg/illustrations/browse.svg" alt="Profile Image">
+                        @endif
+
+                        <span class="d-block">Upload your Image here</span>
+
+                        <input type="file" class="js-file-attach custom-file-boxed-input" name="profile_image"
+                            id="logoUploader" data-hs-file-attach-options='{
+                                          "textTarget": "#logoImg",
+                                          "mode": "image",
+                                          "targetAttr": "src"
+                                        }'>
+                    </label>
+                    <!-- End Logo -->
+                </div>
+
+                <div class="col-md-7 justify-content-md-end">
+
+                    <div class="row form-group">
+                        <div class="col-12">
+                            <label for="validationFormUsernameLabel" class="col-form-label input-label">First
+                                name</label>
+                            <div class="js-form-message">
+                                <input type="text" class="form-control" name="first_name"
+                                    id="validationFormFirstnameLabel" placeholder="Firstname"
+                                    aria-label="Firstname" required data-msg="Please enter your first name."
+                                    value="{{ $user->first_name }}">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Form Group -->
+
+                    <div class="row form-group">
+                        <div class="col-12">
+                            <label for="validationFormUsernameLabel" class="col-form-label input-label">Last
+                                name</label>
+                            <div class="js-form-message">
+                                <input type="text" class="form-control" name="last_name"
+                                    id="validationFormLastnameLabel" placeholder="Lastname"
+                                    aria-label="Lastname" required data-msg="Please enter your last name."
+                                    value="{{ $user->last_name }}">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Form Group -->
+
+                </div>
+            </div>
+            <!-- End Row -->
+
+            <hr class="my-5">
+
+            <div class="row justify-content-md-between">
+                <div class="col-md-6">
+                    <!-- Form Group -->
+                    <div class="row form-group">
+                        <label class="col-sm-5 col-form-label input-label">Email</label>
+
+                        <div class="col-sm-7">
+                            <div class="js-form-message">
+                                <div class="form-control bg-light">{{ $user->email }}</div>
+                                <!--<input type="email" class="form-control" name="email"-->
+                                <!--    id="validationFormEmailLabel" placeholder="Email" aria-label="Email"-->
+                                <!--    required data-msg="Please enter your email." value="{{ $user->email }}">-->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Form Group -->
+
+                    <!-- Form Group -->
+                    <div class="row form-group">
+                        <label class="col-sm-5 col-form-label input-label">Phone Number</label>
+
+                        <div class="col-sm-3">
+                            <div class="js-form-message">
+                                <select name="country_code" id="country_code" class="form-control">
+                                    <option value="">Select Country</option>
+                                    @foreach($countries as $country)
+                                    <option {{$user->country_code == $country->phonecode?"selected":""}}
+                                        value="+{{$country->phonecode}}">+{{$country->phonecode}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="js-form-message">
+                                <input type="text" class="form-control" name="phone_no" id="phone_no"
+                                    placeholder="Phone number" aria-label="Email" required
+                                    data-msg="Please enter your phone number." value="{{$user->phone_no}}">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Form Group -->
+                    <!-- Form Group -->
+                    <div class="row form-group">
+                        <label class="col-sm-5 col-form-label input-label">Gender</label>
+
+                        <div class="col-sm-7">
+                            <div class="js-form-message">
+                                <select name="gender" class="form-control">
+                                    <option value="">Select Gender</option>
+                                    <option {{($user->gender == 'male')?'selected':''}} value="male">Male
+                                    </option>
+                                    <option {{($user->gender == 'female')?'selected':''}} value="female">Female
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Form Group -->
+                    <!-- Form Group -->
+                    <div class="row form-group">
+                        <label class="col-sm-5 col-form-label input-label">Date of Birth</label>
+                        <div class="col-sm-7">
+                            <div class="input-group">
+                                <input type="text" name="date_of_birth" id="date_of_birth"
+                                    value="{{ $user->date_of_birth }}" class="form-control"
+                                    placeholder="Date of Birth" aria-label="Date of birth" required
+                                    data-msg="Enter date of birth">
+                                <div class="input-group-addon p-2">
+                                    <i class="tio-date-range"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Form Group -->
+                    <!-- Form Group -->
+                    <div class="row form-group">
+                        <label class="col-sm-5 col-form-label input-label">Languages Known</label>
+
+                        <div class="col-sm-7">
+                            <div class="js-form-message">
+                                <select name="languages_known[]" multiple id="languages_known"
+                                    class="form-control">
+                                    <?php
+                                      if($user->languages_known != ''){
+                                        $language_known = json_decode($user->languages_known,true);
+                                      }else{
+                                        $language_known = array();
+                                      }
+                                    ?>
+                                    @foreach($languages as $language)
+                                    <option {{in_array($language->id,$language_known)?"selected":""}}
+                                        value="{{$language->id}}">{{$language->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Form Group -->
+
+
+                </div> <!-- div end -->
+
+
+                <div class="col-md-6">
+
+                    <!-- Form Group -->
+                    <div class="row form-group">
+                        <label class="col-sm-5 col-form-label input-label">Country</label>
+                        <div class="col-sm-7">
+                            <div class="js-form-message">
+                                <select name="country_id" id="country_id"
+                                    onchange="stateList(this.value,'state_id')" class="form-control">
+                                    <option value="">Select Country</option>
+                                    @foreach($countries as $country)
+                                    <option {{$user->country_id == $country->id?"selected":""}}
+                                        value="{{$country->id}}">{{$country->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Form Group -->
+                    <!-- Form Group -->
+                    <div class="row form-group">
+                        <label class="col-sm-5 col-form-label input-label">State</label>
+                        <div class="col-sm-7">
+                            <div class="js-form-message">
+                                <select name="state_id" id="state_id" aria-label="State" required
+                                    data-msg="Please select your state"
+                                    onchange="cityList(this.value,'city_id')" class="form-control">
+                                    <option value="">Select State</option>
+                                    @foreach($states as $state)
+                                    <option {{$user->state_id == $state->id?"selected":""}}
+                                        value="{{$state->id}}">{{$state->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Form Group -->
+
+                    <!-- Form Group -->
+                    <div class="row form-group">
+                        <label class="col-sm-5 col-form-label input-label">City</label>
+                        <div class="col-sm-7">
+                            <div class="js-form-message">
+                                <select name="city_id" id="city_id" aria-label="City" required
+                                    data-msg="Please select your city" class="form-control">
+                                    <option value="">Select City</option>
+                                    @foreach($cities as $city)
+                                    <option {{$user->city_id == $city->id?"selected":""}} value="{{$city->id}}">
+                                        {{$city->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Form Group -->
+
+                    <!-- Form Group -->
+                    <div class="row form-group">
+                        <label class="col-sm-5 col-form-label input-label">Address</label>
+                        <div class="col-sm-7">
+                            <div class="js-form-message">
+                                <input type="text" class="form-control" name="address" id="address"
+                                    placeholder="Address" aria-label="Address" required
+                                    data-msg="Please enter your address" value="{{ $user->address }}">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Form Group -->
+
+                    <!-- Form Group -->
+                    <div class="row form-group">
+                        <label class="col-sm-5 col-form-label input-label">Zip Code</label>
+                        <div class="col-sm-7">
+                            <div class="js-form-message">
+                                <input type="text" class="form-control" name="zip_code" id="zip_code"
+                                    placeholder="Zipcode" aria-label="Zipcode" required
+                                    data-msg="Please enter your zip code" value="{{ $user->zip_code }}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Form Group -->
+            </div>
+        </div>
+      </div>
+
+      <div class="card mb-3 mb-lg-5">
+        <div class="card-header">
+         <h2> About </h2>
+        </div>
+        <div class="card-body">
+           <!-- Form Group -->
+            <div class="row form-group">
+                <label class="col-sm-5 col-form-label input-label">Country</label>
+                <div class="col-sm-7">
+                    <div class="js-form-message">
+                        <select name="cp_country_id" aria-label="Country" required data-msg="Please select your country"
+                            id="cp_country_id" onchange="stateList(this.value,'cp_state_id'),licenceBodies(this.value)"
+                            class="form-control">
+                            <option value="">Select Country</option>
+                            @foreach($countries as $country)
+                            <option {{$user->country_id == $country->id?"selected":""}} value="{{$country->id}}">{{$country->name}}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!-- End Form Group -->
+
+            <div class="row form-group">
+                <label class="col-sm-5 col-form-label input-label">License Body</label>
+
+                <div class="col-sm-7">
+                    <div class="js-form-message">
+                        <select name="license_body[]" multiple id="license_body" class="form-control">
+                            <option value="">Select Licence Body</option>
+                            <?php
+                                                  $license_body = json_decode($company_details->license_body,true);
+                                                ?>
+                            @foreach($licence_bodies as $bodies)
+                            <option {{in_array($bodies->id,$license_body)?"selected":""}} value="{{$bodies->id}}">{{$bodies->name}}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="col-sm-5 col-form-label input-label">Are you member in good standing</label>
+                <div class="col-sm-7">
+                    <div class="js-form-message">
+                        <select name="member_of_good_standing" required data-msg="Please select your option" class="form-control">
+                            <option value="">Select Option</option>
+                            <option {{($company_details->member_of_good_standing == 'yes')?'selected':''}} value="yes">Yes</option>
+                            <option {{($company_details->member_of_good_standing == 'no')?'selected':''}} value="no">No</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="col-sm-5 col-form-label input-label">Licence Number</label>
+                <div class="col-sm-7">
+                    <div class="js-form-message">
+                        <input type="text" class="form-control" name="licence_number" id="licence_number"
+                            placeholder="Licence Number" aria-label="Licence Number" required
+                            data-msg="Please enter your licence number" value="{{ $company_details->licence_number }}">
+                    </div>
+                </div>
+            </div>
+            <!-- End Form Group -->
+            <!-- Form Group -->
+            <div class="row form-group">
+                <label class="col-sm-5 col-form-label input-label">Upload your license certificate</label>
+                <div class="col-sm-7">
+                    <div class="js-form-message">
+                        <div class="custom-file">
+                            <input type="file" class="js-file-attach custom-file-input" name="licence_certificate"
+                                id="licence_certificate" data-hs-file-attach-options='{
+                                                        "textTarget": "[for=\"licence_certificate\"]"
+                                                      }'>
+                            <label class="custom-file-label" for="licence_certificate">Choose file</label>
+                        </div>
+                    </div>
+                    @if($company_details->licence_certificate != '' &&
+                    file_exists(professionalDir().'/documents/'.$company_details->licence_certificate))
+                    <a class="badge badge-primary" download
+                        href="{{ professionalDirUrl().'/documents/'.$company_details->licence_certificate }}"><i
+                            class="fa fa-download"></i>{{$company_details->licence_certificate}}</a>
+                    @endif
+                </div>
+            </div>
+            <!-- End Form Group -->
+            <div class="row form-group">
+                <label class="col-sm-5 col-form-label input-label">Years of Expirence</label>
+                <div class="col-sm-7">
+                    <div class="js-form-message">
+                        <select name="years_of_expirences" aria-label="Years of Expirence" required
+                            data-msg="Please select your expirence" class="form-control">
+                            <option>Select</option>
+                            <option {{($company_details->years_of_expirences == 'less then 2 years')?'selected':''}}
+                                value="less then 2 years">Less then 2 years</option>
+                            <option {{($company_details->years_of_expirences == '2 to 5 years')?'selected':''}}
+                                value="2 to 5 years">2 to 5 years</option>
+                            <option {{($company_details->years_of_expirences == '5 to 10 years')?'selected':''}}
+                                value="5 to 10 years">5 to 10 years</option>
+                            <option {{($company_details->years_of_expirences == '10+ years')?'selected':''}} value="10+ years">10+
+                                years</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!-- Form Group -->
+            <div class="row form-group">
+                <label class="col-sm-5 col-form-label input-label">Member of any other designated body</label>
+                <div class="col-sm-7">
+                    <div class="js-form-message">
+                        <input type="text" class="form-control" name="member_of_other_designated_body"
+                            id="member_of_other_designated_body" placeholder="Member of any other designated body"
+                            aria-label="Member of any other designated body" data-msg="Please enter your licence number"
+                            value="{{ $company_details->member_of_other_designated_body }}">
+                    </div>
+                </div>
+            </div>
+            <!-- End Form Group -->
+        </div>
+      </div>
+
+      <div class="card mb-3 mb-lg-5">
+        <div class="card-header">
+         <h2> Company Info </h2>
+        </div>
+        <div class="card-body">
+          <div class="row justify-content-md-between">
+                <div class="col-md-6">
+                    <!-- Form Group -->
+                    <div class="row form-group">
+                        <label class="col-sm-5 col-form-label input-label">Company Name</label>
+
+                        <div class="col-sm-7">
+                            <div class="js-form-message">
+                                <input type="text" class="form-control" name="company_name"
+                                    id="validationFormCompanyCompanyNameLabel" placeholder="Company" aria-label="Company Name"
+                                    required data-msg="Please enter your company name." value="{{$company_details->company_name}}">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Form Group -->
+
+                    <!-- Form Group -->
+                    <div class="row form-group">
+                        <label class="col-sm-5 col-form-label input-label">Website URL</label>
+
+                        <div class="col-sm-7">
+                            <div class="js-form-message">
+                                <input type="text" class="form-control" name="website_url" id="website_url"
+                                    placeholder="Website URL" aria-label="Website URL" required
+                                    data-msg="Please enter your website." value="{{$company_details->website_url}}">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Form Group -->
+
+                    <!-- Form Group -->
+                    <div class="row form-group">
+                        <label class="col-sm-5 col-form-label input-label">Email</label>
+
+                        <div class="col-sm-7">
+                            <div class="js-form-message">
+                                <input type="email" class="form-control" name="cp_email" id="cp_email" placeholder="Email"
+                                    aria-label="Email" required data-msg="Please enter your email."
+                                    value="{{$company_details->email}}">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Form Group -->
+
+                    <!-- Form Group -->
+                    <div class="row form-group">
+                        <label class="col-sm-5 col-form-label input-label">Phone Number</label>
+                        <div class="col-sm-3">
+                            <div class="js-form-message">
+                                <select name="cp_country_code" id="cp_country_code" class="form-control">
+                                    <option>Select</option>
+                                    @foreach($countries as $country)
+                                    <option {{$company_details->country_code == $country->phonecode?"selected":""}}
+                                        value="+{{$country->phonecode}}">+{{$country->phonecode}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="js-form-message">
+                                <input type="text" class="form-control" name="cp_phone_no" id="cp_phone_no"
+                                    placeholder="Phone number" aria-label="Email" required
+                                    data-msg="Please enter your phone number." value="{{$company_details->phone_no}}">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Form Group -->
+
+                    <!-- Form Group -->
+                    <div class="row form-group">
+                        <label class="col-sm-5 col-form-label input-label">Owner ID Proof</label>
+
+                        <div class="col-sm-7">
+                            <div class="js-form-message">
+                                <div class="custom-file">
+                                    <input type="file" class="js-file-attach custom-file-input" name="owner_id_proof"
+                                        id="owner_id_proof" data-hs-file-attach-options='{
+                                                                "textTarget": "[for=\"owner_id_proof\"]"
+                                                              }'>
+                                    <label class="custom-file-label" for="owner_id_proof">Choose file</label>
+                                </div>
+                            </div>
+                            @if($company_details->owner_id_proof != '' &&
+                            file_exists(professionalDir().'/documents/'.$company_details->owner_id_proof))
+                            <a class="badge badge-primary" download
+                                href="{{ professionalDirUrl().'/documents/'.$company_details->owner_id_proof }}"><i
+                                    class="fa fa-download"></i>{{$company_details->owner_id_proof}}</a>
+                            @endif
+                        </div>
+                    </div>
+                    <!-- End Form Group -->
+
+                    <!-- Form Group -->
+                    <div class="row form-group">
+                        <label class="col-sm-5 col-form-label input-label">Company Address Proof</label>
+
+                        <div class="col-sm-7">
+                            <div class="js-form-message">
+                                <div class="custom-file">
+                                    <input type="file" class="js-file-attach custom-file-input" name="company_address_proof"
+                                        id="company_address_proof" data-hs-file-attach-options='{
+                                                                    "textTarget": "[for=\"company_address_proof\"]"
+                                                                  }'>
+                                    <label class="custom-file-label" for="company_address_proof">Choose
+                                        file</label>
+                                </div>
+                            </div>
+                            @if($company_details->company_address_proof != '' &&
+                            file_exists(professionalDir().'/documents/'.$company_details->company_address_proof))
+                            <a class="badge badge-primary" download
+                                href="{{ professionalDirUrl().'/documents/'.$company_details->company_address_proof }}"><i
+                                    class="fa fa-download"></i>{{$company_details->owner_id_proof}}</a>
+                            @endif
+                        </div>
+                    </div>
+                    <!-- End Form Group -->
+
+                </div> <!-- div end -->
+
+
+                <div class="col-md-6">
+                    <!-- Form Group -->
+                    <div class="row form-group">
+                        <label class="col-sm-5 col-form-label input-label">State</label>
+                        <div class="col-sm-7">
+                            <div class="js-form-message">
+                                <select name="cp_state_id" id="cp_state_id" onchange="cityList(this.value,'cp_city_id')"
+                                    class="form-control">
+                                    <option value="">Select State</option>
+                                    @foreach($states as $state)
+                                    <option {{$company_details->state_id == $state->id?"selected":""}} value="{{$state->id}}">
+                                        {{$state->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Form Group -->
+
+                    <!-- Form Group -->
+                    <div class="row form-group">
+                        <label class="col-sm-5 col-form-label input-label">City</label>
+                        <div class="col-sm-7">
+                            <div class="js-form-message">
+                                <select name="cp_city_id" id="cp_city_id" class="form-control">
+                                    <option value="">Select City</option>
+                                    @foreach($cities as $city)
+                                    <option {{$company_details->city_id == $city->id?"selected":""}} value="{{$city->id}}">
+                                        {{$city->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Form Group -->
+                    <div class="row form-group">
+                        <label class="col-sm-5 col-form-label input-label">Register Date</label>
+
+                        <div class="col-sm-7">
+                            <div class="input-group">
+                                <input type="text" name="date_of_register" id="date_of_register" class="form-control"
+                                    placeholder="Date of Register" aria-label="Date of Register" required
+                                    data-msg="Enter date of register" value="{{ $company_details->date_of_register }}">
+                                <div class="input-group-addon p-2">
+                                    <i class="tio-date-range"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Form Group -->
+
+
+
+                    <!-- Form Group -->
+                    <div class="row form-group">
+                        <label class="col-sm-5 col-form-label input-label">Address</label>
+                        <div class="col-sm-7">
+                            <div class="js-form-message">
+                                <input type="text" class="form-control" name="cp_address" id="cp_address" placeholder="Address"
+                                    aria-label="Address" required data-msg="Please enter your address"
+                                    value="{{ $company_details->address }}">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Form Group -->
+
+                    <!-- Form Group -->
+                    <div class="row form-group">
+                        <label for="validationFormZipLabel" class="col-sm-5 col-form-label input-label">Zip
+                            Code</label>
+                        <div class="col-sm-7">
+                            <div class="js-form-message">
+                                <input type="text" class="form-control" name="cp_zip_code" id="cp_zip_code" placeholder="Zipcode"
+                                    aria-label="Zipcode" required data-msg="Please enter your zip code"
+                                    value="{{ $company_details->zip_code }}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <div class="text-center">
+          <button type="button" id="validationFormFinishBtn" class="btn btn-primary">Save Data</button>
+      </div>
+    </form> 
+    @endif
+
+    @if($profile_status == 1)
+    <div class="card mb-3 mb-lg-5">
+        <div class="card-body">
+          <div id="validationFormSuccessMessage" style="display:block;">
+              <div class="text-center">
+                  <img class="img-fluid mb-3" src="assets/svg/illustrations/create.svg" alt="Image Description"
+                      style="max-width: 15rem;">
+
+                  @if(!empty($admin_notes))
+                  <div class="mb-4" style="background:#fcf36a;padding: 30px;">
+                      <h2>Admin notes</h2>
+                      <p style="">{{$admin_notes}}</p>
+                      <span class="float-right"><small>Notes Added On {{$notes_updated_on}}</small></span>
+                  </div>
+                  @else
+                  <div class="mb-4">
+                      <h2>Awaiting Verification!</h2>
+                      <p>Your profile have been successfully saved. Waiting for admin approval!!</p>
+                  </div>
+                  @endif
+              </div>
+          </div>
+        </div>
+    </div>
+    @endif
+    @if($profile_status == 2)
+    <div class="card mb-3 mb-lg-5">
+        <div class="card-body">
+          <div id="validationFormSuccessMessage" style="display:block;">
+              <div class="text-center">
+                  <img class="img-fluid mb-3" src="assets/svg/illustrations/create.svg" alt="Image Description"
+                      style="max-width: 15rem;">
+
+                  <div class="mb-4">
+                      <h2>Successful!</h2>
+                      <p>Your profile have been verified successfully!!</p>
+                  </div>
+              </div>
+          </div>
+        </div>
+    </div>
+    @endif
+</div>
+<!-- Sidebar -->
+<div id="activitySidebar" class="hs-unfold-content sidebar sidebar-bordered sidebar-box-shadow">
+         <div class="card card-lg sidebar-card sidebar-scrollbar">
+            <div class="card-header">
+               <h4 class="card-header-title">Support Chats</h4>
+               <!-- Toggle Button -->
+               <a class="js-hs-unfold-invoker btn btn-icon btn-xs btn-ghost-dark ml-2" href="javascript:;"
+                  data-hs-unfold-options='{
+                  "target": "#activitySidebar",
+                  "type": "css-animation",
+                  "animationIn": "fadeInRight",
+                  "animationOut": "fadeOutRight",
+                  "hasOverlay": true,
+                  "smartPositionOff": true
+                  }'>
+               <i class="tio-clear tio-lg"></i>
+               </a>
+               <!-- End Toggle Button -->
+            </div>
+            <!-- Body -->
+            <div class="card-body sidebar-body">
+               <div class="chat_window">
+                  <ul class="messages">
+                     
+                  </ul>
+                  <div class="doc_chat_input bottom_wrapper clearfix">
+                     <div class="message_input_wrapper">
+                        <input class="form-control msg_textbox" id="message_input" placeholder="Type your message here..." />
+                        <input type="file" name="chat_file" id="chat-attachment" style="display:none" />
+                     </div>
+                     <div class="btn-group send-btn">
+                        <button type="button" class="btn btn-primary btn-pill send-message">
+                          <i class="tio-send"></i>
+                        </button>
+                        <button type="button" class="btn btn-info btn-pill send-attachment">
+                          <i class="tio-attachment"></i>
+                        </button>
+                     </div>
+                  </div>
+               </div>
+               <div class="message_template">
+                  <li class="message">
+                     <div class="avatar"></div>
+                     <div class="text_wrapper">
+                        <div class="text"></div>
+                     </div>
+                  </li>
+               </div>
+            </div>
+            <!-- End Body -->
+         </div>
+      </div>
+      <!-- End Sidebar -->  
+
+@endsection
+
+
+@section('javascript')
+<!-- JS Implementing Plugins -->
+
+<!-- JS Implementing Plugins -->
+<script src="assets/vendor/hs-navbar-vertical-aside/hs-navbar-vertical-aside.min.js"></script>
+<script src="assets/vendor/hs-nav-scroller/dist/hs-nav-scroller.min.js"></script>
+<script src="assets/vendor/hs-go-to/dist/hs-go-to.min.js"></script>
+<script src="assets/vendor/list.js/dist/list.min.js"></script>
+<script src="assets/vendor/prism/prism.js"></script>
+<script src="assets/vendor/hs-step-form/dist/hs-step-form.min.js"></script>
+<script src="assets/vendor/jquery-validation/dist/jquery.validate.min.js"></script>
+<!-- JS Front -->
+<link rel="stylesheet" href="assets/vendor/mCustomScrollbar/jquery.mCustomScrollbar.css" />
+<script src="assets/vendor/mCustomScrollbar/jquery.mCustomScrollbar.min.js"></script>
+<script src="assets/vendor/quill/dist/quill.min.js"></script>
+
+<script>
+$(document).on('ready', function() {
+    $('#date_of_birth,#date_of_register').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        maxDate: (new Date()).getDate(),
+        todayHighlight: true,
+        orientation: "bottom auto"
+    });
+
+    $('.js-validate').each(function() {
+        $.HSCore.components.HSValidation.init($(this));
+    });
+
+    $(".send-message").click(function(){
+       
+        var message = $("#message_input").val();
+        if(message != ''){
+        $.ajax({
+            type: "POST",
+            url: "{{ baseUrl('send-message-to-support') }}",
+            data:{
+                _token:csrf_token,
+                message:message,
+                type:"text",
+            },
+            dataType:'json',
+            beforeSend:function(){
+                // var html = '<div class="text-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
+                // $("#activitySidebar .messages").html(html);
+                $("#message_input,.send-message,.send-attachment").attr('disabled','disabled');
+            },
+            success: function (response) {
+                if(response.status == true){
+                    $("#message_input,.send-message,.send-attachment").removeAttr('disabled');
+                    $("#message_input").val('');
+                    $("#activitySidebar .messages").html(response.html);
+                    $(".messages").mCustomScrollbar();
+                    $(".messages").animate({ scrollTop: $(".messages")[0].scrollHeight}, 1000);
+                    $(".doc_chat_input").show();
+                    fetchChats();
+                }else{
+                    errorMessage(response.message);
+                }
+            },
+            error:function(){
+
+            $("#message_input,.send-message,.send-attachment").removeAttr('disabled');
+            internalError();
+            }
+        });
+        }
+    });
+
+    $(".send-attachment").click(function(){
+      document.getElementById('chat-attachment').click();
+    });
+    $("#chat-attachment").change(function(){
+      var formData = new FormData();
+      formData.append("_token",csrf_token);
+      formData.append('attachment', $('#chat-attachment')[0].files[0]);
+      var url  = "{{ baseUrl('send-file-to-support') }}";
+      $.ajax({
+         url:url,
+         type:"post",
+         data:formData,
+         cache: false,
+         contentType: false,
+         processData: false,
+         dataType:"json",
+         beforeSend:function(){
+            $("#message_input,.send-message,.send-attachment").attr('disabled','disabled');
+         },
+         success: function (response) {
+            if(response.status == true){
+               $("#message_input,.send-message,.send-attachment").removeAttr('disabled');
+               $("#chat-attachment").val('');
+               $("#activitySidebar .messages").html(response.html);
+               $(".messages").mCustomScrollbar();
+               $(".messages").animate({ scrollTop: $(".messages")[0].scrollHeight}, 1000);
+               $(".doc_chat_input").show();
+               fetchChats();
+            }else{
+               errorMessage(response.message);
+            }
+         },
+         error:function(){
+            $("#message_input,.send-message,.send-attachment").removeAttr('disabled');
+            internalError();
+         }
+      });
+    });
+    // initialization of step form
+    $('.js-step-form').each(function() {
+        var stepForm = new HSStepForm($(this), {
+            finish: function() {
+                var formData = new FormData($("#profile_form")[0]);
+                $.ajax({
+                    url: "{{ baseUrl('save-profile') }}",
+                    type: "post",
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function() {
+                        $("#validationFormFinishBtn").html("Processing...");
+                        $("#validationFormFinishBtn").attr("disabled","disabled");
+                        showLoader();
+                    },
+                    success: function(response) {
+                        hideLoader();
+                        $("#validationFormFinishBtn").html("Save Data");
+                        $("#validationFormFinishBtn").removeAttr("disabled");
+                        if (response.status == true) {
+                            successMessage(response.message);
+                            setTimeout(function() {
+                                redirect('{{ baseUrl("complete-profile") }}');
+                            }, 2000);
+
+                        } else {
+                          validation(response.message);
+                            // $("#err_response").html(
+                            //     '<h4><b>*Field required</b></h4>');
+                            // $.each(response.message, function(index, value) {
+                            //     $("#err_response").append("<p>" +
+                            //         value + "</p>");
+                            //     $("input[name=" + index + "]").parents(
+                            //         ".js-form-message").find("#" +
+                            //         index + "-error").remove();
+                            //     $("input[name=" + index + "]").parents(
+                            //         ".js-form-message").find(
+                            //         ".form-control").removeClass(
+                            //         'is-invalid');
+
+                            //     var html = '<div id="' + index +
+                            //         '-error" class="invalid-feedback">' +
+                            //         value + '</div>';
+                            //     $(html).insertAfter("*[name=" + index +
+                            //         "]");
+                            //     $("input[name=" + index + "]").parents(
+                            //         ".js-form-message").find(
+                            //         ".form-control").addClass(
+                            //         'is-invalid');
+                            // });
+                        }
+                    },
+                    error: function() {
+                        hideLoader();                      
+                        $("#validationFormFinishBtn").html("Save Data");
+                        $("#validationFormFinishBtn").removeAttr("disabled");
+                        internalError();
+                    }
+                });
+            }
+        }).init();
+    });
+
+    // initialization of quilljs editor
+    $('.js-flatpickr').each(function() {
+        $.HSCore.components.HSFlatpickr.init($(this));
+    });
+    // initEditor("about_professional");
+});
+
+function licenceBodies(country_id) {
+    $.ajax({
+        url: "{{ url('licence-bodies') }}",
+        data: {
+            country_id: country_id
+        },
+        dataType: "json",
+        beforeSend: function() {
+            $("#license_body").html('');
+        },
+        success: function(response) {
+            if (response.status == true) {
+                $("#license_body").html(response.options);
+            }
+        },
+        error: function() {
+
+        }
+    });
+}
+
+function stateList(country_id, id) {
+    $.ajax({
+        url: "{{ url('states') }}",
+        data: {
+            country_id: country_id
+        },
+        dataType: "json",
+        beforeSend: function() {
+            $("#" + id).html('');
+        },
+        success: function(response) {
+            if (response.status == true) {
+                $("#" + id).html(response.options);
+            }
+        },
+        error: function() {
+
+        }
+    });
+}
+
+function cityList(state_id, id) {
+    $.ajax({
+        url: "{{ url('cities') }}",
+        data: {
+            state_id: state_id
+        },
+        dataType: "json",
+        beforeSend: function() {
+            $("#" + id).html('');
+        },
+        success: function(response) {
+            if (response.status == true) {
+                $("#" + id).html(response.options);
+            }
+        },
+        error: function() {
+
+        }
+    });
+}
+
+function fetchChats(){
+
+    $.ajax({
+    type: "POST",
+    url: "{{ baseUrl('fetch-chats') }}",
+    data:{
+        _token:csrf_token
+    },
+    dataType:'json',
+    beforeSend:function(){
+        $("#message_input").val('');
+        $("#message_input,.send-message,.send-attachment").attr('disabled','disabled');
+    },
+    success: function (response) {
+        if(response.status == true){
+            $("#message_input,.send-message,.send-attachment").removeAttr('disabled');
+            $("#activitySidebar .messages").html(response.html);
+            setTimeout(function(){
+                $("#activitySidebar .messages").mCustomScrollbar();
+                $("#activitySidebar .messages").animate({ scrollTop: $(".messages")[0].scrollHeight}, 1000);
+            },800);
+            
+            $(".doc_chat_input").show();
+        }else{
+            errorMessage(response.message);
+        }
+    },
+    error:function(){
+        $("#activitySidebar .messages").html('');
+        internalError();
+    }
+    });
+}
+</script>
+@endsection

@@ -1,0 +1,95 @@
+<style>
+.invalid-feedback {
+    position: absolute;
+    bottom: -20px;
+}
+</style>
+<div class="modal-dialog modal-lg" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="staticBackdropLabel">{{$pageTitle}}</h5>
+      <button type="button" class="btn btn-xs btn-icon btn-ghost-secondary" data-dismiss="modal" aria-label="Close">
+        <i class="tio-clear tio-lg"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form method="post" id="popup-form"  action="{{ baseUrl('/notes/add-reminder-note') }}">  
+          @csrf
+          <!-- Form Group -->
+          <div class="row form-group">
+            <label class="col-sm-3 col-form-label input-label">Reminder Date</label>
+
+            <div class="col-sm-9 js-form-message">
+              <input autocomplete="off" type="text" class="form-control reminder_date @error('reminder_date') is-invalid @enderror" name="reminder_date" id="reminder_date" placeholder="Enter Reminder Date" aria-label="Enter Reminder Date" value="">
+              @error('reminder_date')
+              <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+              </span>
+              @enderror
+            </div>
+          </div>
+          <!-- End Form Group -->
+
+          <!-- Form Group -->
+          <div class="row form-group">
+            <label class="col-sm-3 col-form-label input-label">Message</label>
+
+            <div class="col-sm-9 js-form-message">
+              <textarea class="form-control @error('message') is-invalid @enderror" name="message" placeholder="Enter your message..." aria-label="Percentage" value=""></textarea>
+              @error('percentage')
+              <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+              </span>
+              @enderror
+            </div>
+          </div>
+          <!-- End Form Group -->
+        </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+      <button form="popup-form" class="btn btn-primary">Save</button>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  
+    $('.reminder_date').datepicker({
+          format: "d/m/yyyy",
+          autoclose: true,
+    })
+    $("#popup-form").submit(function(e){
+        e.preventDefault();
+        var formData = $("#popup-form").serialize();
+        var url  = $("#popup-form").attr('action');
+        $.ajax({
+            url:url,
+            type:"post",
+            data:formData,
+            dataType:"json",
+            beforeSend:function(){
+              showLoader();
+            },
+            success:function(response){
+              hideLoader();
+              if(response.status == true){
+                successMessage(response.message);
+                closeModal();
+                location.reload();
+              }else{
+                if(response.error_type == 'validation'){
+                  validation(response.message);
+                }else{
+                  errorMessage(response.message);
+                }
+              }
+            },
+            error:function(){
+              internalError();
+            }
+        });
+    });
+});
+</script>
