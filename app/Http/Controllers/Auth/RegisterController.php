@@ -118,9 +118,9 @@ class RegisterController extends Controller
             'last_name' => 'required',
             'password' => 'required|confirmed|min:6',
             'password_confirmation' => 'required|min:6',
-            'country_code' => 'required',
-            'phone_no' => 'required',
-            'termsCheckbox'=>'required'
+            // 'country_code' => 'required',
+            // 'phone_no' => 'required',
+            'signupFormPrivacyCheck'=>'required'
             // 'verify_by'=>'required',
             // 'verification_code'=>'required',
         ]);

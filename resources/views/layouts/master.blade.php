@@ -15,14 +15,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 
   <!-- CSS Implementing Plugins -->
-  <link rel="stylesheet" href="assets/dashboard/vendor/icon-set/style.css">
-  <link rel="stylesheet" href="assets/dashboard/vendor/hs-mega-menu/dist/hs-mega-menu.min.css">
-  <link rel="stylesheet" href="assets/dashboard/vendor/select2/dist/css/select2.min.css">
-  <link rel="stylesheet" href="assets/dashboard/vendor/@yaireo/tagify/dist/tagify.css">
-    <link rel="stylesheet" href="assets/dashboard/vendor/quill/dist/quill.snow.css">
-    <link rel="stylesheet" href="assets/dashboard/vendor/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="assets/vendor/icon-set/style.css">
+  <link rel="stylesheet" href="assets/vendor/hs-mega-menu/dist/hs-mega-menu.min.css">
+  <link rel="stylesheet" href="assets/vendor/select2/dist/css/select2.min.css">
+  <link rel="stylesheet" href="assets/vendor/@yaireo/tagify/dist/tagify.css">
+  <link rel="stylesheet" href="assets/vendor/quill/dist/quill.snow.css">
+  <link rel="stylesheet" href="assets/vendor/flatpickr/dist/flatpickr.min.css">
+  
   <!-- CSS Front Template -->
-  <link rel="stylesheet" href="assets/dashboard/css/theme.min.css">
+  <link rel="stylesheet" href="assets/css/theme.min.css">
+  <link rel="stylesheet" href="assets/vendor/toastr/toastr.css">
+  <link rel="stylesheet" type="text/css" href="assets/vendor/sweetalert2/sweetalert2.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/custom.css">
     @yield('style')
     <script>
     var BASEURL = "{{ baseUrl('/') }}";
@@ -31,6 +36,12 @@
     </script>
 </head>
 <body class="bg-light">
+  <div class="loader">
+    <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+    <h4 class="text-danger">Loading...</h4>
+  </div>
   <!-- Search Form -->
   <div id="searchDropdown" class="hs-unfold-content dropdown-unfold search-fullwidth d-md-none">
     <form class="input-group input-group-merge input-group-borderless">
@@ -87,6 +98,8 @@
     <!-- End Content -->
 
   </main>
+  <div class="modal fade" id="popupModal" tabindex="-1" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  </div>
   <!-- ========== END MAIN CONTENT ========== -->
 
   <!-- ========== SECONDARY CONTENTS ========== -->
@@ -450,7 +463,7 @@
           <li class="step-item">
             <div class="step-content-wrapper">
               <div class="step-avatar">
-                <img class="step-avatar-img" src="assets/dashboard/img/160x160/img9.jpg" alt="Image Description">
+                <img class="step-avatar-img" src="assets/img/160x160/img9.jpg" alt="Image Description">
               </div>
 
               <div class="step-content">
@@ -465,7 +478,7 @@
                       <div class="col-6">
                         <div class="media">
                             <span class="mt-1 mr-2">
-                              <img class="avatar avatar-xs" src="assets/dashboard/svg/brands/excel.svg" alt="Image Description">
+                              <img class="avatar avatar-xs" src="assets/svg/brands/excel.svg" alt="Image Description">
                             </span>
                           <div class="media-body text-truncate">
                             <span class="d-block font-size-sm text-dark text-truncate" title="weekly-reports.xls">weekly-reports.xls</span>
@@ -476,7 +489,7 @@
                       <div class="col-6">
                         <div class="media">
                             <span class="mt-1 mr-2">
-                              <img class="avatar avatar-xs" src="assets/dashboard/svg/brands/word.svg" alt="Image Description">
+                              <img class="avatar avatar-xs" src="assets/svg/brands/word.svg" alt="Image Description">
                             </span>
                           <div class="media-body text-truncate">
                             <span class="d-block font-size-sm text-dark text-truncate" title="weekly-reports.xls">weekly-reports.xls</span>
@@ -515,7 +528,7 @@
           <li class="step-item">
             <div class="step-content-wrapper">
               <div class="step-avatar">
-                <img class="step-avatar-img" src="assets/dashboard/img/160x160/img3.jpg" alt="Image Description">
+                <img class="step-avatar-img" src="assets/img/160x160/img3.jpg" alt="Image Description">
               </div>
 
               <div class="step-content">
@@ -527,13 +540,13 @@
                   <li class="list-group-item list-group-item-light">
                     <div class="row gx-1">
                       <div class="col">
-                        <img class="img-fluid rounded ie-sidebar-activity-img" src="assets/dashboard/svg/illustrations/card-1.svg" alt="Image Description">
+                        <img class="img-fluid rounded ie-sidebar-activity-img" src="assets/svg/illustrations/card-1.svg" alt="Image Description">
                       </div>
                       <div class="col">
-                        <img class="img-fluid rounded ie-sidebar-activity-img" src="assets/dashboard/svg/illustrations/card-2.svg" alt="Image Description">
+                        <img class="img-fluid rounded ie-sidebar-activity-img" src="assets/svg/illustrations/card-2.svg" alt="Image Description">
                       </div>
                       <div class="col">
-                        <img class="img-fluid rounded ie-sidebar-activity-img" src="assets/dashboard/svg/illustrations/card-3.svg" alt="Image Description">
+                        <img class="img-fluid rounded ie-sidebar-activity-img" src="assets/svg/illustrations/card-3.svg" alt="Image Description">
                       </div>
                       <div class="col-auto align-self-center">
                         <div class="text-center">
@@ -570,7 +583,7 @@
           <li class="step-item">
             <div class="step-content-wrapper">
               <div class="step-avatar">
-                <img class="step-avatar-img" src="assets/dashboard/img/160x160/img7.jpg" alt="Image Description">
+                <img class="step-avatar-img" src="assets/img/160x160/img7.jpg" alt="Image Description">
               </div>
 
               <div class="step-content">
@@ -588,7 +601,7 @@
           <li class="step-item">
             <div class="step-content-wrapper">
               <div class="step-avatar">
-                <img class="step-avatar-img" src="assets/dashboard/img/160x160/img5.jpg" alt="Image Description">
+                <img class="step-avatar-img" src="assets/img/160x160/img5.jpg" alt="Image Description">
               </div>
 
               <div class="step-content">
@@ -645,7 +658,7 @@
         <div class="modal-body p-sm-5">
           <div class="text-center">
             <div class="w-75 w-sm-50 mx-auto mb-4">
-              <img class="img-fluid" src="assets/dashboard/svg/illustrations/graphs.svg" alt="Image Description">
+              <img class="img-fluid" src="assets/svg/illustrations/graphs.svg" alt="Image Description">
             </div>
 
             <h4 class="h1">Welcome to Front</h4>
@@ -662,16 +675,16 @@
           <div class="w-85 mx-auto">
             <div class="row justify-content-between">
               <div class="col">
-                <img class="img-fluid ie-welcome-brands" src="assets/dashboard/svg/brands/gitlab-gray.svg" alt="Image Description">
+                <img class="img-fluid ie-welcome-brands" src="assets/svg/brands/gitlab-gray.svg" alt="Image Description">
               </div>
               <div class="col">
-                <img class="img-fluid ie-welcome-brands" src="assets/dashboard/svg/brands/fitbit-gray.svg" alt="Image Description">
+                <img class="img-fluid ie-welcome-brands" src="assets/svg/brands/fitbit-gray.svg" alt="Image Description">
               </div>
               <div class="col">
-                <img class="img-fluid ie-welcome-brands" src="assets/dashboard/svg/brands/flow-xo-gray.svg" alt="Image Description">
+                <img class="img-fluid ie-welcome-brands" src="assets/svg/brands/flow-xo-gray.svg" alt="Image Description">
               </div>
               <div class="col">
-                <img class="img-fluid ie-welcome-brands" src="assets/dashboard/svg/brands/layar-gray.svg" alt="Image Description">
+                <img class="img-fluid ie-welcome-brands" src="assets/svg/brands/layar-gray.svg" alt="Image Description">
               </div>
             </div>
           </div>
@@ -685,38 +698,41 @@
 
 
   <!-- JS Global Compulsory  -->
-  <script src="assets/dashboard/vendor/jquery/dist/jquery.min.js"></script>
-  <script src="assets/dashboard/vendor/jquery-migrate/dist/jquery-migrate.min.js"></script>
-  <script src="assets/dashboard/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/jquery/dist/jquery.min.js"></script>
+  <script src="assets/vendor/jquery-migrate/dist/jquery-migrate.min.js"></script>
+  <script src="assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
   <!-- JS Implementing Plugins -->
-   <script src="assets/dashboard/vendor/hs-navbar-vertical-aside/hs-navbar-vertical-aside.min.js"></script>
-  <script src="assets/dashboard/vendor/hs-unfold/dist/hs-unfold.min.js"></script>
-  <script src="assets/dashboard/vendor/hs-form-search/dist/hs-form-search.min.js"></script>
-  <script src="assets/dashboard/vendor/hs-mega-menu/dist/hs-mega-menu.min.js"></script>
-<script src="assets/dashboard/vendor/hs-file-attach/dist/hs-file-attach.min.js"></script>
-    <script src="assets/dashboard/vendor/select2/dist/js/select2.full.min.js"></script>
-    <script src="assets/dashboard/vendor/flatpickr/dist/flatpickr.min.js"></script>
-    <script src="assets/dashboard/vendor/hs-quantity-counter/dist/hs-quantity-counter.min.js"></script>
-    <script src="assets/dashboard/vendor/hs-add-field/dist/hs-add-field.min.js"></script>
-    <script src="assets/dashboard/vendor/hs-sticky-block/dist/hs-sticky-block.min.js"></script>
-	<script src="assets/dashboard/vendor/quill/dist/quill.min.js"></script>
-    <script src="assets/dashboard/vendor/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
-    <script src="assets/dashboard/vendor/@yaireo/tagify/dist/tagify.min.js"></script>
-    <script src="assets/dashboard/vendor/dropzone/dist/min/dropzone.min.js"></script>
-    <script src="assets/dashboard/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
-    <script src="assets/dashboard/vendor/datatables.net.extensions/select/select.min.js"></script>
-    <script src="assets/dashboard/vendor/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-    <script src="assets/dashboard/vendor/datatables.net-buttons/js/buttons.flash.min.js"></script>
-    <script src="assets/dashboard/vendor/jszip/dist/jszip.min.js"></script>
-    <script src="assets/dashboard/vendor/pdfmake/build/pdfmake.min.js"></script>
-    <script src="assets/dashboard/vendor/pdfmake/build/vfs_fonts.js"></script>
-    <script src="assets/dashboard/vendor/datatables.net-buttons/js/buttons.html5.min.js"></script>
-    <script src="assets/dashboard/vendor/datatables.net-buttons/js/buttons.print.min.js"></script>
-    <script src="assets/dashboard/vendor/datatables.net-buttons/js/buttons.colVis.min.js"></script>
-
+  <script src="assets/vendor/hs-navbar-vertical-aside/hs-navbar-vertical-aside.min.js"></script>
+  <script src="assets/vendor/hs-unfold/dist/hs-unfold.min.js"></script>
+  <script src="assets/vendor/hs-form-search/dist/hs-form-search.min.js"></script>
+  <script src="assets/vendor/hs-mega-menu/dist/hs-mega-menu.min.js"></script>
+  <script src="assets/vendor/hs-file-attach/dist/hs-file-attach.min.js"></script>
+  <script src="assets/vendor/select2/dist/js/select2.full.min.js"></script>
+  <script src="assets/vendor/flatpickr/dist/flatpickr.min.js"></script>
+  <script src="assets/vendor/hs-quantity-counter/dist/hs-quantity-counter.min.js"></script>
+  <script src="assets/vendor/hs-add-field/dist/hs-add-field.min.js"></script>
+  <script src="assets/vendor/hs-sticky-block/dist/hs-sticky-block.min.js"></script>
+  <script src="assets/vendor/quill/dist/quill.min.js"></script>
+  <script src="assets/vendor/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
+  <script src="assets/vendor/@yaireo/tagify/dist/tagify.min.js"></script>
+  <script src="assets/vendor/dropzone/dist/min/dropzone.min.js"></script>
+  <script src="assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
+  <script src="assets/vendor/datatables.net.extensions/select/select.min.js"></script>
+  <script src="assets/vendor/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+  <script src="assets/vendor/datatables.net-buttons/js/buttons.flash.min.js"></script>
+  <script src="assets/vendor/jszip/dist/jszip.min.js"></script>
+  <script src="assets/vendor/pdfmake/build/pdfmake.min.js"></script>
+  <script src="assets/vendor/pdfmake/build/vfs_fonts.js"></script>
+  <script src="assets/vendor/datatables.net-buttons/js/buttons.html5.min.js"></script>
+  <script src="assets/vendor/datatables.net-buttons/js/buttons.print.min.js"></script>
+  <script src="assets/vendor/datatables.net-buttons/js/buttons.colVis.min.js"></script>
+  <script src="assets/vendor/toastr/toastr.min.js"></script>
+  <script src="assets/vendor/ckeditor/ckeditor.js"></script>
+  <script src="assets/vendor/sweetalert2/sweetalert2.all.min.js"></script>
   <!-- JS Front -->
-  <script src="assets/dashboard/js/theme.min.js"></script>
+  <script src="assets/js/theme.min.js"></script>
+  <script src="assets/js/theme-custom.js"></script>
 
   <!-- JS Plugins Init. -->
   <script>
@@ -726,7 +742,8 @@
       $('.js-hs-unfold-invoker').each(function () {
         var unfold = new HSUnfold($(this)).init();
       });
-
+      $('[data-toggle="tooltip"]').tooltip();
+      $('.js-nav-tooltip-link').tooltip({ boundary: 'window' });
  // INITIALIZATION OF NAVBAR VERTICAL NAVIGATION
       // =======================================================
       var sidebar = $('.js-navbar-vertical-aside').hsSideNav();
@@ -874,7 +891,7 @@
           },
           language: {
             zeroRecords: '<div class="text-center p-4">' +
-                '<img class="mb-3" src="assets/dashboard/svg/illustrations/sorry.svg" alt="Image Description" style="width: 7rem;">' +
+                '<img class="mb-3" src="assets/svg/illustrations/sorry.svg" alt="Image Description" style="width: 7rem;">' +
                 '<p class="mb-0">No data to show</p>' +
                 '</div>'
           }
@@ -919,7 +936,9 @@
           $.HSCore.components.HSChartJS.init($(this));
         });
 
-        
+        // $('.js-hs-unfold-invoker').each(function () {
+        //   var unfold = new HSUnfold($(this)).init();
+        // });
         // INITIALIZATION OF QUICK VIEW POPOVER
         // =======================================================
         $('#newProjectPopover').popover('show')
@@ -947,11 +966,46 @@
         }
       }).init();
     });
+
+    function showPopup(url,method='get',paramters = {}){
+        $.ajax({
+            url: url+"?_token="+csrf_token,
+            dataType:'json',
+            type:method,
+            data:paramters,
+            beforeSend:function(){
+                showLoader();
+                $("#popupModal").html('');
+            },
+            success: function (result) {
+                hideLoader();
+                if(result.status == true){
+                    $("#popupModal").html(result.contents);
+                    $("#popupModal").modal("show");
+                }else{
+                    if(result.message != undefined){
+                        errorMessage(result.message);
+                    }else{
+                        errorMessage("No Modal Data found");    
+                    }
+                }
+            },
+            error:function(){
+                hideLoader();
+                internalError();
+            }
+        });
+      }
+    
+    function closeModal(){
+        $("#popupModal").html('');
+        $("#popupModal").modal("hide");
+    }
   </script>
 
   <!-- IE Support -->
   <script>
-    if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) document.write('<script src="assets/dashboard/vendor/babel-polyfill/polyfill.min.js"><\/script>');
+    if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) document.write('<script src="assets/vendor/babel-polyfill/polyfill.min.js"><\/script>');
   </script>
   @yield('javascript')
 </body>

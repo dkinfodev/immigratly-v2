@@ -152,6 +152,160 @@ class ProfessionalApiController extends Controller
         return response()->json($response);
     }
 
+    public function copyFolderToCase(Request $request){
+        try{
+            $postData = $request->input();
+            $request->request->add($postData);
+            $folder_ids = $request->input("folder_ids");
+            $case_id = $request->input("case_id");
+            $client_id = $request->input("client_id");
+            $record = Cases::where("unique_id",$case_id)->first();
+
+     
+           
+            foreach($folder_ids as $folder){
+                $doctype = $folder['doctype'];
+                $folder_id = $folder['folder_id'];
+                $user_files = DB::table(MAIN_DATABASE.".user_files as uf")
+                                ->select("fm.*")
+                                ->leftJoin(MAIN_DATABASE.".files_manager as fm", 'uf.file_id', '=', 'fm.unique_id')
+                                ->where("folder_id",$folder_id)
+                                ->get();
+                $user_folder = DB::table(MAIN_DATABASE.".user_folders")
+                                    ->where("unique_id",$folder_id)
+                                    ->first();
+                
+                $unique_id = randomNumber();
+                $object = new CaseFolders();
+                $object->name = $user_folder->name;
+                $object->unique_id = $unique_id;
+                $object->case_id = $case_id;
+                $object->added_by = 'client';
+                $object->created_by = $client_id;
+                $object->save();
+                $cs_id = $object->id;
+                
+                foreach($user_files as $file){
+                    
+                    $check_document = Documents::where("is_shared",1)
+                                    ->where("shared_id",$file->unique_id)
+                                    ->first();
+
+                    $source = userDir($file->user_id)."/documents/".$file->file_name;
+                    $new_name = randomNumber(5)."-".$file->original_name;
+                    $destination = professionalDir($this->subdomain)."/documents/".$new_name;
+                    if(empty($check_document)){
+                        copy($source, $destination);
+                        $document_id = randomNumber();
+                        $object = new Documents();
+                        $object->file_name = $new_name;
+                        $object->original_name = $file->original_name;
+                        $object->unique_id = $document_id;
+                        $object->is_shared = 1;
+                        $object->shared_id = $file->unique_id;
+                        $object->created_by = $client_id;
+
+                        $object->save();
+                    }else{
+                        $document_id = $check_document->unique_id;
+                        if(!file_exists(professionalDir($this->subdomain)."/documents/".$check_document->file_name)){
+                            $destination = professionalDir($this->subdomain)."/documents/".$check_document->file_name;
+                            copy($source, $destination);
+                        }
+                    }
+                    $case_document = CaseDocuments::where("case_id",$case_id)
+                                                ->where("file_id",$document_id)
+                                                ->first();
+                    if(empty($case_document)){
+                        $object2 = new CaseDocuments();
+                        $object2->case_id = $case_id;
+                        $object2->unique_id = randomNumber();
+                    }else{
+                        $object2 = CaseDocuments::find($case_document->id);
+                    }
+                    
+                    $object2->folder_id = $unique_id;
+                    $object2->file_id = $document_id;
+                    $object2->document_type = "other";
+                    $object2->created_by = $client_id;
+                    $object2->added_by = "client";
+                    $object2->save();
+                    
+                }
+                // if($doctype == 'default'){
+                //     $document_folder = DB::table(MAIN_DATABASE.".documents_folder")
+                //                         ->where("unique_id",$folder_id)
+                //                         ->first();
+                //     $checkCase = CaseFolders::where("case_id",$case_id)
+                //                             ->where("unique_id",$folder_id)
+                //                             ->where("unique_id",$folder_id)
+                //                             ->first();
+                    
+                //     if(empty($checkCase)){
+                //         $unique_id = randomNumber();
+                //         $object = new CaseFolders();
+                //         $object->name = $document_folder->name;
+                //         $object->unique_id = $unique_id;
+                //         $object->case_id = $case_id;
+                //         $object->added_by = 'client';
+                //         $object->created_by = $client_id;
+                //         $object->save();
+                //         $cs_id = $object->id;
+                        
+                //         $files = $record->caseDocuments($record->unique_id,$folder_id);
+                    
+                //         foreach($files as $file){
+                //             $object = new CaseDocuments();
+                //             $object->case_id = $case_id;
+                //             $object->unique_id = randomNumber();
+                //             $object->file_id = $file->file_id;
+                //             $object->folder_id = $unique_id;
+                //             $object->document_type = "default";
+                //             $object->added_by = "client";
+                //             $object->created_by = $client_id;
+                //             $object->save();
+                //         }
+                //     }
+                // }
+
+                // if($doctype == 'other'){
+                
+                //     $document_folder = ServiceDocuments::where("unique_id",$folder_id)->first();
+                //     $checkCase = CaseFolders::where("case_id",$case_id)
+                //                             ->where("unique_id",$folder_id)
+                //                             ->first();
+                //     if(empty($checkCase)){
+                //         $object = new CaseFolders();
+                //         $object->name = $document_folder->name;
+                //         $object->unique_id = $folder_id;
+                //         $object->added_by = 'client';
+                //         $object->created_by = $client_id;
+                //         $object->save();
+
+                //         $files = $record->caseDocuments($record->unique_id,$folder_id);
+
+                //         foreach($files as $file){
+                //             $object = new CaseDocuments();
+                //             $object->case_id = $case_id;
+                //             $object->unique_id = randomNumber();
+                //             $object->file_id = $file->file_id;
+                //             $object->folder_id = $unique_id;
+                //             $object->document_type = "other";
+                //             $object->added_by = "client";
+                //             $object->created_by = $client_id;
+                //             $object->save();
+                //         }
+                //     }
+                // }
+            }
+            $response['message'] = "Folder copied successfully";
+            $response['status'] = "success";
+        } catch (Exception $e) {
+            $response['status'] = "error";
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response);
+    }
     public function defaultDocuments(Request $request){
         try{
             $postData = $request->input();
@@ -160,7 +314,9 @@ class ProfessionalApiController extends Controller
             $case_id = $request->input("case_id");
             $doc_id = $request->input("doc_id");
             $record = Cases::where("unique_id",$case_id)->first();
-            $document = DB::table(MAIN_DATABASE.".documents_folder")->where("unique_id",$doc_id)->first();
+            $document = DB::table(MAIN_DATABASE.".documents_folder")
+                        ->where("unique_id",$doc_id)
+                        ->first();
             $folder_id = $document->unique_id;
             $service = ProfessionalServices::where("unique_id",$record->visa_service_id)->first();
             $service->MainService = $service->Service($service->service_id);
@@ -1001,6 +1157,105 @@ class ProfessionalApiController extends Controller
             $response['message'] = $e->getMessage();
         }
         return response()->json($response); 
+    }
+
+    public function removeCaseFolder(Request $request){
+        try{
+            $postData = $request->input();
+            $request->request->add($postData);
+            $id = $request->input("folder_id");
+            $record = CaseFolders::where("unique_id",$id)->first();
+            if(!empty($record)){
+                CaseFolders::deleteRecord($record->id);
+                $response['status'] = 'success';
+                $response['message'] = 'Folder removed successfully';
+            }else{
+                $response['status'] = 'error';
+                $response['message'] = 'Something wents wrong';
+            }
+
+        } catch (Exception $e) {
+            $response['status'] = "error";
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response); 
+    }
+
+    public function copyToProfessional(Request $request){
+        try{
+            $postData = $request->input();
+            $request->request->add($postData);
+            $file_ids = explode(",",$request->input("file_ids"));
+            $folder_id = explode(":",$request->input("folder_id"));
+            $case_id = $request->input("case_id");
+            $client_id = $request->input("client_id");
+            $record = Cases::where("unique_id",$case_id)->first();
+            for($i=0;$i < count($file_ids);$i++){
+                $file_ids[$i] = base64_decode($file_ids[$i]);
+            }
+            
+        
+            $user_files = DB::table(MAIN_DATABASE.".user_files as uf")
+                            ->select("fm.*")
+                            ->leftJoin(MAIN_DATABASE.".files_manager as fm", 'uf.file_id', '=', 'fm.unique_id')
+                            ->whereIn("uf.id",$file_ids)
+                            ->get();
+ 
+            foreach($user_files as $file){
+                
+                $check_document = Documents::where("is_shared",1)
+                                ->where("shared_id",$file->unique_id)
+                                ->first();
+
+                $source = userDir($file->user_id)."/documents/".$file->file_name;
+                $new_name = randomNumber(5)."-".$file->original_name;
+                $destination = professionalDir($this->subdomain)."/documents/".$new_name;
+                if(empty($check_document)){
+                    copy($source, $destination);
+                    $document_id = randomNumber();
+                    $object = new Documents();
+                    $object->file_name = $new_name;
+                    $object->original_name = $file->original_name;
+                    $object->unique_id = $document_id;
+                    $object->is_shared = 1;
+                    $object->shared_id = $file->unique_id;
+                    $object->created_by = $client_id;
+
+                    $object->save();
+                }else{
+                    $document_id = $check_document->unique_id;
+                    if(!file_exists(professionalDir($this->subdomain)."/documents/".$check_document->file_name)){
+                        $destination = professionalDir($this->subdomain)."/documents/".$check_document->file_name;
+                        copy($source, $destination);
+                    }
+                }
+                $case_document = CaseDocuments::where("case_id",$case_id)
+                                            ->where("file_id",$document_id)
+                                            ->first();
+                if(empty($case_document)){
+                    $object2 = new CaseDocuments();
+                    $object2->case_id = $case_id;
+                    $object2->unique_id = randomNumber();
+                }else{
+                    $object2 = CaseDocuments::find($case_document->id);
+                }
+                
+                $object2->folder_id = $folder_id[1];
+                $object2->file_id = $document_id;
+                $object2->document_type = $folder_id[0];
+                $object2->created_by = $client_id;
+                $object2->added_by = "client";
+                $object2->save();
+                
+            }
+            
+            $response['message'] = "Folder copied successfully";
+            $response['status'] = "success";
+        } catch (Exception $e) {
+            $response['status'] = "error";
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response);
     }
     
 }

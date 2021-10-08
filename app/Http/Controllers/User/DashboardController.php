@@ -85,13 +85,13 @@ class DashboardController extends Controller
         
         $validator = Validator::make($request->all(), [
             // 'email' => 'required|email|unique:users,email,'.$object->id,
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'country_code' => 'required',
-            'phone_no' => 'required|unique:users,phone_no,'.$object->id,
+            // 'first_name' => 'required',
+            // 'last_name' => 'required',
+            // 'country_code' => 'required',
+            // 'phone_no' => 'required|unique:users,phone_no,'.$object->id,
             'gender'=>'required',
             'date_of_birth'=>'required',
-            'termsCheckbox'=>'required',
+            // 'termsCheckbox'=>'required',
             'country_id'=>'required',
             'cv_type'=>'required',
         ]);
@@ -108,14 +108,14 @@ class DashboardController extends Controller
             return response()->json($response);
         }
        
-        $object->first_name = $request->input("first_name");
-        $object->last_name = $request->input("last_name");
-        // $object->email = $request->input("email");
-        $object->country_code = $request->input("country_code");
-        $object->phone_no = $request->input("phone_no");
+        // $object->first_name = $request->input("first_name");
+        // $object->last_name = $request->input("last_name");
+        // // $object->email = $request->input("email");
+        // $object->country_code = $request->input("country_code");
+        // $object->phone_no = $request->input("phone_no");
         
         
-        $object->save();
+        // $object->save();
     
         $object2->user_id = \Auth::user()->unique_id;
         $object2->profile_complete = 1;

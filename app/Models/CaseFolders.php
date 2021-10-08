@@ -11,6 +11,11 @@ class CaseFolders extends Model
     protected $table = "case_folders";
 
     static function deleteRecord($id){
-        CaseFolders::where("id",$id)->delete();
+        $record = CaseFolders::where("id",$id)->first();
+        CaseFolders::where("id",$id)->delete();   
+        if(!empty($record)){
+            CaseDocuments::where("case_id",$record->unique_id)->delete();
+        }
+
     }
 }

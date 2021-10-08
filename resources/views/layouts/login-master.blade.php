@@ -18,13 +18,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 
     <!-- CSS Implementing Plugins -->
-    <link rel="stylesheet" href="assets/dashboard/vendor/icon-set/style.css">
-    <link rel="stylesheet" href="assets/dashboard/vendor/select2/dist/css/select2.min.css">
+    <link rel="stylesheet" href="assets/vendor/icon-set/style.css">
+    <link rel="stylesheet" href="assets/vendor/select2/dist/css/select2.min.css">
 
     <!-- CSS Front Template -->
-    <link rel="stylesheet" href="assets/dashboard/css/theme.min.css">
-    <link rel="stylesheet" href="assets/dashboard/css/style.css">
-    <link rel="stylesheet" href="assets/dashboard/css/custom.css">
+    <link rel="stylesheet" href="assets/css/theme.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/custom.css">
     @yield('style')
   </head>
 
@@ -32,18 +32,18 @@
     @yield("content")
 
     <!-- JS Global Compulsory  -->
-    <script src="assets/dashboard/vendor/jquery/dist/jquery.min.js"></script>
-    <script src="assets/dashboard/vendor/jquery-migrate/dist/jquery-migrate.min.js"></script>
-    <script src="assets/dashboard/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="assets/vendor/jquery-migrate/dist/jquery-migrate.min.js"></script>
+    <script src="assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- JS Implementing Plugins -->
-    <script src="assets/dashboard/vendor/hs-toggle-password/dist/js/hs-toggle-password.js"></script>
-    <script src="assets/dashboard/vendor/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="assets/dashboard/vendor/select2/dist/js/select2.full.min.js"></script>
+    <script src="assets/vendor/hs-toggle-password/dist/js/hs-toggle-password.js"></script>
+    <script src="assets/vendor/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="assets/vendor/select2/dist/js/select2.full.min.js"></script>
 
     <!-- JS Front -->
-    <script src="assets/dashboard/js/theme.min.js"></script>
-    <script src="assets/dashboard/js/theme-custom.js"></script>
+    <script src="assets/js/theme.min.js"></script>
+    <script src="assets/js/theme-custom.js"></script>
     <!-- JS Plugins Init. -->
     <script>
       $(document).on('ready', function () {

@@ -42,9 +42,11 @@ class ProfessionalCasesController extends Controller
         }else{
             $record = array();
         }
+        
         $viewData['subdomain'] = $subdomain;
         $viewData['pageTitle'] = "View Case";
         $viewData['record'] = $record;
+        $viewData['active_nav'] = "overview";
         $viewData['visa_services'] = array();
         return view(roleFolder().'.cases.view',$viewData);
     } 
@@ -53,30 +55,102 @@ class ProfessionalCasesController extends Controller
 
         $data['case_id'] = $case_id;
         $case = professionalCurl('cases/documents',$subdomain,$data);
-
+  
         $record = array();
         $service = array();
         $case_folders = array();
         $documents = array();
         $viewData['pageTitle'] = "Documents";
+        $data = array();
+        $data['case_id'] = $case_id;
+        $data['client_id'] = \Auth::user()->unique_id;
+        $case_view = professionalCurl('cases/view',$subdomain,$data);
+        if(isset($case_view['status']) && $case_view['status'] == 'success'){
+            $record = $case_view['data'];
+        }else{
+            $record = array();
+        }
         if(isset($case['status']) && $case['status'] == 'success'){
-            $data = $case['data'];
-            $record = $data['record'];
-            $service = $data['service'];
-            $case_folders = $data['case_folders'];
-            $documents = $data['documents'];
+            $case_data = $case['data'];
+            $service = $case_data['service'];
+            $case_folders = $case_data['case_folders'];
+            $documents = $case_data['documents'];
             $viewData['pageTitle'] = "Documents for ".$service['MainService']['name'];
         }
+        $user_id = \Auth::user()->unique_id;
+        $user_folders = UserFolders::where("user_id",$user_id)->get();
+        
+        $user_file_url = userDirUrl()."/documents";
+        $user_file_dir = userDir()."/documents";
+        $viewData['user_file_url'] = $user_file_url;
+        $viewData['user_file_dir'] = $user_file_dir;
+        $viewData['user_folders'] = $user_folders;
+
         $viewData['case_id'] = $case_id;
         $viewData['subdomain'] = $subdomain;
         $viewData['service'] = $service;
         $viewData['documents'] = $documents;
         $viewData['case_folders'] = $case_folders;
         $viewData['record'] = $record;
+        $viewData['active_nav'] = "files";
         return view(roleFolder().'.cases.document-folders',$viewData);
     }
 
-    public function defaultDocuments($subdomain,$case_id,$doc_id){
+    public function fetchUserDocuments(Request $request){
+        $folder_id = $request->input("doc_id");
+        $case_id = $request->input("case_id");
+        $subdomain = $request->input("subdomain");
+        
+        $document = UserFolders::where("unique_id",$folder_id)->first();
+        $user_id = \Auth::user()->unique_id;
+        
+        $user_documents = UserFiles::with('FileDetail')
+                                    ->join('files_manager', 'files_manager.unique_id', '=', 'user_files.file_id')
+                                    ->where("user_files.folder_id",$folder_id)
+                                    ->where("user_files.user_id",$user_id)
+                                    ->select("user_files.*")
+                                    ->orderBy("id","desc")
+                                    ->get();
+       
+        $viewData['user_documents'] = $user_documents;
+        $file_url = userDirUrl()."/documents";
+        $file_dir = userDir()."/documents";
+        $viewData['file_url'] = $file_url;
+        $viewData['file_dir'] = $file_dir;
+        $viewData['document'] = $document;
+        $viewData['case_id'] = $case_id;
+        $viewData['folder_id'] = $folder_id;
+        $viewData['subdomain'] = $subdomain;
+        $view = View::make(roleFolder().'.cases.fetch-user-files',$viewData);
+        $contents = $view->render();
+        $response['contents'] = $contents;
+        $response['status'] = true;
+        return response()->json($response);      
+    }
+
+    public function fetchDocuments(Request $request){
+        $doctype = $request->input("doctype");
+        $subdomain = $request->input("subdomain");
+        $case_id = $request->input("case_id");
+        $doc_id = $request->input("doc_id");
+        switch($doctype){
+            case "default": // case default
+                $response = $this->defaultDocuments($subdomain,$case_id,$doc_id,true);
+                break;
+            case "extra": // Professional
+                $response = $this->extraDocuments($subdomain,$case_id,$doc_id,true);
+                break;
+            case "other": // case other
+                $response = $this->otherDocuments($subdomain,$case_id,$doc_id,true);
+                break;   
+            default:
+                $response['status'] = false;
+                $response['message'] = "No data available";
+                break;
+        }
+        return response()->json($response);
+    }
+    public function defaultDocuments($subdomain,$case_id,$doc_id,$returnView=false){
         
         $data['case_id'] = $case_id;
         $data['doc_id'] = $doc_id;
@@ -86,8 +160,8 @@ class ProfessionalCasesController extends Controller
         $document = array();
         $case_documents = array();
         
-        $api_response = professionalCurl('cases/default-documents',$subdomain,$data);
-
+        $api_response = professionalCurl('cases/default-documents',$subdomain,$data,true);
+        
         $result = $api_response['data'];
 
         $service = $result['service'];
@@ -112,9 +186,18 @@ class ProfessionalCasesController extends Controller
         $viewData['file_dir'] = $file_dir;
         $user_detail = UserDetails::where("user_id",\Auth::user()->unique_id)->first();
         $viewData['user_detail'] = $user_detail;
-        return view(roleFolder().'.cases.document-files',$viewData);
+        if($returnView == false){
+            return view(roleFolder().'.cases.document-files',$viewData);
+        }else{
+            $view = View::make(roleFolder().'.cases.fetch-folder-files',$viewData);
+            $contents = $view->render();
+            $response['contents'] = $contents;
+            $response['status'] = true;
+            return $response;
+        }
+        
     }
-    public function otherDocuments($subdomain,$case_id,$doc_id){
+    public function otherDocuments($subdomain,$case_id,$doc_id,$returnView=false){
 
         $data['case_id'] = $case_id;
         $data['doc_id'] = $doc_id;
@@ -152,10 +235,18 @@ class ProfessionalCasesController extends Controller
         $viewData['file_dir'] = $file_dir;
         $user_detail = UserDetails::where("user_id",$user_id)->first();
         $viewData['user_detail'] = $user_detail;
-        return view(roleFolder().'.cases.document-files',$viewData);
+        if($returnView == false){
+            return view(roleFolder().'.cases.document-files',$viewData);
+        }else{
+            $view = View::make(roleFolder().'.cases.fetch-folder-files',$viewData);
+            $contents = $view->render();
+            $response['contents'] = $contents;
+            $response['status'] = true;
+            return $response;
+        }
     }
-    public function extraDocuments($subdomain,$case_id,$doc_id){
-
+    public function extraDocuments($subdomain,$case_id,$doc_id,$returnView=false){
+        $user_id = \Auth::user()->unique_id;
         $data['case_id'] = $case_id;
         $data['doc_id'] = $doc_id;
         $data['doc_type'] = "extra";
@@ -193,7 +284,16 @@ class ProfessionalCasesController extends Controller
 
         $user_detail = UserDetails::where("user_id",$user_id)->first();
         $viewData['user_detail'] = $user_detail;
-        return view(roleFolder().'.cases.document-files',$viewData);
+        if($returnView == false){
+            return view(roleFolder().'.cases.document-files',$viewData);
+        }else{
+            $view = View::make(roleFolder().'.cases.fetch-folder-files',$viewData);
+            $contents = $view->render();
+            
+            $response['contents'] = $contents;
+            $response['status'] = true;
+            return $response;
+        }
     }
 
     
@@ -1386,6 +1486,88 @@ class ProfessionalCasesController extends Controller
         $response['status'] = true;
         $response['contents'] = $contents;
         return response()->json($response);
+    }
+    public function removeCaseFolder($subdomain,$id,Request $request){
+        $data['folder_id'] = $id;
+        $apiData = professionalCurl('cases/remove-case-folder',$subdomain,$data);
+        if($apiData['status'] == 'success'){
+            return redirect()->back()->with("success",'Folder removed successfully');
+        }else{
+            return redirect()->back()->with("error",'Error while removing folder');
+        }
+    }
+    public function copyFolderToExtra(Request $request){
+        $subdomain = $request->input("subdomain");
+        $case_id = $request->input("case_id");
+        $folder_ids = $request->input("folder_ids");
+        
+        $data = array();
+        $data['case_id'] = $case_id;
+        $data['folder_ids'] = $folder_ids;
+        $data['client_id'] = \Auth::user()->unique_id;
+       
+        $case_view = professionalCurl('cases/copy-folder-to-case',$subdomain,$data);
+        
+        if(isset($case_view['status']) && $case_view['status'] == 'success'){
+            $response['status'] = true;
+            $response['message'] = $case_view['message'];
+        }else{
+            $response['status'] = false;
+            $response['message'] = $case_view['message'];
+        }
+        return response()->json($response);
+    }
+
+    public function moveToProfessional($case_id,$folder_id,$subdomain){
+        $data['case_id'] = $case_id;
+        $case = professionalCurl('cases/documents',$subdomain,$data);
+  
+        $record = array();
+        $service = array();
+        $case_folders = array();
+        $documents = array();
+       
+        if(isset($case['status']) && $case['status'] == 'success'){
+            $case_data = $case['data'];
+            $service = $case_data['service'];
+            $case_folders = $case_data['case_folders'];
+            $documents = $case_data['documents'];
+        }
+        $viewData['pageTitle'] = "Move files to Professional";
+        $viewData['documents'] = $documents;
+        $viewData['case_folders'] = $case_folders;
+        $viewData['service'] = $service;
+        $viewData['case_id'] = $case_id;
+        $viewData['folder_id'] = $folder_id;
+        $viewData['subdomain'] = $subdomain;
+        $view = View::make(roleFolder().'.cases.modal.move-to-professional',$viewData);
+        $contents = $view->render();
+        $response['contents'] = $contents;
+        $response['status'] = true;
+        return response()->json($response);    
+    }
+
+    public function copyToProfessional($case_id,$user_folder_id,$subdomain,Request $request){
+        $file_ids = $request->input("file_ids");
+        $folder_id = $request->input("folder_id");
+        $data = array();
+        $data['case_id'] = $case_id;
+        $data['file_ids'] = $file_ids;
+        $data['user_folder_id'] = $user_folder_id;
+        $data['folder_id'] = $folder_id;
+        $data['file_ids'] = $file_ids;
+        $data['client_id'] = \Auth::user()->unique_id;
+     
+        $apiData = professionalCurl('cases/copy-to-professional',$subdomain,$data);
+        
+        if(isset($apiData['status']) && $apiData['status'] == 'success'){
+            $response['status'] = true;
+            $response['message'] = $apiData['message'];
+        }else{
+            $response['status'] = false;
+            $response['message'] = $apiData['message'];
+        }
+        return response()->json($response); 
     }
 
 }

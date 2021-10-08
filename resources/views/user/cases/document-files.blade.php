@@ -339,6 +339,9 @@
       $('.js-hs-action').each(function () {
        var unfold = new HSUnfold($(this)).init();
       });
+      $('.js-hs-unfold-invoker').each(function () {
+          var unfold = new HSUnfold($(this)).init();
+      });
       $(".row-checkbox").change(function(){
          if($(".row-checkbox:checked").length > 0){
             $("#datatableCounterInfo").show();

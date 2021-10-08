@@ -35,7 +35,7 @@
 <div class="navbar-nav-wrap">
 <div class="navbar-brand-wrapper">
 <!-- Logo -->
-<a class="navbar-brand" href="./index.html" aria-label="Front">
+<a class="navbar-brand" href="javascript:;" aria-label="Front">
   <img class="navbar-brand-logo" src="assets/svg/logos/logo.svg" alt="Logo">
   <img class="navbar-brand-logo-mini" src="assets/svg/logos/logo-short.svg" alt="Logo">
 </a>
@@ -84,12 +84,12 @@
 
         <div class="dropdown-item bg-transparent text-wrap my-2">
           <span class="h4 mr-1">
-            <a class="btn btn-xs btn-soft-dark btn-pill" href="./index.html">
+            <a class="btn btn-xs btn-soft-dark btn-pill" href="javascript:;">
               Gulp <i class="tio-search ml-1"></i>
             </a>
           </span>
           <span class="h4">
-            <a class="btn btn-xs btn-soft-dark btn-pill" href="./index.html">
+            <a class="btn btn-xs btn-soft-dark btn-pill" href="javascript:;">
               Notification panel <i class="tio-search ml-1"></i>
             </a>
           </span>
@@ -99,7 +99,7 @@
 
         <small class="dropdown-header mb-n2">Tutorials</small>
 
-        <a class="dropdown-item my-2" href="./index.html">
+        <a class="dropdown-item my-2" href="javascript:;">
           <div class="media align-items-center">
             <span class="icon icon-xs icon-soft-dark icon-circle mr-2">
               <i class="tio-tune"></i>
@@ -111,7 +111,7 @@
           </div>
         </a>
 
-        <a class="dropdown-item my-2" href="./index.html">
+        <a class="dropdown-item my-2" href="javascript:;">
           <div class="media align-items-center">
             <span class="icon icon-xs icon-soft-dark icon-circle mr-2">
               <i class="tio-paint-bucket"></i>
@@ -127,7 +127,7 @@
 
         <small class="dropdown-header mb-n2">Members</small>
 
-        <a class="dropdown-item my-2" href="./index.html">
+        <a class="dropdown-item my-2" href="javascript:;">
           <div class="media align-items-center">
             <img class="avatar avatar-xs avatar-circle mr-2" src="assets/img/160x160/img10.jpg" alt="Image Description">
             <div class="media-body text-truncate">
@@ -136,7 +136,7 @@
           </div>
         </a>
 
-        <a class="dropdown-item my-2" href="./index.html">
+        <a class="dropdown-item my-2" href="javascript:;">
           <div class="media align-items-center">
             <img class="avatar avatar-xs avatar-circle mr-2" src="assets/img/160x160/img3.jpg" alt="Image Description">
             <div class="media-body text-truncate">
@@ -145,7 +145,7 @@
           </div>
         </a>
 
-        <a class="dropdown-item my-2" href="./index.html">
+        <a class="dropdown-item my-2" href="javascript:;">
           <div class="media align-items-center">
             <div class="avatar avatar-xs avatar-soft-info avatar-circle mr-2">
               <span class="avatar-initials">A</span>
@@ -159,7 +159,7 @@
       <!-- End Body -->
 
       <!-- Footer -->
-      <a class="card-footer text-center" href="./index.html">
+      <a class="card-footer text-center" href="javascript:;">
         See all results
         <i class="tio-chevron-right"></i>
       </a>

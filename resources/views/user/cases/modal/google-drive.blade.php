@@ -33,7 +33,7 @@
           </ol>
         </nav>
         <div class="row" id="main-folders">
-          @foreach($drive_folders as $folder)
+          @foreach($drive_folders as $key => $folder)
             <div class="col-md-2 mb-3">
                 @if($folder['mimetype'] == 'application/vnd.google-apps.folder')
                   <div class="card folder-block h-100" onclick="fetch_google_drive('{{$folder['id']}}','{{$folder['name']}}')" data-type="folder" data-id="{{$folder['id']}}" data-name="{{$folder['name']}}">
@@ -51,7 +51,7 @@
                   <div class="card folder-block h-100" data-type="file" data-id="{{$folder['id']}}" data-name="{{$folder['name']}}">
                     <div class="card-body text-center">
                       <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input row-checkbox" value="{{ base64_encode($record->id) }}" id="row-{{$key}}">
+                        <input type="checkbox" class="custom-control-input row-checkbox" value="{{ base64_encode($folder['id']) }}" id="row-{{$key}}">
                         <label class="custom-control-label" for="row-{{$key}}"></label>
                       </div>
                       <div class="app-icon">

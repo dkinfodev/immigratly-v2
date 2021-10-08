@@ -26,92 +26,30 @@
 }
 </style>
 @endsection
+@section('pageheader')
+<!-- Content -->
+<div class="">
+    <div class="content container" style="height: 25rem;">
+        <!-- Page Header -->
+        <div class="page-header page-header-light page-header-reset">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h1 class="page-header-title">{{$pageTitle}}</h1>
+                </div>
+            </div>
+            <!-- End Row -->
+        </div>
+        <!-- End Page Header -->
+    </div>
+</div>
+<!-- End Content -->
+@endsection
 @section('content')
 <!-- Content -->
 <!-- Content -->
-<div class="content container-fluid">
+<div class="files">
     <!-- Page Header -->
-    <div class="page-header">
-        <div class="row align-items-end mb-3">
-            <div class="col-sm mb-2 mb-sm-0">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb breadcrumb-no-gutter">
-                        <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a>
-                        </li>
-                        <li class="breadcrumb-item"><a class="breadcrumb-link"
-                                href="{{ baseUrl('/documents') }}">Documents</a></li>
-                        <li class="breadcrumb-item active font-weight-bold" aria-current="page">{{$pageTitle}}</li>
-                    </ol>
-                </nav>
-                <h1 class="page-header-title">{{$pageTitle}}</h1>
-            </div>
-            <div class="col-sm-auto">
-                <div role="group">
-                    @if($user_detail->dropbox_auth != '')
-                    <a class="btn btn-outline-primary"
-                        onclick="showPopup('<?php echo baseUrl('documents/dropbox/folder/'.$document->unique_id) ?>')"
-                        href="javascript:;"><i class="tio-google-drive mr-1"></i> Upload from Dropbox</a>
-                    @endif
-                    @if($user_detail->google_drive_auth != '')
-                    <a class="btn btn-outline-primary"
-                        onclick="showPopup('<?php echo baseUrl('documents/google-drive/folder/'.$document->unique_id) ?>')"
-                        href="javascript:;"><i class="tio-google-drive mr-1"></i> Upload from Google Drive</a>
-                    @endif
-                    <a class="upload-btn btn btn-info collapsed" href="javascript:;" data-toggle="collapse" data-target="#collapseOne"
-                        aria-expanded="true" aria-controls="collapseOne"><i class="tio-upload-on-cloud mr-1"></i>
-                        Upload
-                        <span class="ml-2 card-btn-toggle">
-                            <i class="fa fa-plus plus text-white"></i>
-                            <i class="fa fa-minus minus text-white"></i>
-                        </span>
-                    </a>
-                    <a class="btn btn-primary" href="{{ baseUrl('/documents') }}">Back</a>
-                </div>
-            </div>
-        </div>
-        <div id="collapseOne" class="collapse" aria-labelledby="headingOne">
-            <div class="card-body">
-                <div class="float-right">
-                    <button type="button" onclick="clearDropzone()" class="btn btn-outline-danger mb-3"><i class="tio-delete"></i> Clear Files</button>
-                </div>
-                <div class="clearfix"></div>
-                <!-- Dropzone -->
-                <div id="attachFilesLabel" class="js-dropzone dropzone-custom custom-file-boxed"
-                    data-hs-dropzone-options='{
-                  "url": "<?php echo baseUrl('documents/files/upload-documents') ?>?_token=<?php echo csrf_token() ?>&folder_id=<?php echo $document->unique_id ?>",
-                  "thumbnailWidth": 100,
-                  "thumbnailHeight": 100,
-                  "maxFilesize":18,
-                  "acceptedFiles":"{{$ext_files}}"
-               }'>
-                    <div class="dz-message custom-file-boxed-label">
-                        <img class="avatar avatar-xl avatar-4by3 mb-3" src="./assets/svg/illustrations/browse.svg"
-                            alt="Image Description">
-                        <h5 class="mb-1">Drag and drop your file here</h5>
-                        <p class="mb-2">or</p>
-                        <span class="btn btn-sm btn-white">Browse files</span>
-                    </div>
-                </div>
-                <!-- End Dropzone -->
-            </div>
-        </div>
-        <!-- End Row -->
-        <!-- Nav -->
-        <!-- Nav -->
-        <div class="js-nav-scroller hs-nav-scroller-horizontal">
-            <span class="hs-nav-scroller-arrow-prev" style="display: none;">
-                <a class="hs-nav-scroller-arrow-link" href="javascript:;">
-                    <i class="tio-chevron-left"></i>
-                </a>
-            </span>
-            <span class="hs-nav-scroller-arrow-next" style="display: none;">
-                <a class="hs-nav-scroller-arrow-link" href="javascript:;">
-                    <i class="tio-chevron-right"></i>
-                </a>
-            </span>
-        </div>
-        <!-- End Nav -->
-    </div>
+  
     <!-- End Page Header -->
     <!-- Card -->
     <div class="card">
@@ -194,8 +132,8 @@
         <!-- End Header -->
         <!-- Table -->
 
-        <div class="table-responsive datatable-custom">
-            <table id="datatable" class="table table-borderless table-thead-bordered card-table">
+        <div class="datatable-custom">
+            <table class="datatable table table-borderless table-thead-bordered card-table">
                 <thead class="thead-light">
                     <tr>
                         <th scope="col" class="table-column-pr-0">
@@ -210,9 +148,7 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody>
-
-                </tbody>
+                <tbody></tbody>
             </table>
 
             
@@ -228,8 +164,8 @@
 <script src="assets/vendor/dropzone/dist/min/dropzone.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
-    
-    
+    initSelect();
+    loadData();
     $("#datatableSearch").blur(function(){
        if($("#datatableSearch").val() == ''){
           loadData();
@@ -324,7 +260,7 @@ function loadData() {
         },
         success: function(data) {
             if (data.status == true) {
-                $("#datatable tbody").html(data.contents);
+                $(".datatable tbody").html(data.contents);
                
                 $(".row-checkbox").change(function() {
                     if ($(".row-checkbox:checked").length > 0) {

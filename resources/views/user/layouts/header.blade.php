@@ -4,8 +4,8 @@
         <div class="navbar-nav-wrap">
           <div class="navbar-brand-wrapper">
             <!-- Logo -->
-            <a class="navbar-brand" href="./index.html" aria-label="Front">
-              <img class="navbar-brand-logo" src="assets/dashboard/svg/logos/logo-white.svg" alt="Logo">
+            <a class="navbar-brand" href="{{ url('/') }}" aria-label="Front">
+              <img class="navbar-brand-logo" src="assets/svg/logos/logo-white.svg" alt="Logo">
             </a>
             <!-- End Logo -->
           </div>
@@ -114,7 +114,7 @@
                                       <span class="custom-checkbox-list-stretched-bg"></span>
                                     </div>
                                     <div class="avatar avatar-sm avatar-circle">
-                                      <img class="avatar-img" src="assets/dashboard/img/160x160/img3.jpg" alt="Image Description">
+                                      <img class="avatar-img" src="assets/img/160x160/img3.jpg" alt="Image Description">
                                     </div>
                                   </div>
                                 </div>
@@ -146,7 +146,7 @@
                                     <span class="custom-checkbox-list-stretched-bg"></span>
                                   </div>
                                   <div class="avatar avatar-sm avatar-circle">
-                                    <img class="avatar-img" src="assets/dashboard/img/160x160/img3.jpg" alt="Image Description">
+                                    <img class="avatar-img" src="assets/img/160x160/img3.jpg" alt="Image Description">
                                   </div>
                                 </div>
                               </div>
@@ -180,102 +180,6 @@
                 <!-- End Notification -->
               </li>
 
-              <li class="nav-item d-none d-sm-inline-block">
-                <!-- Apps -->
-                <div class="hs-unfold">
-                  <a class="js-hs-unfold-invoker btn btn-icon btn-ghost-light rounded-circle" href="javascript:;"
-                     data-hs-unfold-options='{
-                       "target": "#appsNavbarDropdown",
-                       "type": "css-animation"
-                     }'>
-                    <i class="tio-menu-vs-outlined"></i>
-                  </a>
-
-                  <div id="appsNavbarDropdown" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right navbar-dropdown-menu" style="width: 25rem;">
-                    <!-- Header -->
-                    <div class="card-header">
-                      <span class="card-title h4">Web apps &amp; services</span>
-                    </div>
-                    <!-- End Header -->
-
-                    <!-- Body -->
-                    <div class="card-body card-body-height">
-                      <!-- Nav -->
-                      <div class="nav nav-pills flex-column">
-                        <a class="nav-link" href="#">
-                          <div class="media align-items-center">
-                            <span class="mr-3">
-                              <img class="avatar avatar-xs" src="assets/dashboard/svg/brands/atlassian.svg" alt="Image Description">
-                            </span>
-                            <div class="media-body text-truncate">
-                              <span class="h5 mb-0">Atlassian</span>
-                              <span class="d-block font-size-sm text-body">Security and control across Cloud</span>
-                            </div>
-                          </div>
-                        </a>
-
-                        <a class="nav-link" href="#">
-                          <div class="media align-items-center">
-                            <span class="mr-3">
-                              <img class="avatar avatar-xs" src="assets/dashboard/svg/brands/slack.svg" alt="Image Description">
-                            </span>
-                            <div class="media-body text-truncate">
-                              <span class="h5 mb-0">Slack <span class="badge badge-primary badge-pill text-uppercase ml-1">Try</span></span>
-                              <span class="d-block font-size-sm text-body">Email collaboration software</span>
-                            </div>
-                          </div>
-                        </a>
-
-                        <a class="nav-link" href="#">
-                          <div class="media align-items-center">
-                            <span class="mr-3">
-                              <img class="avatar avatar-xs" src="assets/dashboard/svg/brands/frontapp.svg" alt="Image Description">
-                            </span>
-                            <div class="media-body text-truncate">
-                              <span class="h5 mb-0">Frontapp</span>
-                              <span class="d-block font-size-sm text-body">The inbox for teams</span>
-                            </div>
-                          </div>
-                        </a>
-
-                        <a class="nav-link" href="#">
-                          <div class="media align-items-center">
-                            <span class="mr-3">
-                              <img class="avatar avatar-xs" src="assets/dashboard/svg/illustrations/review-rating-shield.svg" alt="Image Description">
-                            </span>
-                            <div class="media-body text-truncate">
-                              <span class="h5 mb-0">HS Support</span>
-                              <span class="d-block font-size-sm text-body">Customer service and support</span>
-                            </div>
-                          </div>
-                        </a>
-
-                        <a class="nav-link" href="#">
-                          <div class="media align-items-center">
-                            <span class="avatar avatar-xs avatar-soft-dark mr-3">
-                              <span class="avatar-initials"><i class="tio-apps"></i></span>
-                            </span>
-                            <div class="media-body text-truncate">
-                              <span class="h5 mb-0">More Front products</span>
-                              <span class="d-block font-size-sm text-body">Check out more HS products</span>
-                            </div>
-                          </div>
-                        </a>
-                      </div>
-                      <!-- End Nav -->
-                    </div>
-                    <!-- End Body -->
-
-                    <!-- Footer -->
-                    <a class="card-footer text-center" href="#">
-                      View all apps
-                      <i class="tio-chevron-right"></i>
-                    </a>
-                    <!-- End Footer -->
-                  </div>
-                </div>
-                <!-- End Apps -->
-              </li>
 
               <li class="nav-item d-none d-sm-inline-block">
                 <!-- Activity -->
@@ -304,7 +208,7 @@
                        "type": "css-animation"
                      }'>
                     <div class="avatar avatar-sm avatar-circle">
-                      <img class="avatar-img" src="assets/dashboard/img/160x160/img6.jpg" alt="Image Description">
+                      <img class="avatar-img" src="{{ userProfile('','t') }}" alt="Image Description">
                       <span class="avatar-status avatar-sm-status avatar-status-success"></span>
                     </div>
                   </a>
@@ -313,108 +217,29 @@
                     <div class="dropdown-item-text">
                       <div class="media align-items-center">
                         <div class="avatar avatar-sm avatar-circle mr-2">
-                          <img class="avatar-img" src="assets/dashboard/img/160x160/img6.jpg" alt="Image Description">
+                          <img class="avatar-img" src="{{ userProfile('','t') }}" alt="Image Description">
                         </div>
                         <div class="media-body">
-                          <span class="card-title h5">Mark Williams</span>
-                          <span class="card-text">mark@example.com</span>
+                            <span class="card-title h5">{{ Auth::user()->first_name." ".Auth::user()->last_name }}</span>
+                            <span class="card-text">{{Auth::user()->email}}</span>
                         </div>
                       </div>
                     </div>
 
                     <div class="dropdown-divider"></div>
-
-                    <!-- Unfold -->
-                    <div class="hs-unfold w-100">
-                      <a class="js-hs-unfold-invoker navbar-dropdown-submenu-item dropdown-item d-flex align-items-center" href="javascript:;"
-                         data-hs-unfold-options='{
-                           "target": "#navSubmenuPagesAccountDropdown1",
-                           "event": "hover"
-                         }'>
-                        <span class="text-truncate pr-2" title="Set status">Set status</span>
-                        <i class="tio-chevron-right navbar-dropdown-submenu-item-invoker ml-auto"></i>
-                      </a>
-
-                      <div id="navSubmenuPagesAccountDropdown1" class="hs-unfold-content hs-unfold-has-submenu dropdown-unfold dropdown-menu navbar-dropdown-sub-menu">
-                        <a class="dropdown-item" href="#">
-                          <span class="legend-indicator bg-success mr-1"></span>
-                          <span class="text-truncate pr-2" title="Available">Available</span>
-                        </a>
-                        <a class="dropdown-item" href="#">
-                          <span class="legend-indicator bg-danger mr-1"></span>
-                          <span class="text-truncate pr-2" title="Busy">Busy</span>
-                        </a>
-                        <a class="dropdown-item" href="#">
-                          <span class="legend-indicator bg-warning mr-1"></span>
-                          <span class="text-truncate pr-2" title="Away">Away</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">
-                          <span class="text-truncate pr-2" title="Reset status">Reset status</span>
-                        </a>
-                      </div>
-                    </div>
-                    <!-- End Unfold -->
-
-                    <a class="dropdown-item" href="#">
-                      <span class="text-truncate pr-2" title="Profile &amp; account">Profile &amp; account</span>
+                    <a class="dropdown-item" href="{{baseUrl('edit-profile')}}">
+                      <span class="text-truncate pr-2" title="Edit Profile">Edit Profile</span>
                     </a>
-
-                    <a class="dropdown-item" href="#">
-                      <span class="text-truncate pr-2" title="Settings">Settings</span>
+                    <a class="dropdown-item" href="{{baseUrl('cv')}}">
+                      <span class="text-truncate pr-2" title="Manage CV">Manage CV</span>
                     </a>
-
+                    <a class="dropdown-item" href="{{baseUrl('change-password')}}">
+                      <span class="text-truncate pr-2" title="Change Password">Change Password</span>
+                    </a>
                     <div class="dropdown-divider"></div>
 
-                    <a class="dropdown-item" href="#">
-                      <div class="media align-items-center">
-                        <div class="avatar avatar-sm avatar-dark avatar-circle mr-2">
-                          <span class="avatar-initials">HS</span>
-                        </div>
-                        <div class="media-body">
-                          <span class="card-title h5">Htmlstream <span class="badge badge-primary badge-pill text-uppercase ml-1">PRO</span></span>
-                          <span class="card-text">hs.example.com</span>
-                        </div>
-                      </div>
-                    </a>
-
-                    <div class="dropdown-divider"></div>
-
-                    <!-- Unfold -->
-                    <div class="hs-unfold w-100">
-                      <a class="js-hs-unfold-invoker navbar-dropdown-submenu-item dropdown-item d-flex align-items-center" href="javascript:;"
-                         data-hs-unfold-options='{
-                           "target": "#navSubmenuPagesAccountDropdown2",
-                           "event": "hover"
-                         }'>
-                        <span class="text-truncate pr-2" title="Customization">Customization</span>
-                        <i class="tio-chevron-right navbar-dropdown-submenu-item-invoker  ml-auto"></i>
-                      </a>
-
-                      <div id="navSubmenuPagesAccountDropdown2" class="hs-unfold-content hs-unfold-has-submenu dropdown-unfold dropdown-menu navbar-dropdown-sub-menu">
-                        <a class="dropdown-item" href="#">
-                          <span class="text-truncate pr-2" title="Invite people">Invite people</span>
-                        </a>
-                        <a class="dropdown-item" href="#">
-                          <span class="text-truncate pr-2" title="Analytics">Analytics</span>
-                          <i class="tio-open-in-new"></i>
-                        </a>
-                        <a class="dropdown-item" href="#">
-                          <span class="text-truncate pr-2" title="Customize Front">Customize Front</span>
-                          <i class="tio-open-in-new"></i>
-                        </a>
-                      </div>
-                    </div>
-                    <!-- End Unfold -->
-
-                    <a class="dropdown-item" href="#">
-                      <span class="text-truncate pr-2" title="Manage team">Manage team</span>
-                    </a>
-
-                    <div class="dropdown-divider"></div>
-
-                    <a class="dropdown-item" href="#">
-                      <span class="text-truncate pr-2" title="Sign out">Sign out</span>
+                    <a class="dropdown-item" href="{{ url('logout') }}">
+                      <span class="text-truncate pr-2 text-danger" title="Sign out">Sign out</span>
                     </a>
                   </div>
                 </div>
@@ -451,7 +276,7 @@
                 <!-- Dropdown -->
                 <ul id="navLinkDashboardsDropdown" class="hs-sub-menu dropdown-menu dropdown-menu-lg" aria-labelledby="dashboardsDropdown" style="min-width: 16rem;">
                   <li>
-                    <a class="dropdown-item" href="./index.html">
+                    <a class="dropdown-item" href="{{ url('/') }}">
                       <span class="tio-circle nav-indicator-icon"></span> Default
                     </a>
                   </li>

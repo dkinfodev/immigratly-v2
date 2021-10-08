@@ -23,7 +23,7 @@
   <div class="row gx-2 gx-lg-3">
     <div class="col-md-12">
       <!-- Table -->
-      <div class="table-responsive datatable-custom">
+      <div class="datatable-custom">
         <table id="datatable" class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
               data-hs-datatables-options='{
                 "order": [],
@@ -56,6 +56,7 @@
               if(isset($cases['status']) && $cases['status'] == "success"){
               foreach($cases['data'] as $key => $record){
             ?>
+            @if(!empty($record['MainService']))
             <tr>
               <!--<td class="table-column-pr-0">-->
               <!--  <div class="custom-control custom-checkbox">-->
@@ -78,7 +79,7 @@
                     <span class="avatar-initials">UN</span>
                   </div>
                   @endif
-                  <!-- <img class="avatar" src="assets/dashboard/svg/brands/capsule.svg" alt="Image Description"> -->
+                  <!-- <img class="avatar" src="assets/svg/brands/capsule.svg" alt="Image Description"> -->
                   <div class="ml-3">
                     <span class="d-block h5 text-hover-primary mb-0">{{ $record['case_title'] }}</span>
                     <span class="d-block font-size-sm text-body">Created on {{ dateFormat($record['created_at']) }}</span>
@@ -170,6 +171,7 @@
                 </div>
               </td>
             </tr>
+            @endif
             <?php } 
               }
             }
@@ -196,7 +198,7 @@
 @endsection
 
 @section('javascript')
-<script src="assets/dashboard/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
+<script src="assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
 <script>
   $('.js-nav-tooltip-link').tooltip({ boundary: 'window' });
   $(document).on('ready', function () {

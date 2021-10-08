@@ -41,6 +41,7 @@ class FrontendController extends Controller
     }
 
     public function index(){
+        return redirect("signup/user");
         // $data['database'] = base64_encode("immigrat_main_immigratly");
         // $data['username'] = base64_encode("immigrat_immigratly");
         // $data['password'] = base64_encode("PHx#t;qv1p]S");
@@ -458,6 +459,7 @@ class FrontendController extends Controller
                 \Session::put("verify_code",$verify_code);
                 $response['status'] = true;
                 $response['message'] = "Check your email for verfication code";
+                $response['otp'] = $verify_code;
             }else{
                 $response['status'] = true;
                 $response['verify_code'] = $verify_code;

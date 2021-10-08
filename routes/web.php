@@ -878,9 +878,16 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
         });
         Route::group(array('prefix' => 'documents'), function () {
             Route::get('/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'caseDocuments']);
+            Route::get('/move-to-professional/{case_id}/{folder_id}/{subdomain}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'moveToProfessional']);
+            Route::post('/move-to-professional/{case_id}/{folder_id}/{subdomain}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'copyToProfessional']);
             Route::get('/default/{subdomain}/{case_id}/{folder_id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'defaultDocuments']);
             Route::get('/other/{subdomain}/{case_id}/{folder_id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'otherDocuments']);
             Route::get('/extra/{subdomain}/{case_id}/{folder_id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'extraDocuments']);
+            Route::post('/copy-folder-to-extra', [App\Http\Controllers\User\ProfessionalCasesController::class, 'copyFolderToExtra']);
+            Route::post('/fetch-documents', [App\Http\Controllers\User\ProfessionalCasesController::class, 'fetchDocuments']);
+            Route::post('/fetch-user-documents', [App\Http\Controllers\User\ProfessionalCasesController::class, 'fetchUserDocuments']);
+            Route::get('/remove-case-folder/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'removeCaseFolder']);
+            
             Route::get('/file-move-to/{subdomain}/{case_id}/{doc_id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'fileMoveTo']);
             Route::get('/delete/{subdomain}/{doc_id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'deleteDocument']);
             Route::post('/delete-multiple', [App\Http\Controllers\User\ProfessionalCasesController::class, 'deleteMultipleDocuments']);
