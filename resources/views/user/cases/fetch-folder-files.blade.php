@@ -63,9 +63,9 @@
     </div>
 </div>
 
-<link rel="stylesheet" href="assets/vendor/mCustomScrollbar/jquery.mCustomScrollbar.css" />
-<script src="assets/vendor/mCustomScrollbar/jquery.mCustomScrollbar.min.js"></script>
-<script src="assets/vendor/dropzone/dist/min/dropzone.min.js"></script>
+<!-- <link rel="stylesheet" href="assets/vendor/mCustomScrollbar/jquery.mCustomScrollbar.css" /> -->
+<!-- <script src="assets/vendor/mCustomScrollbar/jquery.mCustomScrollbar.min.js"></script> -->
+<!-- <script src="assets/vendor/dropzone/dist/min/dropzone.min.js"></script> -->
 <script type="text/javascript">
 
    $(document).ready(function(){

@@ -160,7 +160,7 @@ class ProfessionalCasesController extends Controller
         $document = array();
         $case_documents = array();
         
-        $api_response = professionalCurl('cases/default-documents',$subdomain,$data,true);
+        $api_response = professionalCurl('cases/default-documents',$subdomain,$data);
         
         $result = $api_response['data'];
 

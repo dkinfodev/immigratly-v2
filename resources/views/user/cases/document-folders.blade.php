@@ -4,23 +4,28 @@
     padding: 16px;
     border-bottom: 1px solid #ddd;
 }
+
 .sub_services li {
     border-bottom: none;
 }
-.document-exchange{
-  cursor: move;
-  padding: 10px 0px;
+
+.document-exchange {
+    cursor: move;
+    padding: 10px 0px;
 }
-.droppable{
-  min-height: 65px;
+
+.droppable {
+    min-height: 65px;
 }
+
 .document-drop {
     list-style: none;
     padding: 10px 0px;
     border: 0.0625rem solid #e7eaf3;
 }
+
 .professional-request-folders .folder-label-professional {
-  
+
     z-index: 10 !important;
 }
 </style>
@@ -45,556 +50,492 @@
 @section('content')
 <!-- Page Header -->
 @include(roleFolder().'.cases.case-navbar')
+<div class="row">
+    <div class="col-lg-9 mb-5 mb-lg-0">
+        <h2 class="h4 mb-3">Pinned access <i class="tio-help-outlined text-muted" data-toggle="tooltip"
+                data-placement="right" title="Pinned access to files you've been working on."></i></h2>
+        <!-- Pinned Access -->
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 mb-5">
+            <div class="col mb-3 mb-lg-5">
+                <!-- Card -->
+                <a class="card card-sm card-hover-shadow h-100 text-center" href="#">
+                    <!-- Checkbox -->
+                    <div class="custom-control custom-checkbox-switch card-pinned">
+                        <input type="checkbox" id="starredCheckbox1"
+                            class="custom-control-input custom-checkbox-switch-input" checked>
+                        <label class="custom-checkbox-switch-label btn-icon btn-xs rounded-circle"
+                            for="starredCheckbox1">
+                            <span class="custom-checkbox-switch-default" data-toggle="tooltip" data-placement="top"
+                                title="Pin">
+                                <i class="tio-star-outlined"></i>
+                            </span>
+                            <span class="custom-checkbox-switch-active" data-toggle="tooltip" data-placement="top"
+                                title="Pinned">
+                                <i class="tio-star"></i>
+                            </span>
+                        </label>
+                    </div>
+                    <!-- End Checkbox -->
+                    <div class="card-body">
+                        <img class="avatar avatar-4by3" src="assets/svg/folder-files.svg" alt="Image Description">
+                    </div>
 
-<div class="col-lg-9 mb-5 mb-lg-0">
-    <h2 class="h4 mb-3">Pinned access <i class="tio-help-outlined text-muted" data-toggle="tooltip"
-            data-placement="right" title="Pinned access to files you've been working on."></i></h2>
-    <!-- Pinned Access -->
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 mb-5">
-        <div class="col mb-3 mb-lg-5">
-            <!-- Card -->
-            <a class="card card-sm card-hover-shadow h-100 text-center" href="#">
-                <!-- Checkbox -->
-                <div class="custom-control custom-checkbox-switch card-pinned">
-                    <input type="checkbox" id="starredCheckbox1"
-                        class="custom-control-input custom-checkbox-switch-input" checked>
-                    <label class="custom-checkbox-switch-label btn-icon btn-xs rounded-circle" for="starredCheckbox1">
-                        <span class="custom-checkbox-switch-default" data-toggle="tooltip" data-placement="top"
-                            title="Pin">
-                            <i class="tio-star-outlined"></i>
-                        </span>
-                        <span class="custom-checkbox-switch-active" data-toggle="tooltip" data-placement="top"
-                            title="Pinned">
-                            <i class="tio-star"></i>
-                        </span>
-                    </label>
-                </div>
-                <!-- End Checkbox -->
-                <div class="card-body">
-                    <img class="avatar avatar-4by3" src="assets/svg/folder-files.svg" alt="Image Description">
-                </div>
 
+                    <div class="card-footer border-top-0">
+                        <span class="d-block font-size-sm text-muted mb-1">1 files</span>
+                        <h5>Screenshots from Figma</h5>
+                    </div>
+                </a>
+                <!-- End Card -->
+            </div>
 
-                <div class="card-footer border-top-0">
-                    <span class="d-block font-size-sm text-muted mb-1">1 files</span>
-                    <h5>Screenshots from Figma</h5>
-                </div>
-            </a>
-            <!-- End Card -->
+            <div class="col mb-3 mb-lg-5">
+                <!-- Card -->
+                <a class="card card-sm card-hover-shadow h-100 text-center" href="#">
+                    <!-- Checkbox -->
+                    <div class="custom-control custom-checkbox-switch card-pinned">
+                        <input type="checkbox" id="starredCheckbox2"
+                            class="custom-control-input custom-checkbox-switch-input" checked>
+                        <label class="custom-checkbox-switch-label btn-icon btn-xs rounded-circle"
+                            for="starredCheckbox2">
+                            <span class="custom-checkbox-switch-default" data-toggle="tooltip" data-placement="top"
+                                title="Pin">
+                                <i class="tio-star-outlined"></i>
+                            </span>
+                            <span class="custom-checkbox-switch-active" data-toggle="tooltip" data-placement="top"
+                                title="Pinned">
+                                <i class="tio-star"></i>
+                            </span>
+                        </label>
+                    </div>
+                    <!-- End Checkbox -->
+
+                    <div class="card-body">
+                        <img class="avatar avatar-4by3" src="assets/svg/folder.svg" alt="Image Description">
+                    </div>
+
+                    <div class="card-footer border-top-0">
+                        <span class="d-block font-size-sm text-muted mb-1">0 files</span>
+                        <h5>Early audit sheets for last year</h5>
+                    </div>
+                </a>
+                <!-- End Card -->
+            </div>
+
+            <div class="col mb-3 mb-lg-5">
+                <!-- Card -->
+                <a class="card card-sm card-hover-shadow h-100 text-center" href="#">
+                    <!-- Checkbox -->
+                    <div class="custom-control custom-checkbox-switch card-pinned">
+                        <input type="checkbox" id="starredCheckbox3"
+                            class="custom-control-input custom-checkbox-switch-input" checked>
+                        <label class="custom-checkbox-switch-label btn-icon btn-xs rounded-circle"
+                            for="starredCheckbox3">
+                            <span class="custom-checkbox-switch-default" data-toggle="tooltip" data-placement="top"
+                                title="Pin">
+                                <i class="tio-star-outlined"></i>
+                            </span>
+                            <span class="custom-checkbox-switch-active" data-toggle="tooltip" data-placement="top"
+                                title="Pinned">
+                                <i class="tio-star"></i>
+                            </span>
+                        </label>
+                    </div>
+                    <!-- End Checkbox -->
+
+                    <div class="card-body">
+                        <img class="avatar avatar-4by3" src="assets/svg/folder-files.svg" alt="Image Description">
+                    </div>
+
+                    <div class="card-footer border-top-0">
+                        <span class="d-block font-size-sm text-muted mb-1">27 files</span>
+                        <h5>Article images</h5>
+                    </div>
+                </a>
+                <!-- End Card -->
+            </div>
+
+            <div class="col mb-3 mb-lg-5">
+                <!-- Card -->
+                <a class="card card-sm card-hover-shadow h-100 text-center" href="#">
+                    <!-- Checkbox -->
+                    <div class="custom-control custom-checkbox-switch card-pinned">
+                        <input type="checkbox" id="starredCheckbox4"
+                            class="custom-control-input custom-checkbox-switch-input" checked>
+                        <label class="custom-checkbox-switch-label btn-icon btn-xs rounded-circle"
+                            for="starredCheckbox4">
+                            <span class="custom-checkbox-switch-default" data-toggle="tooltip" data-placement="top"
+                                title="Pin">
+                                <i class="tio-star-outlined"></i>
+                            </span>
+                            <span class="custom-checkbox-switch-active" data-toggle="tooltip" data-placement="top"
+                                title="Pinned">
+                                <i class="tio-star"></i>
+                            </span>
+                        </label>
+                    </div>
+                    <!-- End Checkbox -->
+
+                    <div class="card-body">
+                        <img class="avatar avatar-4by3" src="assets/svg/folder-files.svg" alt="Image Description">
+                    </div>
+
+                    <div class="card-footer border-top-0">
+                        <span class="d-block font-size-sm text-muted mb-1">8 files</span>
+                        <h5>Solving product design exercises</h5>
+                    </div>
+                </a>
+                <!-- End Card -->
+            </div>
         </div>
+        <!-- End Pinned Access -->
 
-        <div class="col mb-3 mb-lg-5">
-            <!-- Card -->
-            <a class="card card-sm card-hover-shadow h-100 text-center" href="#">
-                <!-- Checkbox -->
-                <div class="custom-control custom-checkbox-switch card-pinned">
-                    <input type="checkbox" id="starredCheckbox2"
-                        class="custom-control-input custom-checkbox-switch-input" checked>
-                    <label class="custom-checkbox-switch-label btn-icon btn-xs rounded-circle" for="starredCheckbox2">
-                        <span class="custom-checkbox-switch-default" data-toggle="tooltip" data-placement="top"
-                            title="Pin">
-                            <i class="tio-star-outlined"></i>
-                        </span>
-                        <span class="custom-checkbox-switch-active" data-toggle="tooltip" data-placement="top"
-                            title="Pinned">
-                            <i class="tio-star"></i>
-                        </span>
-                    </label>
-                </div>
-                <!-- End Checkbox -->
+        <!-- Header -->
 
-                <div class="card-body">
-                    <img class="avatar avatar-4by3" src="assets/svg/folder.svg" alt="Image Description">
-                </div>
+        <!-- End Header -->
+        @if(count($case_folders) > 0)
+        <div class="row align-items-center mb-2">
+            <div class="col">
+                <h2 class="h4 mb-0">Files</h2>
+            </div>
 
-                <div class="card-footer border-top-0">
-                    <span class="d-block font-size-sm text-muted mb-1">0 files</span>
-                    <h5>Early audit sheets for last year</h5>
-                </div>
-            </a>
-            <!-- End Card -->
+            <div class="col-auto">
+
+            </div>
         </div>
+        <!-- Tab Content -->
+        <div class="tab-content" id="professionalTabContent">
 
-        <div class="col mb-3 mb-lg-5">
-            <!-- Card -->
-            <a class="card card-sm card-hover-shadow h-100 text-center" href="#">
-                <!-- Checkbox -->
-                <div class="custom-control custom-checkbox-switch card-pinned">
-                    <input type="checkbox" id="starredCheckbox3"
-                        class="custom-control-input custom-checkbox-switch-input" checked>
-                    <label class="custom-checkbox-switch-label btn-icon btn-xs rounded-circle" for="starredCheckbox3">
-                        <span class="custom-checkbox-switch-default" data-toggle="tooltip" data-placement="top"
-                            title="Pin">
-                            <i class="tio-star-outlined"></i>
-                        </span>
-                        <span class="custom-checkbox-switch-active" data-toggle="tooltip" data-placement="top"
-                            title="Pinned">
-                            <i class="tio-star"></i>
-                        </span>
-                    </label>
-                </div>
-                <!-- End Checkbox -->
-
-                <div class="card-body">
-                    <img class="avatar avatar-4by3" src="assets/svg/folder-files.svg" alt="Image Description">
-                </div>
-
-                <div class="card-footer border-top-0">
-                    <span class="d-block font-size-sm text-muted mb-1">27 files</span>
-                    <h5>Article images</h5>
-                </div>
-            </a>
-            <!-- End Card -->
-        </div>
-
-        <div class="col mb-3 mb-lg-5">
-            <!-- Card -->
-            <a class="card card-sm card-hover-shadow h-100 text-center" href="#">
-                <!-- Checkbox -->
-                <div class="custom-control custom-checkbox-switch card-pinned">
-                    <input type="checkbox" id="starredCheckbox4"
-                        class="custom-control-input custom-checkbox-switch-input" checked>
-                    <label class="custom-checkbox-switch-label btn-icon btn-xs rounded-circle" for="starredCheckbox4">
-                        <span class="custom-checkbox-switch-default" data-toggle="tooltip" data-placement="top"
-                            title="Pin">
-                            <i class="tio-star-outlined"></i>
-                        </span>
-                        <span class="custom-checkbox-switch-active" data-toggle="tooltip" data-placement="top"
-                            title="Pinned">
-                            <i class="tio-star"></i>
-                        </span>
-                    </label>
-                </div>
-                <!-- End Checkbox -->
-
-                <div class="card-body">
-                    <img class="avatar avatar-4by3" src="assets/svg/folder-files.svg" alt="Image Description">
-                </div>
-
-                <div class="card-footer border-top-0">
-                    <span class="d-block font-size-sm text-muted mb-1">8 files</span>
-                    <h5>Solving product design exercises</h5>
-                </div>
-            </a>
-            <!-- End Card -->
-        </div>
-    </div>
-    <!-- End Pinned Access -->
-
-    <!-- Header -->
-
-    <!-- End Header -->
-    @if(count($case_folders) > 0)
-    <div class="row align-items-center mb-2">
-        <div class="col">
-            <h2 class="h4 mb-0">Files</h2>
-        </div>
-
-        <div class="col-auto">
-            
-        </div>
-    </div>
-    <!-- Tab Content -->
-    <div class="tab-content" id="professionalTabContent">
-
-        <div class="tab-pane fade show active professional-request-folders" id="list" role="tabpanel" aria-labelledby="list-tab">
-            <span class="folder-label-professional">Professional Request</span>
-            <ul class="list-group professional-request-folders-list droppable" id="accordionProfessionalDoc">
-                <!-- List Item -->
-                @foreach($case_folders as $key => $document)
-                <li class="list-group-item" data-foldername="{{$document['name']}}" data-folder="{{$document['unique_id']}}">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                            <img class="avatar avatar-xs avatar-4by3" src="assets/svg/folder-files.svg"
-                                alt="Image Description">
-                        </div>
-
-                        <div class="col" data-toggle="collapse" data-target="#collapseProfessionalDoc-{{ $key }}" aria-expanded="true" aria-controls="collapseProfessionalDoc-{{ $key }}">
-                            <a href="javascript:;" onclick="fetchFiles(this)" data-subdomain="{{$subdomain}}" data-doctype="extra" data-caseid="{{$case_id}}" data-docid="{{ $document['unique_id'] }}">
-                                <h5 class="mb-0">
-                                    {{$document['name']}}
-                                </h5>
-                                <ul class="list-inline list-separator small">
-                                    <li class="list-inline-item">{{$document['files_count']}} Files</li>
-                                    
-                                </ul>
-                            </a>
-                        </div>
-                        <div class="col-auto">
-                            @if($document['added_by'] == 'client')
-                            <a href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('cases/documents/remove-case-folder/'.$subdomain.'/'.$document['unique_id'])}}" class="btn btn-sm btn-danger js-nav-tooltip-link" data-toggle="tooltip" data-html="true" title="Delete Folder"><i class="tio-delete"></i></a>
-                            <a href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('cases/documents/remove-case-folder/'.$subdomain.'/'.$document['unique_id'])}}" class="btn btn-sm btn-primary js-nav-tooltip-link" data-toggle="tooltip" data-html="true" title="Click to Pin"><i class="tio-pin"></i></a>
-                            @endif
-                        </div>
-                        <!-- <div class="col-auto">
-                            <div class="hs-unfold">
-                                <a class="js-hs-unfold-invoker btn btn-sm btn-white" href="javascript:;"
-                                    data-hs-unfold-options='{
-                                    "target": "#profDropdown-{{$key}}",
-                                    "type": "css-animation"
-                                  }'>
-                                    <span class="d-none d-sm-inline-block mr-1">More</span>
-                                    <i class="tio-chevron-down"></i>
-                                </a>
-
-                                <div id="profDropdown-{{$key}}"
-                                    class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right"
-                                    style="min-width: 13rem;">
-                                    <span class="dropdown-header">Settings</span>
-
-                                    <a class="dropdown-item" href="#">
-                                        <i class="tio-share dropdown-item-icon"></i> Share file
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="tio-folder-add dropdown-item-icon"></i> Move to
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="tio-star-outlined dropdown-item-icon"></i> Add to stared
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="tio-edit dropdown-item-icon"></i> Rename
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="tio-download-to dropdown-item-icon"></i> Download
-                                    </a>
-
-                                    <div class="dropdown-divider"></div>
-
-                                    <a class="dropdown-item" href="#">
-                                        <i class="tio-chat-outlined dropdown-item-icon"></i> Report
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="tio-delete-outlined dropdown-item-icon"></i> Delete
-                                    </a>
-                                </div>
+            <div class="tab-pane fade show active professional-request-folders" id="list" role="tabpanel"
+                aria-labelledby="list-tab">
+                <span class="folder-label-professional">Professional Request</span>
+                <ul class="list-group professional-request-folders-list droppable" id="accordionProfessionalDoc">
+                    <!-- List Item -->
+                    @foreach($case_folders as $key => $document)
+                    <li class="list-group-item" data-foldername="{{$document['name']}}"
+                        data-folder="{{$document['unique_id']}}">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <img class="avatar avatar-xs avatar-4by3" src="assets/svg/folder-files.svg"
+                                    alt="Image Description">
                             </div>
-                        </div> -->
-                        <div id="collapseProfessionalDoc-{{$key}}" class="collapse files-collapse" aria-labelledby="headingProfessional-{{$key}}" data-parent="#accordionProfessionalDoc"></div>
-                    </div>
-                    <!-- End Row -->
-                </li>
-                <!-- End List Item -->
-               @endforeach
-               
-                <?php
-                    $default_documents = $service['Documents'];
-                ?>
-                @foreach($default_documents as $key => $document)
-                <li class="list-group-item" data-foldername="{{$document['name']}}" data-folder="{{$document['name']}}" data-doctype="default" data-docid="{{ $document['unique_id'] }}">
-                    <div class="row">
-                        <div class="col-auto">
-                            <img class="avatar avatar-xs avatar-4by3" src="assets/svg/folder-files.svg"
-                                alt="Image Description">
-                        </div>
 
-                        <div class="col" data-toggle="collapse" data-target="#collapseDefaultDoc-{{ $key }}" aria-expanded="true" aria-controls="collapseDefaultDoc-{{ $key }}">
-                            <a href="javascript:;" onclick="fetchFiles(this)" data-subdomain="{{$subdomain}}" data-doctype="default" data-caseid="{{$case_id}}" data-docid="{{ $document['unique_id'] }}">
-                                <h5 class="mb-0">
-                                    {{$document['name']}}
-                                </h5>
-                                <ul class="list-inline list-separator small">
-                                    <li class="list-inline-item">{{$document['files_count']}} Files</li>
-                                    
-                                </ul>
-                            </a>
-                        </div>
+                            <div class="col" data-toggle="collapse" data-target="#collapseProfessionalDoc-{{ $key }}"
+                                aria-expanded="true" aria-controls="collapseProfessionalDoc-{{ $key }}">
+                                <a href="javascript:;" onclick="fetchFiles(this)" data-subdomain="{{$subdomain}}"
+                                    data-doctype="extra" data-caseid="{{$case_id}}"
+                                    data-docid="{{ $document['unique_id'] }}">
+                                    <h5 class="mb-0">
+                                        {{$document['name']}}
+                                    </h5>
+                                    <ul class="list-inline list-separator small">
+                                        <li class="list-inline-item">{{$document['files_count']}} Files</li>
 
-                        <!-- <div class="col-auto">
-                            <div class="hs-unfold">
-                                <a class="js-hs-unfold-invoker btn btn-sm btn-white" href="javascript:;"
-                                    data-hs-unfold-options='{
-                                       "target": "#defaultDropdown-{{$key}}",
-                                       "type": "css-animation"
-                                    }'>
-                                    <span class="d-none d-sm-inline-block mr-1">More</span>
-                                    <i class="tio-chevron-down"></i>
+                                    </ul>
                                 </a>
-
-                                <div id="defaultDropdown-{{$key}}"
-                                    class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right"
-                                    style="min-width: 13rem;">
-                                    <span class="dropdown-header">Settings</span>
-
-                                    <a class="dropdown-item" href="#">
-                                        <i class="tio-share dropdown-item-icon"></i> Share file
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="tio-folder-add dropdown-item-icon"></i> Move to
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="tio-star-outlined dropdown-item-icon"></i> Add to stared
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="tio-edit dropdown-item-icon"></i> Rename
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="tio-download-to dropdown-item-icon"></i> Download
-                                    </a>
-
-                                    <div class="dropdown-divider"></div>
-
-                                    <a class="dropdown-item" href="#">
-                                        <i class="tio-chat-outlined dropdown-item-icon"></i> Report
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="tio-delete-outlined dropdown-item-icon"></i> Delete
-                                    </a>
-                                </div>
                             </div>
-                        </div> -->
-                        <div id="collapseDefaultDoc-{{$key}}" class="collapse files-collapse" aria-labelledby="headingDefault-{{$key}}" data-parent="#accordionDefaultDoc">
+                            <div class="col-auto">
+                                <a href="<?php echo baseUrl("cases/documents/extra/".$subdomain."/".$case_id."/".$document['unique_id']) ?>" 
+                                    class="btn btn-sm btn-warning js-nav-tooltip-link" data-toggle="tooltip"
+                                    data-html="true" title="View Documents"><i class="tio-documents"></i></a>
+                                @if($document['added_by'] == 'client')
+                                <a href="javascript:;" onclick="confirmAction(this)"
+                                    data-href="{{baseUrl('cases/documents/remove-case-folder/'.$subdomain.'/'.$document['unique_id'])}}"
+                                    class="btn btn-sm btn-danger js-nav-tooltip-link" data-toggle="tooltip"
+                                    data-html="true" title="Delete Folder"><i class="tio-delete"></i></a>
+                                <a href="javascript:;" onclick="confirmAction(this)"
+                                    data-href="{{baseUrl('cases/documents/remove-case-folder/'.$subdomain.'/'.$document['unique_id'])}}"
+                                    class="btn btn-sm btn-primary js-nav-tooltip-link" data-toggle="tooltip"
+                                    data-html="true" title="Click to Pin"><i class="tio-pin"></i></a>
+                                @endif
+                            </div>
                             
+                            <div id="collapseProfessionalDoc-{{$key}}" class="collapse files-collapse" aria-labelledby="headingProfessional-{{$key}}" data-parent="#accordionProfessionalDoc"></div>
                         </div>
-                    </div>
-                    <!-- End Row -->
-                </li>
-                <!-- End List Item -->
-                @endforeach
-                @foreach($documents as $key => $document)
-                <!-- List Item -->
-                <li class="list-group-item" data-foldername="{{$document['name']}}" data-folder="{{$document['name']}}" data-doctype="other" data-docid="{{ $document['unique_id'] }}">
-                    <div class="row align-items-center gx-2">
-                        <div class="col-auto">
-                            <img class="avatar avatar-xs avatar-4by3" src="assets/svg/folder-files.svg" alt="Image Description">
-                        </div>
+                        <!-- End Row -->
+                    </li>
+                    <!-- End List Item -->
+                    @endforeach
 
-                        <div class="col" data-toggle="collapse" data-target="#collapseDefaultDoc-{{ $key }}" aria-expanded="true" aria-controls="collapseOtherDoc-{{ $key }}">
-                            <a href="javascript:;" onclick="fetchFiles(this)" data-subdomain="{{$subdomain}}" data-doctype="other" data-caseid="{{$case_id}}" data-docid="{{ $document['unique_id'] }}">
-                                <h5 class="mb-0">
-                                    {{$document['name']}}
-                                </h5>
-                                <ul class="list-inline list-separator small">
-                                    <li class="list-inline-item">{{$document['files_count']}} Files</li>
-                                </ul>
-                            </a>
-                        </div>
+                    <?php
+                        $default_documents = $service['Documents'];
+                    ?>
+                    @foreach($default_documents as $key => $document)
+                    <li class="list-group-item" data-foldername="{{$document['name']}}"
+                        data-folder="{{$document['name']}}" data-doctype="default"
+                        data-docid="{{ $document['unique_id'] }}">
+                        <div class="row">
+                            <div class="col-auto">
+                                <img class="avatar avatar-xs avatar-4by3" src="assets/svg/folder-files.svg"
+                                    alt="Image Description">
+                            </div>
 
-                        <!-- <div class="col-auto">
-                            <div class="hs-unfold">
-                                <a class="js-hs-unfold-invoker btn btn-sm btn-white" href="javascript:;"
-                                    data-hs-unfold-options='{
-                                    "target": "#otherDropdown-{{$key}}",
-                                    "type": "css-animation"
-                                    }'>
-                                    <span class="d-none d-sm-inline-block mr-1">More</span>
-                                    <i class="tio-chevron-down"></i>
+                            <div class="col" data-toggle="collapse" data-target="#collapseDefaultDoc-{{ $key }}"
+                                aria-expanded="true" aria-controls="collapseDefaultDoc-{{ $key }}">
+                                <a href="javascript:;" onclick="fetchFiles(this)" data-subdomain="{{$subdomain}}"
+                                    data-doctype="default" data-caseid="{{$case_id}}"
+                                    data-docid="{{ $document['unique_id'] }}">
+                                    <h5 class="mb-0">
+                                        {{$document['name']}}
+                                    </h5>
+                                    <ul class="list-inline list-separator small">
+                                        <li class="list-inline-item">{{$document['files_count']}} Files</li>
+
+                                    </ul>
                                 </a>
-
-                                <div id="otherDropdown-{{$key}}"
-                                    class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right"
-                                    style="min-width: 13rem;">
-                                    <span class="dropdown-header">Settings</span>
-
-                                    <a class="dropdown-item" href="#">
-                                        <i class="tio-share dropdown-item-icon"></i> Share file
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="tio-folder-add dropdown-item-icon"></i> Move to
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="tio-star-outlined dropdown-item-icon"></i> Add to stared
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="tio-edit dropdown-item-icon"></i> Rename
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="tio-download-to dropdown-item-icon"></i> Download
-                                    </a>
-
-                                    <div class="dropdown-divider"></div>
-
-                                    <a class="dropdown-item" href="#">
-                                        <i class="tio-chat-outlined dropdown-item-icon"></i> Report
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="tio-delete-outlined dropdown-item-icon"></i> Delete
-                                    </a>
-                                </div>
                             </div>
-                        </div> -->
-                        <div id="collapseOtherDoc-{{$key}}" class="collapse files-collapse" aria-labelledby="headingOther-{{$key}}" data-parent="#accordionDefaultDoc">
-                            
+                            <div class="col-auto">
+                                <a href="<?php echo baseUrl("cases/documents/default/".$subdomain."/".$case_id."/".$document['unique_id']) ?>" 
+                                    class="btn btn-sm btn-warning js-nav-tooltip-link" data-toggle="tooltip"
+                                    data-html="true" title="View Documents"><i class="tio-documents"></i></a>
+                               
+                            </div>
+                            <div id="collapseDefaultDoc-{{$key}}" class="collapse files-collapse" aria-labelledby="headingDefault-{{$key}}" data-parent="#accordionProfessionalDoc">
+
+                            </div>
                         </div>
-                    </div>
-                    <!-- End Row -->
-                </li>
-                <!-- End List Item -->
-                @endforeach
-            </ul>
+                        <!-- End Row -->
+                    </li>
+                    <!-- End List Item -->
+                    @endforeach
+                    @foreach($documents as $key => $document)
+                    <!-- List Item -->
+                    <li class="list-group-item" data-foldername="{{$document['name']}}"
+                        data-folder="{{$document['name']}}" data-doctype="other"
+                        data-docid="{{ $document['unique_id'] }}">
+                        <div class="row align-items-center gx-2">
+                            <div class="col-auto">
+                                <img class="avatar avatar-xs avatar-4by3" src="assets/svg/folder-files.svg"
+                                    alt="Image Description">
+                            </div>
+
+                            <div class="col" data-toggle="collapse" data-target="#collapseDefaultDoc-{{ $key }}"
+                                aria-expanded="true" aria-controls="collapseOtherDoc-{{ $key }}">
+                                <a href="javascript:;" onclick="fetchFiles(this)" data-subdomain="{{$subdomain}}"
+                                    data-doctype="other" data-caseid="{{$case_id}}"
+                                    data-docid="{{ $document['unique_id'] }}">
+                                    <h5 class="mb-0">
+                                        {{$document['name']}}
+                                    </h5>
+                                    <ul class="list-inline list-separator small">
+                                        <li class="list-inline-item">{{$document['files_count']}} Files</li>
+                                    </ul>
+                                </a>
+                            </div>
+                            <div class="col-auto">
+                                <a href="<?php echo baseUrl("cases/documents/other/".$subdomain."/".$case_id."/".$document['unique_id']) ?>" 
+                                    class="btn btn-sm btn-warning js-nav-tooltip-link" data-toggle="tooltip"
+                                    data-html="true" title="View Documents"><i class="tio-documents"></i></a>
+                               
+                            </div>
+                            <div id="collapseOtherDoc-{{$key}}" class="collapse files-collapse" aria-labelledby="headingOther-{{$key}}" data-parent="#accordionProfessionalDoc"></div>
+                        </div>
+                        <!-- End Row -->
+                    </li>
+                    <!-- End List Item -->
+                    @endforeach
+                </ul>
+            </div>
         </div>
+        <!-- End Tab Content -->
+        @endif
+        <!-- Header -->
+        <div class="row align-items-center mb-2 mt-4">
+            <div class="col">
+                <h2 class="h4 mb-0">Files</h2>
+            </div>
+
+            <div class="col-auto">
+                <!-- Nav -->
+
+                <!-- End Nav -->
+            </div>
+        </div>
+        <!-- End Header -->
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="connectionsTabContent">
+            <div class="mb-2 text-right">
+                <a onclick="showPopup('{{ baseUrl('documents/add-folder') }}')" class="btn btn-outline-primary" href="javascript:;">
+                    <i class="tio-folder-add mr-1"></i> Add folder
+                </a>
+            </div>
+            <div class="tab-pane fade show active professional-request-folders" id="list" role="tabpanel"
+                aria-labelledby="list-tab">
+                <span class="folder-label-professional">My Documents</span>
+                <ul class="list-group" id="accordionMyDoc">
+                    <!-- List Item -->
+
+                    @foreach($user_folders as $key => $document)
+                    <li class="list-group-item draggable document-folder" data-foldername="{{$document->name}}"
+                        data-folder="{{$document['name']}}" data-doctype="default"
+                        data-docid="{{ $document->unique_id }}">
+                        <div class="row">
+                            <div class="col-auto">
+                                <img class="avatar avatar-xs avatar-4by3" src="assets/svg/folder-files.svg"
+                                    alt="Image Description">
+                            </div>
+
+                            <div class="col" data-toggle="collapse" data-target="#collapseMyDoc-{{ $key }}"
+                                aria-expanded="true" aria-controls="collapseMyDoc-{{ $key }}">
+                                <a href="javascript:;" onclick="fetchUserFiles(this)"
+                                    data-docid="{{ $document->unique_id }}">
+                                    <h5 class="mb-0">
+                                        {{$document->name}}
+                                    </h5>
+                                    <ul class="list-inline list-separator small">
+                                        <li class="list-inline-item">{{count($document->Files)}} Files</li>
+
+                                    </ul>
+                                </a>
+                            </div>
+
+                            <div id="collapseMyDoc-{{$key}}" class="collapse files-collapse"
+                                aria-labelledby="headingDefault-{{$key}}" data-parent="#accordionMyDoc">
+
+                            </div>
+                        </div>
+                        <!-- End Row -->
+                    </li>
+                    <!-- End List Item -->
+                    @endforeach
+
+                </ul>
+            </div>
+        </div>
+        <!-- End Tab Content -->
+
     </div>
-    <!-- End Tab Content -->
-
-    @endif
-
-
-    <!-- Header -->
-    <div class="row align-items-center mb-2 mt-4">
-        <div class="col">
-            <h2 class="h4 mb-0">Files</h2>
-        </div>
-
-        <div class="col-auto">
-            <!-- Nav -->
-            
-            <!-- End Nav -->
-        </div>
-    </div>
-    <!-- End Header -->
-
-    <!-- Tab Content -->
-    <div class="tab-content" id="connectionsTabContent">
-
-        <div class="tab-pane fade show active professional-request-folders" id="list" role="tabpanel" aria-labelledby="list-tab">
-            <span class="folder-label-professional">My Documents</span>
-            <ul class="list-group" id="accordionMyDoc">
-                <!-- List Item -->
-              
-                @foreach($user_folders as $key => $document)
-                <li class="list-group-item draggable document-folder" data-foldername="{{$document->name}}" data-folder="{{$document['name']}}" data-doctype="default" data-docid="{{ $document->unique_id }}">
-                    <div class="row">
-                        <div class="col-auto">
-                            <img class="avatar avatar-xs avatar-4by3" src="assets/svg/folder-files.svg"
-                                alt="Image Description">
-                        </div>
-
-                        <div class="col" data-toggle="collapse" data-target="#collapseMyDoc-{{ $key }}" aria-expanded="true" aria-controls="collapseDefaultDoc-{{ $key }}">
-                            <a href="javascript:;" onclick="fetchUserFiles(this)" data-docid="{{ $document->unique_id }}">
-                                <h5 class="mb-0">
-                                    {{$document->name}}
-                                </h5>
-                                <ul class="list-inline list-separator small">
-                                    <li class="list-inline-item">{{count($document->Files)}} Files</li>
-                                    
-                                </ul>
-                            </a>
-                        </div>
-
-                        <div id="collapseMyDoc-{{$key}}" class="collapse files-collapse" aria-labelledby="headingDefault-{{$key}}" data-parent="#accordionMyDoc">
-                            
-                        </div>
-                    </div>
-                    <!-- End Row -->
-                </li>
-                <!-- End List Item -->
-                @endforeach
-               
-            </ul>
-        </div>
-    </div>
-    <!-- End Tab Content -->
-
-
 
     <!-- Sticky Block End Point -->
-    <div id="stickyBlockEndPoint"></div>
+    <div class="col-lg-3">
+        <div class="folder-btn">
+            <a class="btn btn-info w-100 mb-3" href="{{ baseUrl('cases/import-to-my-documents/'.$subdomain.'/'.$record['unique_id']) }}">
+             Import to My Documents 
+            </a>
+            <a class="btn btn-primary w-100 mb-3" href="{{ baseUrl('cases/my-documents-exchanger/'.$subdomain.'/'.$record['unique_id']) }}">
+             Export from My Documents 
+            </a>
+            <a class="btn btn-success w-100 mb-3" href="{{ baseUrl('cases/documents-exchanger/'.$subdomain.'/'.$record['unique_id']) }}">
+             Documents Exchanger
+            </a>
+
+
+        </div>
+    </div>
+</div>
 </div>
 @endsection
 
 @section('javascript')
-<!-- JS Implementing Plugins -->
-<script src="assets/vendor/hs-navbar-vertical-aside/hs-navbar-vertical-aside.min.js"></script>
-<script src="assets/vendor/hs-nav-scroller/dist/hs-nav-scroller.min.js"></script>
-<script src="assets/vendor/hs-go-to/dist/hs-go-to.min.js"></script>
-<script src="assets/vendor/list.js/dist/list.min.js"></script>
-<script src="assets/vendor/prism/prism.js"></script>
-<script src="assets/vendor/hs-step-form/dist/hs-step-form.min.js"></script>
-<script src="assets/vendor/jquery-validation/dist/jquery.validate.min.js"></script>
 <!-- JS Front -->
 <link rel="stylesheet" href="assets/vendor/jquery-ui/jquery-ui.css">
 <script src="assets/vendor/jquery-ui/jquery-ui.js"></script>
+
+<!-- <script src="assets/vendor/hs-sticky-block/dist/hs-sticky-block.min.js"></script> -->
 <script type="text/javascript">
 // initEditor("description"); 
 $(document).on('ready', function() {
     $('[data-toggle="tooltip"]').tooltip();
-    $('.js-nav-tooltip-link').tooltip({ boundary: 'window' });
+    $('.js-nav-tooltip-link').tooltip({
+        boundary: 'window'
+    });
+    $('.js-sticky-block').each(function () {
+        var stickyBlock = new HSStickyBlock($(this), {
+            targetSelector: $('#header').hasClass('navbar-fixed') ? '#header' : null
+        }).init();
+    });
     $('.draggable').draggable({
         revert: true,
         revertDuration: 0,
         stack: ".draggable",
         refreshPositions: false
-            //helper: 'clone'
+        //helper: 'clone'
     });
     $('.droppable').droppable({
-      accept: ".draggable",
-      activeClass: "ui-state-highlight",
-      drop: function( event, ui ) {
-          var droppable = $(this);
-          var draggable = ui.draggable;
-          var clone = draggable.clone();   
-        //   var parent = draggable.parents(".professional-request-folders-list");
-          var folder = draggable.attr("data-foldername");
-        //   alert(docid);
-          var is_docid = false;
-          $(".professional-request-folders-list li[data-foldername]").each(function(){
-            var cur_folder = $(this).data("foldername");
-            
-            if(cur_folder == folder){
-                is_docid = true;
-            }
-          });
-          
-        //   $("."+parent).find("li[data-id='"+id+"']").remove();
-        //   var document_type = $(this).parents(".documents").data("type");
-        //   var folder_id = $(this).parents(".documents").data("file");
-       
-        if(is_docid == true){
-            errorMessage("Folder already exists, you can copy files to it.");
-            return false;
-        }
-        $(this).append(clone);
-        clone.css({top: '5px', left: '5px'});
-        
-        var case_id = "{{$case_id}}";
-        var subdomain = "{{$subdomain}}";
-        var folder_ids = [];
-        var doctype = [];
-        $(".professional-request-folders-list .document-folder").each(function(){
-            folder_ids.push({
-                    "folder_id":$(this).data("docid"),
-                    "doctype":$(this).data("doctype")
-                });
-            // doctype.push($(this).data("doctype"));
-        });
-        $.ajax({
-            type: "POST",
-            url: BASEURL + '/cases/documents/copy-folder-to-extra',
-            data:{
-                _token:csrf_token,
-                folder_ids:folder_ids,
-                subdomain:"{{ $subdomain }}",
-                case_id:"{{ $case_id }}"
-            },
-            dataType:'json',
-            beforeSend:function(){
-                showLoader();
-            },
-            success: function (data) {
-                hideLoader();
-                if(data.status == true){
-                    bottomMessage(data.message,'success');
-                }else{
-                    errorMessage('Issue while file transfer');
+        accept: ".draggable",
+        activeClass: "ui-state-highlight",
+        drop: function(event, ui) {
+            var droppable = $(this);
+            var draggable = ui.draggable;
+            var clone = draggable.clone();
+            //   var parent = draggable.parents(".professional-request-folders-list");
+            var folder = draggable.attr("data-foldername");
+            //   alert(docid);
+            var is_docid = false;
+            $(".professional-request-folders-list li[data-foldername]").each(function() {
+                var cur_folder = $(this).data("foldername");
+
+                if (cur_folder == folder) {
+                    is_docid = true;
                 }
-            },
-            error:function(){
-                internalError();
+            });
+
+            //   $("."+parent).find("li[data-id='"+id+"']").remove();
+            //   var document_type = $(this).parents(".documents").data("type");
+            //   var folder_id = $(this).parents(".documents").data("file");
+
+            if (is_docid == true) {
+                errorMessage("Folder already exists, you can copy files to it.");
+                return false;
             }
-        });
-      }   
-    }); 
+            $(this).append(clone);
+            clone.css({
+                top: '5px',
+                left: '5px'
+            });
+
+            var case_id = "{{$case_id}}";
+            var subdomain = "{{$subdomain}}";
+            var folder_ids = [];
+            var doctype = [];
+            $(".professional-request-folders-list .document-folder").each(function() {
+                folder_ids.push({
+                    "folder_id": $(this).data("docid"),
+                    "doctype": $(this).data("doctype")
+                });
+                // doctype.push($(this).data("doctype"));
+            });
+            $.ajax({
+                type: "POST",
+                url: BASEURL + '/cases/documents/copy-folder-to-extra',
+                data: {
+                    _token: csrf_token,
+                    folder_ids: folder_ids,
+                    subdomain: "{{ $subdomain }}",
+                    case_id: "{{ $case_id }}"
+                },
+                dataType: 'json',
+                beforeSend: function() {
+                    showLoader();
+                },
+                success: function(data) {
+                    hideLoader();
+                    if (data.status == true) {
+                        bottomMessage(data.message, 'success');
+                    } else {
+                        errorMessage('Issue while file transfer');
+                    }
+                },
+                error: function() {
+                    internalError();
+                }
+            });
+        }
+    });
 });
-function fetchUserFiles(e){
- 
+
+function fetchUserFiles(e) {
+
     var doc_id = $(e).attr("data-docid");
     $.ajax({
         url: "{{ baseUrl('cases/documents/fetch-user-documents') }}",
-        type:"POST",
+        type: "POST",
         data: {
-            _token:csrf_token,
+            _token: csrf_token,
             case_id: "{{$case_id}}",
-            subdomain:"{{$subdomain}}",
-            doc_id:doc_id
+            subdomain: "{{$subdomain}}",
+            doc_id: doc_id
         },
         dataType: "json",
         beforeSend: function() {
@@ -604,7 +545,7 @@ function fetchUserFiles(e){
             hideLoader();
             if (response.status == true) {
                 $(e).parents("li").find(".collapse").html(response.contents);
-            }else{
+            } else {
                 errorMessage(response.message);
             }
         },
@@ -613,6 +554,7 @@ function fetchUserFiles(e){
         }
     });
 }
+
 function fetchFiles(e) {
     var case_id = $(e).attr("data-caseid");
     var doctype = $(e).attr("data-doctype");
@@ -620,13 +562,13 @@ function fetchFiles(e) {
     var doc_id = $(e).attr("data-docid");
     $.ajax({
         url: "{{ baseUrl('cases/documents/fetch-documents') }}",
-        type:"POST",
+        type: "POST",
         data: {
-            _token:csrf_token,
+            _token: csrf_token,
             case_id: case_id,
-            doctype:doctype,
-            subdomain:subdomain,
-            doc_id:doc_id
+            doctype: doctype,
+            subdomain: subdomain,
+            doc_id: doc_id
         },
         dataType: "json",
         beforeSend: function() {
@@ -636,7 +578,7 @@ function fetchFiles(e) {
             hideLoader();
             if (response.status == true) {
                 $(e).parents("li").find(".collapse").html(response.contents);
-            }else{
+            } else {
                 errorMessage(response.message);
             }
         },
@@ -645,7 +587,6 @@ function fetchFiles(e) {
         }
     });
 }
-
 </script>
 
 @endsection

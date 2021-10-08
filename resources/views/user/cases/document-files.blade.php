@@ -1,568 +1,769 @@
 @extends('layouts.master')
-@section("style")
 <style>
-   .all_services li {
-   padding: 16px;
-   border-bottom: 1px solid #ddd;
-   }
-   .sub_services li {
-   border-bottom: none;
-   }
+.all_services li {
+    padding: 16px;
+    border-bottom: 1px solid #ddd;
+}
+
+.sub_services li {
+    border-bottom: none;
+}
 </style>
+@section('pageheader')
+<!-- Content -->
+<div class="">
+    <div class="content container" style="height: 25rem;">
+        <!-- Page Header -->
+        <div class="page-header page-header-light page-header-reset">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h1 class="page-header-title">{{$pageTitle}}</h1>
+                </div>
+            </div>
+            <!-- End Row -->
+        </div>
+        <!-- End Page Header -->
+    </div>
+</div>
+<!-- End Content -->
 @endsection
 @section('content')
 <!-- Content -->
-<!-- Content -->
-<div class="content container-fluid">
-   <!-- Page Header -->
-   <div class="page-header">
-      <div class="row align-items-end mb-3">
-         <div class="col-sm mb-2 mb-sm-0">
-            <nav aria-label="breadcrumb">
-               <ol class="breadcrumb breadcrumb-no-gutter">
-                  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
-                  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/cases') }}">Cases</a></li>
-                  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/cases/documents/'.$subdomain.'/'.$case_id) }}">Documents</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
-               </ol>
-            </nav>
-            <h1 class="page-header-title">{{$pageTitle}}</h1>
-            <div clas="d-block">
-               @if(!empty($service['MainService']))
-                <h4 class="text-primary p-2">{{$service['MainService']['name']}}</h4>
-               @else
-                <h4 class="text-primary p-2">Service not found</h4>
-               @endif
-            </div>
-         </div>
-         <div class="col-sm-auto">
-            <div role="group">
-               @if($user_detail->dropbox_auth != '')
-               <a class="btn btn-outline-primary" onclick="showDropboxFiles()"  href="javascript:;"><i class="tio-google-drive mr-1"></i> Upload from Dropbox</a>
-               @endif
-               @if($user_detail->google_drive_auth != '')
-               <a class="btn btn-outline-primary" onclick="showGoogleFiles()"  href="javascript:;"><i class="tio-google-drive mr-1"></i> Upload from Google Drive</a>
-               @endif
-               <a class="btn btn-primary"  href="javascript:;" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"><i class="tio-upload-on-cloud mr-1"></i> Upload</a>
-            </div>
-         </div>
-      </div>
-      <div id="collapseOne" class="collapse" aria-labelledby="headingOne">
-        <div class="card-body">
-          <!-- Dropzone -->
-            <div id="attachFilesLabel" class="js-dropzone dropzone-custom custom-file-boxed"
-               data-hs-dropzone-options='{
+@include(roleFolder().'.cases.case-navbar')
+<div class="">
+    <div class="row">
+        <div class="col-lg-9 mb-5 mb-lg-0">
+            <div id="collapseOne" class="collapse" aria-labelledby="headingOne">
+                <div class="card-body">
+                    <!-- Dropzone -->
+                    <div id="attachFilesLabel" class="js-dropzone dropzone-custom custom-file-boxed"
+                        data-hs-dropzone-options='{
                   "url": "<?php echo baseUrl('cases/upload-documents/'.$record['unique_id']) ?>?_token=<?php echo csrf_token() ?>&folder_id=<?php echo $document['unique_id'] ?>&doc_type=<?php echo $doc_type ?>&subdomain=<?php echo $subdomain ?>",
                   "thumbnailWidth": 100,
                   "thumbnailHeight": 100
-               }'
-            >
-               <div class="dz-message custom-file-boxed-label">
-                  <img class="avatar avatar-xl avatar-4by3 mb-3" src="./assets/svg/illustrations/browse.svg" alt="Image Description">
-                  <h5 class="mb-1">Drag and drop your file here</h5>
-                  <p class="mb-2">or</p>
-                  <span class="btn btn-sm btn-white">Browse files</span>
-               </div>
+               }'>
+                        <div class="dz-message custom-file-boxed-label">
+                            <img class="avatar avatar-xl avatar-4by3 mb-3" src="assets/svg/illustrations/browse.svg"
+                                alt="Image Description">
+                            <h5 class="mb-1">Drag and drop your file here</h5>
+                            <p class="mb-2">or</p>
+                            <span class="btn btn-sm btn-white">Browse files</span>
+                        </div>
+                    </div>
+                    <!-- End Dropzone -->
+                </div>
             </div>
-            <!-- End Dropzone -->
+            <!-- List Group -->
+            <ul class="list-group">
+                <!-- List Item -->
+                @foreach($case_documents as $key => $doc)
+                <?php 
+      $doc_url = $file_url."/".$doc['file_detail']['file_name']; 
+      $url = baseUrl('cases/view-document/'.$case_id.'/'.$doc['unique_id'].'?url='.$doc_url.'&file_name='.$doc['file_detail']['file_name'].'&p='.$subdomain.'&doc_type='.$doc_type.'&folder_id='.$doc_id);
+   ?>
+                <li class="list-group-item">
+                    <div class="row align-items-center gx-2">
+                        <div class="col-auto">
+                            <?php 
+            $fileicon = fileIcon($doc['file_detail']['original_name']);
+            echo $fileicon;
+            $filesize = file_size($file_dir."/".$doc['file_detail']['file_name']);
+         ?>
+                        </div>
+
+                        <div class="col">
+                            <h5 class="mb-0">
+                                <a class="text-dark" href="#" data-toggle="modal"
+                                    data-target=".bd-example-modal-fs">{{$doc['file_detail']['original_name']}}</a>
+                            </h5>
+                            <ul class="list-inline list-separator small">
+                                <li class="list-inline-item">Added on {{dateFormat($doc['created_at'])}}</li>
+                                <li class="list-inline-item">{{$filesize}}</li>
+                            </ul>
+                        </div>
+
+                        <div class="col-auto">
+                            <!-- Unfold -->
+                            <div class="hs-unfold">
+                                <a class="js-hs-unfold-invoker btn btn-sm btn-white" href="javascript:;"
+                                    data-hs-unfold-options='{
+               "target": "#action-{{$key}}",
+               "type": "css-animation"
+               }'>
+                                    <span class="d-none d-sm-inline-block mr-1">More</span>
+                                    <i class="tio-chevron-down"></i>
+                                </a>
+                                <div id="action-{{$key}}"
+                                    class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right"
+                                    style="min-width: 13rem;">
+
+                                    <a class="dropdown-item" download href="{{ $doc_url }}">
+                                        <i class="tio-download-to dropdown-item-icon"></i>
+                                        Download
+                                    </a>
+                                    @if($doc['created_by'] == Auth::user()->unique_id)
+                                    <a class="dropdown-item text-danger" href="javascript:;"
+                                        onclick="confirmAction(this)"
+                                        data-href="{{baseUrl('cases/documents/delete/'.$subdomain.'/'.$doc['unique_id'])}}">
+                                        <i class="tio-delete-outlined dropdown-item-icon"></i>
+                                        Delete
+                                    </a>
+                                    @endif
+                                </div>
+                            </div>
+                            <!-- End Unfold -->
+                        </div>
+                    </div>
+                    <!-- End Row -->
+                </li>
+                @endforeach
+                <!-- End List Item -->
+
+            </ul>
+            <!-- End List Group -->
+
+            <!-- Sticky Block End Point -->
+            <div id="stickyBlockEndPoint"></div>
         </div>
-      </div>
-      <!-- End Row -->
-      <!-- Nav -->
-      <!-- Nav -->
-      <div class="js-nav-scroller hs-nav-scroller-horizontal">
-         <span class="hs-nav-scroller-arrow-prev" style="display: none;">
-         <a class="hs-nav-scroller-arrow-link" href="javascript:;">
-         <i class="tio-chevron-left"></i>
-         </a>
-         </span>
-         <span class="hs-nav-scroller-arrow-next" style="display: none;">
-         <a class="hs-nav-scroller-arrow-link" href="javascript:;">
-         <i class="tio-chevron-right"></i>
-         </a>
-         </span>
-      </div>
-      <!-- End Nav -->
-   </div>
-   <!-- End Page Header -->
-   <!-- Card -->
-   <div class="card">
-      <!-- Header -->
-      <div class="card-header">
-         <div class="row justify-content-between align-items-center flex-grow-1">
-            <!-- <div class="col-12 col-md">
-               <form>
-                  <div class="input-group input-group-merge input-group-borderless">
-                     <div class="input-group-prepend">
-                        <div class="input-group-text">
-                           <i class="tio-search"></i>
-                        </div>
-                     </div>
-                     <input id="datatableSearch" type="search" class="form-control" placeholder="Search users" aria-label="Search users">
-                  </div>
-               </form>
-            </div> -->
-            <div class="col-auto">
-               <div class="d-flex align-items-center">
-                  <div id="datatableCounterInfo" class="mr-2" style="display: none;">
-                     <div class="d-flex align-items-center">
-                        <span class="font-size-sm mr-3">
-                        <span id="datatableCounter">0</span>
-                        Selected
-                        </span>
-                        <a class="btn btn-sm btn-outline-danger" data-href="{{ baseUrl('cases/documents/delete-multiple') }}" onclick="deleteMultipleDocuments(this)" href="javascript:;">
-                        <i class="tio-delete-outlined"></i> Delete
-                        </a>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-      <!-- End Header -->
-      <!-- Table -->
-      <!-- Sidebar -->
-      <div id="activitySidebar" class="hs-unfold-content sidebar sidebar-bordered sidebar-box-shadow">
-         <div class="card card-lg sidebar-card sidebar-scrollbar">
-            <div class="card-header">
-               <h4 class="card-header-title">Document Chats</h4>
-               <!-- Toggle Button -->
-               <a class="js-hs-unfold-invoker btn btn-icon btn-xs btn-ghost-dark ml-2" href="javascript:;"
-                  data-hs-unfold-options='{
-                  "target": "#activitySidebar",
-                  "type": "css-animation",
-                  "animationIn": "fadeInRight",
-                  "animationOut": "fadeOutRight",
-                  "hasOverlay": true,
-                  "smartPositionOff": true
-                  }'>
-               <i class="tio-clear tio-lg"></i>
-               </a>
-               <!-- End Toggle Button -->
-            </div>
-            <!-- Body -->
-            <div class="card-body sidebar-body">
-               <div class="chat_window">
-                  <ul class="messages">
-                     
-                  </ul>
-                  <div class="doc_chat_input bottom_wrapper clearfix">
-                     <div class="message_input_wrapper">
-                        <input class="form-control msg_textbox" id="message_input" placeholder="Type your message here..." />
-                        <input type="file" name="chat_file" id="chat-attachment" style="display:none" />
-                        
-                     </div>
-                     <div class="btn-group send-btn">
-                        <button type="button" class="btn btn-primary btn-pill send-message">
-                          <i class="tio-send"></i>
-                        </button>
-                        <button type="button" class="btn btn-info btn-pill send-attachment">
-                          <i class="tio-attachment"></i>
-                        </button>
-                     </div>
-                  </div>
-               </div>
-               <div class="message_template">
-                  <li class="message">
-                     <div class="avatar"></div>
-                     <div class="text_wrapper">
-                        <div class="text"></div>
-                     </div>
-                  </li>
-               </div>
-            </div>
-            <!-- End Body -->
+
+        <div id="stickyBlockStartPoint" class="col-lg-3">
+            
+         <div role="group">
+            @if($user_detail->dropbox_auth != '')
+            <a class="btn btn-outline-primary" onclick="showDropboxFiles()" href="javascript:;"><i
+                     class="tio-google-drive mr-1"></i> Upload from Dropbox</a>
+            @endif
+            @if($user_detail->google_drive_auth != '')
+            <a class="btn btn-outline-primary w-100 mb-3" onclick="showGoogleFiles()" href="javascript:;"><i
+                     class="tio-google-drive mr-1"></i> Upload from Google Drive</a>
+            @endif
+            <a class="btn btn-primary w-100" href="javascript:;" data-toggle="collapse" data-target="#collapseOne"
+                  aria-expanded="true" aria-controls="collapseOne"><i class="tio-upload-on-cloud mr-1"></i>
+                  Upload</a>
          </div>
 
-      </div>
-      <!-- End Sidebar -->  
-      <div class="table-responsive datatable-custom">
-         <table id="datatable" class="table table-borderless table-thead-bordered card-table">
-            <thead class="thead-light">
-               <tr>
-                  <th scope="col" class="table-column-pr-0">
-                     <div class="custom-control custom-checkbox">
-                        <input id="datatableCheckAll" type="checkbox" class="custom-control-input">
-                        <label class="custom-control-label" for="datatableCheckAll"></label>
-                     </div>
-                  </th>
-                  <th scope="col" class="table-column-pl-0">Document Name</th>
-                  <!-- <th scope="col">Folder</th> -->
-                  <th scope="col"><i class="tio-chat-outlined"></i></th>
-                  <th scope="col">Members</th>
-                  <th scope="col"></th>
-               </tr>
-            </thead>
-            <tbody>
-               @foreach($case_documents as $key => $doc)
-               <tr>
-                  <td class="table-column-pr-0">
-                     <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input row-checkbox" id="row-{{$key}}" value="{{ $doc['unique_id'] }}">
-                        <label class="custom-control-label" for="row-{{$key}}"></label>
-                     </div>
-                  </td>
-                  <td class="table-column-pl-0">
-                     <?php 
-                        $doc_url = $file_url."/".$doc['file_detail']['file_name']; 
-                        $url = baseUrl('cases/view-document/'.$case_id.'/'.$doc['unique_id'].'?url='.$doc_url.'&file_name='.$doc['file_detail']['file_name'].'&p='.$subdomain.'&doc_type='.$doc_type.'&folder_id='.$doc_id);
-                     ?>
-                     <a class="d-flex align-items-center" href="{{ $url }}">
-                        <?php 
-                           $fileicon = fileIcon($doc['file_detail']['original_name']);
-                           echo $fileicon;
-                           $filesize = file_size($file_dir."/".$doc['file_detail']['file_name']);
-                        ?>
-                        <div class="ml-3">
-                           <span class="d-block h5 text-hover-primary mb-0">{{$doc['file_detail']['original_name']}}</span>
-                           <ul class="list-inline list-separator small file-specs">
-                              <li class="list-inline-item">Added on {{dateFormat($doc['created_at'])}}</li>
-                              <li class="list-inline-item">{{$filesize}}</li>
-                           </ul>
-                        </div>
-                     </a>
-                  </td>
-                  <!-- <td><a class="badge badge-soft-primary p-2" href="#">Marketing team</a></td> -->
-                  <td width="10%">
-                     <!-- Toggle -->
-                     <div class="hs-unfold">
-                        <a onclick="fetchChats('{{ $doc['case_id'] }}','{{ $doc['unique_id'] }}')" class="js-hs-unfold-invoker text-body" href="javascript:;"
-                           data-hs-unfold-options='{
-                           "target": "#activitySidebar",
-                           "type": "css-animation",
-                           "animationIn": "fadeInRight",
-                           "animationOut": "fadeOutRight",
-                           "hasOverlay": true,
-                           "smartPositionOff": true
-                           }'>
-                        <i class="tio-chat-outlined"></i> {{count($doc['chats'])}}
-                        </a>
-                     </div>
-                     <!-- End Toggle -->
-                  </td>
-                  <td>
-                     <div class="avatar-group avatar-group-xs avatar-circle">
-                       <?php 
-                         $more_file = 0;
-                       ?>
-                       @foreach($doc['chat_users'] as $key => $member)
-                         <?php 
-                         if($key > 1){
-                           $more_file++;
-                         }else{
-                           if($member['send_by'] == 'client'){
-                        ?>
-                           <span class="avatar" data-toggle="tooltip" data-placement="top" title="{{ $member['user_name'] }}">
-                           <img class="avatar-img" src="{{ userProfile($member['created_by'],'t') }}" alt="Image Description">
-                           </span>
-                        <?php
-                           }else{
-                         ?>  
-                           <span class="avatar" data-toggle="tooltip" data-placement="top" title="{{ $member['user_name'] }}">
-                              <img class="avatar-img" src="{{ professionalProfile($member['created_by'],'t',$subdomain) }}" alt="Image Description">
-                           </span>
-                         
+        </div>
+        <!-- End Row -->
+    </div>
+</div>
+<div class="modal fade bd-example-modal-fs" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-fs" role="document">
+        <div class="modal-content min-vh-lg-100">
 
-                         <?php } } ?>
-                       @endforeach
-                       @if($more_file > 0)
-                         <span class="avatar avatar-light js-nav-tooltip-link avatar-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="">
-                           <span class="avatar-initials">{{ $more_file }}+</span>
-                         </span>
-                       @endif
-                     </div>
-                     
-                  </td>
-                  <td>
-                     <!-- Unfold -->
-                     <div class="hs-unfold">
-                        <a class="js-hs-unfold-invoker btn btn-sm btn-white" href="javascript:;"
-                           data-hs-unfold-options='{
-                           "target": "#action-{{$key}}",
-                           "type": "css-animation"
-                           }'>
-                        <span class="d-none d-sm-inline-block mr-1">More</span>
-                        <i class="tio-chevron-down"></i>
-                        </a>
-                        <div id="action-{{$key}}" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right" style="min-width: 13rem;">
-                           <!-- <span class="dropdown-header">Settings</span> -->
-                           <!-- <a class="dropdown-item" href="#">
-                           <i class="tio-share dropdown-item-icon"></i>
-                           Share file
-                           </a> -->
-                           <!-- <a class="dropdown-item" href="javascript:;" onclick="showPopup('<?php echo baseUrl('cases/documents/file-move-to/'.$doc['unique_id'].'/'.$record['unique_id'].'/'.$document['unique_id']) ?>')">
-                              <i class="tio-folder-add dropdown-item-icon"></i>
-                              Move to
-                           </a> -->
-                           <a class="dropdown-item" download href="{{ $doc_url }}">
-                              <i class="tio-download-to dropdown-item-icon"></i>
-                              Download
-                           </a>
-                           @if($doc['created_by'] == Auth::user()->unique_id)
-                           <a class="dropdown-item text-danger" href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('cases/documents/delete/'.$subdomain.'/'.$doc['unique_id'])}}">
-                              <i class="tio-delete-outlined dropdown-item-icon"></i>
-                              Delete
-                           </a>
-                           @endif
-                        </div>
-                     </div>
-                     <!-- End Unfold -->
-                  </td>
-               </tr>
-               @endforeach
-            </tbody>
-         </table>
+            <div class="modal-header">
+                <h5 class="modal-title h4" id="myExtraLargeModalLabel">Extra large modal</h5>
+                <button type="button" class="btn btn-xs btn-icon btn-ghost-secondary" data-dismiss="modal"
+                    aria-label="Close">
+                    <i class="tio-clear tio-lg"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="document-view-container">
+                    <div class="document-toolbar">
+                        <h5 class="document-view-title" style="color:#666">
+                            Document title here
+                        </h5>
+                    </div>
 
-         @if(count($case_documents) <= 0)
-         <div class="text-danger text-center p-2">
-            No documents available
-         </div>
-         @endif
-      </div>
-      <!-- End Table -->
-   </div>
-   <!-- End Card -->
+
+                    <div class="document-preview-thumbs">
+                        <div id="document-preview-thumbs-content">
+                            <ul>
+                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
+
+                                        <div class="card-body">
+                                            <img class="avatar avatar-4by3" src="assets/svg/brands/google-docs.svg"
+                                                alt="Image Description">
+                                        </div>
+
+
+                                        <div class="card-footer border-top-0">
+                                            <h6>Screenshots from Figma</h6>
+                                        </div>
+                                    </a></li>
+                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
+
+                                        <div class="card-body">
+                                            <img class="avatar avatar-4by3" src="assets/svg/brands/pdf.svg"
+                                                alt="Image Description">
+                                        </div>
+
+
+                                        <div class="card-footer border-top-0">
+                                            <h6>Screenshots from Figma</h6>
+                                        </div>
+                                    </a></li>
+                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
+
+                                        <div class="card-body">
+                                            <img class="avatar avatar-4by3" src="assets/svg/brands/google-slides.svg"
+                                                alt="Image Description">
+                                        </div>
+
+
+                                        <div class="card-footer border-top-0">
+                                            <h6>Screenshots from Figma</h6>
+                                        </div>
+                                    </a></li>
+                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
+
+                                        <div class="card-body">
+                                            <img class="avatar avatar-4by3" src="assets/svg/brands/google-docs.svg"
+                                                alt="Image Description">
+                                        </div>
+
+
+                                        <div class="card-footer border-top-0">
+                                            <h6>Screenshots from Figma</h6>
+                                        </div>
+                                    </a></li>
+                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
+
+                                        <div class="card-body">
+                                            <img class="avatar avatar-4by3" src="assets/svg/brands/google-sheets.svg"
+                                                alt="Image Description">
+                                        </div>
+
+
+                                        <div class="card-footer border-top-0">
+                                            <h6>Screenshots from Figma</h6>
+                                        </div>
+                                    </a></li>
+                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
+
+                                        <div class="card-body">
+                                            <img class="avatar avatar-4by3"
+                                                src="assets/svg/components/placeholder-img-format.svg"
+                                                alt="Image Description">
+                                        </div>
+
+
+                                        <div class="card-footer border-top-0">
+                                            <h6>Screenshots from Figma</h6>
+                                        </div>
+                                    </a></li>
+                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
+
+                                        <div class="card-body">
+                                            <img class="avatar avatar-4by3" src="assets/svg/brands/google-docs.svg"
+                                                alt="Image Description">
+                                        </div>
+
+
+                                        <div class="card-footer border-top-0">
+                                            <h6>Screenshots from Figma</h6>
+                                        </div>
+                                    </a></li>
+                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
+
+                                        <div class="card-body">
+                                            <img class="avatar avatar-4by3" src="assets/svg/brands/google-slides.svg"
+                                                alt="Image Description">
+                                        </div>
+
+
+                                        <div class="card-footer border-top-0">
+                                            <h6>Screenshots from Figma</h6>
+                                        </div>
+                                    </a></li>
+                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
+
+                                        <div class="card-body">
+                                            <img class="avatar avatar-4by3" src="assets/svg/brands/google-docs.svg"
+                                                alt="Image Description">
+                                        </div>
+
+
+                                        <div class="card-footer border-top-0">
+                                            <h6>Screenshots from Figma</h6>
+                                        </div>
+                                    </a></li>
+                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
+
+                                        <div class="card-body">
+                                            <img class="avatar avatar-4by3" src="assets/svg/brands/pdf.svg"
+                                                alt="Image Description">
+                                        </div>
+
+
+                                        <div class="card-footer border-top-0">
+                                            <h6>Screenshots from Figma</h6>
+                                        </div>
+                                    </a></li>
+                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
+
+                                        <div class="card-body">
+                                            <img class="avatar avatar-4by3" src="assets/svg/brands/google-slides.svg"
+                                                alt="Image Description">
+                                        </div>
+
+
+                                        <div class="card-footer border-top-0">
+                                            <h6>Screenshots from Figma</h6>
+                                        </div>
+                                    </a></li>
+                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
+
+                                        <div class="card-body">
+                                            <img class="avatar avatar-4by3" src="assets/svg/brands/google-docs.svg"
+                                                alt="Image Description">
+                                        </div>
+
+
+                                        <div class="card-footer border-top-0">
+                                            <h6>Screenshots from Figma</h6>
+                                        </div>
+                                    </a></li>
+                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
+
+                                        <div class="card-body">
+                                            <img class="avatar avatar-4by3" src="assets/svg/brands/google-sheets.svg"
+                                                alt="Image Description">
+                                        </div>
+
+
+                                        <div class="card-footer border-top-0">
+                                            <h6>Screenshots from Figma</h6>
+                                        </div>
+                                    </a></li>
+                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
+
+                                        <div class="card-body">
+                                            <img class="avatar avatar-4by3"
+                                                src="assets/svg/components/placeholder-img-format.svg"
+                                                alt="Image Description">
+                                        </div>
+
+
+                                        <div class="card-footer border-top-0">
+                                            <h6>Screenshots from Figma</h6>
+                                        </div>
+                                    </a></li>
+                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
+
+                                        <div class="card-body">
+                                            <img class="avatar avatar-4by3" src="assets/svg/brands/google-docs.svg"
+                                                alt="Image Description">
+                                        </div>
+
+
+                                        <div class="card-footer border-top-0">
+                                            <h6>Screenshots from Figma</h6>
+                                        </div>
+                                    </a></li>
+                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
+
+                                        <div class="card-body">
+                                            <img class="avatar avatar-4by3" src="assets/svg/brands/google-slides.svg"
+                                                alt="Image Description">
+                                        </div>
+
+
+                                        <div class="card-footer border-top-0">
+                                            <h6>Screenshots from Figma</h6>
+                                        </div>
+                                    </a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+
+                    <div class="document-content">
+                        <iframe
+                            src="https://immigratly.com/public/uploads/professional/abc9/documents/39672-Document Checklist SOWP - student.pdf"
+                            style="margin:0 auto;width:100%;height: 100vh;" frameborder="0"></iframe>
+                    </div>
+                </div>
+                <div id="shot-sidebar-app" class="shot-sidebar-app">
+                    <div class="shot-sidebar-open-contents">
+                        <div class="comment-document active-comment"><a href="#" id="comment-trigger"
+                                class="comment-document-link">
+                                <span class="comment-document-counter">1</span>
+                                <img class="avatar avatar-4by3 comment-document-image"
+                                    src="assets/svg/message/chat-blue.svg" alt="Image Description"></a>
+                        </div>
+                    </div>
+                    <div class="shot-actions-toolbar-wrapper">
+                        <!---->
+                    </div>
+                    <div class="shot-sidebar sidebar-open">
+                        <div class="shot-sidebar-content">
+                            <h5 class="document-feedback-title">
+                                Document Feedback
+                            </h5> <a href="#" id="send-message-close-manually">Hide Me</a>
+                            <div class="send-message-box">
+                                <div class="send-message-container">
+                                    <div class="form-group">
+                                        <label class="input-label" for="exampleFormControlTextarea1">Send a
+                                            message</label>
+                                        <textarea id="exampleFormControlTextarea1" class="form-control"
+                                            placeholder="Type your message" rows="2"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div infinite-scroll-distance="10" infinite-scroll-listen-for-event="infiniteScroll"
+                                class="sidebar-scrolling-container">
+                                <div class="shot-sidebar-contents">
+                                    <div class="shot-sidebar-actions display-flex justify-space-between">
+
+                                        <div class="message-blue-wrap mb-5 mt-3">
+                                            <div class="message-blue">
+                                                <p class="message-content">Lorem ipsum dolor sit amet, consectetur
+                                                    adipisicing elit, sed do
+                                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+                                                    ad minim veniam, quis
+                                                    nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                                                    consequat. Duis aute
+                                                    irure dolor in reprehenderit in voluptate velit esse cillum dolore
+                                                    eu fugiat nulla pariatur.
+                                                    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+                                                    officia deserunt mollit
+                                                    anim id est laborum.</p>
+
+                                            </div>
+                                            <div class="message-timestamp-left">Jone Doe, 13:37</div>
+                                            <span class="avatar avatar-xs avatar-circle">
+                                                <img class="avatar-img" src="assets/img/160x160/img8.jpg"
+                                                    alt="Image Description">
+                                            </span>
+                                        </div>
+                                        <div class="message-orange-wrap  mb-5 mt-3">
+                                            <div class="message-orange">
+                                                <p class="message-content">Lorem ipsum dolor sit amet, consectetur
+                                                    adipisicing elit, sed do
+                                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+                                                    ad minim veniam, quis
+                                                    nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                                                    consequat. Duis aute
+                                                    irure dolor in reprehenderit in voluptate velit esse cillum dolore
+                                                    eu fugiat nulla pariatur.
+                                                    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+                                                    officia deserunt mollit
+                                                    anim id est laborum.</p>
+
+                                            </div>
+                                            <div class="message-timestamp-right">You, 13:37</div>
+                                            <span class="avatar avatar-xs avatar-circle">
+                                                <img class="avatar-img" src="assets/img/160x160/img7.jpg"
+                                                    alt="Image Description">
+                                            </span>
+                                        </div>
+                                        <div class="message-blue-wrap  mb-5 mt-3">
+                                            <div class="message-blue">
+                                                <p class="message-content">Thanks!</p>
+
+                                            </div>
+                                            <div class="message-timestamp-left">Jone Doe 13:37</div>
+                                            <span class="avatar avatar-xs avatar-circle">
+                                                <img class="avatar-img" src="assets/img/160x160/img8.jpg"
+                                                    alt="Image Description">
+                                            </span>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <!-- End Content -->
 <!-- End Content -->
 @endsection
 @section('javascript')
+<link rel="stylesheet" href="assets/vendor/icon-set/style.css">
+<link rel="stylesheet" href="assets/vendor/hs-mega-menu/dist/hs-mega-menu.min.css">
+<link rel="stylesheet" href="assets/vendor/select2/dist/css/select2.min.css">
+<link rel="stylesheet" href="assets/vendor/@yaireo/tagify/dist/tagify.css">
+<link rel="stylesheet" href="assets/vendor/quill/dist/quill.snow.css">
+<link rel="stylesheet" href="assets/vendor/flatpickr/dist/flatpickr.min.css">
+
+<link rel="stylesheet" href="assets/css/jquery.mThumbnailScroller.css">
+<!-- CSS Front Template -->
 <link rel="stylesheet" href="assets/vendor/mCustomScrollbar/jquery.mCustomScrollbar.css" />
 <script src="assets/vendor/mCustomScrollbar/jquery.mCustomScrollbar.min.js"></script>
 <script src="assets/vendor/dropzone/dist/min/dropzone.min.js"></script>
+<script src="assets/js/jquery.slidereveal.js"></script>
+<script src="assets/js/jquery.mThumbnailScroller.js"></script>
 <script type="text/javascript">
-   var case_id;
-   var document_id;
-   var is_error = false;
-   $(document).ready(function(){
-      $('.js-nav-tooltip-link').tooltip({ boundary: 'window' })
-      $('.js-hs-action').each(function () {
-       var unfold = new HSUnfold($(this)).init();
-      });
-      $('.js-hs-unfold-invoker').each(function () {
-          var unfold = new HSUnfold($(this)).init();
-      });
-      $(".row-checkbox").change(function(){
-         if($(".row-checkbox:checked").length > 0){
-            $("#datatableCounterInfo").show();
-         }else{
-            $("#datatableCounterInfo").hide();
-         }
-         $("#datatableCounter").html($(".row-checkbox:checked").length);
-      });
-      $(".send-attachment").click(function(){
-         document.getElementById('chat-attachment').click();
-      });
-      $(".send-message").click(function(){
-         
-         var message = $("#message_input").val();
-         if(message != ''){
-            $.ajax({
-              type: "POST",
-              url: "{{ baseUrl('cases/documents/send-chats') }}",
-              data:{
-                  _token:csrf_token,
-                  case_id:case_id,
-                  document_id:document_id,
-                  message:message,
-                  doc_type:"{{ $doc_type}}",
-                  type:"text",
-                  subdomain:"{{$subdomain}}"
-              },
-              dataType:'json',
-              beforeSend:function(){
-                 // var html = '<div class="text-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
-                 // $("#activitySidebar .messages").html(html);
-                 $("#message_input,.send-message,.send-attachment").attr('disabled','disabled');
-              },
-              success: function (response) {
-                  if(response.status == true){
-                     $("#message_input,.send-message,.send-attachment").removeAttr('disabled');
-                     $("#message_input").val('');
-                     $("#activitySidebar .messages").html(response.html);
-                     $(".messages").mCustomScrollbar();
-                     $(".messages").animate({ scrollTop: $(".messages")[0].scrollHeight}, 1000);
-                     $(".doc_chat_input").show();
-                     fetchChats(case_id,document_id);
-                  }else{
-                     errorMessage(response.message);
-                  }
-              },
-              error:function(){
-               $("#message_input,.send-message,.send-attachment").removeAttr('disabled');
-               internalError();
-              }
-            });
-         }
-      });
+var case_id;
+var document_id;
+var is_error = false;
+$(document).ready(function() {
+   $("#document-preview-thumbs-content").mThumbnailScroller({
+   axis: "y",
+   type: "click-50",
+   theme: "buttons-out"
+   });
 
-      $("#chat-attachment").change(function(){
-         var formData = new FormData();
-         formData.append("_token",csrf_token);
-         formData.append("case_id",case_id);
-         formData.append("document_id",document_id);
-         formData.append("subdomain","{{$subdomain}}");
-         formData.append('attachment', $('#chat-attachment')[0].files[0]);
-         var url  = "{{ baseUrl('cases/documents/send-chat-file') }}";
-         $.ajax({
-            url:url,
-            type:"post",
-            data:formData,
+
+   $("#shot-sidebar-app").slideReveal({
+   trigger: $("#comment-trigger"),
+   autoEscape: false,
+   width: 380,
+   push: true,
+   top: 34,
+   position: "right",
+   speed: 700
+   });
+   var sample1 = $("#shot-sidebar-app").slideReveal({
+   trigger: $("#comment-trigger"),
+   autoEscape: false,
+   width: 380,
+   push: true,
+   top: 34,
+   position: "right",
+   speed: 700
+   })
+   $("#send-message-close-manually").click(function () {
+   sample1.slideReveal("hide");
+   });
+    $('.js-nav-tooltip-link').tooltip({
+        boundary: 'window'
+    })
+    $('.js-hs-action').each(function() {
+        var unfold = new HSUnfold($(this)).init();
+    });
+    $('.js-hs-unfold-invoker').each(function() {
+        var unfold = new HSUnfold($(this)).init();
+    });
+    $(".row-checkbox").change(function() {
+        if ($(".row-checkbox:checked").length > 0) {
+            $("#datatableCounterInfo").show();
+        } else {
+            $("#datatableCounterInfo").hide();
+        }
+        $("#datatableCounter").html($(".row-checkbox:checked").length);
+    });
+    $(".send-attachment").click(function() {
+        document.getElementById('chat-attachment').click();
+    });
+    $(".send-message").click(function() {
+
+        var message = $("#message_input").val();
+        if (message != '') {
+            $.ajax({
+                type: "POST",
+                url: "{{ baseUrl('cases/documents/send-chats') }}",
+                data: {
+                    _token: csrf_token,
+                    case_id: case_id,
+                    document_id: document_id,
+                    message: message,
+                    doc_type: "{{ $doc_type}}",
+                    type: "text",
+                    subdomain: "{{$subdomain}}"
+                },
+                dataType: 'json',
+                beforeSend: function() {
+                    // var html = '<div class="text-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
+                    // $("#activitySidebar .messages").html(html);
+                    $("#message_input,.send-message,.send-attachment").attr('disabled',
+                        'disabled');
+                },
+                success: function(response) {
+                    if (response.status == true) {
+                        $("#message_input,.send-message,.send-attachment").removeAttr(
+                            'disabled');
+                        $("#message_input").val('');
+                        $("#activitySidebar .messages").html(response.html);
+                        $(".messages").mCustomScrollbar();
+                        $(".messages").animate({
+                            scrollTop: $(".messages")[0].scrollHeight
+                        }, 1000);
+                        $(".doc_chat_input").show();
+                        fetchChats(case_id, document_id);
+                    } else {
+                        errorMessage(response.message);
+                    }
+                },
+                error: function() {
+                    $("#message_input,.send-message,.send-attachment").removeAttr(
+                        'disabled');
+                    internalError();
+                }
+            });
+        }
+    });
+
+    $("#chat-attachment").change(function() {
+        var formData = new FormData();
+        formData.append("_token", csrf_token);
+        formData.append("case_id", case_id);
+        formData.append("document_id", document_id);
+        formData.append("subdomain", "{{$subdomain}}");
+        formData.append('attachment', $('#chat-attachment')[0].files[0]);
+        var url = "{{ baseUrl('cases/documents/send-chat-file') }}";
+        $.ajax({
+            url: url,
+            type: "post",
+            data: formData,
             cache: false,
             contentType: false,
             processData: false,
-            dataType:"json",
-            beforeSend:function(){
-               $("#message_input,.send-message,.send-attachment").attr('disabled','disabled');
+            dataType: "json",
+            beforeSend: function() {
+                $("#message_input,.send-message,.send-attachment").attr('disabled',
+                    'disabled');
             },
-            success: function (response) {
-               if(response.status == true){
-                  $("#message_input,.send-message,.send-attachment").removeAttr('disabled');
-                  $("#chat-attachment").val('');
-                  $("#activitySidebar .messages").html(response.html);
-                  $(".messages").mCustomScrollbar();
-                  $(".messages").animate({ scrollTop: $(".messages")[0].scrollHeight}, 1000);
-                  $(".doc_chat_input").show();
-                  fetchChats(case_id,document_id);
-               }else{
-                  errorMessage(response.message);
-               }
+            success: function(response) {
+                if (response.status == true) {
+                    $("#message_input,.send-message,.send-attachment").removeAttr(
+                        'disabled');
+                    $("#chat-attachment").val('');
+                    $("#activitySidebar .messages").html(response.html);
+                    $(".messages").mCustomScrollbar();
+                    $(".messages").animate({
+                        scrollTop: $(".messages")[0].scrollHeight
+                    }, 1000);
+                    $(".doc_chat_input").show();
+                    fetchChats(case_id, document_id);
+                } else {
+                    errorMessage(response.message);
+                }
             },
-            error:function(){
-               $("#message_input,.send-message,.send-attachment").removeAttr('disabled');
-               internalError();
+            error: function() {
+                $("#message_input,.send-message,.send-attachment").removeAttr('disabled');
+                internalError();
             }
-         });
-      });
-   });
-   $('.dropzone-custom').each(function () {
-      var dropzone = $.HSCore.components.HSDropzone.init('#' + $(this).attr('id'));
-      dropzone.on("success", function(file,response) {
+        });
+    });
+});
+$('.dropzone-custom').each(function() {
+    var dropzone = $.HSCore.components.HSDropzone.init('#' + $(this).attr('id'));
+    dropzone.on("success", function(file, response) {
 
-        if(response.status == false){
+        if (response.status == false) {
             is_error = true;
-         }
-      });
-      dropzone.on("queuecomplete", function() {
-         if(is_error == true){
+        }
+    });
+    dropzone.on("queuecomplete", function() {
+        if (is_error == true) {
             errorMessage("Error while upload file");
-         }else{
+        } else {
             location.reload();
-         }
-      });
-      
-   });      
+        }
+    });
 
-   function deleteMultipleDocuments(e){
-      var url = $(e).attr("data-href");
-      if($(".row-checkbox:checked").length <= 0){
-         warningMessage("No records selected to delete");
-         return false;
-      }
-      Swal.fire({
-         title: 'Are you sure to delete?',
-         text: "You won't be able to revert this!",
-         type: 'warning',
-         showCancelButton: true,
-         confirmButtonColor: '#3085d6',
-         cancelButtonColor: '#d33',
-         confirmButtonText: 'Yes',
-         confirmButtonClass: 'btn btn-primary',
-         cancelButtonClass: 'btn btn-danger ml-1',
-         buttonsStyling: false,
-       }).then(function(result) {
-         if(result.value){
-            if($(".row-checkbox:checked").length <= 0){
-               warningMessage("No records selected to delete");
-               return false;
+});
+
+function deleteMultipleDocuments(e) {
+    var url = $(e).attr("data-href");
+    if ($(".row-checkbox:checked").length <= 0) {
+        warningMessage("No records selected to delete");
+        return false;
+    }
+    Swal.fire({
+        title: 'Are you sure to delete?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes',
+        confirmButtonClass: 'btn btn-primary',
+        cancelButtonClass: 'btn btn-danger ml-1',
+        buttonsStyling: false,
+    }).then(function(result) {
+        if (result.value) {
+            if ($(".row-checkbox:checked").length <= 0) {
+                warningMessage("No records selected to delete");
+                return false;
             }
             var row_ids = [];
-            $(".row-checkbox:checked").each(function(){
-               row_ids.push($(this).val());
+            $(".row-checkbox:checked").each(function() {
+                row_ids.push($(this).val());
             });
             var ids = row_ids.join(",");
             $.ajax({
-              type: "POST",
-              url: url,
-              data:{
-                  _token:csrf_token,
-                  ids:ids,
-                  subdomain:"{{$subdomain}}"
-              },
-              dataType:'json',
-              beforeSend:function(){
-                 showLoader();
-              },
-              success: function (response) {
-                  if(response.status == true){
-                     location.reload();
-                  }else{
-                     errorMessage(response.message);
-                  }
-              },
-              error:function(){
-               internalError();
-              }
+                type: "POST",
+                url: url,
+                data: {
+                    _token: csrf_token,
+                    ids: ids,
+                    subdomain: "{{$subdomain}}"
+                },
+                dataType: 'json',
+                beforeSend: function() {
+                    showLoader();
+                },
+                success: function(response) {
+                    if (response.status == true) {
+                        location.reload();
+                    } else {
+                        errorMessage(response.message);
+                    }
+                },
+                error: function() {
+                    internalError();
+                }
             });
-         }
-       })
-   }
+        }
+    })
+}
 
 
-   function fetchChats(c_id,d_id){
-      case_id = c_id;
-      document_id = d_id;
-      $.ajax({
+function fetchChats(c_id, d_id) {
+    case_id = c_id;
+    document_id = d_id;
+    $.ajax({
         type: "POST",
         url: "{{ baseUrl('cases/documents/fetch-chats') }}",
-        data:{
-            _token:csrf_token,
-            case_id:case_id,
-            document_id:document_id,
-            subdomain:"{{$subdomain}}"
+        data: {
+            _token: csrf_token,
+            case_id: case_id,
+            document_id: document_id,
+            subdomain: "{{$subdomain}}"
         },
-        dataType:'json',
-        beforeSend:function(){
-           // var html = '<div class="text-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
-           // $("#activitySidebar .messages").html(html);
-           $("#message_input").val('');
-           $("#message_input,.send-message,.send-attachment").attr('disabled','disabled');
+        dataType: 'json',
+        beforeSend: function() {
+            // var html = '<div class="text-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
+            // $("#activitySidebar .messages").html(html);
+            $("#message_input").val('');
+            $("#message_input,.send-message,.send-attachment").attr('disabled', 'disabled');
         },
-        success: function (response) {
-            if(response.status == true){
-               $("#message_input,.send-message,.send-attachment").removeAttr('disabled');
-               $("#activitySidebar .messages").html(response.html);
-               setTimeout(function(){
-                  $(".messages").mCustomScrollbar();
-                  $(".messages").animate({ scrollTop: $(".messages")[0].scrollHeight}, 1000);
-               },800);
-               
-               $(".doc_chat_input").show();
-            }else{
-               errorMessage(response.message);
+        success: function(response) {
+            if (response.status == true) {
+                $("#message_input,.send-message,.send-attachment").removeAttr('disabled');
+                $("#activitySidebar .messages").html(response.html);
+                setTimeout(function() {
+                    $(".messages").mCustomScrollbar();
+                    $(".messages").animate({
+                        scrollTop: $(".messages")[0].scrollHeight
+                    }, 1000);
+                }, 800);
+
+                $(".doc_chat_input").show();
+            } else {
+                errorMessage(response.message);
             }
         },
-        error:function(){
-         internalError();
+        error: function() {
+            internalError();
         }
-      });
-   }
+    });
+}
 
-   function showGoogleFiles(){
-      var parameter = {};
-      parameter['doc_type'] = "<?php echo $doc_type ?>";
-      parameter['subdomain'] = "<?php echo $subdomain ?>";
-      parameter['case_id'] = "<?php echo $case_id ?>";
+function showGoogleFiles() {
+    var parameter = {};
+    parameter['doc_type'] = "<?php echo $doc_type ?>";
+    parameter['subdomain'] = "<?php echo $subdomain ?>";
+    parameter['case_id'] = "<?php echo $case_id ?>";
 
-      showPopup("<?php echo baseUrl('cases/google-drive/folder/'.$document['unique_id']) ?>",'post',parameter);
-   }
-   function showDropboxFiles(){
-      var parameter = {};
-      parameter['doc_type'] = "<?php echo $doc_type ?>";
-      parameter['subdomain'] = "<?php echo $subdomain ?>";
-      parameter['case_id'] = "<?php echo $case_id ?>";
+    showPopup("<?php echo baseUrl('cases/google-drive/folder/'.$document['unique_id']) ?>", 'post', parameter);
+}
 
-      showPopup("<?php echo baseUrl('cases/dropbox/folder/'.$document['unique_id']) ?>",'post',parameter);
-   }
+function showDropboxFiles() {
+    var parameter = {};
+    parameter['doc_type'] = "<?php echo $doc_type ?>";
+    parameter['subdomain'] = "<?php echo $subdomain ?>";
+    parameter['case_id'] = "<?php echo $case_id ?>";
+
+    showPopup("<?php echo baseUrl('cases/dropbox/folder/'.$document['unique_id']) ?>", 'post', parameter);
+}
 </script>
 @endsection

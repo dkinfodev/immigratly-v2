@@ -161,8 +161,6 @@ class ProfessionalApiController extends Controller
             $client_id = $request->input("client_id");
             $record = Cases::where("unique_id",$case_id)->first();
 
-     
-           
             foreach($folder_ids as $folder){
                 $doctype = $folder['doctype'];
                 $folder_id = $folder['folder_id'];
@@ -313,7 +311,7 @@ class ProfessionalApiController extends Controller
 
             $case_id = $request->input("case_id");
             $doc_id = $request->input("doc_id");
-            $record = Cases::where("unique_id",$case_id)->first();
+            $record = Cases::with(['AssingedMember','VisaService'])->where("unique_id",$case_id)->first();
             $document = DB::table(MAIN_DATABASE.".documents_folder")
                         ->where("unique_id",$doc_id)
                         ->first();
@@ -361,7 +359,7 @@ class ProfessionalApiController extends Controller
 
             $case_id = $request->input("case_id");
             $doc_id = $request->input("doc_id");
-            $record = Cases::where("unique_id",$case_id)->first();
+            $record = Cases::with(['AssingedMember','VisaService'])->where("unique_id",$case_id)->first();
 
             $document = ServiceDocuments::where("unique_id",$doc_id)->first();
             $folder_id = $document->unique_id;
@@ -410,7 +408,7 @@ class ProfessionalApiController extends Controller
             $case_id = $request->input("case_id");
             $doc_id = $request->input("doc_id");
 
-            $record = Cases::where("unique_id",$case_id)->first();
+            $record = Cases::with(['AssingedMember','VisaService'])->where("unique_id",$case_id)->first();
            
             $document = CaseFolders::where("unique_id",$doc_id)->first();
             $folder_id = $document->unique_id;
