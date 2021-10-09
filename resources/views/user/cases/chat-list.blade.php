@@ -7,7 +7,34 @@ if($chat['send_by'] != 'client'){
 }
 ?>
 @if($chat['created_by'] != \Auth::user()->unique_id)
-<li class="justify-content-between mb-4">
+<div class="message-blue-wrap mb-5 mt-3">
+    <div class="message-blue">
+        @if($chat['type'] == 'file')
+         <?php
+            $file_url = professionalDirUrl($subdomain)."/documents/".$chat['file_detail']['file_name'];
+         ?>
+         <a href="{{$file_url}}" class="d-flex" download>
+           <?php 
+              $fileicon = fileIcon($chat['message']);
+              echo $fileicon;
+           ?>
+           <div class="text-msg text-dark">{{$chat['message']}}</div>
+         </a>
+        @else
+        <p class="mb-0">
+          {{$chat['message']}}
+        </p>
+        @endif
+
+    </div>
+    <div class="message-timestamp-left">Jone Doe, 13:37</div>
+    <span class="avatar avatar-xs avatar-circle">
+        <img class="avatar-img" src="assets/img/160x160/img8.jpg"
+            alt="Image Description">
+    </span>
+</div>
+
+{{--<li class="justify-content-between mb-4">
   <div class="row m-0">
     <div class="col-md-2">
       <span class="avatar avatar-sm avatar-circle">
@@ -40,9 +67,35 @@ if($chat['send_by'] != 'client'){
       </div>
     </div>
   </div>
-</li>
+</li> --}}
 @else
-<li class="justify-content-between mb-4">
+<div class="message-orange-wrap  mb-5 mt-3">
+    <div class="message-orange">
+    @if($chat['type'] == 'file')
+         <?php
+            $file_url = professionalDirUrl($subdomain)."/documents/".$chat['file_detail']['file_name'];
+         ?>
+         <a href="{{$file_url}}" class="d-flex" download>
+           <?php 
+              $fileicon = fileIcon($chat['message']);
+              echo $fileicon;
+           ?>
+           <div class="text-msg text-dark">{{$chat['message']}}</div>
+         </a>
+        @else
+        <p class="mb-0">
+          {{$chat['message']}}
+        </p>
+        @endif
+
+    </div>
+    <div class="message-timestamp-right">You, 13:37</div>
+    <span class="avatar avatar-xs avatar-circle">
+        <img class="avatar-img" src="assets/img/160x160/img7.jpg"
+            alt="Image Description">
+    </span>
+</div>
+{{--<li class="justify-content-between mb-4">
   <div class="row m-0">
     <div class="col-md-10">
       <div class="chat-body white p-0 ml-2 z-depth-1">
@@ -75,6 +128,6 @@ if($chat['send_by'] != 'client'){
       </span>
     </div>
   </div>
-</li>
+</li>--}}
 @endif
 @endforeach

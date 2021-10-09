@@ -893,6 +893,7 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
             Route::post('/delete-multiple', [App\Http\Controllers\User\ProfessionalCasesController::class, 'deleteMultipleDocuments']);
             Route::post('/chats', [App\Http\Controllers\User\ProfessionalCasesController::class, 'documentChats']);
             Route::post('/fetch-chats', [App\Http\Controllers\User\ProfessionalCasesController::class, 'fetchDocumentChats']);
+            // Route::post('/fetch-document-chats', [App\Http\Controllers\User\ProfessionalCasesController::class, 'fetchDocumentChats']);
             Route::post('/send-chats', [App\Http\Controllers\User\ProfessionalCasesController::class, 'saveDocumentChat']);
             Route::post('/send-chat-file', [App\Http\Controllers\User\ProfessionalCasesController::class, 'saveDocumentChatFile']);
         });
@@ -906,6 +907,7 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
         Route::post('/import-documents', [App\Http\Controllers\User\ProfessionalCasesController::class, 'saveImportDocuments']);
         Route::post('/remove-user-document', [App\Http\Controllers\User\ProfessionalCasesController::class, 'removeUserDocument']);
         Route::get('/view-document/{case_id}/{doc_id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'viewDocument']);
+        Route::get('/preview-document/{case_id}/{doc_id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'previewDocument']);
         
         
 

@@ -58,22 +58,22 @@
                 <!-- List Item -->
                 @foreach($case_documents as $key => $doc)
                 <?php 
-      $doc_url = $file_url."/".$doc['file_detail']['file_name']; 
-      $url = baseUrl('cases/view-document/'.$case_id.'/'.$doc['unique_id'].'?url='.$doc_url.'&file_name='.$doc['file_detail']['file_name'].'&p='.$subdomain.'&doc_type='.$doc_type.'&folder_id='.$doc_id);
-   ?>
+                    $doc_url = $file_url."/".$doc['file_detail']['file_name']; 
+                    $url = baseUrl('cases/preview-document/'.$case_id.'/'.$doc['unique_id'].'?url='.$doc_url.'&file_name='.$doc['file_detail']['file_name'].'&p='.$subdomain.'&doc_type='.$doc_type.'&folder_id='.$doc_id);
+                ?>
                 <li class="list-group-item">
                     <div class="row align-items-center gx-2">
                         <div class="col-auto">
                             <?php 
-            $fileicon = fileIcon($doc['file_detail']['original_name']);
-            echo $fileicon;
-            $filesize = file_size($file_dir."/".$doc['file_detail']['file_name']);
-         ?>
+                                $fileicon = fileIcon($doc['file_detail']['original_name']);
+                                echo $fileicon;
+                                $filesize = file_size($file_dir."/".$doc['file_detail']['file_name']);
+                            ?>
                         </div>
 
                         <div class="col">
                             <h5 class="mb-0">
-                                <a class="text-dark" href="#" data-toggle="modal"
+                                <a data-href="{{$url}}" onclick="previewDocument(this)" data-caseid="{{$case_id}}" data-documentid="{{ $doc['unique_id'] }}"  class="text-dark" href="#" data-toggle="modal"
                                     data-target=".bd-example-modal-fs">{{$doc['file_detail']['original_name']}}</a>
                             </h5>
                             <ul class="list-inline list-separator small">
@@ -87,9 +87,9 @@
                             <div class="hs-unfold">
                                 <a class="js-hs-unfold-invoker btn btn-sm btn-white" href="javascript:;"
                                     data-hs-unfold-options='{
-               "target": "#action-{{$key}}",
-               "type": "css-animation"
-               }'>
+                                    "target": "#action-{{$key}}",
+                                    "type": "css-animation"
+                                    }'>
                                     <span class="d-none d-sm-inline-block mr-1">More</span>
                                     <i class="tio-chevron-down"></i>
                                 </a>
@@ -170,218 +170,45 @@
                     <div class="document-preview-thumbs">
                         <div id="document-preview-thumbs-content">
                             <ul>
-                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
-
+                            @foreach($case_documents as $key => $doc)
+                            <?php 
+                                $doc_url = $file_url."/".$doc['file_detail']['file_name']; 
+                                $url = baseUrl('cases/preview-document/'.$case_id.'/'.$doc['unique_id'].'?url='.$doc_url.'&file_name='.$doc['file_detail']['file_name'].'&p='.$subdomain.'&doc_type='.$doc_type.'&folder_id='.$doc_id);
+                            ?>
+                                <li>
+                                    <a onclick="previewDocument(this)" data-caseid="{{$case_id}}" data-documentid="{{ $doc['unique_id'] }}" class="card card-sm card-hover-shadow text-center" href="javascript:;" data-href="{{$url}}">
                                         <div class="card-body">
-                                            <img class="avatar avatar-4by3" src="assets/svg/brands/google-docs.svg"
-                                                alt="Image Description">
+                                            <?php 
+                                                $fileicon = fileIcon($doc['file_detail']['original_name']);
+                                                echo $fileicon;
+                                                $filesize = file_size($file_dir."/".$doc['file_detail']['file_name']);
+                                            ?>
                                         </div>
-
-
                                         <div class="card-footer border-top-0">
-                                            <h6>Screenshots from Figma</h6>
+                                            <h6>{{$doc['file_detail']['original_name']}}</h6>
                                         </div>
-                                    </a></li>
-                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
-
-                                        <div class="card-body">
-                                            <img class="avatar avatar-4by3" src="assets/svg/brands/pdf.svg"
-                                                alt="Image Description">
-                                        </div>
-
-
-                                        <div class="card-footer border-top-0">
-                                            <h6>Screenshots from Figma</h6>
-                                        </div>
-                                    </a></li>
-                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
-
-                                        <div class="card-body">
-                                            <img class="avatar avatar-4by3" src="assets/svg/brands/google-slides.svg"
-                                                alt="Image Description">
-                                        </div>
-
-
-                                        <div class="card-footer border-top-0">
-                                            <h6>Screenshots from Figma</h6>
-                                        </div>
-                                    </a></li>
-                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
-
-                                        <div class="card-body">
-                                            <img class="avatar avatar-4by3" src="assets/svg/brands/google-docs.svg"
-                                                alt="Image Description">
-                                        </div>
-
-
-                                        <div class="card-footer border-top-0">
-                                            <h6>Screenshots from Figma</h6>
-                                        </div>
-                                    </a></li>
-                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
-
-                                        <div class="card-body">
-                                            <img class="avatar avatar-4by3" src="assets/svg/brands/google-sheets.svg"
-                                                alt="Image Description">
-                                        </div>
-
-
-                                        <div class="card-footer border-top-0">
-                                            <h6>Screenshots from Figma</h6>
-                                        </div>
-                                    </a></li>
-                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
-
-                                        <div class="card-body">
-                                            <img class="avatar avatar-4by3"
-                                                src="assets/svg/components/placeholder-img-format.svg"
-                                                alt="Image Description">
-                                        </div>
-
-
-                                        <div class="card-footer border-top-0">
-                                            <h6>Screenshots from Figma</h6>
-                                        </div>
-                                    </a></li>
-                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
-
-                                        <div class="card-body">
-                                            <img class="avatar avatar-4by3" src="assets/svg/brands/google-docs.svg"
-                                                alt="Image Description">
-                                        </div>
-
-
-                                        <div class="card-footer border-top-0">
-                                            <h6>Screenshots from Figma</h6>
-                                        </div>
-                                    </a></li>
-                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
-
-                                        <div class="card-body">
-                                            <img class="avatar avatar-4by3" src="assets/svg/brands/google-slides.svg"
-                                                alt="Image Description">
-                                        </div>
-
-
-                                        <div class="card-footer border-top-0">
-                                            <h6>Screenshots from Figma</h6>
-                                        </div>
-                                    </a></li>
-                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
-
-                                        <div class="card-body">
-                                            <img class="avatar avatar-4by3" src="assets/svg/brands/google-docs.svg"
-                                                alt="Image Description">
-                                        </div>
-
-
-                                        <div class="card-footer border-top-0">
-                                            <h6>Screenshots from Figma</h6>
-                                        </div>
-                                    </a></li>
-                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
-
-                                        <div class="card-body">
-                                            <img class="avatar avatar-4by3" src="assets/svg/brands/pdf.svg"
-                                                alt="Image Description">
-                                        </div>
-
-
-                                        <div class="card-footer border-top-0">
-                                            <h6>Screenshots from Figma</h6>
-                                        </div>
-                                    </a></li>
-                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
-
-                                        <div class="card-body">
-                                            <img class="avatar avatar-4by3" src="assets/svg/brands/google-slides.svg"
-                                                alt="Image Description">
-                                        </div>
-
-
-                                        <div class="card-footer border-top-0">
-                                            <h6>Screenshots from Figma</h6>
-                                        </div>
-                                    </a></li>
-                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
-
-                                        <div class="card-body">
-                                            <img class="avatar avatar-4by3" src="assets/svg/brands/google-docs.svg"
-                                                alt="Image Description">
-                                        </div>
-
-
-                                        <div class="card-footer border-top-0">
-                                            <h6>Screenshots from Figma</h6>
-                                        </div>
-                                    </a></li>
-                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
-
-                                        <div class="card-body">
-                                            <img class="avatar avatar-4by3" src="assets/svg/brands/google-sheets.svg"
-                                                alt="Image Description">
-                                        </div>
-
-
-                                        <div class="card-footer border-top-0">
-                                            <h6>Screenshots from Figma</h6>
-                                        </div>
-                                    </a></li>
-                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
-
-                                        <div class="card-body">
-                                            <img class="avatar avatar-4by3"
-                                                src="assets/svg/components/placeholder-img-format.svg"
-                                                alt="Image Description">
-                                        </div>
-
-
-                                        <div class="card-footer border-top-0">
-                                            <h6>Screenshots from Figma</h6>
-                                        </div>
-                                    </a></li>
-                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
-
-                                        <div class="card-body">
-                                            <img class="avatar avatar-4by3" src="assets/svg/brands/google-docs.svg"
-                                                alt="Image Description">
-                                        </div>
-
-
-                                        <div class="card-footer border-top-0">
-                                            <h6>Screenshots from Figma</h6>
-                                        </div>
-                                    </a></li>
-                                <li><a class="card card-sm card-hover-shadow h-100 text-center" href="#">
-
-                                        <div class="card-body">
-                                            <img class="avatar avatar-4by3" src="assets/svg/brands/google-slides.svg"
-                                                alt="Image Description">
-                                        </div>
-
-
-                                        <div class="card-footer border-top-0">
-                                            <h6>Screenshots from Figma</h6>
-                                        </div>
-                                    </a></li>
+                                    </a>
+                                </li>
+                            @endforeach
                             </ul>
                         </div>
                     </div>
 
 
                     <div class="document-content">
-                        <iframe
-                            src="https://immigratly.com/public/uploads/professional/abc9/documents/39672-Document Checklist SOWP - student.pdf"
-                            style="margin:0 auto;width:100%;height: 100vh;" frameborder="0"></iframe>
+                        <div id="document-preview"></div>
+                        <!-- <iframe src="https://immigratly.com/public/uploads/professional/abc9/documents/39672-Document Checklist SOWP - student.pdf" style="margin:0 auto;width:100%;height: 100vh;" frameborder="0"></iframe> -->
                     </div>
                 </div>
                 <div id="shot-sidebar-app" class="shot-sidebar-app">
                     <div class="shot-sidebar-open-contents">
-                        <div class="comment-document active-comment"><a href="#" id="comment-trigger"
+                        <div class="comment-document active-comment">
+                            <a href="javascript:;" id="comment-trigger"
                                 class="comment-document-link">
                                 <span class="comment-document-counter">1</span>
                                 <img class="avatar avatar-4by3 comment-document-image"
-                                    src="assets/svg/message/chat-blue.svg" alt="Image Description"></a>
+                                    src="assets/svg/message/chat-blue.svg" alt="Image Description">
+                            </a>
                         </div>
                     </div>
                     <div class="shot-actions-toolbar-wrapper">
@@ -391,7 +218,8 @@
                         <div class="shot-sidebar-content">
                             <h5 class="document-feedback-title">
                                 Document Feedback
-                            </h5> <a href="#" id="send-message-close-manually">Hide Me</a>
+                            </h5> 
+                            <a href="javascript:;" id="send-message-close-manually">Hide Me</a>
                             <div class="send-message-box">
                                 <div class="send-message-container">
                                     <div class="form-group">
@@ -405,9 +233,9 @@
                             <div infinite-scroll-distance="10" infinite-scroll-listen-for-event="infiniteScroll"
                                 class="sidebar-scrolling-container">
                                 <div class="shot-sidebar-contents">
-                                    <div class="shot-sidebar-actions display-flex justify-space-between">
+                                    <div id="document-chats" class="shot-sidebar-actions display-flex justify-space-between">
 
-                                        <div class="message-blue-wrap mb-5 mt-3">
+                                        <!-- <div class="message-blue-wrap mb-5 mt-3">
                                             <div class="message-blue">
                                                 <p class="message-content">Lorem ipsum dolor sit amet, consectetur
                                                     adipisicing elit, sed do
@@ -460,7 +288,7 @@
                                                     alt="Image Description">
                                             </span>
 
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>
@@ -528,9 +356,9 @@ $(document).ready(function() {
     $('.js-hs-action').each(function() {
         var unfold = new HSUnfold($(this)).init();
     });
-    $('.js-hs-unfold-invoker').each(function() {
-        var unfold = new HSUnfold($(this)).init();
-    });
+    // $('.js-hs-unfold-invoker').each(function() {
+    //     var unfold = new HSUnfold($(this)).init();
+    // });
     $(".row-checkbox").change(function() {
         if ($(".row-checkbox:checked").length > 0) {
             $("#datatableCounterInfo").show();
@@ -729,7 +557,7 @@ function fetchChats(c_id, d_id) {
         success: function(response) {
             if (response.status == true) {
                 $("#message_input,.send-message,.send-attachment").removeAttr('disabled');
-                $("#activitySidebar .messages").html(response.html);
+                $("#document-chats").html(response.html);
                 setTimeout(function() {
                     $(".messages").mCustomScrollbar();
                     $(".messages").animate({
@@ -764,6 +592,33 @@ function showDropboxFiles() {
     parameter['case_id'] = "<?php echo $case_id ?>";
 
     showPopup("<?php echo baseUrl('cases/dropbox/folder/'.$document['unique_id']) ?>", 'post', parameter);
+}
+function previewDocument(e){
+    var url = $(e).attr("data-href");
+    var case_id = $(e).attr("data-caseid");
+    var document_id = $(e).attr("data-documentid");
+    $.ajax({
+        type: "GET",
+        url: url,
+        dataType: 'json',
+        beforeSend: function() {
+            showLoader();
+        },
+        success: function(response) {
+            hideLoader();
+            if (response.status == true) {
+                $("#document-preview").html(response.content);
+                fetchChats(case_id, document_id);
+            } else {
+                errorMessage(response.message);
+            }
+        },
+        error: function() {
+            $("#message_input,.send-message,.send-attachment").removeAttr(
+                'disabled');
+            internalError();
+        }
+    });
 }
 </script>
 @endsection

@@ -52,7 +52,7 @@
               @if(google_doc_viewer($extension))
                 <iframe src="http://docs.google.com/viewer?url={{$url}}&embedded=true" style="margin:0 auto; width:100%; height:700px;" frameborder="0"></iframe>
               @else
-              <iframe src="{{$url}}" style="margin:0 auto; width:100%; height:700px;" frameborder="0"></iframe>
+                <iframe src="{{$url}}" style="margin:0 auto; width:100%; height:700px;" frameborder="0"></iframe>
               @endif
             @endif
           </div>

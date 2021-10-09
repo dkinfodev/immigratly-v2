@@ -1570,4 +1570,27 @@ class ProfessionalCasesController extends Controller
         return response()->json($response); 
     }
 
+    public function previewDocument($case_id,$doc_id,Request $request){
+        $url = $request->get("url");
+        $filename = $request->get("file_name");
+        $extension = fileExtension($filename);
+        $subdomain = $request->get("p");
+        $folder_id = $request->get("folder_id");
+        
+        $doc_type = $request->get("doc_type");
+        $document = '';
+        if($extension == 'image'){
+            $document = '<div class="text-center"><img src="'.$url.'" class="img-fluid" /></div>';
+        }else{
+            if(google_doc_viewer($extension)){
+                $document = '<iframe src="http://docs.google.com/viewer?url='.$url.'&embedded=true" style="margin:0 auto; width:100%; height:700px;" frameborder="0"></iframe>';
+            }else{
+                $document = '<iframe src="'.$url.'" style="margin:0 auto; width:100%; height:700px;" frameborder="0"></iframe>';
+            }
+        }
+        $response['status'] = true;
+        $response['content'] = $document;
+        return response()->json($response);
+    }
+
 }
