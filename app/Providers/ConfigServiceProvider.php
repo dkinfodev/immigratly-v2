@@ -39,16 +39,16 @@ class ConfigServiceProvider extends ServiceProvider
             \DB::purge('mysql');
         }else{
            
-            $login_to = 'admin_panel'; // admin_panel/professional_panel
+            $login_to = 'professional_panel'; // admin_panel/professional_panel
             \Session::put("login_to",$login_to);
             
             if($login_to == 'professional_panel'){
                 \Session::forget("subdomain");
-                \Session::put("subdomain",'dkdev');
-              
-                \Config::set('database.connections.mysql.database', 'immigrat_dkdev');
+                \Session::put("subdomain",'testdev');
+                
+                \Config::set('database.connections.mysql.database', 'immigrat_testdev');
                 \DB::purge('mysql');
-                // \Config::set('database.connections.mysql.database', 'immigrat_immigratly_dkdev');
+                // \Config::set('database.connections.mysql.database', 'immigrat_immigratly_testdev');
             }
         }
         

@@ -149,7 +149,7 @@
 
                     <div class="input-group input-group-merge" data-hs-validation-validate-class>
                         <input type="password" class="js-toggle-password form-control form-control-lg"
-                            name="password" id="signupModalFormSignupPassword"
+                            name="password" id="password"
                             placeholder="8+ characters required" aria-label="8+ characters required"
                             required data-hs-toggle-password-options='{
                                 "target": [".js-toggle-password-target-1", ".js-toggle-password-target-2"],
@@ -162,6 +162,8 @@
                             <i class="js-toggle-passowrd-show-icon-1 bi-eye"></i>
                         </a>
                     </div>
+
+
 
                     <span class="invalid-feedback">Your password is invalid. Please try again.</span>
                 </div>
@@ -179,11 +181,11 @@
                                 "target": [".js-toggle-password-target-1", ".js-toggle-password-target-2"],
                                 "defaultClass": "bi-eye-slash",
                                 "showClass": "bi-eye",
-                                "classChangeTarget": ".js-toggle-passowrd-show-icon-1"
+                                "classChangeTarget": ".js-toggle-passowrd-show-icon-2"
                             }'>
-                        <a class="js-toggle-password-target-1 input-group-append input-group-text"
+                        <a class="js-toggle-password-target-2 input-group-append input-group-text"
                             href="javascript:;">
-                            <i class="js-toggle-passowrd-show-icon-1 bi-eye"></i>
+                            <i class="js-toggle-passowrd-show-icon-2 bi-eye"></i>
                         </a>
                     </div>
 
@@ -327,6 +329,18 @@
 <!-- End Row -->
 <script src="assets/front/vendor/hs-toggle-password/dist/js/hs-toggle-password.js"></script>
 <script src="assets/vendor/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
+
+
+<script>
+    (function() {
+         // INITIALIZATION OF TOGGLE PASSWORD
+         // =======================================================
+        new HSTogglePassword('.js-toggle-password')
+
+    })();
+
+</script>
+
 <script type="text/javascript">
 
 // INITIALIZATION OF TOGGLE PASSWORD
@@ -340,6 +354,9 @@ $(document).ready(function() {
     // $('.js-masked-input').each(function() {
     //     var mask = $.HSCore.components.HSMask.init($(this));
     // });
+
+
+
     $(".signup-btn").click(function(e) {
         e.preventDefault();
         $(".signup-btn").attr("disabled", "disabled");
@@ -375,7 +392,7 @@ $(document).ready(function() {
                             // $("#vr_email").html(response.email);
                             // $("#vr_mobile").html(response.mobile_no);
                         }
-                        if (response.error_type == 'verification_pending') {
+                        if (response.error_type == ' verification_pending') {
                             verify_status = '';
                             sendOtp("email:" + response.email);
                             // $("#verificationModal").modal("show");
@@ -397,7 +414,7 @@ $(document).ready(function() {
 
 function sendOtp(value) {
     $("#verify_code").val('');
-    // var value = '';
+    //var value = '';
     // if ($("input[name=verify_type]:checked").val() != undefined && $("input[name=verify_type]:checked").val() != '') {
     //     value = $("input[name=verify_type]:checked").val();
     // } else {

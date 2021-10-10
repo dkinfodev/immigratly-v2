@@ -201,10 +201,8 @@ $(document).ready(function(){
     //     $.HSCore.components.HSFlatpickr.init($(this));
     // });
     // initEditor("about_professional");
-
-    $("#form").submit(function(e) {
+     $("#form").submit(function(e) {
         e.preventDefault();
-
         var formData = new FormData($(this)[0]);
         var url = $("#form").attr('action');
         $.ajax({
@@ -241,7 +239,8 @@ $(document).ready(function(){
             }
         });
     });
-});
+
+
 
 
 function stateList(country_id, id) {
