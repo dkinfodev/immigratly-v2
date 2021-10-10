@@ -1,334 +1,362 @@
-@extends('layouts.signup-master')
-@section('style')
-<style type="text/css">
-.custom-select {
-    height: 56px;
-}
+@extends('frontend.layouts.master')
 
-.select2-selection.custom-select {
-    padding-top: 14px;
-    padding-bottom: 13px;
-}
-</style>
+@section('style')
+<link rel="stylesheet" href="assets/vendor/hs-mega-menu/dist/hs-mega-menu.min.css">
+  <!-- CSS Front Template ---ADDITIONAL -->
+  <link rel="stylesheet" href="assets/vendor/tom-select/dist/css/tom-select.bootstrap5.css">
+
+    <link rel="stylesheet" href="assets/front/css/front.css">
+    <link rel="stylesheet" href="assets/vendor/select2/dist/css/select2.min.css">
+
 @endsection
 @section('content')
-<!-- ========== HEADER ========== -->
-<header class="position-absolute top-0 left-0 right-0 mt-3 mx-3">
-    <div class="d-flex d-lg-none justify-content-between">
-        <a href="{{ baseUrl('/') }}">
-            <img class="w-100" src="assets/svg/logos/logo.svg" alt="Image Description"
-                style="min-width: 7rem; max-width: 7rem;">
-        </a>
-        <!-- End Select -->
-    </div>
-</header>
-<!-- ========== END HEADER ========== -->
-
-<!-- ========== MAIN CONTENT ========== -->
-<main id="content" role="main" class="main pt-0">
-    <!-- Content -->
-    <div class="container-fluid px-3">
-        <div class="row">
-            <!-- Cover -->
-            <div
-                class="col-lg-6 d-none d-lg-flex justify-content-center align-items-center min-vh-lg-100 position-relative bg-light px-0">
-                <!-- Logo & Language -->
-                <div class="position-absolute top-0 left-0 right-0 mt-3 mx-3">
-                    <div class="d-none d-lg-flex justify-content-between">
-                        <a href="{{ baseUrl('/') }}">
-                            <img class="w-100" src="assets/svg/logos/logo.svg" alt="Image Description"
-                                style="min-width: 7rem; max-width: 7rem;">
-                        </a>
-                    </div>
+<div class="row">
+    <div class="col-lg-6 col-xl-4  d-none d-lg-flex justify-content-center align-items-center min-vh-lg-100 position-relative offset-xl-2 offset-md-0">
+        <div class="flex-grow-1 p-5">
+            <!-- Blockquote -->
+            <figure class="text-center">
+                <div class="mb-4">
+                    <img class="avatar avatar-xl avatar-4x3"
+                        src="assets/front/svg/brands/mailchimp-white.svg" alt="Logo">
                 </div>
-                <!-- End Logo & Language -->
 
-                <div style="max-width: 23rem;">
-                    <div class="text-center mb-5">
-                        <img class="img-fluid" src="assets/svg/illustrations/chat.svg" alt="Image Description"
-                            style="width: 12rem;">
+                <blockquote class="blockquote">“ It has many landing page variations to choose from, which
+                    one is always a big advantage. ”</blockquote>
+
+                <figcaption class="blockquote-footer">
+                    <div class="mb-3">
+                        <img class="avatar avatar-circle" src="assets/front/img/160x160/img9.jpg"
+                            alt="Image Description">
                     </div>
 
-                    <div class="mb-5">
-                        <h2 class="display-4">Build digital products with:</h2>
+                    Lida Reidy
+                    <span class="blockquote-footer-source">Project Manager | Mailchimp</span>
+                </figcaption>
+            </figure>
+            <!-- End Blockquote -->
+
+            <!-- Clients -->
+            <div class="position-absolute start-0 end-0 bottom-0 text-center p-5">
+                <div class="row justify-content-center">
+                    <div class="col text-center py-3">
+                        <img class="avatar avatar-lg avatar-4x3"
+                            src="assets/front/svg/brands/fitbit-white.svg" alt="Logo">
                     </div>
+                    <!-- End Col -->
 
-                    <!-- List Checked -->
-                    <ul class="list-checked list-checked-lg list-checked-primary list-unstyled-py-4">
-                        <li class="list-checked-item">
-                            <span class="d-block font-weight-bold mb-1">All-in-one tool</span>
-                            Build, run, and scale your apps - end to end
-                        </li>
-
-                        <li class="list-checked-item">
-                            <span class="d-block font-weight-bold mb-1">Easily add &amp; manage your services</span>
-                            It brings together your tasks, projects, timelines, files and more
-                        </li>
-                    </ul>
-                    <!-- End List Checked -->
-
-                    <div class="row justify-content-between mt-5 gx-2">
-                        <div class="col">
-                            <img class="img-fluid" src="assets/svg/brands/gitlab-gray.svg" alt="Image Description">
-                        </div>
-                        <div class="col">
-                            <img class="img-fluid" src="assets/svg/brands/fitbit-gray.svg" alt="Image Description">
-                        </div>
-                        <div class="col">
-                            <img class="img-fluid" src="assets/svg/brands/flow-xo-gray.svg" alt="Image Description">
-                        </div>
-                        <div class="col">
-                            <img class="img-fluid" src="assets/svg/brands/layar-gray.svg" alt="Image Description">
-                        </div>
+                    <div class="col text-center py-3">
+                        <img class="avatar avatar-lg avatar-4x3"
+                            src="assets/front/svg/brands/business-insider-white.svg" alt="Logo">
                     </div>
-                    <!-- End Row -->
+                    <!-- End Col -->
+
+                    <div class="col text-center py-3">
+                        <img class="avatar avatar-lg avatar-4x3"
+                            src="assets/front/svg/brands/capsule-white.svg" alt="Logo">
+                    </div>
+                    <!-- End Col -->
                 </div>
+                <!-- End Row -->
             </div>
-            <!-- End Cover -->
-
-            <div class="col-lg-6 d-flex justify-content-center align-items-center min-vh-lg-100">
-                <div class="w-100 pt-10 pt-lg-7 pb-7" style="max-width: 25rem;">
-                    <!-- Form -->
-                    <form id="signup-form" class="js-validate" action="{{ url('signup/professional') }}" method="post">
-                        @csrf
-                        <div id="personal-info">
-                            <div class="text-center mb-5">
-                                <h1 class="display-4">Create your account</h1>
-                                <p>Already have an account? <a href="{{ url('login') }}">Sign in here</a></p>
-                            </div>
-                            <label class="input-label" for="fullNameSrEmail">Full name</label>
-
-                            <!-- Form Group -->
-                            <div class="form-row">
-                                <div class="col-sm-6">
-                                    <div class="js-form-message form-group">
-                                        <input type="text" class="form-control form-control-lg" name="first_name"
-                                            id="first_name" placeholder="Mark" aria-label="Mark" required
-                                            data-msg="Please enter your first name.">
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-6">
-                                    <div class="js-form-message form-group">
-                                        <input type="text" class="form-control form-control-lg" name="last_name"
-                                            id="last_name" placeholder="Williams" aria-label="Williams" required
-                                            data-msg="Please enter your last name.">
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Form Group -->
-
-                            <!-- Form Group -->
-                            <div class="js-form-message form-group">
-                                <label class="input-label" for="signupSrEmail">Your email</label>
-
-                                <input type="email" class="form-control form-control-lg" name="email" id="signupSrEmail"
-                                    placeholder="Markwilliams@example.com" aria-label="Markwilliams@example.com"
-                                    required data-msg="Please enter a valid email address.">
-                            </div>
-                            <!-- End Form Group -->
-
-                            <label class="input-label" for="phoneNo">Mobile Number</label>
-
-                            <!-- Form Group -->
-                            <div class="form-row">
-                                <div class="col-sm-5">
-                                    <div class="js-form-message form-group">
-                                        <div class="select2-custom select2-custom-right">
-                                            <select class="js-select2-custom form-control-lg" id="country_code"
-                                                name="country_code">
-                                                <option value="">Select Code</option>
-                                                @foreach($countries as $code)
-                                                <option {{ old("country_code") =='+'.$code->phonecode?"selected":"" }}
-                                                    value="+{{ $code->phonecode }}">+{{ $code->phonecode }}
-                                                    ({{$code->sortname}})</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-7">
-                                    <div class="js-form-message form-group">
-                                        <input type="text" class="form-control form-control-lg" name="phone_no"
-                                            id="phone_no" placeholder="Mobile Number" aria-label="Mark" required
-                                            data-msg="Please enter mobile number">
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Form Group -->
-                            <div class="js-form-message form-group">
-                                <label class="input-label">Company Name</label>
-                                <input type="text" class="form-control form-control-lg" name="company_name"
-                                    id="company_name" placeholder="Company Name" aria-label="company_name" required
-                                    data-msg="Please enter a valid company name.">
-                            </div>
-                            <div class="js-form-message form-group">
-                                <label class="input-label">Choose your subdomain name</label>
-
-                                <input type="text" name="subdomain" class="form-control" id="subdomain"
-                                    name="form-control-rangelength" placeholder="Subdomain between 4 - 10 chars"
-                                    minlength="4" maxlength="10" required>
-                            </div>
-                            <!-- End Form Group -->
-                            <!-- Form Group -->
-                            <div class="js-form-message form-group">
-                                <label class="input-label" for="password">Password</label>
-
-                                <div class="input-group input-group-merge">
-                                    <input type="password" class="js-toggle-password form-control form-control-lg"
-                                        name="password" id="password" placeholder="8+ characters required"
-                                        aria-label="8+ characters required" required
-                                        data-msg="Your password is invalid. Please try again."
-                                        data-hs-toggle-password-options='{
-                                          "target": [".js-toggle-password-target-1", ".js-toggle-password-target-2"],
-                                          "defaultClass": "tio-hidden-outlined",
-                                          "showClass": "tio-visible-outlined",
-                                          "classChangeTarget": ".js-toggle-passowrd-show-icon-1"
-                                        }'>
-                                    <div class="js-toggle-password-target-1 input-group-append">
-                                        <a class="input-group-text" href="javascript:;">
-                                            <i class="js-toggle-passowrd-show-icon-1 tio-visible-outlined"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Form Group -->
-
-                            <!-- Form Group -->
-                            <div class="js-form-message form-group">
-                                <label class="input-label" for="password_confirmation">Confirm password</label>
-
-                                <div class="input-group input-group-merge">
-                                    <input type="password" class="js-toggle-password form-control form-control-lg"
-                                        name="password_confirmation" id="password_confirmation"
-                                        placeholder="8+ characters required" aria-label="8+ characters required"
-                                        required data-msg="Password does not match the confirm password."
-                                        data-hs-toggle-password-options='{
-                                          "target": [".js-toggle-password-target-1", ".js-toggle-password-target-2"],
-                                          "defaultClass": "tio-hidden-outlined",
-                                          "showClass": "tio-visible-outlined",
-                                          "classChangeTarget": ".js-toggle-passowrd-show-icon-2"
-                                        }'>
-                                    <div class="js-toggle-password-target-2 input-group-append">
-                                        <a class="input-group-text" href="javascript:;">
-                                            <i class="js-toggle-passowrd-show-icon-2 tio-visible-outlined"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Form Group -->
-
-                            <!-- Checkbox -->
-                            <div class="js-form-message form-group">
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" required id="termsCheckbox"
-                                        name="termsCheckbox" required
-                                        data-msg="Please accept our Terms and Conditions.">
-                                    <label class="custom-control-label font-size-sm text-muted" for="termsCheckbox"> I
-                                        accept the <a href="#">Terms and Conditions</a></label>
-                                </div>
-                            </div>
-                            <!-- End Checkbox -->
-
-                            <button type="button" class="btn btn-lg btn-block btn-primary mb-2 signup-btn">Create an
-                                account</button>
-                            <a class="text-dark float-right" href="{{ url('/') }}"><i class="tio-home"></i> Back To
-                                Home</a>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div id="verify-screen"></div>
-                        <div id="verificationModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalCenterTitle">Choose Verification Option
-                                        </h5>
-                                        <button type="button" class="btn btn-xs btn-icon btn-soft-secondary"
-                                            data-dismiss="modal" aria-label="Close">
-                                            <svg aria-hidden="true" width="10" height="10" viewBox="0 0 18 18"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path fill="currentColor"
-                                                    d="M11.5,9.5l5-5c0.2-0.2,0.2-0.6-0.1-0.9l-1-1c-0.3-0.3-0.7-0.3-0.9-0.1l-5,5l-5-5C4.3,2.3,3.9,2.4,3.6,2.6l-1,1 C2.4,3.9,2.3,4.3,2.5,4.5l5,5l-5,5c-0.2,0.2-0.2,0.6,0.1,0.9l1,1c0.3,0.3,0.7,0.3,0.9,0.1l5-5l5,5c0.2,0.2,0.6,0.2,0.9-0.1l1-1 c0.3-0.3,0.3-0.7,0.1-0.9L11.5,9.5z" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>An OTP will be send for verification. Choose the option for sending OTP</p>
-                                        <div class="js-form-message form-control">
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" class="custom-control-input" name="verify_type"
-                                                    value="email" id="verficationRadio1">
-                                                <label class="custom-control-label" for="verficationRadio1">Email (<span
-                                                        id="vr_email"></span>) </label>
-                                            </div>
-                                        </div>
-                                        <div class="js-form-message form-control">
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" class="custom-control-input" name="verify_type"
-                                                    value="mobile_no" id="verficationRadio2">
-                                                <label class="custom-control-label" for="verficationRadio2">Mobile
-                                                    Number (<span id="vr_mobile"></span>)</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-                                        <button type="button" onclick="sendOtp(this)" class="btn btn-primary">Send
-                                            OTP</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="verificationCodeModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalCenterTitle">Verification Code</h5>
-                                        <button type="button" class="btn btn-xs btn-icon btn-soft-secondary"
-                                            data-dismiss="modal" aria-label="Close">
-                                            <svg aria-hidden="true" width="10" height="10" viewBox="0 0 18 18"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path fill="currentColor"
-                                                    d="M11.5,9.5l5-5c0.2-0.2,0.2-0.6-0.1-0.9l-1-1c-0.3-0.3-0.7-0.3-0.9-0.1l-5,5l-5-5C4.3,2.3,3.9,2.4,3.6,2.6l-1,1 C2.4,3.9,2.3,4.3,2.5,4.5l5,5l-5,5c-0.2,0.2-0.2,0.6,0.1,0.9l1,1c0.3,0.3,0.7,0.3,0.9,0.1l5-5l5,5c0.2,0.2,0.6,0.2,0.9-0.1l1-1 c0.3-0.3,0.3-0.7,0.1-0.9L11.5,9.5z" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p id="opt_response"></p>
-                                        <div class="js-form-message form-group">
-                                            <label id="creditCardLabel" class="input-label">Enter Verfication
-                                                Code</label>
-                                            <input type="text" class="js-masked-input form-control" id="verify_code"
-                                                placeholder="xxxxxx" data-hs-mask-options='{
-                                            "template": "000000"
-                                            }'>
-                                        </div>
-
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-white"
-                                            data-dismiss="modal">Close</button>
-                                        <button type="button" onclick="verifyOtp(this)"
-                                            class="btn btn-primary">Verify
-                                            OTP</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                    <!-- End Form -->
-                </div>
-            </div>
+            <!-- End Clients -->
         </div>
-        <!-- End Row -->
     </div>
-    <!-- End Content -->
-</main>
-<!-- ========== END MAIN CONTENT ========== -->
+    <!-- End Col -->
+
+    <div class="col-lg-6 col-xl-4 justify-content-center align-items-center min-vh-lg-100 ">
+        <div class="flex-grow-1 margin-auto-sm" style="max-width: 28rem;">
+            <div class="type-label-holder-wrap-outer">
+                <div class="row">
+                    <div class="col-lg-4 col-xl-4">
+                        <div class="type-label-holder-wrap text-center ">
+
+                            <div class="type-label-holder"><img class="avatar avatar-xss"
+                                    src="assets/front/svg/brands/google.svg" alt="Image Description"></div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-8 col-xl-8">
+                        <div class="mb-5 mb-md-7 text-center-xs">
+                            <h1 class="h2">Create an account</h1>
+                            <p>Not a user? <a class="link" href="./page-login.html">View other sign-ups</a>
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+                <span class="type-label professional-label">Professional</span>
+            </div>
+            <div class="text-center">
+                <p>Already have an account? <a class="link" href="{{ url('login') }}">Log in here</a></p>
+            </div>
+            <!-- Form -->
+            <form id="signup-form" class="js-validate  needs-validation" action="{{ url('signup/professional') }}" method="post" novalidate>
+                @csrf
+                
+
+                <div class="mb-3 mt-5"><label class="form-label" for="fullsubdomain name">Choose your unique subdomain name</label> 
+                    <div class="input-group "> 
+                        <input type="text" name="subdomain" id="subdomain" class="form-control" placeholder="Choose between 6 to 14 characters" aria-label="Choose between 6 to 14 characters" aria-describedby="basic-addon2">
+                        <span class="input-group-text" id="basic-addon2">.immigratly.com</span></div>
+                </div>
+
+                <div class="mb-3"> 
+                  <label class="form-label" for="fullNameSrEmail">Full name</label>
+                  <!-- Form Group -->
+                    <div class="form-row">
+                      <div class="col-sm-6">
+                        <div class="js-form-message form-group">
+                          <input type="text" class="form-control form-control-lg" name="first_name" id="first_name" placeholder="First name" aria-label="First name" required data-msg="Please enter your first name.">
+                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="js-form-message form-group">
+                          <input type="text" name="last_name" id="last_name" class="form-control form-control-lg" placeholder="Last name" aria-label="Last name" required data-msg="Please enter your last name.">
+                        </div>
+                      </div>
+                    </div>
+                    <!-- End Form Group -->
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="email">Your email</label>
+                    <input type="email" class="form-control form-control-lg" name="email" id="signupSrEmail" placeholder="email@site.com" aria-label="email@site.com" required>
+                    <span class="invalid-feedback">Please enter a valid email address.</span>
+                </div>
+
+            <div class="mb-3"> 
+             <label class="form-label" for="fullNameSrEmail">Your phone number</label>
+             <!-- Form Group -->
+             <div class="form-row">
+              <div class="col-6 ">
+               <!-- Select -->
+                 <div class="tom-select-custom">
+
+                    <select class="js-select form-select" id="country_code"
+                        name="country_code">
+                        <option value="Select">Select</option>
+                        @foreach($countries as $code)
+                        <option {{ old("country_code") =='+'.$code->phonecode?"selected":"" }}
+                            value="+{{ $code->phonecode }}">+{{ $code->phonecode }}
+                            ({{$code->sortname}})</option>
+                        @endforeach
+                    </select>
+                   
+                 </div>
+               
+               </div>  
+                
+                <div class="col-sm-6">
+                  <div class="js-form-message form-group">
+                    <input type="text" name="phone_no"
+                    id="phone_no" class="form-control form-control-lg" placeholder="Enter your number" aria-label="Phone number" required data-msg="Enter your number.">
+                  </div>
+                </div>
+             </div> 
+             
+             <!-- Form -->
+            <div class="mb-3">
+              <label class="form-label" for="password">Password</label>
+
+              <div class="input-group input-group-merge" data-hs-validation-validate-class>
+                <input type="password" class="js-toggle-password form-control form-control-lg" name="password" id="password" placeholder="8+ characters required" aria-label="8+ characters required" required
+                data-hs-toggle-password-options='{
+                "target": [".js-toggle-password-target-1", ".js-toggle-password-target-2"],
+                "defaultClass": "bi-eye-slash",
+                "showClass": "bi-eye",
+                "classChangeTarget": ".js-toggle-passowrd-show-icon-1"
+              }'>
+              <a class="js-toggle-password-target-1 input-group-append input-group-text" href="javascript:;">
+                <i class="js-toggle-passowrd-show-icon-1 bi-eye"></i>
+              </a>
+            </div>
+
+            <span class="invalid-feedback">Your password is invalid. Please try again.</span>
+            </div> 
+            
+             <!-- Form -->
+            <div class="mb-3">
+              <label class="form-label" for="confirmPassword">Confirm Password</label>
+
+              <div class="input-group input-group-merge" data-hs-validation-validate-class>
+                <input type="password" class="js-toggle-password form-control form-control-lg" name="password_confirmation" id="password_confirmation" placeholder="8+ characters required" aria-label="8+ characters required" required
+                data-hs-toggle-password-options='{
+                "target": [".js-toggle-password-target-1", ".js-toggle-password-target-2"],
+                "defaultClass": "bi-eye-slash",
+                "showClass": "bi-eye",
+                "classChangeTarget": ".js-toggle-passowrd-show-icon-2"
+              }'>
+              <a class="js-toggle-password-target-2 input-group-append input-group-text" href="javascript:;">
+                <i class="js-toggle-passowrd-show-icon-2 bi-eye"></i>
+              </a>
+            </div>
+
+            <span class="invalid-feedback">Your password is invalid. Please try again.</span>
+            </div> 
+            
+
+                <!-- Check -->
+                <div class="form-check mb-3">
+                    <input type="checkbox" class="form-check-input" id="signupHeroFormPrivacyCheck"
+                        name="signupFormPrivacyCheck" required>
+                    <label class="form-check-label small" for="signupHeroFormPrivacyCheck"> By submitting
+                        this form I have read and acknowledged the <a href=./page-privacy.html>Privacy
+                            Policy</a></label>
+                    <span class="invalid-feedback">Please accept our Privacy Policy.</span>
+                </div>
+                <!-- End Check -->
+
+                <div class="d-grid mb-3">
+                    <button type="button" class="btn btn-primary btn-lg signup-btn">Sign up</button>
+                </div>
+
+
+            </form>
+            <!-- End Form -->
+            <div class="mt-5 mt-md-7">
+                <div class="other-type-label-holder-wrap-outer"> <span
+                        class="other-type-label professional-label">Other Sign-ups</span>
+                    <div class="row">
+                        <div class="col-lg-4 col-xl-4">
+                            <div class="type-label-holder-wrap text-center ">
+
+                                <div class="type-label-holder"><img class="avatar avatar-xss"
+                                        src="assets/front/svg/brands/google.svg" alt="Image Description">
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-lg-8 col-xl-8">
+                            <!-- Heading -->
+                            <div class="mb-5 mb-md-7 text-center-xs">
+                                <h1 class="h2">User Signup</h1>
+                                <p>Create account for user</p>
+
+                            </div>
+                            <!-- End Heading -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- End Col -->
+</div>
+
 @endsection
 
 @section("javascript")
-<script type="text/javascript">
+<div id="verify-screen"></div>
+
+<div id="verificationModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Choose Verification Option
+                </h5>
+                <button type="button" class="btn btn-xs btn-icon btn-soft-secondary"
+                    data-dismiss="modal" aria-label="Close">
+                    <svg aria-hidden="true" width="10" height="10" viewBox="0 0 18 18"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill="currentColor"
+                            d="M11.5,9.5l5-5c0.2-0.2,0.2-0.6-0.1-0.9l-1-1c-0.3-0.3-0.7-0.3-0.9-0.1l-5,5l-5-5C4.3,2.3,3.9,2.4,3.6,2.6l-1,1 C2.4,3.9,2.3,4.3,2.5,4.5l5,5l-5,5c-0.2,0.2-0.2,0.6,0.1,0.9l1,1c0.3,0.3,0.7,0.3,0.9,0.1l5-5l5,5c0.2,0.2,0.6,0.2,0.9-0.1l1-1 c0.3-0.3,0.3-0.7,0.1-0.9L11.5,9.5z" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>An OTP will be send for verification. Choose the option for sending OTP</p>
+                <div class="js-form-message form-control">
+                    <div class="custom-control custom-radio">
+                        <input type="radio" class="custom-control-input" name="verify_type"
+                            value="email" id="verficationRadio1">
+                        <label class="custom-control-label" for="verficationRadio1">Email (<span
+                                id="vr_email"></span>) </label>
+                    </div>
+                </div>
+                <div class="js-form-message form-control">
+                    <div class="custom-control custom-radio">
+                        <input type="radio" class="custom-control-input" name="verify_type"
+                            value="mobile_no" id="verficationRadio2">
+                        <label class="custom-control-label" for="verficationRadio2">Mobile
+                            Number (<span id="vr_mobile"></span>)</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                <button type="button" onclick="sendOtp(this)" class="btn btn-primary">Send
+                    OTP</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="verificationCodeModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Verification Code</h5>
+                <button type="button" class="btn btn-xs btn-icon btn-soft-secondary"
+                    data-dismiss="modal" aria-label="Close">
+                    <svg aria-hidden="true" width="10" height="10" viewBox="0 0 18 18"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill="currentColor"
+                            d="M11.5,9.5l5-5c0.2-0.2,0.2-0.6-0.1-0.9l-1-1c-0.3-0.3-0.7-0.3-0.9-0.1l-5,5l-5-5C4.3,2.3,3.9,2.4,3.6,2.6l-1,1 C2.4,3.9,2.3,4.3,2.5,4.5l5,5l-5,5c-0.2,0.2-0.2,0.6,0.1,0.9l1,1c0.3,0.3,0.7,0.3,0.9,0.1l5-5l5,5c0.2,0.2,0.6,0.2,0.9-0.1l1-1 c0.3-0.3,0.3-0.7,0.1-0.9L11.5,9.5z" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="opt_response"></p>
+                <div class="js-form-message form-group">
+                    <label id="creditCardLabel" class="input-label">Enter Verfication
+                        Code</label>
+                    <input type="text" class="js-masked-input form-control" id="verify_code"
+                        placeholder="xxxxxx" data-hs-mask-options='{
+                    "template": "000000"
+                    }'>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white"
+                    data-dismiss="modal">Close</button>
+                <button type="button" onclick="verifyOtp(this)"
+                    class="btn btn-primary">Verify
+                    OTP</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Row -->
+
+
+<script src="assets/front/vendor/hs-toggle-password/dist/js/hs-toggle-password.js"></script>
+<script src="assets/vendor/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
+<script src="assets/vendor/select2/dist/js/select2.full.min.js"></script>
+
+
+<script>
+    (function() {
+         // INITIALIZATION OF TOGGLE PASSWORD
+         // =======================================================
+        new HSTogglePassword('.js-toggle-password')
+
+        HSCore.components.HSTomSelect.init('.js-select')
+        HSBsDropdown.init()
+
+        $('.js-select2-custom').each(function () {
+          var select2 = $.HSCore.components.HSSelect2.init($(this));
+        });     
+
+    })();
+
+</script>
+
+<script>
+
 var verify_status = '';
 $(document).ready(function() {
     $(".signup-btn").click(function(e) {
@@ -365,19 +393,21 @@ $(document).ready(function() {
                         validation(response.message);
                     } else {
                         if (response.error_type == 'not_verified') {
-                            $("#verificationModal").modal("show");
-                            $("#verficationRadio1").val("email:" + response.email);
-                            $("#verficationRadio2").val("mobile_no:" + response.mobile_no);
-                            $("#vr_email").html(response.email);
-                            $("#vr_mobile").html(response.mobile_no);
+                            // $("#verificationModal").modal("show");
+                            // $("#verficationRadio1").val("email:" + response.email);
+                            // $("#verficationRadio2").val("mobile_no:" + response.mobile_no);
+                            // $("#vr_email").html(response.email);
+                            // $("#vr_mobile").html(response.mobile_no);
+                            sendOtp("email:" + response.email);
                         }
                         if (response.error_type == 'verification_pending') {
-                            verify_status = '';
-                            $("#verificationModal").modal("show");
-                            $("#verficationRadio1").val("email:" + response.email);
-                            $("#verficationRadio2").val("mobile_no:" + response.mobile_no);
-                            $("#vr_email").html(response.email);
-                            $("#vr_mobile").html(response.mobile_no);
+                             verify_status = '';
+                             sendOtp("email:" + response.email);
+                            // $("#verificationModal").modal("show");
+                            // $("#verficationRadio1").val("email:" + response.email);
+                            // $("#verficationRadio2").val("mobile_no:" + response.mobile_no);
+                            // $("#vr_email").html(response.email);
+                            // $("#vr_mobile").html(response.mobile_no);
                         }
                     }
                 }
@@ -389,16 +419,17 @@ $(document).ready(function() {
         });
     });
 });
-function sendOtp() {
-    showLoader();
-    $("#verify_code").val('');
-    var value = '';
-    if ($("input[name=verify_type]:checked").val() != undefined && $("input[name=verify_type]:checked").val() != '') {
-        value = $("input[name=verify_type]:checked").val();
-    } else {
-        errorMessage("Please select any one option");
-        return false;
-    }
+function sendOtp(value) {
+    //alert("hello");
+    //showLoader();
+    // $("#verify_code").val('');
+    //var value = '';
+    // if ($("input[name=verify_type]:checked").val() != undefined && $("input[name=verify_type]:checked").val() != '') {
+    //     value = $("input[name=verify_type]:checked").val();
+    // } else {
+    //     errorMessage("Please select any one option");
+    //     return false;
+    // }
     $.ajax({
         url: "{{ url('send-verify-code') }}",
         type: "post",
@@ -433,17 +464,17 @@ function verifyOtp(e) {
     //   $(e).attr("disabled","disabled");
     //   $(e).html("Verifying...");
     var verify_code = $("#verify_code").val();
-    var verify_by = '';
-    if ($("input[name=verify_type]:checked").val() != undefined && $("input[name=verify_type]:checked").val() != '') {
-        verify_by = $("input[name=verify_type]:checked").val();
-    } else {
-        errorMessage("Please select any one option");
-        return false;
-    }
-    if (verify_code == '') {
-        errorMessage("Please enter verification code");
-        return false;
-    }
+    var verify_by = 'email';
+    // if ($("input[name=verify_type]:checked").val() != undefined && $("input[name=verify_type]:checked").val() != '') {
+    //     verify_by = $("input[name=verify_type]:checked").val();
+    // } else {
+    //     errorMessage("Please select any one option");
+    //     return false;
+    // }
+    // if (verify_code == '') {
+    //     errorMessage("Please enter verification code");
+    //     return false;
+    // }
     $.ajax({
         url: "{{ url('verify-code') }}",
         type: "post",

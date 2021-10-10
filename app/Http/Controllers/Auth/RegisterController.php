@@ -248,13 +248,13 @@ class RegisterController extends Controller
             'email' => 'required|email|unique:professionals',
             'first_name' => 'required',
             'last_name' => 'required',
-            'password' => 'required|confirmed|min:4',
-            'password_confirmation' => 'required|min:4',
+            //'password' => 'required|confirmed|min:4',
+            //'password_confirmation' => 'required|min:4',
             'country_code' => 'required',
-            'phone_no' => 'required|unique:professionals',
+            //'phone_no' => 'required|unique:professionals',
             // 'verify_by'=>'required',
-            'company_name'=>'required',
-            'termsCheckbox'=>'required',
+            //'company_name'=>'required',
+            //'termsCheckbox'=>'required',
             'subdomain'=>'required|unique:professionals|max:10|min:3',
         ]);
 

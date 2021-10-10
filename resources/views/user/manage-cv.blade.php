@@ -1,7 +1,29 @@
 @extends('layouts.master')
+@section('style')
+<link rel="stylesheet" href="assets/vendor/select2/dist/css/select2.min.css">
+@endsection
+@section('pageheader')
+<!-- Content -->
+<div class="">
+    <div class="content container" style="height: 25rem;">
+        <!-- Page Header -->
+        <div class="page-header page-header-light page-header-reset">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h1 class="page-header-title">{{$pageTitle}}</h1>
+                </div>
+            </div>
+            <!-- End Row -->
+        </div>
+        <!-- End Page Header -->
+    </div>
+</div>
+<!-- End Content -->
+@endsection
+
 @section('content')
 <!-- Content -->
-<div class="content container-fluid">
+<div class="manage_cv">
   <div id="main-content"  class="has-navbar-vertical-aside navbar-vertical-aside-show-xl   footer-offset"
         data-offset="80"
         data-hs-scrollspy-options='{
@@ -745,6 +767,14 @@
 <script src="assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
 <script>
    var work_expirence_dt,education_qualification_dt;
+   
+
+   $('.js-select2-custom').each(function () {
+   var select2 = $.HSCore.components.HSSelect2.init($(this));
+   select2.init();   
+   });
+
+
       $(document).on('ready', function () {
 
 

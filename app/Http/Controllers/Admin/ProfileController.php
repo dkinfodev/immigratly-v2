@@ -64,10 +64,10 @@ class ProfileController extends Controller
         $object = User::find($id);
         $validator = Validator::make($request->all(), [
             // 'email' => 'required|email|unique:users,email,'.$object->id,
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'country_code' => 'required',
-            'phone_no' => 'required|unique:users,phone_no,'.$object->id,
+            //'first_name' => 'required',
+            //'last_name' => 'required',
+            //'country_code' => 'required',
+            //'phone_no' => 'required|unique:users,phone_no,'.$object->id,
             'gender'=>'required',
             'date_of_birth'=>'required',
             'languages_known'=>'required',
@@ -76,7 +76,7 @@ class ProfileController extends Controller
             'city_id'=>'required',
             'address'=>'required',
             'zip_code'=>'required',
-            'license_body'=>'required',
+            //'license_body'=>'required',
             'member_of_good_standing'=>'required',
             'years_of_expirences'=>'required',
             'company_name'=>'required',
@@ -109,11 +109,11 @@ class ProfileController extends Controller
         }
         $id = \Auth::user()->id;
         $object = User::find($id);
-        $object->first_name = $request->input("first_name");
-        $object->last_name = $request->input("last_name");
+        //$object->first_name = $request->input("first_name");
+        //$object->last_name = $request->input("last_name");
         // $object->email = $request->input("email");
-        $object->country_code = $request->input("country_code");
-        $object->phone_no = $request->input("phone_no");
+        //$object->country_code = $request->input("country_code");
+        //$object->phone_no = $request->input("phone_no");
         $object->date_of_birth = $request->input("date_of_birth");
         $object->gender = $request->input("gender");
         $object->country_id = $request->input("country_id");

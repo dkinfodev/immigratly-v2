@@ -27,6 +27,9 @@
     <link rel="stylesheet" type="text/css" href="assets/vendor/sweetalert2/sweetalert2.min.css">
     <link rel="stylesheet" href="assets/front/vendor/tom-select/dist/css/tom-select.bootstrap5.css">
     <link rel="stylesheet" href="assets/front/css/front.css">
+    <link rel="stylesheet" href="assets/vendor/select2/dist/css/select2.min.css">
+
+
     <script>
     var BASEURL = "{{ baseUrl('/') }}";
     var SITEURL = "{{ url('/') }}";
@@ -1228,6 +1231,8 @@
     </a>
     <!-- ========== END SECONDARY CONTENTS ========== -->
     
+    <script src="assets/vendor/jquery/dist/jquery.min.js"></script>
+    
     <!-- JS Global Compulsory  -->
     <script src="assets/front/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     
@@ -1239,7 +1244,7 @@
     <script src="assets/front/vendor/hs-video-player/dist/hs-video-player.min.js"></script>
     <!-- JS Implementing Plugins -->
     
-    <script src="assets/vendor/jquery/dist/jquery.min.js"></script>
+    
 
     <script src="assets/vendor/toastr/toastr.min.js"></script>
     <script src="assets/vendor/sweetalert2/sweetalert2.all.min.js"></script>
@@ -1247,7 +1252,8 @@
     <!-- JS Front -->
     <script src="assets/front/js/theme.min.js"></script>
     <script src="assets/js/theme-custom.js"></script>
-
+    
+    
     <script>
       // (function() {
       //   // INITIALIZATION OF HEADER
@@ -1278,6 +1284,7 @@
       //   new HSGoTo('.js-go-to')
 
       // })()
+
     </script>
 
     @yield("javascript")
