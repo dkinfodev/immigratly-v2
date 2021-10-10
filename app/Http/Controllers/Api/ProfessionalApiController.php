@@ -174,8 +174,15 @@ class ProfessionalApiController extends Controller
                                     ->first();
                 
                 $unique_id = randomNumber();
+                $checkFolder = CaseFolders::where("name",$user_folder->name)->count();
                 $object = new CaseFolders();
-                $object->name = $user_folder->name;
+                if(!empty($checkFolder)){
+                    $object->name = $user_folder->name."(".($checkFolder+1).")";
+                }else{
+                    $object->name = $user_folder->name;    
+                }
+                
+                
                 $object->unique_id = $unique_id;
                 $object->case_id = $case_id;
                 $object->added_by = 'client';
@@ -727,13 +734,28 @@ class ProfessionalApiController extends Controller
         try{
             $postData = $request->input();
             $request->request->add($postData);
-
-            $chats = DocumentChats::with('FileDetail')->where("case_id",$request->input("case_id"))
+            $client_id = $request->input("client_id");
+            $chats = DocumentChats::with('FileDetail')
+                                ->where("case_id",$request->input("case_id"))
                                 ->where("document_id",$request->input("document_id"))
                                 ->get();
+            $unread = DocumentChats::with('FileDetail')
+                                ->where("case_id",$request->input("case_id"))
+                                ->where("document_id",$request->input("document_id"))
+                                ->where("created_by","!=",$client_id)
+                                ->where("user_read",0)
+                                ->count();
+            DocumentChats::with('FileDetail')
+                    ->where("case_id",$request->input("case_id"))
+                    ->where("document_id",$request->input("document_id"))
+                    ->where("created_by","!=",$client_id)
+                    ->where("user_read",0)
+                    ->update(['user_read'=>1]);
             $data['chats'] = $chats;
+            $data['unread_chat'] = $unread;
             $response['status'] = "success";
             $response['data'] = $data;
+            
 
         } catch (Exception $e) {
             $response['status'] = "error";

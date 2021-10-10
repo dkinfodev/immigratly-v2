@@ -212,8 +212,12 @@
                 <ul class="list-group professional-request-folders-list droppable" id="accordionProfessionalDoc">
                     <!-- List Item -->
                     @foreach($case_folders as $key => $document)
-                    <li class="list-group-item" data-foldername="{{$document['name']}}"
-                        data-folder="{{$document['unique_id']}}">
+                    @if($document['added_by'] == 'client')
+                    <li class="list-group-item" data-foldername="{{$document['name']}}" data-folder="{{$document['unique_id']}}">
+                    @else
+                    <li class="list-group-item" data-folder="{{$document['unique_id']}}">
+                    @endif
+                        
                         <div class="row align-items-center">
                             <div class="col-auto">
                                 <img class="avatar avatar-xs avatar-4by3" src="assets/svg/folder-files.svg"
@@ -222,9 +226,13 @@
 
                             <div class="col" data-toggle="collapse" data-target="#collapseProfessionalDoc-{{ $key }}"
                                 aria-expanded="true" aria-controls="collapseProfessionalDoc-{{ $key }}">
-                                <a href="javascript:;" onclick="fetchFiles(this)" data-subdomain="{{$subdomain}}"
+                                <a href="<?php echo baseUrl("cases/documents/extra/".$subdomain."/".$case_id."/".$document['unique_id']) ?>" data-subdomain="{{$subdomain}}"
                                     data-doctype="extra" data-caseid="{{$case_id}}"
                                     data-docid="{{ $document['unique_id'] }}">
+                                    
+                                <!-- <a href="javascript:;" onclick="fetchFiles(this)" data-subdomain="{{$subdomain}}"
+                                    data-doctype="extra" data-caseid="{{$case_id}}"
+                                    data-docid="{{ $document['unique_id'] }}"> -->
                                     <h5 class="mb-0">
                                         {{$document['name']}}
                                     </h5>
@@ -235,9 +243,9 @@
                                 </a>
                             </div>
                             <div class="col-auto">
-                                <a href="<?php echo baseUrl("cases/documents/extra/".$subdomain."/".$case_id."/".$document['unique_id']) ?>" 
+                                <!-- <a href="<?php echo baseUrl("cases/documents/extra/".$subdomain."/".$case_id."/".$document['unique_id']) ?>" 
                                     class="btn btn-sm btn-warning js-nav-tooltip-link" data-toggle="tooltip"
-                                    data-html="true" title="View Documents"><i class="tio-documents"></i></a>
+                                    data-html="true" title="View Documents"><i class="tio-documents"></i></a> -->
                                 @if($document['added_by'] == 'client')
                                 <a href="javascript:;" onclick="confirmAction(this)"
                                     data-href="{{baseUrl('cases/documents/remove-case-folder/'.$subdomain.'/'.$document['unique_id'])}}"
@@ -272,7 +280,7 @@
 
                             <div class="col" data-toggle="collapse" data-target="#collapseDefaultDoc-{{ $key }}"
                                 aria-expanded="true" aria-controls="collapseDefaultDoc-{{ $key }}">
-                                <a href="javascript:;" onclick="fetchFiles(this)" data-subdomain="{{$subdomain}}"
+                                <a href="<?php echo baseUrl("cases/documents/default/".$subdomain."/".$case_id."/".$document['unique_id']) ?>" onclick="fetchFiles(this)" data-subdomain="{{$subdomain}}"
                                     data-doctype="default" data-caseid="{{$case_id}}"
                                     data-docid="{{ $document['unique_id'] }}">
                                     <h5 class="mb-0">
@@ -285,9 +293,9 @@
                                 </a>
                             </div>
                             <div class="col-auto">
-                                <a href="<?php echo baseUrl("cases/documents/default/".$subdomain."/".$case_id."/".$document['unique_id']) ?>" 
+                                <!-- <a href="<?php echo baseUrl("cases/documents/default/".$subdomain."/".$case_id."/".$document['unique_id']) ?>" 
                                     class="btn btn-sm btn-warning js-nav-tooltip-link" data-toggle="tooltip"
-                                    data-html="true" title="View Documents"><i class="tio-documents"></i></a>
+                                    data-html="true" title="View Documents"><i class="tio-documents"></i></a> -->
                                
                             </div>
                             <div id="collapseDefaultDoc-{{$key}}" class="collapse files-collapse" aria-labelledby="headingDefault-{{$key}}" data-parent="#accordionProfessionalDoc">
@@ -311,7 +319,7 @@
 
                             <div class="col" data-toggle="collapse" data-target="#collapseDefaultDoc-{{ $key }}"
                                 aria-expanded="true" aria-controls="collapseOtherDoc-{{ $key }}">
-                                <a href="javascript:;" onclick="fetchFiles(this)" data-subdomain="{{$subdomain}}"
+                                <a href="<?php echo baseUrl("cases/documents/other/".$subdomain."/".$case_id."/".$document['unique_id']) ?>" onclick="fetchFiles(this)" data-subdomain="{{$subdomain}}"
                                     data-doctype="other" data-caseid="{{$case_id}}"
                                     data-docid="{{ $document['unique_id'] }}">
                                     <h5 class="mb-0">
@@ -323,9 +331,9 @@
                                 </a>
                             </div>
                             <div class="col-auto">
-                                <a href="<?php echo baseUrl("cases/documents/other/".$subdomain."/".$case_id."/".$document['unique_id']) ?>" 
+                                <!-- <a href="<?php echo baseUrl("cases/documents/other/".$subdomain."/".$case_id."/".$document['unique_id']) ?>" 
                                     class="btn btn-sm btn-warning js-nav-tooltip-link" data-toggle="tooltip"
-                                    data-html="true" title="View Documents"><i class="tio-documents"></i></a>
+                                    data-html="true" title="View Documents"><i class="tio-documents"></i></a> -->
                                
                             </div>
                             <div id="collapseOtherDoc-{{$key}}" class="collapse files-collapse" aria-labelledby="headingOther-{{$key}}" data-parent="#accordionProfessionalDoc"></div>

@@ -108,3 +108,14 @@ ul.elg-list {
 .ui-draggable {
     left: 0px !important;
 }
+.mTSThumbContainer.active a {
+    background-color: #57a4ff!important;
+    color: #FFF;
+}
+.mTSThumbContainer.active .card-footer {
+    background-color: transparent;
+}
+.mTSThumbContainer.active .card-footer h6{
+    background-color: transparent;
+    color: #FFF !important;
+}

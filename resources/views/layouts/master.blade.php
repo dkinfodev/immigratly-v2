@@ -849,9 +849,9 @@
         
         // INITIALIZATION OF DROPZONE FILE ATTACH MODULE
         // =======================================================
-        $('.js-dropzone').each(function () {
-          var dropzone = $.HSCore.components.HSDropzone.init('#' + $(this).attr('id'));
-        });
+        // $('.js-dropzone').each(function () {
+        //   var dropzone = $.HSCore.components.HSDropzone.init('#' + $(this).attr('id'));
+        // });
 
         
         // INITIALIZATION OF DATATABLES

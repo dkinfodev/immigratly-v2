@@ -26914,7 +26914,7 @@ a:hover .text-hover-primary {
 		position: -webkit-sticky;
 		position: sticky;
 		top: 60px;
-		max-width: 380px
+		max-width: 280px
 	}
 }
 
@@ -27143,16 +27143,15 @@ a:hover .text-hover-primary {
 
 }.document-view-container .document-toolbar{
     margin-bottom: 20px;
-    background: #fff;
     padding: 0 20px;
-    border-bottom: 0.0625rem solid rgba(231, 234, 243, 0.7);
+    border: 0.0625rem solid rgba(231, 234, 243, 0.7);
 } .shot-sidebar-open-contents{
     position: absolute;
     width: 90px;
     height: 100%;
     bottom: 0;
     border-left: 0.0625rem solid rgba(231, 234, 243, 0.7);
-    background: #fbfbfb;
+    background: #fff;
     left: -90px;
     top: 0;
     }
@@ -27177,60 +27176,4 @@ a:hover .text-hover-primary {
     padding: 1rem 1rem 0 1rem;
 }#document-preview-thumbs-content .card-footer{
     padding-top: 0.5rem;
-}#document-preview-thumbs-content h6{
-    font-size: 11px;
-    color: #8496B0;
-    font-weight: normal;
-}
-
-.comment-document{
-    position: relative;
-    border-bottom: 0.0625rem solid rgba(231, 234, 243, 0.7);
-}
-.comment-document-link{
-    width: 60px;
-    line-height: 60px;
-    position: relative;
-    border-radius: 50%;
-    margin-left: 15px;
-    margin-bottom: 20px;
-    /* background: #fff; */
-    margin-top: 25px;
-    text-align: center;
-    /* border: 0.0625rem solid rgba(231, 234, 243, 0.7); */
-    display: inline-block;
-    height: 60px;
-}
-.comment-document-counter{
-    width: 24px;
-    display: inline-block;
-    height: 24px;
-    position: absolute;
-    font-size: 10px;
-    border: 3px solid #fff;
-    letter-spacing: 0.5px;
-    right: -8px;
-    line-height: 17px;
-    font-weight: 600;
-    color: #fff;
-    border-radius: 50%;
-    background: red;
-}
-.comment-document-image{
-    position: absolute;
-    top: 10px;
-    left: 2px;
-}#send-message-close-manually{
-    position: absolute;
-    right: 10px;
-    font-size: 10px;
-    text-transform: uppercase;
-    padding: 3px 6px;
-    border: 1px solid #eee;
-    top: 10px;
-    border-radius: 25px;
-    color: #666;
-    background: #fff;
-    z-index: 2;
-}
-.shot-sidebar-contents{    padding-bottom: 120px;}
+}#document-preview-thumbs-content h6{}

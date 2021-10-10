@@ -3,73 +3,60 @@
 <?php 
 $user = docChatSendBy($chat['send_by'],$chat['created_by'],$subdomain);
 ?>
-<li class="message left appeared">
-   <span class="avatar avatar-sm avatar-circle">
-     <img class="avatar-img" src="assets/img/160x160/img5.jpg" alt="Image Description">
-   </span>
-   <div class="text_wrapper">
-      <div class="send-date"><small>{{dateFormat($chat['created_at'],"F d, Y H:i:s a")}}</small></div>
-      @if($chat['type'] == 'text')
-      <div class="text">
-         <div class="text-msg">{{$chat['message']}}</div>
-         <div class="clearfix"></div>
-         <div class="text-right">
-            <small><b>-{{$user->first_name." ".$user->last_name}} ({{$chat['send_by']}})</b></small>
-         </div> 
-      </div>
-      @else
-      <div class="text file-msg">
-         <div class="send-date"><small>{{dateFormat($chat['created_at'],"F d, Y H:i:s a")}}</small></div>
+<div class="message-blue-wrap mb-5 mt-3">
+    <div class="message-blue">
+        @if($chat['type'] == 'file')
          <?php
             $file_url = professionalDirUrl($subdomain)."/documents/".$chat['file_detail']['file_name'];
          ?>
-         <a href="{{$file_url}}" download>
-         <?php 
-            $fileicon = fileIcon($chat['message']);
-            echo $fileicon;
-         ?>
-         <div class="text-msg">{{$chat['message']}}</div>
+         <a href="{{$file_url}}" class="d-flex" download>
+           <?php 
+              $fileicon = fileIcon($chat['message']);
+              echo $fileicon;
+           ?>
+           <div class="text-msg text-dark">{{$chat['message']}}</div>
          </a>
-         <div class="clearfix"></div>
-         <div class="text-right">
-            <small><b>-{{$user->first_name." ".$user->last_name}} ({{$chat['send_by']}})</b></small>
-         </div>
-      </div>
-      @endif
-   </div>
-</li>
-@else
-<li class="message right appeared">
-   <span class="avatar avatar-circle">
-     <img class="avatar-img" src="{{ userProfile(Auth::user()->unique_id,'t') }}" alt="Image Description">
-   </span>
-   <div class="text_wrapper">
+        @else
+        <p class="mb-0">
+          {{$chat['message']}}
+        </p>
+        @endif
 
-      @if($chat['type'] == 'text')
-      <div class="text">
-         <div class="send-date"><small>{{dateFormat($chat['created_at'],"F d, Y H:i:s a")}}</div>
-         <div class="text-msg">{{$chat['message']}}</div>
-         <div class="clearfix"></div>
-         <div class="text-right"><b>-You</b></div>
-      </div>
-      @else
-      <div class="text file-msg">
-         <div class="text-right"><small>{{dateFormat($chat['created_at'],"F d, Y H:i:s a")}}</small></div>
+    </div>
+    <div class="message-timestamp-left">{{$user->first_name." ".$user->last_name}} ({{$user->role}}), {{ dateFormat($chat['created_at'],'F d,Y H:i:s') }}</div>
+    <span class="avatar avatar-xs avatar-circle">
+        <img class="avatar-img" src="{{ professionalProfile($chat['created_by'],'t',$subdomain) }}"
+            alt="Image Description">
+    </span>
+</div>
+
+@else
+<div class="message-orange-wrap  mb-5 mt-3">
+    <div class="message-orange">
+    @if($chat['type'] == 'file')
          <?php
             $file_url = professionalDirUrl($subdomain)."/documents/".$chat['file_detail']['file_name'];
          ?>
-         <a href="{{$file_url}}" download>
-         <?php 
-            $fileicon = fileIcon($chat['message']);
-            echo $fileicon;
-         ?>
-         <div class="text-msg">{{$chat['message']}}</div>
+         <a href="{{$file_url}}" class="d-flex" download>
+           <?php 
+              $fileicon = fileIcon($chat['message']);
+              echo $fileicon;
+           ?>
+           <div class="text-msg text-dark">{{$chat['message']}}</div>
          </a>
-         <div class="clearfix"></div>
-         <div class="text-right"><small><b>-You</b></small></div>
-      </div>
-      @endif
-   </div>
-</li>
+        @else
+        <p class="mb-0">
+          {{$chat['message']}}
+        </p>
+        @endif
+
+    </div>
+    <div class="message-timestamp-left">You, {{ dateFormat($chat['created_at'],'F d,Y H:i:s') }}</div>
+    <span class="avatar avatar-xs avatar-circle">
+        <img class="avatar-img" src="assets/img/160x160/img7.jpg"
+            alt="Image Description">
+    </span>
+</div>
+
 @endif
 @endforeach

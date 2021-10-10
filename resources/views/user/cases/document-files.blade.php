@@ -1,14 +1,5 @@
 @extends('layouts.master')
-<style>
-.all_services li {
-    padding: 16px;
-    border-bottom: 1px solid #ddd;
-}
 
-.sub_services li {
-    border-bottom: none;
-}
-</style>
 @section('pageheader')
 <!-- Content -->
 <div class="">
@@ -28,6 +19,19 @@
 <!-- End Content -->
 @endsection
 @section('content')
+<style>
+.all_services li {
+    padding: 16px;
+    border-bottom: 1px solid #ddd;
+}
+
+.sub_services li {
+    border-bottom: none;
+}
+span.comment-document-counter {
+    display: none;
+}
+</style>
 <!-- Content -->
 @include(roleFolder().'.cases.case-navbar')
 <div class="">
@@ -73,7 +77,7 @@
 
                         <div class="col">
                             <h5 class="mb-0">
-                                <a data-href="{{$url}}" onclick="previewDocument(this)" data-caseid="{{$case_id}}" data-documentid="{{ $doc['unique_id'] }}"  class="text-dark" href="#" data-toggle="modal"
+                                <a data-href="{{$url}}" onclick="previewDocument(this)" data-filename="{{$doc['file_detail']['original_name']}}" data-caseid="{{$case_id}}" data-documentid="{{ $doc['unique_id'] }}"  class="text-dark" href="javascript:;" data-toggle="modal"
                                     data-target=".bd-example-modal-fs">{{$doc['file_detail']['original_name']}}</a>
                             </h5>
                             <ul class="list-inline list-separator small">
@@ -152,7 +156,7 @@
         <div class="modal-content min-vh-lg-100">
 
             <div class="modal-header">
-                <h5 class="modal-title h4" id="myExtraLargeModalLabel">Extra large modal</h5>
+                <h5 class="modal-title h4" id="myExtraLargeModalLabel">Preview Document</h5>
                 <button type="button" class="btn btn-xs btn-icon btn-ghost-secondary" data-dismiss="modal"
                     aria-label="Close">
                     <i class="tio-clear tio-lg"></i>
@@ -168,6 +172,7 @@
 
 
                     <div class="document-preview-thumbs">
+                        
                         <div id="document-preview-thumbs-content">
                             <ul>
                             @foreach($case_documents as $key => $doc)
@@ -175,8 +180,8 @@
                                 $doc_url = $file_url."/".$doc['file_detail']['file_name']; 
                                 $url = baseUrl('cases/preview-document/'.$case_id.'/'.$doc['unique_id'].'?url='.$doc_url.'&file_name='.$doc['file_detail']['file_name'].'&p='.$subdomain.'&doc_type='.$doc_type.'&folder_id='.$doc_id);
                             ?>
-                                <li>
-                                    <a onclick="previewDocument(this)" data-caseid="{{$case_id}}" data-documentid="{{ $doc['unique_id'] }}" class="card card-sm card-hover-shadow text-center" href="javascript:;" data-href="{{$url}}">
+                                <li class="{{ $doc['unique_id'] }}">
+                                    <a onclick="previewDocument(this)" data-filename="{{ $doc['file_detail']['original_name'] }}" data-caseid="{{$case_id}}" data-documentid="{{ $doc['unique_id'] }}" class="card card-sm card-hover-shadow text-center" href="javascript:;" data-href="{{$url}}">
                                         <div class="card-body">
                                             <?php 
                                                 $fileicon = fileIcon($doc['file_detail']['original_name']);
@@ -196,6 +201,8 @@
 
 
                     <div class="document-content">
+                        <input type="hidden" name="document_id" class="document_id" />
+                        <input type="hidden" name="case_id" class="case_id" />
                         <div id="document-preview"></div>
                         <!-- <iframe src="https://immigratly.com/public/uploads/professional/abc9/documents/39672-Document Checklist SOWP - student.pdf" style="margin:0 auto;width:100%;height: 100vh;" frameborder="0"></iframe> -->
                     </div>
@@ -203,9 +210,9 @@
                 <div id="shot-sidebar-app" class="shot-sidebar-app">
                     <div class="shot-sidebar-open-contents">
                         <div class="comment-document active-comment">
-                            <a href="javascript:;" id="comment-trigger"
+                            <a href="javascript:;" onclick="viewChats()" id="comment-trigger"
                                 class="comment-document-link">
-                                <span class="comment-document-counter">1</span>
+                                <span class="comment-document-counter"></span>
                                 <img class="avatar avatar-4by3 comment-document-image"
                                     src="assets/svg/message/chat-blue.svg" alt="Image Description">
                             </a>
@@ -223,9 +230,9 @@
                             <div class="send-message-box">
                                 <div class="send-message-container">
                                     <div class="form-group">
-                                        <label class="input-label" for="exampleFormControlTextarea1">Send a
+                                        <label class="input-label" id="send-message" for="message_input">Send a
                                             message</label>
-                                        <textarea id="exampleFormControlTextarea1" class="form-control"
+                                        <textarea id="message_input" class="form-control"
                                             placeholder="Type your message" rows="2"></textarea>
                                     </div>
                                 </div>
@@ -321,6 +328,7 @@
 var case_id;
 var document_id;
 var is_error = false;
+var sample1;
 $(document).ready(function() {
    $("#document-preview-thumbs-content").mThumbnailScroller({
    axis: "y",
@@ -330,25 +338,25 @@ $(document).ready(function() {
 
 
    $("#shot-sidebar-app").slideReveal({
-   trigger: $("#comment-trigger"),
-   autoEscape: false,
-   width: 380,
-   push: true,
-   top: 34,
-   position: "right",
-   speed: 700
+        trigger: $("#comment-trigger"),
+        autoEscape: false,
+        width: 380,
+        push: true,
+        top: 34,
+        position: "right",
+        speed: 700
    });
-   var sample1 = $("#shot-sidebar-app").slideReveal({
-   trigger: $("#comment-trigger"),
-   autoEscape: false,
-   width: 380,
-   push: true,
-   top: 34,
-   position: "right",
-   speed: 700
+    sample1 = $("#shot-sidebar-app").slideReveal({
+        trigger: $("#comment-trigger"),
+        autoEscape: false,
+        width: 380,
+        push: true,
+        top: 34,
+        position: "right",
+        speed: 700
    })
    $("#send-message-close-manually").click(function () {
-   sample1.slideReveal("hide");
+    sample1.slideReveal("hide");
    });
     $('.js-nav-tooltip-link').tooltip({
         boundary: 'window'
@@ -370,7 +378,7 @@ $(document).ready(function() {
     $(".send-attachment").click(function() {
         document.getElementById('chat-attachment').click();
     });
-    $(".send-message").click(function() {
+    $("#send-message").click(function() {
 
         var message = $("#message_input").val();
         if (message != '') {
@@ -558,6 +566,12 @@ function fetchChats(c_id, d_id) {
             if (response.status == true) {
                 $("#message_input,.send-message,.send-attachment").removeAttr('disabled');
                 $("#document-chats").html(response.html);
+                if(response.unread_chat != ''){
+                    $(".comment-document-counter").show();
+                    $(".comment-document-counter").html(response.unread_chat);
+                }else{
+                    $(".comment-document-counter").hide();
+                }
                 setTimeout(function() {
                     $(".messages").mCustomScrollbar();
                     $(".messages").animate({
@@ -596,7 +610,14 @@ function showDropboxFiles() {
 function previewDocument(e){
     var url = $(e).attr("data-href");
     var case_id = $(e).attr("data-caseid");
+    var file_name = $(e).attr("data-filename")
     var document_id = $(e).attr("data-documentid");
+    $("#document-preview-thumbs-content .mTSThumbContainer").removeClass("active");
+    $("#document-preview-thumbs-content ."+document_id).addClass("active");
+    $(".document-content .document_id").val(document_id);
+    $(".document-content .case_id").val(case_id);
+    $(".document-view-title").html(file_name);
+    sample1.slideReveal("hide");
     $.ajax({
         type: "GET",
         url: url,
@@ -608,7 +629,7 @@ function previewDocument(e){
             hideLoader();
             if (response.status == true) {
                 $("#document-preview").html(response.content);
-                fetchChats(case_id, document_id);
+                // fetchChats(case_id, document_id);
             } else {
                 errorMessage(response.message);
             }
@@ -619,6 +640,11 @@ function previewDocument(e){
             internalError();
         }
     });
+}
+function viewChats(){
+    var dc_id = $(".document-content .document_id").val();
+    var cid = $(".document-content .case_id").val();
+    fetchChats(cid, dc_id);
 }
 </script>
 @endsection

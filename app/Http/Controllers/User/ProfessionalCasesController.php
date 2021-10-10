@@ -738,12 +738,16 @@ class ProfessionalCasesController extends Controller
         $data = array();
         $data['case_id'] = $case_id;
         $data['document_id'] = $document_id;
+        $data['client_id'] = \Auth::user()->unique_id;
         $data['type'] = $request->input("type");
         $data['subdomain'] = $subdomain;
         $api_response = professionalCurl('cases/fetch-document-chats',$subdomain,$data);
+        
         $chats = array();
+        $unread_chat = '';
         if($api_response['status'] == 'success'){
             $chats = $api_response['data']['chats'];
+            $unread_chat = $api_response['data']['unread_chat'];
         }
         $viewData['chats'] = $chats;
         $viewData['subdomain'] = $subdomain;
@@ -752,6 +756,7 @@ class ProfessionalCasesController extends Controller
 
         $response['status'] = true;
         $response['html'] = $contents;
+        $response['unread_chat'] = $unread_chat;
         return response()->json($response);
     }
 
