@@ -1,4 +1,23 @@
 @extends('layouts.master')
+@section('pageheader')
+<!-- Content -->
+<div class="">
+    <div class="content container" style="height: 25rem;">
+        <!-- Page Header -->
+        <div class="page-header page-header-light page-header-reset">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h1 class="page-header-title">{{$pageTitle}}</h1>
+                </div>
+            </div>
+            <!-- End Row -->
+        </div>
+        <!-- End Page Header -->
+    </div>
+</div> 
+<!-- End Content -->
+@endsection
+
 @section("style")
 <style>
 .all_services li {
@@ -12,7 +31,7 @@
 @endsection
 @section('content')
 <!-- Content -->
-<div class="content container-fluid">
+<div class="cases">
   <div class="page-header">
     <div class="row align-items-end">
       <div class="col-sm mb-2 mb-sm-0">
