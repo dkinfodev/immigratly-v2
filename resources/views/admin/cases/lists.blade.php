@@ -8,11 +8,13 @@
         <div class="page-header page-header-light page-header-reset">
             <div class="row align-items-center">
                 <div class="col">
-                    <h1 class="page-header-title">Dashboard</h1>
+                    <h1 class="page-header-title">{{$pageTitle}}</h1>
                 </div>
 
                 <div class="col-auto">
-                    <a class="btn btn-primary" href="#">My dashboard</a>
+                  <a class="btn btn-primary" href="<?php echo baseUrl('cases/add') ?>">
+                    <i class="tio-user-add mr-1"></i> Create Case
+                  </a>
                 </div>
             </div>
             <!-- End Row -->

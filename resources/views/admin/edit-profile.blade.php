@@ -1,60 +1,42 @@
 @extends('layouts.master')
+@section('pageheader')
+<!-- Content -->
+<div class="">
+    <div class="content container" style="height: 25rem;">
+        <!-- Page Header -->
+        <div class="page-header page-header-light page-header-reset">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h1 class="page-header-title">{{$pageTitle}}</h1>
+                </div>
 
-@section('style')
+                <div class="col-auto">
+                  
+                </div>
+            </div>
+            <!-- End Row -->
+        </div>
+        <!-- End Page Header -->
+    </div>
+</div>
+<!-- End Content -->
+@endsection
+
+
+@section('content')
 <link rel="stylesheet" href="assets/vendor/quill/dist/quill.snow.css">
 <style type="text/css">
 .page-header-tabs {
     margin-bottom: 0px !important;
 }
 </style>
-@endsection
-
-@section('content')
-
 <!-- Content -->
-<div class="bg-dark">
-    <div class="content container-fluid" style="height: 25rem;">
-        <!-- Page Header -->
-        <div class="page-header page-header-light">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h1 class="page-header-title">{{$pageTitle}}</h1>
-                </div>
-            </div>
-            <!-- End Row -->
 
-            <!-- Nav Scroller -->
-            <div class="js-nav-scroller hs-nav-scroller-horizontal">
-                <span class="hs-nav-scroller-arrow-prev hs-nav-scroller-arrow-dark-prev" style="display: none;">
-                    <a class="hs-nav-scroller-arrow-link" href="javascript:;">
-                        <i class="tio-chevron-left"></i>
-                    </a>
-                </span>
-
-                <span class="hs-nav-scroller-arrow-next hs-nav-scroller-arrow-dark-next" style="display: none;">
-                    <a class="hs-nav-scroller-arrow-link" href="javascript:;">
-                        <i class="tio-chevron-right"></i>
-                    </a>
-                </span>
-
-                <!-- Nav -->
-                <ul class="nav nav-tabs nav-tabs-light page-header-tabs" id="pageHeaderTab" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="javascript:;">Edit Profile</a>
-                    </li>
-                </ul>
-                <!-- End Nav -->
-            </div>
-            <!-- End Nav Scroller -->
-        </div>
-        <!-- End Page Header -->
-    </div>
-</div>
 <!-- End Content -->
 
 
 <!-- Content -->
-<div class="content container-fluid" style="margin-top: -17rem;">
+<div class="edit-profile">
     <!-- Card -->
     <form id="profile_form" class="js-step-form js-validate" data-hs-step-form-options='{
         "progressSelector": "#validationFormProgress",
@@ -395,7 +377,7 @@
                     file_exists(professionalDir().'/documents/'.$company_details->licence_certificate))
                     <a class="badge badge-primary" download
                         href="{{ professionalDirUrl().'/documents/'.$company_details->licence_certificate }}"><i
-                            class="fa fa-download"></i>{{$company_details->licence_certificate}}</a>
+                            class="fa fa-download"></i> Download File</a>
                     @endif
                 </div>
             </div>
@@ -548,7 +530,7 @@
                           file_exists(professionalDir().'/documents/'.$company_details->owner_id_proof))
                           <a class="badge badge-primary" download
                               href="{{ professionalDirUrl().'/documents/'.$company_details->owner_id_proof }}"><i
-                                  class="fa fa-download"></i>{{$company_details->owner_id_proof}}</a>
+                                  class="fa fa-download"></i> Download File</a>
                           @endif
                       </div>
                   </div>
@@ -570,7 +552,7 @@
                           file_exists(professionalDir().'/documents/'.$company_details->company_address_proof))
                           <a class="badge badge-primary" download
                               href="{{ professionalDirUrl().'/documents/'.$company_details->company_address_proof }}"><i
-                                  class="fa fa-download"></i>{{$company_details->owner_id_proof}}</a>
+                                  class="fa fa-download"></i>  Download File</a>
                           @endif
                       </div>
                   </div>
