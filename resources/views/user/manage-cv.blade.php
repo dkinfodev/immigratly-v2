@@ -69,14 +69,7 @@
             <!-- End Navbar Toggle -->
             <div id="navbarVerticalNavMenu" class="collapse navbar-collapse">
                <!-- Navbar Nav -->
-               <ul id="navbarSettings" class="js-sticky-block js-scrollspy navbar-nav navbar-nav-lg nav-tabs card card-navbar-nav"
-                  data-hs-sticky-block-options='{
-                  "parentSelector": "#navbarVerticalNavMenu",
-                  "breakpoint": "lg",
-                  "startPoint": "#navbarVerticalNavMenu",
-                  "endPoint": "#stickyBlockEndPoint",
-                  "stickyOffsetTop": 20
-                  }'>
+               <ul id="navbarSettings" class="js-sticky-block js-scrollspy navbar-nav navbar-nav-lg nav-tabs card card-navbar-nav">
                   <li class="nav-item">
                      <a class="nav-link active" href="javascript:;">
                      <i class="tio-user-outlined nav-icon"></i>

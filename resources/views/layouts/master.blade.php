@@ -21,7 +21,7 @@
   <link rel="stylesheet" href="assets/vendor/@yaireo/tagify/dist/tagify.css">
   <link rel="stylesheet" href="assets/vendor/quill/dist/quill.snow.css">
   <link rel="stylesheet" href="assets/vendor/flatpickr/dist/flatpickr.min.css">
-  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css" />
   <!-- CSS Front Template -->
   <link rel="stylesheet" href="assets/css/theme.min.css">
   <link rel="stylesheet" href="assets/vendor/toastr/toastr.css">
@@ -88,7 +88,7 @@
     <!-- Sidebar Detached Content -->
       <div class="sidebar-detached-content mt-3 mt-lg-0">
        <div class="">
-          <div class="content pt-0 container-fluid">
+          <div class="content p-0 container-fluid">
             @yield("content")
           </div>
         </div>
@@ -729,6 +729,7 @@
   <script src="assets/vendor/datatables.net-buttons/js/buttons.colVis.min.js"></script>
   <script src="assets/vendor/toastr/toastr.min.js"></script>
   <script src="assets/vendor/ckeditor/ckeditor.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
   <script src="assets/vendor/sweetalert2/sweetalert2.all.min.js"></script>
   <!-- JS Front -->
   <script src="assets/js/theme.min.js"></script>
@@ -736,6 +737,7 @@
 
   <!-- JS Plugins Init. -->
   <script>
+    initSelect();
     $(document).on('ready', function () {
       // INITIALIZATION OF UNFOLD
       // =======================================================

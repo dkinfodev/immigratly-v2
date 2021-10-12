@@ -925,17 +925,17 @@ class ProfessionalApiController extends Controller
             $client_id = $request->input("client_id");
             if($request->input("invoice_type") == 'all'){
                 $records = CaseInvoices::with(['Invoice'])
-                ->whereHas("Invoice",function($query) use($client_id){
-                    $query->where("client_id",$client_id);
-                })
-                ->orderBy('id',"desc")
-                ->get();
+                            ->whereHas("Invoice",function($query) use($client_id){
+                                $query->where("client_id",$client_id);
+                            })
+                            ->orderBy('id',"desc")
+                            ->get();
                 $data['records'] = $records;
             }else{
                 $records = CaseInvoices::with(['Invoice'])
-                ->where("case_id",$case_id)
-                ->orderBy('id',"desc")
-                ->paginate();
+                            ->where("case_id",$case_id)
+                            ->orderBy('id',"desc")
+                            ->paginate();
                 $data['records'] = $records->items();
                 $data['last_page'] = $records->lastPage();
                 $data['current_page'] = $records->currentPage();

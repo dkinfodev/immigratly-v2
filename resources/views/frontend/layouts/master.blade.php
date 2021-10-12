@@ -877,35 +877,35 @@
     
     
     <script>
-      // (function() {
-      //   // INITIALIZATION OF HEADER
-      //   // =======================================================
-      //   new HSHeader('#header').init()
+      (function() {
+        // INITIALIZATION OF HEADER
+        // =======================================================
+        new HSHeader('#header').init()
 
 
-      //   // INITIALIZATION OF MEGA MENU
-      //   // =======================================================
-      //   new HSMegaMenu('.js-mega-menu', {
-      //       desktop: {
-      //         position: 'left'
-      //       }
-      //     })
+        // INITIALIZATION OF MEGA MENU
+        // =======================================================
+        new HSMegaMenu('.js-mega-menu', {
+            desktop: {
+              position: 'left'
+            }
+          })
 
 
-      //   // INITIALIZATION OF SHOW ANIMATIONS
-      //   // =======================================================
-      //   new HSShowAnimation('.js-animation-link')
+        // INITIALIZATION OF SHOW ANIMATIONS
+        // =======================================================
+        new HSShowAnimation('.js-animation-link')
 
-      //   // INITIALIZATION OF BOOTSTRAP DROPDOWN
-      //   // =======================================================
-      //   HSBsDropdown.init()
+        // INITIALIZATION OF BOOTSTRAP DROPDOWN
+        // =======================================================
+        HSBsDropdown.init()
 
 
-      //   // INITIALIZATION OF GO TO
-      //   // =======================================================
-      //   new HSGoTo('.js-go-to')
+        // INITIALIZATION OF GO TO
+        // =======================================================
+        new HSGoTo('.js-go-to')
 
-      // })()
+      })()
 
     </script>
 

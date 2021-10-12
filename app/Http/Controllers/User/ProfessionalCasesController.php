@@ -16,6 +16,7 @@ use App\Models\UserFolders;
 use App\Models\UserFiles;
 use App\Models\FilesManager;
 use App\Models\UserDetails;
+use App\Models\PinCaseFolder;
 
 class ProfessionalCasesController extends Controller
 {
@@ -79,13 +80,13 @@ class ProfessionalCasesController extends Controller
         }
         $user_id = \Auth::user()->unique_id;
         $user_folders = UserFolders::where("user_id",$user_id)->get();
-        
+        $pin_folders = PinCaseFolder::where("case_id",$case_id)->get();
         $user_file_url = userDirUrl()."/documents";
         $user_file_dir = userDir()."/documents";
         $viewData['user_file_url'] = $user_file_url;
         $viewData['user_file_dir'] = $user_file_dir;
         $viewData['user_folders'] = $user_folders;
-
+        $viewData['pin_folders'] = $pin_folders;
         $viewData['case_id'] = $case_id;
         $viewData['subdomain'] = $subdomain;
         $viewData['service'] = $service;
@@ -1595,6 +1596,35 @@ class ProfessionalCasesController extends Controller
         }
         $response['status'] = true;
         $response['content'] = $document;
+        return response()->json($response);
+    }
+
+    public function pinCaseFolder(Request $request){
+        $case_id = $request->input("case_id");
+        $folder_id = $request->input("folder_id");
+        $folder_type = $request->input("folder_type");
+        $pin_status = $request->input("pin_status");
+        $subdomain = $request->input("subdomain");
+        if($pin_status == 1){
+            $object = new PinCaseFolder();
+            $object->case_id = $case_id;
+            $object->folder_id = $folder_id;
+            $object->folder_type = $folder_type;
+            $object->subdomain = $subdomain;
+            $object->user_id = \Auth::user()->unique_id;
+            $object->save();
+            $response['message'] = "Folder Pinned Successfully";
+        }else{
+            $pin_id = $request->input("pin_id");
+            PinCaseFolder::where("id",$pin_id)
+                        ->where("case_id",$case_id)
+                        ->where("folder_id",$folder_id)
+                        ->where("folder_type",$folder_type)
+                        ->delete();
+            $response['message'] = "Folder unpinned successfully";
+        }
+        $response['status'] = true;
+
         return response()->json($response);
     }
 

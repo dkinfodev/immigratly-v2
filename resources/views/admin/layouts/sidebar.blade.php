@@ -1,25 +1,27 @@
-<aside class="js-navbar-vertical-aside navbar navbar-vertical-aside navbar-vertical navbar-vertical-fixed navbar-expand-xl navbar-bordered  ">
-  <div class="navbar-vertical-container">
-    <div class="navbar-vertical-footer-offset">
-      <div class="navbar-brand-wrapper justify-content-between">
-        <!-- Logo -->
-          <a class="navbar-brand" href="{{ baseUrl('/') }}" aria-label="Front">
-            <img class="navbar-brand-logo" src="assets/svg/logos/logo.svg" alt="Logo">
-            <img class="navbar-brand-logo-mini" src="assets/svg/logos/logo-short.svg" alt="Logo">
-          </a>
-        
-        <!-- End Logo -->
+<!-- Navbar Vertical -->
+<div class="navbar-expand-lg">
+    <!-- Navbar Toggle -->
+    <button type="button" class="navbar-toggler btn btn-block btn-white mb-3" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navbarVerticalNavMenu" data-toggle="collapse" data-target="#navbarVerticalNavMenu">
+      <span class="d-flex justify-content-between align-items-center">
+        <span class="h5 mb-0">Nav menu</span>
 
-        <!-- Navbar Vertical Toggle -->
-        <button type="button" class="js-navbar-vertical-aside-toggle-invoker navbar-vertical-aside-toggle btn btn-icon btn-xs btn-ghost-dark">
-          <i class="tio-clear tio-lg"></i>
-        </button>
-        <!-- End Navbar Vertical Toggle -->
-      </div>
+        <span class="navbar-toggle-default">
+          <i class="tio-menu-hamburger"></i>
+        </span>
 
-      <!-- Content -->
-      <div class="navbar-vertical-content">
-        <ul class="navbar-nav navbar-nav-lg nav-tabs">
+        <span class="navbar-toggle-toggled">
+          <i class="tio-clear"></i>
+        </span>
+      </span>
+    </button>
+    <!-- End Navbar Toggle -->
+
+    <aside id="navbarVerticalNavMenu" class="js-navbar-vertical-aside navbar navbar-vertical navbar-vertical-absolute navbar-vertical-detached navbar-shadow navbar-collapse collapse rounded-lg">
+      <div class="navbar-vertical-container">
+        <div class="navbar-vertical-footer-offset">
+          <!-- Content -->
+          <div class="navbar-vertical-content">
+          <ul class="navbar-nav navbar-nav-lg nav-tabs">
           <!-- Dashboards -->
           <li class="navbar-vertical-aside-has-menu show">
             <a class="js-navbar-vertical-aside-menu-link nav-link active" href="{{ baseUrl('/') }}">
@@ -106,9 +108,10 @@
 
           @endif
         </ul>
+          </div>
+          <!-- End Footer -->
+        </div>
       </div>
-      <!-- End Content -->
-
-    </div>
+    </aside>
   </div>
-</aside>
+  <!-- End Navbar Vertical -->

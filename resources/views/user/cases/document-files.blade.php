@@ -319,8 +319,8 @@ span.comment-document-counter {
 
 <link rel="stylesheet" href="assets/css/jquery.mThumbnailScroller.css">
 <!-- CSS Front Template -->
-<link rel="stylesheet" href="assets/vendor/mCustomScrollbar/jquery.mCustomScrollbar.css" />
-<script src="assets/vendor/mCustomScrollbar/jquery.mCustomScrollbar.min.js"></script>
+<!-- <link rel="stylesheet" href="assets/vendor/mCustomScrollbar/jquery.mCustomScrollbar.css" />
+<script src="assets/vendor/mCustomScrollbar/jquery.mCustomScrollbar.min.js"></script> -->
 <script src="assets/vendor/dropzone/dist/min/dropzone.min.js"></script>
 <script src="assets/js/jquery.slidereveal.js"></script>
 <script src="assets/js/jquery.mThumbnailScroller.js"></script>
@@ -407,10 +407,10 @@ $(document).ready(function() {
                             'disabled');
                         $("#message_input").val('');
                         $("#activitySidebar .messages").html(response.html);
-                        $(".messages").mCustomScrollbar();
-                        $(".messages").animate({
-                            scrollTop: $(".messages")[0].scrollHeight
-                        }, 1000);
+                        // $(".messages").mCustomScrollbar();
+                        // $(".messages").animate({
+                        //     scrollTop: $(".messages")[0].scrollHeight
+                        // }, 1000);
                         $(".doc_chat_input").show();
                         fetchChats(case_id, document_id);
                     } else {
@@ -452,7 +452,7 @@ $(document).ready(function() {
                         'disabled');
                     $("#chat-attachment").val('');
                     $("#activitySidebar .messages").html(response.html);
-                    $(".messages").mCustomScrollbar();
+                    // $(".messages").mCustomScrollbar();
                     $(".messages").animate({
                         scrollTop: $(".messages")[0].scrollHeight
                     }, 1000);
@@ -573,7 +573,7 @@ function fetchChats(c_id, d_id) {
                     $(".comment-document-counter").hide();
                 }
                 setTimeout(function() {
-                    $(".messages").mCustomScrollbar();
+                    // $(".messages").mCustomScrollbar();
                     $(".messages").animate({
                         scrollTop: $(".messages")[0].scrollHeight
                     }, 1000);

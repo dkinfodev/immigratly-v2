@@ -866,6 +866,7 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
         Route::post('/save-chat', [App\Http\Controllers\User\ProfessionalCasesController::class, 'saveChat']);
         Route::post('/save-chat-file', [App\Http\Controllers\User\ProfessionalCasesController::class, 'saveChatFile']);
         Route::get('/chat-demo', [App\Http\Controllers\User\ProfessionalCasesController::class, 'chatdemo']);
+        
         Route::group(array('prefix' => 'google-drive'), function () {
             Route::post('/folder/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'fetchGoogleDrive']);
             Route::post('/files-list', [App\Http\Controllers\User\ProfessionalCasesController::class, 'googleDriveFilesList']);
@@ -880,6 +881,7 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
             Route::get('/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'caseDocuments']);
             Route::get('/move-to-professional/{case_id}/{folder_id}/{subdomain}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'moveToProfessional']);
             Route::post('/move-to-professional/{case_id}/{folder_id}/{subdomain}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'copyToProfessional']);
+            Route::post('/pin-case-folder', [App\Http\Controllers\User\ProfessionalCasesController::class, 'pinCaseFolder']);
             Route::get('/default/{subdomain}/{case_id}/{folder_id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'defaultDocuments']);
             Route::get('/other/{subdomain}/{case_id}/{folder_id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'otherDocuments']);
             Route::get('/extra/{subdomain}/{case_id}/{folder_id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'extraDocuments']);

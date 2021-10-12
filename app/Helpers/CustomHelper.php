@@ -30,6 +30,8 @@ use App\Models\GroupConditionalQuestions;
 use App\Models\VisaServices;
 use App\Models\LicenceBodies;
 use App\Models\Languages;
+use App\Models\PinCaseFolder;
+use App\Models\UserFiles;
 
 if (! function_exists('getFileType')) {
     function getFileType($ext) {
@@ -2186,5 +2188,28 @@ if(!function_exists("staffRoles")){
                     array("name"=>"Telecaller","slug"=>"telecaller"),
                 );
         return $roles;
+    }
+}
+if(!function_exists("pinCaseFolder")){
+    function pinCaseFolder($case_id,$folder_id,$folder_type){
+        $checkPin = PinCaseFolder::where("case_id",$case_id)
+                                ->where("folder_id",$folder_id)
+                                ->where("folder_type",$folder_type)
+                                ->first();
+  
+        return $checkPin;
+    }
+}
+
+if(!function_exists("countFolderFiles")){
+    function countFolderFiles($case_id,$folder_id,$folder_type,$subdomain){
+        if($folder_type == 'mydoc'){
+            $files = UserFiles::where("folder_id",$folder_id)->count();
+        }else{
+            $files = DB::table(PROFESSIONAL_DATABASE.$subdomain.".case_documents")
+                        ->where("folder_id",$folder_id)
+                        ->count();
+        }  
+        return $files;
     }
 }

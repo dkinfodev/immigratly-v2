@@ -44,11 +44,11 @@ class ConfigServiceProvider extends ServiceProvider
             
             if($login_to == 'professional_panel'){
                 \Session::forget("subdomain");
-                \Session::put("subdomain",'testdev');
+                \Session::put("subdomain",'dkdev');
                 
-                \Config::set('database.connections.mysql.database', 'immigrat_testdev');
+                \Config::set('database.connections.mysql.database', 'immigrat_dkdev');
                 \DB::purge('mysql');
-                // \Config::set('database.connections.mysql.database', 'immigrat_immigratly_testdev');
+                // \Config::set('database.connections.mysql.database', 'immigrat_immigratly_dkdev');
             }
         }
         
