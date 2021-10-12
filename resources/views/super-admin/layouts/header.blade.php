@@ -114,7 +114,7 @@
                                       <span class="custom-checkbox-list-stretched-bg"></span>
                                     </div>
                                     <div class="avatar avatar-sm avatar-circle">
-                                      <img class="avatar-img" src="assets/img/160x160/img3.jpg" alt="Image Description">
+                                      <img class="avatar-img" src="assets/img/160x160/img3.jpg" alt="">
                                     </div>
                                   </div>
                                 </div>
@@ -146,7 +146,7 @@
                                     <span class="custom-checkbox-list-stretched-bg"></span>
                                   </div>
                                   <div class="avatar avatar-sm avatar-circle">
-                                    <img class="avatar-img" src="assets/img/160x160/img3.jpg" alt="Image Description">
+                                    <img class="avatar-img" src="assets/img/160x160/img3.jpg" alt="">
                                   </div>
                                 </div>
                               </div>
@@ -208,7 +208,7 @@
                        "type": "css-animation"
                      }'>
                     <div class="avatar avatar-sm avatar-circle">
-                      <img class="avatar-img" src="{{ userProfile('','t') }}" alt="Image Description">
+                      <img class="avatar-img" src="{{ userProfile('','t') }}" alt="">
                       <span class="avatar-status avatar-sm-status avatar-status-success"></span>
                     </div>
                   </a>
