@@ -1,5 +1,24 @@
 @extends('layouts.master')
 
+@section('pageheader')
+<!-- Content -->
+<div class="">
+    <div class="content container" style="height: 25rem;">
+        <!-- Page Header -->
+        <div class="page-header page-header-light page-header-reset">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h1 class="page-header-title">{{$pageTitle}}</h1>
+                </div>
+            </div>
+            <!-- End Row -->
+        </div>
+        <!-- End Page Header -->
+    </div>
+</div> 
+<!-- End Content -->
+@endsection
+
 @section('style')
 <link rel="stylesheet" href="assets/vendor/quill/dist/quill.snow.css">
 @endsection
@@ -7,7 +26,7 @@
 
 @section('content')
 <!-- Content -->
-<div class="content container-fluid">
+<div class="edit_profile">
   <!-- Page Header -->
   <div class="page-header">
     <div class="row align-items-end">

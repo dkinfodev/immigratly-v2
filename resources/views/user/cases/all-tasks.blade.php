@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('pageheader')
+@section('pageheader') 
 <!-- Content -->
 <div class="">
     <div class="content container" style="height: 25rem;">
