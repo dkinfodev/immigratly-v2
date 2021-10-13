@@ -1499,4 +1499,20 @@ class CasesController extends Controller
         $response['message'] = "Task status changed";
         return response()->json($response);
     }
+
+    public function view($case_id){
+        $record = Cases::with(['AssingedMember','VisaService'])
+                    ->where("unique_id",$case_id)
+                    ->first();
+        $temp = $record;
+        $temp->MainService = $record->Service($record->VisaService->service_id);
+        $data = $temp;
+            
+        $viewData['subdomain'] = $subdomain;
+        $viewData['pageTitle'] = "View Case";
+        $viewData['record'] = $data;
+        $viewData['active_nav'] = "overview";
+        $viewData['visa_services'] = array();
+        return view(roleFolder().'.cases.view',$viewData);
+    } 
 }
