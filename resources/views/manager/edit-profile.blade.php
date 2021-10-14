@@ -1,28 +1,32 @@
 @extends('layouts.master')
-
+@section('pageheader')
+<!-- Content -->
+<div class="">
+    <div class="content container" style="height: 25rem;">
+        <!-- Page Header -->
+        <div class="page-header page-header-light page-header-reset">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h1 class="page-header-title">{{$pageTitle}}</h1>
+                </div>
+            </div>
+            <!-- End Row -->
+        </div>
+        <!-- End Page Header -->
+    </div>
+</div> 
+<!-- End Content -->
+@endsection
 @section('content')
 <!-- Content -->
-<div class="content container-fluid">
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="row align-items-end">
-      <div class="col-sm mb-2 mb-sm-0">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb breadcrumb-no-gutter">
-            <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
-          </ol>
-        </nav>
-
-        <h1 class="page-title">{{$pageTitle}}</h1>
-      </div>
-    </div>
-    <!-- End Row -->
-  </div>
-  <!-- End Page Header -->
-
+<div class="edit_profile">
+  
   <!-- Card -->
-  <div class="card">
+  <div class="card mb-5">
+
+    <div class="card-header">
+      <h2>Edit Profile</h2>
+    </div>
 
     <div class="card-body">
       <form id="form" class="js-validate" action="{{ baseUrl('/update-profile') }}" method="post">
