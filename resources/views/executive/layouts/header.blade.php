@@ -208,7 +208,7 @@
                        "type": "css-animation"
                      }'>
                     <div class="avatar avatar-sm avatar-circle">
-                      <img class="avatar-img" src="{{ professionalProfile('','t') }}" alt="">
+                      <img class="avatar-img" src="{{ userProfile('','t') }}" alt="">
                       <span class="avatar-status avatar-sm-status avatar-status-success"></span>
                     </div>
                   </a>
@@ -217,7 +217,7 @@
                     <div class="dropdown-item-text">
                       <div class="media align-items-center">
                         <div class="avatar avatar-sm avatar-circle mr-2">
-                          <img class="avatar-img" src="{{ professionalProfile('','t') }}" alt="Image Description">
+                          <img class="avatar-img" src="{{ userProfile('','t') }}" alt="Image Description">
                         </div>
                         <div class="media-body">
                             <span class="card-title h5">{{ Auth::user()->first_name." ".Auth::user()->last_name }}</span>
