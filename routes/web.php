@@ -1088,6 +1088,7 @@ Route::group(array('prefix' => 'admin'), function () {
             Route::get('/delete/{id}', [App\Http\Controllers\Admin\CasesController::class, 'deleteSingle']);
             Route::post('/delete-multiple', [App\Http\Controllers\Admin\CasesController::class, 'deleteMultiple']);
             Route::get('/edit/{id}', [App\Http\Controllers\Admin\CasesController::class, 'edit']);
+            Route::get('/view/{id}', [App\Http\Controllers\Admin\CasesController::class, 'view']);
             Route::post('/update/{id}', [App\Http\Controllers\Admin\CasesController::class, 'update']);
             Route::get('/view/{id}', [App\Http\Controllers\Admin\CasesController::class, 'view']);
             Route::post('/remove-documents', [App\Http\Controllers\Admin\CasesController::class, 'removeDocuments']);

@@ -101,6 +101,10 @@
           <i class="tio-edit dropdown-item-icon"></i>
           Edit
           </a>
+          <a class="dropdown-item" href="{{baseUrl('cases/view/'.base64_encode($record->id))}}">
+          <i class="tio-globe dropdown-item-icon"></i>
+          View
+          </a>
           <a class="dropdown-item" href="{{baseUrl('cases/case-documents/documents/'.base64_encode($record->id))}}">
           <i class="tio-pages-outlined dropdown-item-icon"></i>
           Case Documents

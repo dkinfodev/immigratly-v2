@@ -1501,8 +1501,10 @@ class CasesController extends Controller
     }
 
     public function view($case_id){
+        $case_id = base64_decode($case_id);
+        $subdomain = \Session::get("subdomain");
         $record = Cases::with(['AssingedMember','VisaService'])
-                    ->where("unique_id",$case_id)
+                    ->where("id",$case_id)
                     ->first();
         $temp = $record;
         $temp->MainService = $record->Service($record->VisaService->service_id);

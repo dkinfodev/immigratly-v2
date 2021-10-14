@@ -9,7 +9,7 @@
       <div class="media-body">
         <div class="row">
           <div class="col-lg mb-3 mb-lg-0">
-            <h1 class="page-header-title">{{$record['case_title']}}</h1>
+            <h1 class="page-header-title">{{$record->case_title}}</h1>
 
             <div class="row align-items-center">
               <div class="col-auto">
@@ -29,9 +29,9 @@
 
                   <!-- Flatpickr -->
                   <div id="projectDeadlineFlatpickr" class="js-flatpickr flatpickr-custom flatpickr-custom-borderless col input-group input-group-sm">
-                    @if(!empty($record['MainService']))
+                    @if(!empty($record->MainService))
                     <span class="text-primary">
-                       {{$record['MainService']['name']}} 
+                       {{$record->MainService->name}} 
                     </span>
                     @else
                     <span class="text-danger">
@@ -42,27 +42,27 @@
                   <!-- End Flatpickr -->
                 </div>
               </div>
-              @if($record['start_date'] != '')
+              @if($record->start_date != '')
               <div class="col-auto">
                 <div class="row align-items-center g-0">
                   <div class="col-auto">Start date:</div>
 
                   <!-- Flatpickr -->
                   <div id="projectDeadlineFlatpickr" class="js-flatpickr flatpickr-custom flatpickr-custom-borderless col input-group input-group-sm">
-                    <span class="text-primary"> {{ $record['start_date'] }}</span>
+                    <span class="text-primary"> {{ $record->start_date }}</span>
                   </div>
                   <!-- End Flatpickr -->
                 </div>
               </div>
               @endif
-              @if($record['end_date'] != '')
+              @if($record->end_date != '')
               <div class="col-auto">
                 <div class="row align-items-center g-0">
                   <div class="col-auto">Due date:</div>
 
                   <!-- Flatpickr -->
                   <div id="projectDeadlineFlatpickr" class="js-flatpickr flatpickr-custom flatpickr-custom-borderless col input-group input-group-sm">
-                    <span class="text-primary"> {{ $record['end_date'] }}</span>
+                    <span class="text-primary"> {{ $record->end_date }}</span>
                   </div>
                   <!-- End Flatpickr -->
                 </div>
@@ -90,20 +90,20 @@
           </div>
 
           <div class="col-lg-auto">
-          @if(count($record['assinged_member']) > 2)
+          @if(count($record->AssingedMember) > 2)
             <small class="text-cap mb-2">Team members:</small>
 
             <div class="d-flex">
               <!-- Avatar Group -->
               <div class="avatar-group avatar-circle mr-3">
-                @foreach($record['assinged_member'] as $key => $member)
+                @foreach($record->AssingedMember as $key => $member)
                     <a class="avatar" href="javascript:;" data-toggle="tooltip" data-placement="top" title="<?php echo $member['member']['first_name']." ".$member['member']['last_name'] ?>">
-                    <img class="avatar-img" src="{{ professionalProfile($member['member']['unique_id'],'t',$subdomain) }}" alt="Image Description">
+                    <img class="avatar-img" src="{{ professionalProfile($member->Member->unique_id,'t',$subdomain) }}" alt="Image Description">
                     </a>
                 @endforeach
-                @if(count($record['assinged_member']) > 2)
+                @if(count($record->AssingedMember) > 2)
                     <a class="avatar avatar-light avatar-circle" href="javascript:;" data-toggle="modal" data-target="#shareWithPeopleModal">
-                    <span class="avatar-initials">+{{count($record['assinged_member'])-2 }}</span>
+                    <span class="avatar-initials">+{{count($record->assinged_member)-2 }}</span>
                     </a>
                 @endif
               </div>
@@ -149,11 +149,11 @@
     </span>
     <ul class="nav nav-tabs page-header-tabs" id="projectsTab" role="tablist">
         <li class="nav-item">
-            <a class="nav-link {{isset($active_nav) && $active_nav == 'overview'?'active':'' }}" href="{{baseUrl('cases/view/'.$subdomain.'/'.$record['unique_id'])}}">Overview</a>
+            <a class="nav-link {{isset($active_nav) && $active_nav == 'overview'?'active':'' }}" href="{{baseUrl('cases/view/'.base64_encode($record->id))}}">Overview</a>
                                                                                                               
         </li>
         <li class="nav-item">
-            <a class="nav-link {{isset($active_nav) && $active_nav == 'files'?'active':'' }}" href="{{baseUrl('cases/documents/'.$subdomain.'/'.$record['unique_id'])}}">Files <span
+            <a class="nav-link {{isset($active_nav) && $active_nav == 'files'?'active':'' }}" href="{{baseUrl('cases/case-documents/documents/'.base64_encode($record->id))}}">Files <span
                     class="badge badge-soft-dark rounded-circle ml-1">3</span></a>
         </li>
         <li class="nav-item">
