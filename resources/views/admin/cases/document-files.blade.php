@@ -220,8 +220,17 @@
                             <div class="send-message-box">
                                 <div class="send-message-container">
                                     <div class="form-group">
-                                        <label class="input-label" id="send-message" for="message_input">Send a
-                                            message</label>
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <label class="input-label" id="send-message" for="message_input">Send a message</label>
+                                                <input type="file" name="chat_file" id="chat-attachment" style="display:none" />
+                                            </div>
+                                            <div class="col-auto">
+                                                <button type="button" class="btn btn-info btn-pill send-attachment">
+                                                    <i class="tio-attachment"></i>
+                                                </button>
+                                            </div>
+                                        </div>
                                         <textarea id="message_input" class="form-control"
                                             placeholder="Type your message" rows="2"></textarea>
                                     </div>
@@ -382,9 +391,7 @@
                     $("#chat-attachment").val('');
                     $("#activitySidebar .messages").html(response.html);
                     // $(".messages").mCustomScrollbar();
-                    $(".messages").animate({
-                        scrollTop: $(".messages")[0].scrollHeight
-                    }, 1000);
+                    
                     $(".doc_chat_input").show();
                     fetchChats(case_id, document_id);
                 } else {
@@ -479,13 +486,6 @@
                 }else{
                     $(".comment-document-counter").hide();
                 }
-                setTimeout(function() {
-                    // $(".messages").mCustomScrollbar();
-                    $(".messages").animate({
-                        scrollTop: $(".messages")[0].scrollHeight
-                    }, 1000);
-                }, 800);
-
                 $(".doc_chat_input").show();
             } else {
                 errorMessage(response.message);
@@ -499,9 +499,9 @@
    }
    function previewDocument(e){
     var url = $(e).attr("data-href");
-    var case_id = $(e).attr("data-caseid");
+    case_id = $(e).attr("data-caseid");
     var file_name = $(e).attr("data-filename")
-    var document_id = $(e).attr("data-documentid");
+    document_id = $(e).attr("data-documentid");
     $("#document-preview-thumbs-content .mTSThumbContainer").removeClass("active");
     $("#document-preview-thumbs-content ."+document_id).addClass("active");
     $(".document-content .document_id").val(document_id);
@@ -519,7 +519,7 @@
             hideLoader();
             if (response.status == true) {
                 $("#document-preview").html(response.content);
-                // fetchChats(case_id, document_id);
+                fetchChats(case_id, document_id);
             } else {
                 errorMessage(response.message);
             }

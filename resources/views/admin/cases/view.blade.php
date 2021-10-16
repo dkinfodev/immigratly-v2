@@ -32,7 +32,9 @@
 
     <!-- Body -->
     <div class="card-body">
-        <?php echo $record['description'] ?>
+        <?php 
+        echo $record->description;
+        ?>
     </div>
     <!-- End Body -->
   </div>
