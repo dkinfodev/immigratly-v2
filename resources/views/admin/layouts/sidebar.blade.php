@@ -90,6 +90,27 @@
             </a>
           </li>
 
+          <li class="nav-item">
+            <small class="nav-subtitle" title="Pages">Settings</small>
+            <small class="tio-more-horizontal nav-subtitle-replacer"></small>
+          </li>
+          
+
+          <li class="navbar-vertical-aside-has-menu">
+            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ baseUrl('staff') }}">
+              <i class="tio-user nav-icon"></i>
+              <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Staff</span>
+            </a>
+          </li>
+
+          <li class="navbar-vertical-aside-has-menu">
+            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ baseUrl('role-privileges') }}">
+              <i class="tio-lock nav-icon"></i>
+              <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Role Privileges</span>
+            </a>
+          </li>
+
+
           <!-- <li class="navbar-vertical-aside-has-menu ">
             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle " href="javascript:;">
               <i class="tio-apps nav-icon"></i>
