@@ -225,10 +225,10 @@
                                                 <label class="input-label" id="send-message" for="message_input">Send a message</label>
                                                 <input type="file" name="chat_file" id="chat-attachment" style="display:none" />
                                             </div>
-                                            <div class="col-auto">
-                                                <button type="button" class="btn btn-info btn-pill send-attachment">
+                                            <div class="col-mx-auto">
+                                                <div class="text-info send-attachment">
                                                     <i class="tio-attachment"></i>
-                                                </button>
+                                                </div>
                                             </div>
                                         </div>
                                         <textarea id="message_input" class="form-control"
