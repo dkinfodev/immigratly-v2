@@ -339,22 +339,78 @@ class CasesController extends Controller
         \Session::flash('success', 'Folder unpinned!');
         return response()->json($response);
     }
+    public function caseDocuments_new($id){
+        $id = base64_decode($id);
+        $record = Cases::where("id",$id)->first();
+        $service = ProfessionalServices::where("unique_id",$record->visa_service_id)->first();
+        $documents = ServiceDocuments::where("service_id",$record->visa_service_id)->get();
+        $case_folders = CaseFolders::where("case_id",$record->unique_id)->get();
+        $service->MainService = $service->Service($service->service_id);
+        
+        // $visa_service = $service->MainService;
+        $subdomain = \Session::get("subdomain");
+        $default_documents = $service->DefaultDocuments($service->service_id);
+        foreach($default_documents as $document){
+            $document->files_count = $record->caseDocuments($record->unique_id,$document->unique_id,'count');
+        }
+        foreach($documents as $document){
+            $document->files_count = $record->caseDocuments($record->unique_id,$document->unique_id,'count');
+        }
+        foreach($case_folders as $document){
+            $document->files_count = $record->caseDocuments($record->unique_id,$document->unique_id,'count');
+        }
+        $service->Documents = $default_documents;
+        $viewData['pageTitle'] = "Documents for ".$service->Service($service->service_id)->name;
+        $user_file_url = userDirUrl($record->client_id)."/documents";
+        $user_file_dir = userDir($record->client_id)."/documents";
+        $pinned_folders = $record->pinned_folders;
+        if($pinned_folders != ''){
+            $pin_folders = json_decode($pinned_folders,true);
+            $is_pinned = true;
+        }else{
+            $pin_folders = array('default'=>array(),"other"=>array(),"extra"=>array());
+            $is_pinned = false;
+        }
+        $pin_folders = array();
+        $viewData['is_pinned'] = $is_pinned;
+        $viewData['pin_folders'] = $pin_folders;
 
+        $viewData['user_file_url'] = $user_file_url;
+        $viewData['user_file_dir'] = $user_file_dir;
+        $viewData['case_id'] = $record->unique_id;
+        $viewData['subdomain'] = $subdomain;
+        $viewData['service'] = $service;
+        $viewData['documents'] = $documents;
+        $viewData['case_folders'] = $case_folders;
+        $viewData['record'] = $record;
+        $viewData['active_nav'] = "files";
+
+        // if(!empty($visa_service)){
+        //     $viewData['pageTitle'] = "Documents for ".$service->Service($service->service_id)->name;
+        // }else{
+        //     return redirect()->back()->with("error","No visa service found");
+        // }
+
+        return view(roleFolder().'.cases.document-folders',$viewData);
+
+    }
     public function caseDocuments($id){
         $id = base64_decode($id);
         $record = Cases::find($id);
-        
+        $subdomain = \Session::get("subdomain");
         $service = ProfessionalServices::where("unique_id",$record->visa_service_id)->first();
         $documents = ServiceDocuments::where("service_id",$service->unique_id)->get();
         $case_folders = CaseFolders::where("case_id",$record->unique_id)->get();
         $pinned_folders = $record->pinned_folders;
         if($pinned_folders != ''){
             $pinned_folders = json_decode($pinned_folders,true);
+            
             $is_pinned = true;
         }else{
             $pinned_folders = array('default'=>array(),"other"=>array(),"extra"=>array());
             $is_pinned = false;
         }
+        $viewData['subdomain'] = $subdomain;
         $viewData['is_pinned'] = $is_pinned;
         $viewData['pinned_folders'] = $pinned_folders;
         $viewData['service'] = $service;
@@ -704,6 +760,12 @@ class CasesController extends Controller
         $data['document_id'] = $document_id;
         $subdomain = $request->input("subdomain");
         $data['type'] = $request->input("type");
+
+        $unread_chat = DocumentChats::where("case_id",$case_id)
+                ->where('document_id',$document_id)
+                ->where('admin_read',0)
+                ->count();
+
         DocumentChats::where("case_id",$case_id)
                 ->where('document_id',$document_id)
                 ->update(['admin_read'=>1]);
@@ -714,6 +776,7 @@ class CasesController extends Controller
 
         $response['status'] = true;
         $response['html'] = $contents;
+        $response['unread_chat'] = $unread_chat;
         return response()->json($response);
     }
 
@@ -1517,4 +1580,27 @@ class CasesController extends Controller
         $viewData['visa_services'] = array();
         return view(roleFolder().'.cases.view',$viewData);
     } 
+
+    public function previewDocument($case_id,$doc_id,Request $request){
+        $url = $request->get("url");
+        $filename = $request->get("file_name");
+        $extension = fileExtension($filename);
+        $subdomain = $request->get("p");
+        $folder_id = $request->get("folder_id");
+        
+        $doc_type = $request->get("doc_type");
+        $document = '';
+        if($extension == 'image'){
+            $document = '<div class="text-center"><img src="'.$url.'" class="img-fluid" /></div>';
+        }else{
+            if(google_doc_viewer($extension)){
+                $document = '<iframe src="http://docs.google.com/viewer?url='.$url.'&embedded=true" style="margin:0 auto; width:100%; height:700px;" frameborder="0"></iframe>';
+            }else{
+                $document = '<iframe src="'.$url.'" style="margin:0 auto; width:100%; height:700px;" frameborder="0"></iframe>';
+            }
+        }
+        $response['status'] = true;
+        $response['content'] = $document;
+        return response()->json($response);
+    }
 }

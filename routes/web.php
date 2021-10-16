@@ -1099,6 +1099,7 @@ Route::group(array('prefix' => 'admin'), function () {
             Route::post('/pinned-folder', [App\Http\Controllers\Admin\CasesController::class, 'pinnedFolder']);
             Route::post('/unpinned-folder', [App\Http\Controllers\Admin\CasesController::class, 'unpinnedFolder']);
             Route::group(array('prefix' => 'case-documents'), function () {
+                Route::get('/preview-document/{case_id}/{doc_id}', [App\Http\Controllers\Admin\CasesController::class, 'previewDocument']);
                 Route::get('/documents/{id}', [App\Http\Controllers\Admin\CasesController::class, 'caseDocuments']);
                 Route::get('/add-folder/{id}', [App\Http\Controllers\Admin\CasesController::class, 'addFolder']);
                 Route::post('/add-folder/{id}', [App\Http\Controllers\Admin\CasesController::class, 'createFolder']);

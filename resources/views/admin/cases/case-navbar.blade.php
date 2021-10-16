@@ -29,9 +29,11 @@
 
                   <!-- Flatpickr -->
                   <div id="projectDeadlineFlatpickr" class="js-flatpickr flatpickr-custom flatpickr-custom-borderless col input-group input-group-sm">
-                    @if(!empty($record->MainService))
+  
+                    
+                    @if(!empty($record->Service($record->VisaService->service_id)))
                     <span class="text-primary">
-                       {{$record->MainService->name}} 
+                       {{$record->Service($record->VisaService->service_id)->name}} 
                     </span>
                     @else
                     <span class="text-danger">
@@ -48,7 +50,7 @@
                   <div class="col-auto">Start date:</div>
 
                   <!-- Flatpickr -->
-                  <div id="projectDeadlineFlatpickr" class="js-flatpickr flatpickr-custom flatpickr-custom-borderless col input-group input-group-sm">
+                  <div class="col input-group input-group-sm">
                     <span class="text-primary"> {{ $record->start_date }}</span>
                   </div>
                   <!-- End Flatpickr -->
@@ -56,12 +58,12 @@
               </div>
               @endif
               @if($record->end_date != '')
-              <div class="col-auto">
+              <div class="ml-3 col-auto">
                 <div class="row align-items-center g-0">
                   <div class="col-auto">Due date:</div>
 
                   <!-- Flatpickr -->
-                  <div id="projectDeadlineFlatpickr" class="js-flatpickr flatpickr-custom flatpickr-custom-borderless col input-group input-group-sm">
+                  <div class="col input-group input-group-sm">
                     <span class="text-primary"> {{ $record->end_date }}</span>
                   </div>
                   <!-- End Flatpickr -->

@@ -67,6 +67,9 @@ class Cases extends Model
         if($type == 'other'){
             $document = ServiceDocuments::where("unique_id",$folder_id)->first();
         }
+        if($type == 'extra'){
+            $document = CaseFolders::where("unique_id",$folder_id)->first();
+        }
         return $document;
     }
 

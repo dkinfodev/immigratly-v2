@@ -331,9 +331,9 @@ var is_error = false;
 var sample1;
 $(document).ready(function() {
    $("#document-preview-thumbs-content").mThumbnailScroller({
-   axis: "y",
-   type: "click-50",
-   theme: "buttons-out"
+    axis: "y",
+    type: "click-50",
+    theme: "buttons-out"
    });
 
 
