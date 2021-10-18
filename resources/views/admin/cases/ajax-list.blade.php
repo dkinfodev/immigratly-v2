@@ -7,7 +7,7 @@
     </div>
   </td>
   <td class="table-column-pl-0">
-    <a class="d-flex align-items-center" href="{{baseUrl('cases/edit/'.base64_encode($record->id))}}">
+    <a class="d-flex align-items-center" href="{{baseUrl('cases/view/'.base64_encode($record->id))}}">
       @if(!empty($record->Client($record->client_id)))
       <?php
       $client = $record->Client($record->client_id);

@@ -122,6 +122,12 @@
                                     </h5>
                                     <ul class="list-inline list-separator small">
                                        <li class="list-inline-item">{{$record->caseDocuments($record->unique_id,$document->unique_id,'count')}} Files</li>
+                                       <?php
+                                          $doc_chats = countUnreadDocChat($case_id,$subdomain,\Auth::user()->role,$document->unique_id);
+                                          if($doc_chats > 0){
+                                       ?>
+                                          <li class="list-inline-item text-danger">{{$doc_chats}} chats</li>
+                                       <?php } ?>
                                     </ul>
                               </a>
                            </div>
@@ -185,6 +191,12 @@
                                     </h5>
                                     <ul class="list-inline list-separator small">
                                        <li class="list-inline-item">{{$record->caseDocuments($record->unique_id,$document->unique_id,'count')}} Files</li>
+                                       <?php
+                                          $doc_chats = countUnreadDocChat($case_id,$subdomain,\Auth::user()->role,$document->unique_id);
+                                          if($doc_chats > 0){
+                                       ?>
+                                          <li class="list-inline-item text-danger">{{$doc_chats}} chats</li>
+                                       <?php } ?>
                                     </ul>
                               </a>
                            </div>

@@ -156,7 +156,7 @@
         </li>
         <li class="nav-item">
             <a class="nav-link {{isset($active_nav) && $active_nav == 'files'?'active':'' }}" href="{{baseUrl('cases/case-documents/documents/'.base64_encode($record->id))}}">Files <span
-                    class="badge badge-soft-dark rounded-circle ml-1">3</span></a>
+                    class="badge badge-soft-dark rounded-circle ml-1"> {{ countUnreadDocChat($case_id,$subdomain,\Auth::user()->role) }}</span></a>
         </li>
         <li class="nav-item">
             <a class="nav-link " href="project-activity.html">Activity</a>

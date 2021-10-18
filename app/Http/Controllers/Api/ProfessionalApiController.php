@@ -774,11 +774,15 @@ class ProfessionalApiController extends Controller
             $object->document_id = $request->input("document_id");
             $object->message = $request->input("message");
             $object->type = $request->input("type");
+            if($request->input("file_message")){
+                $object->file_message = $request->input("file_message");
+            }
             if($request->input("type") == 'file'){
                 $document_id = randomNumber();
                 $object2 = new Documents();
                 $object2->file_name = $request->input("file_name");
                 $object2->original_name = $request->input("original_name");
+                
                 $object2->unique_id = $document_id;
                 $object2->created_by = 0;
                 $object2->save();

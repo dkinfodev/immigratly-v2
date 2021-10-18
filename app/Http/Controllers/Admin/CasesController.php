@@ -106,7 +106,6 @@ class CasesController extends Controller
         $postData['professional'] = ProfessionalDetails::first();
         $postData['data'] = $data;
         $result = curlRequest("create-client",$postData);
-      
         if($result['status'] == 'error'){
             $response['status'] = false;
             $response['error_type'] = 'process_error';
@@ -417,7 +416,8 @@ class CasesController extends Controller
         $viewData['documents'] = $documents;
         $viewData['case_folders'] = $case_folders;
         $viewData['record'] = $record;
-        $viewData['case_id'] = $record->id;
+        // $viewData['case_id'] = $record->id;
+        $viewData['case_id'] = $record->unique_id;
         $visa_service = $service->Service($service->service_id);
         if(!empty($visa_service)){
             $viewData['pageTitle'] = "Documents for ".$service->Service($service->service_id)->name;
@@ -763,6 +763,7 @@ class CasesController extends Controller
 
         $unread_chat = DocumentChats::where("case_id",$case_id)
                 ->where('document_id',$document_id)
+                ->where("send_by","!=","admin")
                 ->where('admin_read',0)
                 ->count();
 
@@ -885,6 +886,9 @@ class CasesController extends Controller
                 $object->document_id = $request->input("document_id");
                 $object->message = $fileName;
                 $object->type = 'file';
+                if($request->input("message")){
+                    $object->file_message = $request->input("message");
+                }
                 $object->file_id = $file_id;
                 $object->send_by = \Auth::user()->role;
                 $object->created_by = \Auth::user()->unique_id;
@@ -1576,6 +1580,7 @@ class CasesController extends Controller
         $viewData['subdomain'] = $subdomain;
         $viewData['pageTitle'] = "View Case";
         $viewData['record'] = $data;
+        $viewData['case_id'] = $record->unique_id;
         $viewData['active_nav'] = "overview";
         $viewData['visa_services'] = array();
         return view(roleFolder().'.cases.view',$viewData);

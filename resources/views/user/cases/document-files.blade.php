@@ -83,6 +83,12 @@ span.comment-document-counter {
                             <ul class="list-inline list-separator small">
                                 <li class="list-inline-item">Added on {{dateFormat($doc['created_at'])}}</li>
                                 <li class="list-inline-item">{{$filesize}}</li>
+                                <?php       
+                                    $doc_chats = countUnreadDocChat($case_id,$subdomain,"client",$doc['folder_id'],$doc['unique_id']);
+                                    if($doc_chats > 0){
+                                ?>
+                                    <li class="list-inline-item text-danger">{{$doc_chats}} chats</li>
+                                <?php } ?>
                             </ul>
                         </div>
 
@@ -230,8 +236,18 @@ span.comment-document-counter {
                             <div class="send-message-box">
                                 <div class="send-message-container">
                                     <div class="form-group">
-                                        <label class="input-label" id="send-message" for="message_input">Send a
-                                            message</label>
+                                        <div class="row">
+                                            <div class="col">
+                                                <label class="input-label" id="send-message" for="message_input">Send a message</label>
+                                                <input type="file" name="chat_file" id="chat-attachment" style="display:none" />
+                                            </div>
+                                            <div class="col text-right">
+                                                <span class="text-primary uploaded-file"></span>
+                                                <a href="javascript:;" class="text-info send-attachment">
+                                                    <i class="tio-attachment"></i>
+                                                </a>
+                                            </div>
+                                        </div>
                                         <textarea id="message_input" class="form-control"
                                             placeholder="Type your message" rows="2"></textarea>
                                     </div>
@@ -381,32 +397,51 @@ $(document).ready(function() {
     $("#send-message").click(function() {
 
         var message = $("#message_input").val();
+        var formData = new FormData();
+        formData.append("_token", csrf_token);
+        formData.append("case_id", case_id);
+        formData.append("document_id", document_id);
+        formData.append("doc_type", '{{ $doc_type}}');
+        formData.append("subdomain", "{{$subdomain}}");
+        formData.append("message", message);
+        if($('#chat-attachment')[0].files[0] != undefined){
+            formData.append('attachment', $('#chat-attachment')[0].files[0]);
+            formData.append("type", 'file');
+            var url = "{{ baseUrl('cases/documents/send-chat-file') }}";
+        }else{
+            formData.append("type", 'text');
+            var url  = "{{ baseUrl('cases/documents/send-chats') }}";
+        }
         if (message != '') {
             $.ajax({
                 type: "POST",
-                url: "{{ baseUrl('cases/documents/send-chats') }}",
-                data: {
-                    _token: csrf_token,
-                    case_id: case_id,
-                    document_id: document_id,
-                    message: message,
-                    doc_type: "{{ $doc_type}}",
-                    type: "text",
-                    subdomain: "{{$subdomain}}"
-                },
+                url: url,
+                data:formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                // data: {
+                //     _token: csrf_token,
+                //     case_id: case_id,
+                //     document_id: document_id,
+                //     message: message,
+                //     doc_type: "{{ $doc_type}}",
+                //     type: "text",
+                //     subdomain: "{{$subdomain}}"
+                // },
                 dataType: 'json',
                 beforeSend: function() {
                     // var html = '<div class="text-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
                     // $("#activitySidebar .messages").html(html);
-                    $("#message_input,.send-message,.send-attachment").attr('disabled',
-                        'disabled');
+                    $("#message_input,.send-message,.send-attachment").attr('disabled','disabled');
                 },
                 success: function(response) {
                     if (response.status == true) {
-                        $("#message_input,.send-message,.send-attachment").removeAttr(
-                            'disabled');
                         $("#message_input").val('');
                         $("#activitySidebar .messages").html(response.html);
+                        $("#message_input,.send-message,.send-attachment").removeAttr('disabled');
+                        $("#chat-attachment").val('');
+                        $(".uploaded-file").html('');
                         // $(".messages").mCustomScrollbar();
                         // $(".messages").animate({
                         //     scrollTop: $(".messages")[0].scrollHeight
@@ -427,46 +462,48 @@ $(document).ready(function() {
     });
 
     $("#chat-attachment").change(function() {
-        var formData = new FormData();
-        formData.append("_token", csrf_token);
-        formData.append("case_id", case_id);
-        formData.append("document_id", document_id);
-        formData.append("subdomain", "{{$subdomain}}");
-        formData.append('attachment', $('#chat-attachment')[0].files[0]);
-        var url = "{{ baseUrl('cases/documents/send-chat-file') }}";
-        $.ajax({
-            url: url,
-            type: "post",
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            dataType: "json",
-            beforeSend: function() {
-                $("#message_input,.send-message,.send-attachment").attr('disabled',
-                    'disabled');
-            },
-            success: function(response) {
-                if (response.status == true) {
-                    $("#message_input,.send-message,.send-attachment").removeAttr(
-                        'disabled');
-                    $("#chat-attachment").val('');
-                    $("#activitySidebar .messages").html(response.html);
-                    // $(".messages").mCustomScrollbar();
-                    $(".messages").animate({
-                        scrollTop: $(".messages")[0].scrollHeight
-                    }, 1000);
-                    $(".doc_chat_input").show();
-                    fetchChats(case_id, document_id);
-                } else {
-                    errorMessage(response.message);
-                }
-            },
-            error: function() {
-                $("#message_input,.send-message,.send-attachment").removeAttr('disabled');
-                internalError();
-            }
-        });
+        var filename = $('#chat-attachment')[0].files.length ? $('#chat-attachment')[0].files[0].name : "";
+        $(".uploaded-file").html(filename);
+        // var formData = new FormData();
+        // formData.append("_token", csrf_token);
+        // formData.append("case_id", case_id);
+        // formData.append("document_id", document_id);
+        // formData.append("subdomain", "{{$subdomain}}");
+        // formData.append('attachment', $('#chat-attachment')[0].files[0]);
+        // var url = "{{ baseUrl('cases/documents/send-chat-file') }}";
+        // $.ajax({
+        //     url: url,
+        //     type: "post",
+        //     data: formData,
+        //     cache: false,
+        //     contentType: false,
+        //     processData: false,
+        //     dataType: "json",
+        //     beforeSend: function() {
+        //         $("#message_input,.send-message,.send-attachment").attr('disabled',
+        //             'disabled');
+        //     },
+        //     success: function(response) {
+        //         if (response.status == true) {
+        //             $("#message_input,.send-message,.send-attachment").removeAttr(
+        //                 'disabled');
+        //             $("#chat-attachment").val('');
+        //             $("#activitySidebar .messages").html(response.html);
+        //             // $(".messages").mCustomScrollbar();
+        //             $(".messages").animate({
+        //                 scrollTop: $(".messages")[0].scrollHeight
+        //             }, 1000);
+        //             $(".doc_chat_input").show();
+        //             fetchChats(case_id, document_id);
+        //         } else {
+        //             errorMessage(response.message);
+        //         }
+        //     },
+        //     error: function() {
+        //         $("#message_input,.send-message,.send-attachment").removeAttr('disabled');
+        //         internalError();
+        //     }
+        // });
     });
 });
 $('.dropzone-custom').each(function() {
@@ -609,9 +646,9 @@ function showDropboxFiles() {
 }
 function previewDocument(e){
     var url = $(e).attr("data-href");
-    var case_id = $(e).attr("data-caseid");
+    case_id = $(e).attr("data-caseid");
     var file_name = $(e).attr("data-filename")
-    var document_id = $(e).attr("data-documentid");
+    document_id = $(e).attr("data-documentid");
     $("#document-preview-thumbs-content .mTSThumbContainer").removeClass("active");
     $("#document-preview-thumbs-content ."+document_id).addClass("active");
     $(".document-content .document_id").val(document_id);
@@ -629,7 +666,7 @@ function previewDocument(e){
             hideLoader();
             if (response.status == true) {
                 $("#document-preview").html(response.content);
-                // fetchChats(case_id, document_id);
+                fetchChats(case_id, document_id);
             } else {
                 errorMessage(response.message);
             }

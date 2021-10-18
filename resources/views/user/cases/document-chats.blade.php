@@ -14,8 +14,11 @@ $user = docChatSendBy($chat['send_by'],$chat['created_by'],$subdomain);
               $fileicon = fileIcon($chat['message']);
               echo $fileicon;
            ?>
-           <div class="text-msg text-dark">{{$chat['message']}}</div>
+           <div class="text-msg badge badge-info">{{$chat['message']}}</div>
          </a>
+         @if($chat['file_message'] != '')
+           <div class="text-white">{{$chat['file_message']}}</div>
+         @endif
         @else
         <p class="mb-0">
           {{$chat['message']}}
@@ -42,8 +45,11 @@ $user = docChatSendBy($chat['send_by'],$chat['created_by'],$subdomain);
               $fileicon = fileIcon($chat['message']);
               echo $fileicon;
            ?>
-           <div class="text-msg text-dark">{{$chat['message']}}</div>
+           <div class="text-msg badge badge-info">{{$chat['message']}}</div>
          </a>
+         @if($chat['file_message'] != '')
+           <div class="text-white">{{$chat['file_message']}}</div>
+         @endif
         @else
         <p class="mb-0">
           {{$chat['message']}}

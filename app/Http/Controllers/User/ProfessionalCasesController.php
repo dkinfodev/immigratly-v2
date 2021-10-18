@@ -43,7 +43,7 @@ class ProfessionalCasesController extends Controller
         }else{
             $record = array();
         }
-        
+        $viewData['case_id'] = $case_id;
         $viewData['subdomain'] = $subdomain;
         $viewData['pageTitle'] = "View Case";
         $viewData['record'] = $record;
@@ -825,6 +825,7 @@ class ProfessionalCasesController extends Controller
             $data['case_id'] = $request->input("case_id");
             $data['document_id'] = $request->input("document_id");
             
+            
             $fileName  = $file->getClientOriginalName();
             $extension = $file->getClientOriginalExtension() ?: 'png';
             $newName = mt_rand(1,99999)."-".$fileName;
@@ -837,7 +838,7 @@ class ProfessionalCasesController extends Controller
                 $data['created_by'] = \Auth::user()->unique_id;
                 $data['original_name'] = $fileName;
                 $data['file_name'] = $newName;
-                
+                $data['file_message'] = $request->input("message");
                 $data['type'] = 'file';
                 $api_response = professionalCurl('cases/save-document-chat',$subdomain,$data);
                 if($api_response['status'] == 'success'){

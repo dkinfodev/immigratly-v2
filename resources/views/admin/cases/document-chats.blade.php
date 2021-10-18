@@ -19,8 +19,11 @@ if($chat->send_by != 'client'){
               $fileicon = fileIcon($chat->message);
               echo $fileicon;
            ?>
-           <div class="text-msg text-dark">{{$chat->message}}</div>
+           <div class="text-msg badge badge-info">{{$chat->message}}</div>
          </a>
+         @if($chat->file_message != '')
+           <div class="text-white">{{$chat->file_message}}</div>
+         @endif
         @else
         <p class="mb-0">
           {{$chat->message}}
@@ -44,15 +47,18 @@ if($chat->send_by != 'client'){
     <div class="message-orange">
     @if($chat->type == 'file')
          <?php
-            $file_url = professionalDirUrl($subdomain)."/documents/".$chat['file_detail']['file_name'];
+            $file_url = professionalDirUrl($subdomain)."/documents/".$chat->FileDetail->file_name;
          ?>
          <a href="{{$file_url}}" class="d-flex" download>
            <?php 
               $fileicon = fileIcon($chat->message);
               echo $fileicon;
            ?>
-           <div class="text-msg text-dark">{{$chat->message}}</div>
+           <div class="text-msg badge badge-info">{{$chat->message}}</div>
          </a>
+         @if($chat->file_message != '')
+           <div class="text-white">{{$chat->file_message}}</div>
+         @endif
         @else
         <p class="mb-0">
           {{$chat->message}}

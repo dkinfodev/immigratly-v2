@@ -152,8 +152,7 @@
                                     
                                 </div>
 
-                                <div class="col" data-toggle="collapse" data-target="#collapseProfessionalDoc-{{ $key }}"
-                                    aria-expanded="true" aria-controls="collapseProfessionalDoc-{{ $key }}">
+                                <div class="col">
                                     <a href="<?php echo baseUrl("cases/documents/extra/".$subdomain."/".$case_id."/".$document['unique_id']) ?>" data-subdomain="{{$subdomain}}"
                                         data-doctype="extra" data-caseid="{{$case_id}}"
                                         data-docid="{{ $document['unique_id'] }}">
@@ -166,6 +165,13 @@
                                         </h5>
                                         <ul class="list-inline list-separator small">
                                             <li class="list-inline-item">{{$document['files_count']}} Files</li>
+                                            <?php
+                                                
+                                                $doc_chats = countUnreadDocChat($case_id,$subdomain,"client",$document['unique_id']);
+                                                if($doc_chats > 0){
+                                            ?>
+                                                <li class="list-inline-item text-danger">{{$doc_chats}} chats</li>
+                                            <?php } ?>
 
                                         </ul>
                                     </a>
@@ -219,7 +225,7 @@
 
                                 <div class="col" data-toggle="collapse" data-target="#collapseDefaultDoc-{{ $key }}"
                                     aria-expanded="true" aria-controls="collapseDefaultDoc-{{ $key }}">
-                                    <a href="<?php echo baseUrl("cases/documents/default/".$subdomain."/".$case_id."/".$document['unique_id']) ?>" onclick="fetchFiles(this)" data-subdomain="{{$subdomain}}"
+                                    <a href="<?php echo baseUrl("cases/documents/default/".$subdomain."/".$case_id."/".$document['unique_id']) ?>" data-subdomain="{{$subdomain}}"
                                         data-doctype="default" data-caseid="{{$case_id}}"
                                         data-docid="{{ $document['unique_id'] }}">
                                         <h5 class="mb-0">
@@ -227,6 +233,12 @@
                                         </h5>
                                         <ul class="list-inline list-separator small">
                                             <li class="list-inline-item">{{$document['files_count']}} Files</li>
+                                            <?php
+                                                $doc_chats = countUnreadDocChat($case_id,$subdomain,"client",$document['unique_id']);
+                                                if($doc_chats > 0){
+                                            ?>
+                                                <li class="list-inline-item text-danger">{{$doc_chats}} chats</li>
+                                            <?php } ?>
                                         </ul>
                                     </a>
                                 </div>
@@ -271,7 +283,7 @@
 
                                 <div class="col" data-toggle="collapse" data-target="#collapseDefaultDoc-{{ $key }}"
                                     aria-expanded="true" aria-controls="collapseOtherDoc-{{ $key }}">
-                                    <a href="<?php echo baseUrl("cases/documents/other/".$subdomain."/".$case_id."/".$document['unique_id']) ?>" onclick="fetchFiles(this)" data-subdomain="{{$subdomain}}"
+                                    <a href="<?php echo baseUrl("cases/documents/other/".$subdomain."/".$case_id."/".$document['unique_id']) ?>" data-subdomain="{{$subdomain}}"
                                         data-doctype="other" data-caseid="{{$case_id}}"
                                         data-docid="{{ $document['unique_id'] }}">
                                         <h5 class="mb-0">

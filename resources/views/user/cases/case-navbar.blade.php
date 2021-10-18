@@ -29,6 +29,7 @@
 
                   <!-- Flatpickr -->
                   <div id="projectDeadlineFlatpickr" class="js-flatpickr flatpickr-custom flatpickr-custom-borderless col input-group input-group-sm">
+                   
                     @if(!empty($record['MainService']))
                     <span class="text-primary">
                        {{$record['MainService']['name']}} 
@@ -149,12 +150,12 @@
     </span>
     <ul class="nav nav-tabs page-header-tabs" id="projectsTab" role="tablist">
         <li class="nav-item">
-            <a class="nav-link {{isset($active_nav) && $active_nav == 'overview'?'active':'' }}" href="{{baseUrl('cases/view/'.$subdomain.'/'.$record['unique_id'])}}">Overview</a>
-                                                                                                              
+            <a class="nav-link {{isset($active_nav) && $active_nav == 'overview'?'active':'' }}" href="{{baseUrl('cases/view/'.$subdomain.'/'.$record['unique_id'])}}">Overview</a>                                                                                             
         </li>
         <li class="nav-item">
-            <a class="nav-link {{isset($active_nav) && $active_nav == 'files'?'active':'' }}" href="{{baseUrl('cases/documents/'.$subdomain.'/'.$record['unique_id'])}}">Files <span
-                    class="badge badge-soft-dark rounded-circle ml-1">3</span></a>
+            <a class="nav-link {{isset($active_nav) && $active_nav == 'files'?'active':'' }}" href="{{baseUrl('cases/documents/'.$subdomain.'/'.$record['unique_id'])}}">Files 
+            <span class="badge badge-soft-dark rounded-circle ml-1"> {{ countUnreadDocChat($case_id,$subdomain,"client") }} </span>
+            </a>
         </li>
         <li class="nav-item">
             <a class="nav-link " href="project-activity.html">Activity</a>
