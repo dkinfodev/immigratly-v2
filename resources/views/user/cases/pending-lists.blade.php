@@ -60,7 +60,7 @@
               foreach($cases['data'] as $key => $record){
                
             ?>
-            @if($record['approve_status'] == "1")
+            @if($record['approve_status'] == "0")
             @if(!empty($record['MainService']))
             <tr>
               <!--<td class="table-column-pr-0">-->
@@ -119,7 +119,15 @@
               <td>
 
                 @if($record['approve_status'] == "0")
-                <span class="badge badge-soft-warning p-2">Awaiting Approve</span>
+
+                <label class="toggle-switch mx-2" for="$record['unique_id']">
+                  <input type="checkbox" data-id="{{ $record['unique_id'] }}" onchange="caseApprovalStatus('<?php echo $record['unique_id']; ?>','<?php echo $professional->professional; ?>')" class="js-toggle-switch toggle-switch-input" id="$record['unique_id']" >
+                  <span class="toggle-switch-label">
+                    <span class="toggle-switch-indicator"></span>
+                  </span>
+                </label>
+
+                <span class="badge badge-soft-warning p-2">Awaiting Approve</span> 
                 @endif
                 @if($record['approve_status'] == "1")
                 <span class="badge badge-soft-info p-2">Approved</span>
@@ -226,5 +234,59 @@
     // initialization of datatables
     // var datatable = $.HSCore.components.HSDatatables.init($('#datatable'));
   });
+
+  function caseApprovalStatus(uid,subdomain){
+
+  var uid = uid;
+  var subdomain = subdomain;
+  if($(this).is(":checked")){
+    $.ajax({
+        type: "POST",
+        url: BASEURL + '/cases/approve-case',
+        data:{
+            _token:csrf_token,
+            uid:uid,
+            subdomain:subdomain,
+        },
+        dataType:'json',
+        beforeSend:function(){
+          showLoader();
+        },
+        success: function (result) {
+            if(result.status == true){
+                successMessage(result.message);
+                location.reload();
+            }else{
+                errorMessage(result.message);
+            }
+        },
+    });
+  }else{
+    $.ajax({
+        type: "POST",
+        url: BASEURL + '/cases/approve-case',
+        data:{
+            _token:csrf_token,
+            uid:uid,
+            subdomain:subdomain,
+        },
+        dataType:'json',
+        beforeSend:function(){
+          showLoader();
+        },
+        success: function (result) {
+            if(result.status == true){
+                successMessage(result.message);
+                location.reload();
+            }else{
+                errorMessage(result.message);
+            }
+        },
+        error: function(){
+          internalError();
+        }
+    });
+  }
+}
 </script>
 @endsection

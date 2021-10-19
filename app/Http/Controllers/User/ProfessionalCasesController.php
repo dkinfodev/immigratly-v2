@@ -33,6 +33,38 @@ class ProfessionalCasesController extends Controller
         $viewData['professionals'] = $professionals;
         return view(roleFolder().'.cases.lists',$viewData);
     }
+
+    public function pendingCases()
+    {
+        $viewData['pageTitle'] = "Cases";
+        $professionals = UserWithProfessional::where('user_id',\Auth::user()->unique_id)->get();
+       
+        $viewData['professionals'] = $professionals;
+        return view(roleFolder().'.cases.pending-lists',$viewData);
+    }
+
+     public function approveCase(Request $request)
+    {
+        
+        $uid = $request->input("uid");
+        //$uid = base64_decode($uid);
+        $subdomain = $request->input("subdomain");
+
+        $data['case_id'] = $uid;
+        $data['client_id'] = \Auth::user()->unique_id;
+        $case = professionalCurl('cases/approval',$subdomain,$data);
+        if(isset($case['status']) && $case['status'] == 'success'){
+            $response['status'] = true;
+            $response['message'] = "Case approved successfully.";
+            $response['redirect_back'] = baseUrl('cases');
+            return response()->json($response);
+        }else{
+            $response['status'] = false;
+            $response['message'] = "Can not proceed your request";
+            $response['redirect_back'] = baseUrl('cases');
+            return response()->json($response);
+        }   
+    }
     
     public function view($subdomain,$case_id){
         $data['case_id'] = $case_id;
