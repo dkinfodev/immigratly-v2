@@ -127,6 +127,7 @@ class CasesController extends Controller
         }
         return response()->json($response);
     }
+
     public function add(){
         $viewData['pageTitle'] = "Create Case";
         $viewData['staffs'] = User::where("role","!=","admin")->get();
@@ -136,6 +137,7 @@ class CasesController extends Controller
         $viewData['visa_services'] = ProfessionalServices::orderBy('id',"asc")->get();
         return view(roleFolder().'.cases.add',$viewData);
     } 
+    
     public function save(Request $request){
         $validator = Validator::make($request->all(), [
             'client_id' => 'required',
@@ -183,16 +185,37 @@ class CasesController extends Controller
                 $object2->save();
             }
         }
+
+        //Email NOTIFICATION FOR CASE
+        $mailData = array();
+        $uuid = $request->input("client_id");
+        $user = DB::table(MAIN_DATABASE.".users")->where("unique_id",$uuid)->first();
+        $professional = ProfessionalDetails::first();
+        $mail_message = "Hello ".$user->first_name." ".$user->last_name.",<br>".$professional->company_name." has created the case. You can approve the case by login to website.";
+        $parameter['subject'] = "New case added to your profile. ";
+        $mailData['mail_message'] = $mail_message;
+        $view = View::make('emails.notification',$mailData);
+        $message = $view->render();
+        $parameter['to'] = $user->email;
+        $parameter['to_name'] = $user->first_name." ".$user->last_name;
+        $parameter['message'] = $message;
+        $parameter['view'] = "emails.notification";
+        $parameter['data'] = $mailData;
+        $mailRes = sendMail($parameter);
+        //End Email NOTIFICATION FOR CASE
+
         $response['status'] = true;
         $response['message'] = "Case created successfully";
         $response['redirect_back'] = baseUrl('cases');
         return response()->json($response);
     }
+
     public function deleteSingle($id){
         $id = base64_decode($id);
         Cases::deleteRecord($id);
         return redirect()->back()->with("success","Record has been deleted!");
     }
+    
     public function deleteMultiple(Request $request){
         $ids = explode(",",$request->input("ids"));
         for($i = 0;$i < count($ids);$i++){

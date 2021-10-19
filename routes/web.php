@@ -860,6 +860,10 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
     });
     Route::group(array('prefix' => 'cases'), function () {
         Route::get('/', [App\Http\Controllers\User\ProfessionalCasesController::class, 'cases']);
+        Route::get('/pending', [App\Http\Controllers\User\ProfessionalCasesController::class, 'pendingCases']);
+        
+        Route::post('/approve-case', [App\Http\Controllers\User\ProfessionalCasesController::class, 'approveCase']);
+
         Route::get('/view/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'view']);
         Route::get('/chats/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'chats']);
         Route::post('/fetch-chats', [App\Http\Controllers\User\ProfessionalCasesController::class, 'fetchChats']);

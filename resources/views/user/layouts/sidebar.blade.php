@@ -53,21 +53,30 @@
                           CV</span>
                   </a>
               </li>
-              <li class="nav-item">
-                  <a class="js-nav-tooltip-link nav-link" href="{{ baseUrl('/cases') }}" data-placement="left">
-                      <i class="tio-account-square nav-icon"></i>
-                      <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">My
-                          Cases</span>
-                  </a>
-              </li>
-              <li class="nav-item">
-                  <a class="js-nav-tooltip-link nav-link" href="{{ baseUrl('/invoices') }}"
+               <li class="navbar-vertical-aside-has-menu ">
+                <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle " href="javascript:;">
+                  <i class="tio-account-square nav-icon"></i>
+                  <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Cases</span>
+                </a>
+
+                <ul class="js-navbar-vertical-aside-submenu nav nav-sub">
+                  <li class="nav-item">
+                    <a class="nav-link " href="{{ baseUrl('/cases') }}">
+                      <span class="tio-circle nav-indicator-icon"></span>
+                      <span class="text-truncate">Approved </span>
+                    </a>
+                  </li>
+                 <li class="nav-item">
+                    <a class="js-nav-tooltip-link nav-link" href="{{ baseUrl('/cases/pending') }}"
                       data-placement="left">
-                      <i class="tio-account-square nav-icon"></i>
-                      <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">My
-                          Invoices</span>
-                  </a>
+                      <span class="tio-circle nav-indicator-icon"></span>
+                      <span class="text-truncate">Pending Approval </span>
+                    </a>
+                  </li>
+              
+                </ul>
               </li>
+
               <li class="nav-item">
                   <a class="js-nav-tooltip-link nav-link" href="{{ baseUrl('/notes') }}" data-placement="left">
                       <i class="tio-account-square nav-icon"></i>

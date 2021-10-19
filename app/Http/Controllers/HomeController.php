@@ -52,8 +52,8 @@ class HomeController extends Controller
         foreach($tables as $table)
         {
               pre($table);
-              $tb = $table->Tables_in_immigrately;
-              $colums = DB::select("SHOW COLUMNS FROM immigrately.".$tb);
+              $tb = $table->Tables_in_new_immigratly;
+              $colums = DB::select("SHOW COLUMNS FROM new_immigratly.".$tb);
               // pre($colums);
               foreach($colums as $column){
                 // pre($column);

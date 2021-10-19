@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
+use View;
 
 use App\Models\User;
 use App\Models\DomainDetails;
@@ -38,25 +39,70 @@ class ProfessionalApiController extends Controller
     }
     public function clientCases(Request $request)
     {
-    	try{
-    		$postData = $request->input();
+        try{
+            $postData = $request->input();
             $request->request->add($postData);
 
-	       	$cases = Cases::with(['AssingedMember','VisaService','Chats','Documents'])
+            $cases = Cases::with(['AssingedMember','VisaService','Chats','Documents'])
                         ->where("client_id",$request->input("client_id"))
                         ->orderBy("id","desc")
                         ->get();
-	       	$data = array();
-	       	foreach($cases as $key => $record){
-	       		$temp = $record;
-	       		$temp->MainService = $record->Service($record->VisaService->service_id);
+            $data = array();
+            foreach($cases as $key => $record){
+                $temp = $record;
+                $temp->MainService = $record->Service($record->VisaService->service_id);
                 $temp->unread_chat = $record->UnreadChat($record->unique_id,"user",$request->input("client_id"),'count');
-	       		$data[] = $temp;
-	       	}
+                $data[] = $temp;
+            }
 
-	        $response['data'] = $data;
-	        $response['status'] = 'success';
-       	} catch (Exception $e) {
+            $response['data'] = $data;
+            $response['status'] = 'success';
+        } catch (Exception $e) {
+            $response['status'] = "error";
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response);
+    }
+    public function caseApproval(Request $request)
+    {
+         
+        try{
+            $postData = $request->input();
+            $request->request->add($postData);
+            $client_id = $request->input("client_id");
+            $record = Cases::where("unique_id",$request->input("case_id"))
+                            ->where("client_id",$client_id)
+                            ->first();
+            if(!empty($record)){
+                $record->approve_status = 1;
+                $record->save();
+                //Email notification to professional
+                $mailData = array();
+
+                $uuid = $request->input("client_id");
+                $professional = User::where('role','admin')->first();
+
+                $user = DB::table(MAIN_DATABASE.".users")->where("unique_id",$uuid)->first();
+                $professionalDetail = ProfessionalDetails::first();
+                $mail_message = "Hello ".$professional->first_name." ".$professional->last_name.",<br> Case has been approved by Client";
+                //$mail_message = "Hello Case approved";
+                $parameter['subject'] = "Case Approved";
+                $mailData['mail_message'] = $mail_message;
+                $view = View::make('emails.notification',$mailData);
+                $message = $view->render();
+                $parameter['to'] = $professional->email;
+                $parameter['to_name'] = $professional->first_name." ".$professional->last_name;
+                $parameter['message'] = $message;
+                $parameter['view'] = "emails.notification";
+                $parameter['data'] = $mailData;
+                $mailRes = sendMail($parameter);
+                //End Email notification    
+                $response['status'] = 'success';
+            }else{
+                $response['status'] = "error";
+                $response['message'] = "Case not found";
+            }
+        } catch (Exception $e) {
             $response['status'] = "error";
             $response['message'] = $e->getMessage();
         }
