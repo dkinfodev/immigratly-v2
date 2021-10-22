@@ -1,4 +1,5 @@
 @extends('layouts.master')
+
 <style>
 .all_services li {
     padding: 16px;

@@ -863,6 +863,7 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
         Route::get('/pending', [App\Http\Controllers\User\ProfessionalCasesController::class, 'pendingCases']);
         
         Route::post('/approve-case', [App\Http\Controllers\User\ProfessionalCasesController::class, 'approveCase']);
+        Route::get('/tasks/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'caseTasks']);
 
         Route::get('/view/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'view']);
         Route::get('/chats/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'chats']);
