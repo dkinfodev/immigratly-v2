@@ -18,13 +18,70 @@
 <!-- End Content -->
 @endsection
 @section('content')
+<!-- Page Header -->
+  
+  <!-- NAVBAR -->
+  <div class="page-header">
+    
+    <!-- Nav -->
+    <!-- Nav -->
+    <div class="js-nav-scroller hs-nav-scroller-horizontal">
+      <span class="hs-nav-scroller-arrow-prev" style="display: none;">
+        <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+          <i class="tio-chevron-left"></i>
+        </a>
+      </span>
+
+      <span class="hs-nav-scroller-arrow-next" style="display: none;">
+        <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+          <i class="tio-chevron-right"></i>
+        </a>
+      </span>
+
+    <div class="js-nav-scroller hs-nav-scroller-horizontal">
+    <span class="hs-nav-scroller-arrow-prev" style="display: none;">
+        <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+        <i class="tio-chevron-left"></i>
+        </a>
+    </span>
+
+    <span class="hs-nav-scroller-arrow-next" style="display: none;">
+        <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+        <i class="tio-chevron-right"></i>
+        </a>
+    </span>
+    <ul class="nav nav-tabs page-header-tabs" id="projectsTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link {{isset($active_nav) && $active_nav == 'cases'?'active':'' }}" href="{{baseUrl('cases')}}">Approved</a>                                                                                             
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{isset($active_nav) && $active_nav == 'pending-approval'?'active':'' }}" href="{{baseUrl('cases/pending')}}">Pending Approval 
+            </a>
+        </li>
+        
+    </ul>
+</div>
+    
+    </div>
+    <!-- End Nav -->
+  </div>
+  <!-- End Page Header -->
+  <!-- NAVBAR -->
 
   <!-- Card -->
-  <div class="row gx-2 gx-lg-3">
-    <div class="col-md-12">
-      <!-- Table -->
-      <div class="datatable-custom">
-        <table id="datatable" class="table table-borderless table-theard-bordered table-nowrap table-align-middle card-table"
+  <div class="card mb-3 mb-lg-5">
+    <!-- Header -->
+    <div class="card-header">
+      <h6 class="card-subtitle mb-0">{{$pageTitle}}</h6>
+
+    </div>
+    <!-- End Header -->
+
+    <!-- Body -->
+    <div class="card-body">
+        <!-- Table -->
+    <div class="datatable-custom">
+      <table id="datatable" class="table table-borderless table-theard-bordered table-nowrap table-align-middle card-table"
               data-hs-datatables-options='{
                 "order": [],
                 "isResponsive": false,
@@ -107,6 +164,7 @@
                 <span class="text-danger h4">Professional not found</span>
                 @endif
               </td>
+
               <td>
                 @if(!empty($record['MainService']))
                 <span class="badge badge-soft-info p-2">{{$record['MainService']['name']}}</span>
@@ -115,19 +173,9 @@
                 @endif
               </td>
 
-
               <td>
-
                 @if($record['approve_status'] == "0")
-
-                <label class="toggle-switch mx-2" for="$record['unique_id']">
-                  <input type="checkbox" data-id="{{ $record['unique_id'] }}" onchange="caseApprovalStatus('<?php echo $record['unique_id']; ?>','<?php echo $professional->professional; ?>')" class="js-toggle-switch toggle-switch-input" id="$record['unique_id']" >
-                  <span class="toggle-switch-label">
-                    <span class="toggle-switch-indicator"></span>
-                  </span>
-                </label>
-
-                <span class="badge badge-soft-warning p-2">Awaiting Approve</span> 
+                <span class="badge badge-soft-warning p-2">Awaiting Approve</span>
                 @endif
                 @if($record['approve_status'] == "1")
                 <span class="badge badge-soft-info p-2">Approved</span>
@@ -203,29 +251,32 @@
             ?>
           </tbody>
         </table>
-      </div>
-      <!-- End Table -->
-
-      <!-- Footer -->
-      <div class="card-footer">
-        <!-- Pagination -->
-        <div class="d-flex justify-content-center justify-content-sm-end">
-          <nav id="datatablePagination" aria-label="Activity pagination"></nav>
-        </div>
-        <!-- End Pagination -->
-      </div>
-      <!-- End Footer -->
+      
     </div>
+    <!-- End Table -->
+    </div>
+    <!-- End Body -->
   </div>
-<!-- End Card -->
-</div>
-<!-- End Content -->
+  <!-- End Card -->
+
+  <!-- End Row -->
+
 @endsection
 
 @section('javascript')
+<!-- JS Implementing Plugins -->
+<script src="assets/vendor/hs-navbar-vertical-aside/hs-navbar-vertical-aside.min.js"></script>
+<script src="assets/vendor/hs-nav-scroller/dist/hs-nav-scroller.min.js"></script>
+<script src="assets/vendor/hs-go-to/dist/hs-go-to.min.js"></script>
+<script src="assets/vendor/list.js/dist/list.min.js"></script>
+<script src="assets/vendor/prism/prism.js"></script>
+<script src="assets/vendor/hs-step-form/dist/hs-step-form.min.js"></script>
+<script src="assets/vendor/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
-<script>
-  $('.js-nav-tooltip-link').tooltip({ boundary: 'window' });
+<!-- JS Front -->
+<script type="text/javascript">
+// initEditor("description"); 
+$('.js-nav-tooltip-link').tooltip({ boundary: 'window' });
   $(document).on('ready', function () {
     
     $('.js-hs-action').each(function () {
@@ -234,59 +285,6 @@
     // initialization of datatables
     // var datatable = $.HSCore.components.HSDatatables.init($('#datatable'));
   });
-
-  function caseApprovalStatus(uid,subdomain){
-
-  var uid = uid;
-  var subdomain = subdomain;
-  if($(this).is(":checked")){
-    $.ajax({
-        type: "POST",
-        url: BASEURL + '/cases/approve-case',
-        data:{
-            _token:csrf_token,
-            uid:uid,
-            subdomain:subdomain,
-        },
-        dataType:'json',
-        beforeSend:function(){
-          showLoader();
-        },
-        success: function (result) {
-            if(result.status == true){
-                successMessage(result.message);
-                location.reload();
-            }else{
-                errorMessage(result.message);
-            }
-        },
-    });
-  }else{
-    $.ajax({
-        type: "POST",
-        url: BASEURL + '/cases/approve-case',
-        data:{
-            _token:csrf_token,
-            uid:uid,
-            subdomain:subdomain,
-        },
-        dataType:'json',
-        beforeSend:function(){
-          showLoader();
-        },
-        success: function (result) {
-            if(result.status == true){
-                successMessage(result.message);
-                location.reload();
-            }else{
-                errorMessage(result.message);
-            }
-        },
-        error: function(){
-          internalError();
-        }
-    });
-  }
-}
 </script>
+
 @endsection

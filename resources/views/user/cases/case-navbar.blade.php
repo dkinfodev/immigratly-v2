@@ -71,21 +71,6 @@
               @endif
 
               <div class="col-auto">
-                <!-- Select -->
-                <!-- <div class="select2-custom">
-                    <select class="js-select2-custom custom-select-sm" size="1" style="opacity: 0;" id="ownerLabel"
-                            data-hs-select2-options='{
-                              "minimumResultsForSearch": "Infinity",
-                              "customClass": "custom-select custom-select-sm custom-select-borderless pl-0",
-                              "dropdownAutoWidth": true,
-                              "width": true
-                            }'>
-                      <option value="owner1" selected data-option-template='<span class="media align-items-center"><img class="avatar avatar-xss avatar-circle mr-2" src="assets/img/160x160/img6.jpg" alt="Avatar" /><span class="media-body">Mark Williams</span></span>'>Mark Williams</option>
-                      <option value="owner2" data-option-template='<span class="media align-items-center"><img class="avatar avatar-xss avatar-circle mr-2" src="assets/img/160x160/img10.jpg" alt="Avatar" /><span class="media-body">Amanda Harvey</span></span>'>Amanda Harvey</option>
-                      <option value="owner3" data-option-template='<span class="media align-items-center"><i class="tio-user-outlined text-body mr-2"></i><span class="media-body">Assign to owner</span></span>'>Assign to owner</option>
-                    </select>
-                  </div> -->
-                <!-- End Select -->
               </div>
             </div>
           </div>
@@ -108,11 +93,7 @@
                     </a>
                 @endif
               </div>
-              <!-- End Avatar Group -->
-
-              <!-- <a class="btn btn-icon btn-primary rounded-circle" href="javascript:;" data-toggle="modal" data-target="#shareWithPeopleModal">
-                <i class="tio-share"></i>
-              </a> -->
+              
             </div>
             @endif
           </div>
@@ -161,7 +142,10 @@
             <a class="nav-link {{isset($active_nav) && $active_nav == 'activity'?'active':'' }} " href="{{baseUrl('cases/activity/'.$subdomain.'/'.$record['unique_id'])}}">Activity</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link " href="02-master-user-container-invoice-view.html">Invoice</a>
+            <a class="nav-link {{isset($active_nav) && $active_nav == 'invoices'?'active':'' }}" href="{{baseUrl('cases/'.$subdomain.'/invoices/list/'.$record['unique_id'])}}">
+            Invoice
+            </a>
+            <!-- <a class="nav-link " href="02-master-user-container-invoice-view.html">Invoice</a> -->
         </li>
         <li class="nav-item">
             <a class="nav-link " href="project-teams.html">Teams</a>

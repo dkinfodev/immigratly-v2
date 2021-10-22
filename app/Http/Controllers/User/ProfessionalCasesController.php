@@ -29,7 +29,7 @@ class ProfessionalCasesController extends Controller
     {
        	$viewData['pageTitle'] = "Cases";
         $professionals = UserWithProfessional::where('user_id',\Auth::user()->unique_id)->get();
-       
+        $viewData['active_nav'] = 'cases';
         $viewData['professionals'] = $professionals;
         return view(roleFolder().'.cases.lists',$viewData);
     }
@@ -38,7 +38,7 @@ class ProfessionalCasesController extends Controller
     {
         $viewData['pageTitle'] = "Cases";
         $professionals = UserWithProfessional::where('user_id',\Auth::user()->unique_id)->get();
-       
+        $viewData['active_nav'] = 'pending-approval';
         $viewData['professionals'] = $professionals;
         return view(roleFolder().'.cases.pending-lists',$viewData);
     }
@@ -1139,6 +1139,10 @@ class ProfessionalCasesController extends Controller
         $api_response = professionalCurl('cases/view',$subdomain,$data);
         $case = $api_response['data'];
         $viewData['case'] = $case;
+        //$record['title'] = ""
+        $viewData['record'] = $case;
+        $viewData['case_id'] = $case_id;
+        $viewData['active_nav'] = "invoices";
         $viewData['pageTitle'] = "Case Invoices";
         $viewData['subdomain'] = $subdomain;
         return view(roleFolder().'.cases.invoices',$viewData);
