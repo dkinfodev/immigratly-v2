@@ -86,7 +86,7 @@
     <!-- End Header -->
 
     <!-- Table -->
-    <div class="table-responsive datatable-custom">
+    <div class="datatable-custom">
       <table id="tableList" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
         <thead class="thead-light">
           <tr>

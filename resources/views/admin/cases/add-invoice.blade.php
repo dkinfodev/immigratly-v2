@@ -29,7 +29,7 @@
 <div class="add-invoice">
 
   <div class="row">
-    <div class="col-lg-12 mb-5 mb-lg-0">
+    <div class="col-lg-9 mb-5 mb-lg-0">
       <!-- Card -->
       <div class="card card-lg">
         <!-- Body -->
@@ -44,11 +44,11 @@
               <!-- Form Group -->
               <div class="form-group js-form-message">
                 <label class="input-label">Bill to:</label>
-<textarea class="form-control" required placeholder="Who is this invoice from?" name="bill_to" aria-label="Who is this invoice from?" rows="5">{{$client->first_name." ".$client->last_name}},
-{{$client->address}},
-{{$client->city_name}}, {{$client->state_name}},
-{{$client->country_name}}
-</textarea>
+                  <textarea class="form-control" required placeholder="Who is this invoice from?" name="bill_to" aria-label="Who is this invoice from?" rows="5">{{$client->first_name." ".$client->last_name}},
+                  {{$client->address}},
+                  {{$client->city_name}}, {{$client->state_name}},
+                  {{$client->country_name}}
+                  </textarea>
               </div>
               <!-- End Form Group -->
               <div class="form-group mb-0 js-form-message">
@@ -73,14 +73,14 @@
               <!-- Form Group -->
               <div class="form-group text-left js-form-message">
                 <label class="input-label">Bill From:</label>
-<textarea class="form-control text-right" required placeholder="Who is this invoice from?" name="bill_from" aria-label="Who is this invoice from?" rows="5">{{$professional->company_name}}
-{{$professional->address}},
-@if(!empty($professional->City($professional->city_id)))
-{{$professional->City($professional->city_id)->name}},{{$professional->State($professional->state_id)->name}},
-@endif
-@if(!empty($professional->Country($professional->country_id)))
-{{$professional->Country($professional->country_id)->name}}
-@endif</textarea>
+        <textarea class="form-control text-right" required placeholder="Who is this invoice from?" name="bill_from" aria-label="Who is this invoice from?" rows="5">{{$professional->company_name}}
+        {{$professional->address}},
+        @if(!empty($professional->City($professional->city_id)))
+        {{$professional->City($professional->city_id)->name}},{{$professional->State($professional->state_id)->name}},
+        @endif
+        @if(!empty($professional->Country($professional->country_id)))
+        {{$professional->Country($professional->country_id)->name}}
+        @endif</textarea>
               </div>
               <!-- End Form Group -->
               <div class="form-group mb-0 js-form-message">
@@ -175,11 +175,11 @@
             <textarea name="notes" class="form-control" placeholder="Who is this invoice to?" id="invoiceNotesLabel" aria-label="Who is this invoice to?" rows="3"></textarea>
           </div>
           <!-- End Form Group -->
-          <div class="text-center">
+          <!-- <div class="text-center">
             <button type="button" class="btn btn-primary mb-3 save-invoice">
               <i class="tio-send mr-1"></i> Save Invoice
             </button>
-          </div>
+          </div> -->
           </form>
         </div>
         <!-- End Body -->
@@ -189,6 +189,30 @@
       <!-- Sticky Block End Point -->
       <div id="stickyBlockEndPoint"></div>
     </div>
+
+    <div id="stickyBlockStartPoint" class="col-lg-3">
+            <div class="js-sticky-block"
+                 data-hs-sticky-block-options='{
+                   "parentSelector": "#stickyBlockStartPoint",
+                   "breakpoint": "lg",
+                   "startPoint": "#stickyBlockStartPoint",
+                   "endPoint": "#stickyBlockEndPoint",
+                   "stickyOffsetTop": 20
+                 }'>
+              
+              <button type="button" class="btn btn-block btn-primary mb-3 save-invoice">
+                <i class="tio-send mr-1"></i> Save Invoice
+              </button>
+
+              
+              <a class="btn btn-block btn-white mb-3" href="javascript:;">
+                <i class="tio-download-to mr-1"></i> Download
+              </a>
+
+              <!-- End Row -->
+
+            </div>
+          </div>
   </div>
 </div>
   <!-- End Content -->

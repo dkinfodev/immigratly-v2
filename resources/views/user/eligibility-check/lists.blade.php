@@ -94,7 +94,7 @@
 
     <!-- Table -->
     <div class="col-sm-12">
-      <div class="table-responsive datatable-custom">
+      <div class="datatable-custom">
         <table id="tableList" class="table table-borderless">
           <thead class="thead-light">
             <tr>

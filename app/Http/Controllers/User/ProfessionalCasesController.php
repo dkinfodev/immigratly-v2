@@ -1661,4 +1661,13 @@ class ProfessionalCasesController extends Controller
         return response()->json($response);
     }
 
+    public function caseTasks($id){
+
+        $viewData['pageTitle'] = "Case Tasks";
+        //$professionals = UserWithProfessional::where('user_id',\Auth::user()->unique_id)->get();
+       
+        //$viewData['professionals'] = $professionals;
+        return view(roleFolder().'.cases.tasks.lists',$viewData);
+
+    }
 }
