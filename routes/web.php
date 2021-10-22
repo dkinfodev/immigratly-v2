@@ -866,6 +866,7 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
         Route::get('/tasks/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'caseTasks']);
 
         Route::get('/view/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'view']);
+        Route::get('/activity/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'activityLog']);
         Route::get('/chats/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'chats']);
         Route::post('/fetch-chats', [App\Http\Controllers\User\ProfessionalCasesController::class, 'fetchChats']);
         Route::post('/save-chat', [App\Http\Controllers\User\ProfessionalCasesController::class, 'saveChat']);

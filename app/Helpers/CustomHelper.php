@@ -2262,8 +2262,8 @@ if(!function_exists("caseActivityLog")){
         $notData['comment'] = $comment;
         $notData['created_at'] = date("Y-m-d H:i:s");
         $notData['updated_at'] = date("Y-m-d H:i:s");
-        DB::table(PROFESSIONAL_DATABASE.".case_activity_logs")
+        DB::table(PROFESSIONAL_DATABASE.$subdomain.".case_activity_logs")
         ->insert($notData);
-        return $count;
+        return true;
     }
 }

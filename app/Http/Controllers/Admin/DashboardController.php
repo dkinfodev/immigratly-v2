@@ -12,6 +12,8 @@ use View;
 use App\Models\RolePrivileges;
 use App\Models\ReminderNotes;
 use App\Models\Notifications;
+use App\Models\DomainDetails;
+
 class DashboardController extends Controller
 {
     public function __construct()
@@ -77,6 +79,11 @@ class DashboardController extends Controller
 
     public function completeProfile()
     {
+        $setting = DomainDetails::first();
+
+        if($setting->profile_status == 2){
+            return redirect(baseUrl('/'));
+        }
         $viewData['pageTitle'] = "Complete Profile";
         $viewData['active_tab'] = "personal_tab";
         $user = User::where("id",\Auth::user()->id)->first();

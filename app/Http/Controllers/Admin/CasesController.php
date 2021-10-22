@@ -561,6 +561,7 @@ class CasesController extends Controller
                     $object2->save();
                     $response['status'] = true;
                     $response['message'] = 'File uploaded!';
+                    
                 }else{
                     $response['status'] = false;
                     $response['message'] = 'File not uploaded!';

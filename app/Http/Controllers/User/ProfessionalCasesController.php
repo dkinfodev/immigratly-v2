@@ -43,9 +43,8 @@ class ProfessionalCasesController extends Controller
         return view(roleFolder().'.cases.pending-lists',$viewData);
     }
 
-     public function approveCase(Request $request)
+    public function approveCase(Request $request)
     {
-        
         $uid = $request->input("uid");
         //$uid = base64_decode($uid);
         $subdomain = $request->input("subdomain");
@@ -363,8 +362,7 @@ class ProfessionalCasesController extends Controller
                     $insData['folder_id'] = $folder_id;
 
                     $api_response = professionalCurl('cases/upload-documents',$subdomain,$insData);
-                    
-
+  
                     $caseNot = array();
                     $caseNot['case_id'] = $case_id;
                     $caseNot['comment'] = "Document added in folder ";
@@ -1673,5 +1671,31 @@ class ProfessionalCasesController extends Controller
         //$viewData['professionals'] = $professionals;
         return view(roleFolder().'.cases.tasks.lists',$viewData);
 
+    }
+
+    public function activityLog($subdomain,$case_id){
+        $data['case_id'] = $case_id;
+        $data['client_id'] = \Auth::user()->unique_id;
+        $case = professionalCurl('cases/view',$subdomain,$data);
+        if(isset($case['status']) && $case['status'] == 'success'){
+            $record = $case['data'];
+        }else{
+            $record = array();
+        }
+
+        $api_response = professionalCurl('cases/case-activity-logs',$subdomain,$data);
+        if(isset($api_response['status']) && $api_response['status'] == 'success'){
+            $activity_logs = $api_response['records'];
+        }else{
+            $activity_logs = array();
+        }
+       
+        $viewData['case_id'] = $case_id;
+        $viewData['subdomain'] = $subdomain;
+        $viewData['pageTitle'] = "View Case";
+        $viewData['record'] = $record;
+        $viewData['active_nav'] = "activity";
+        $viewData['activity_logs'] = $activity_logs;
+        return view(roleFolder().'.cases.activity-logs',$viewData);
     }
 }

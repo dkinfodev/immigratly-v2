@@ -158,7 +158,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link " href="project-activity.html">Activity</a>
+            <a class="nav-link {{isset($active_nav) && $active_nav == 'activity'?'active':'' }} " href="{{baseUrl('cases/activity/'.$subdomain.'/'.$record['unique_id'])}}">Activity</a>
         </li>
         <li class="nav-item">
             <a class="nav-link " href="02-master-user-container-invoice-view.html">Invoice</a>

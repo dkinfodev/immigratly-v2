@@ -27,6 +27,11 @@ class ProfileController extends Controller
         }
        
         $setting = DomainDetails::first();
+        echo $setting->profile_status;
+        exit;
+        if($setting->profile_status == 2){
+            return redirect(baseUrl('/'));
+        }
         $viewData['profile_status'] = $setting->profile_status;
         $viewData['pageTitle'] = "Complete Profile";
         $viewData['active_tab'] = "personal_tab";

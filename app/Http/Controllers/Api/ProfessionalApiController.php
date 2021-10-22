@@ -26,6 +26,7 @@ use App\Models\ProfessionalDetails;
 use App\Models\AssessmentCase;
 use App\Models\CaseTasks;
 use App\Models\ChatRead;
+use App\Models\CaseActivityLogs;
 
 class ProfessionalApiController extends Controller
 {
@@ -371,6 +372,7 @@ class ProfessionalApiController extends Controller
             $folder_id = $document->unique_id;
             $service = ProfessionalServices::where("unique_id",$record->visa_service_id)->first();
             $service->MainService = $service->Service($service->service_id);
+            $record->MainService = $service->Service($service->service_id);
             $case_documents = CaseDocuments::with(['FileDetail','Chats','ChatUsers'])->where("case_id",$case_id)
                                             ->where("folder_id",$folder_id)
                                             ->orderBy("id","desc")
@@ -418,6 +420,7 @@ class ProfessionalApiController extends Controller
             $folder_id = $document->unique_id;
             $service = ProfessionalServices::where("id",$record->visa_service_id)->first();
             $service->MainService = $service->Service($service->service_id);
+            $record->MainService = $service->Service($service->service_id);
             $case_documents = CaseDocuments::with(['FileDetail','Chats','ChatUsers'])->where("case_id",$case_id)
                                             ->where("folder_id",$folder_id)
                                             ->orderBy("id","desc")
@@ -467,6 +470,7 @@ class ProfessionalApiController extends Controller
             $folder_id = $document->unique_id;
             $service = ProfessionalServices::where("unique_id",$record->visa_service_id)->first();
             $service->MainService = $service->Service($service->service_id);
+            $record->MainService = $service->Service($service->service_id);
             $case_documents = CaseDocuments::with(['FileDetail','Chats','ChatUsers'])->where("case_id",$case_id)
                                             ->where("folder_id",$folder_id)
                                             ->orderBy("id","desc")
@@ -531,7 +535,26 @@ class ProfessionalApiController extends Controller
             $object2->created_by = $request->input("created_by");
             $object2->document_type = $document_type;
             $object2->save();
+            $case_id = $record->unique_id;
+            $user_id = $request->input("created_by");
+            
+            if($document_type == 'default'){
+                $document = DB::table(MAIN_DATABASE.".documents_folder")
+                            ->where("unique_id",$folder_id)
+                            ->first();
+                $comment = "File addded to folder ".$document->name; 
 
+            }
+            
+            if($document_type == 'other'){
+                $document = ServiceDocuments::where("unique_id",$folder_id)->first();
+                $comment = "File addded to folder ".$document->name;         
+            }
+            if($document_type == 'extra'){
+                $document = CaseFolders::where("unique_id",$folder_id)->first();
+                $comment = "File addded to folder ".$document->name;         
+            }
+            caseActivityLog($this->subdomain,$case_id,$user_id,$comment);
             $response['status'] = "success";
             $response['message'] = "File uploaded!";
 
@@ -838,6 +861,10 @@ class ProfessionalApiController extends Controller
             $object->send_by = 'client';
             $object->created_by = $request->input("created_by");
             $object->save();
+            $case_id = $request->input("case_id");
+            $user_id = $request->input("created_by");
+            $comment = "Message sent on document (".$request->input("message").")";
+            caseActivityLog($this->subdomain,$case_id,$user_id,$comment);
 
             $response['status'] = "success";
             $response['message'] = "Message send successfully";
@@ -1328,4 +1355,24 @@ class ProfessionalApiController extends Controller
         return response()->json($response);
     }
     
+    public function caseActivityLogs(Request $request){
+        try{
+            $postData = $request->input();
+            $request->request->add($postData);
+            $case_id = $request->input("case_id");
+            $client_id = $request->input("client_id");
+            $records = CaseActivityLogs::where("case_id",$case_id)
+                        ->where("user_id",$client_id)
+                        ->orderBy("id","desc")
+                        ->get();
+            
+            $response['status'] = 'success';
+            $response['records'] = $records;
+
+        } catch (Exception $e) {
+            $response['status'] = "error";
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response); 
+    }
 }

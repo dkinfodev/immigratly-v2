@@ -453,7 +453,11 @@
             "hideSearch": true
           }'>
               <?php
+              if($company_details->license_body != ''){
                 $license_body = json_decode($company_details->license_body,true);
+              }else{
+                $license_body = array();
+              }
               ?>
               <option value="">Choose...</option>
               @foreach($licence_bodies as $bodies)
