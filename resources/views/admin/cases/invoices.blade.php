@@ -68,7 +68,7 @@
     <!-- End Header -->
 
     <!-- Table -->
-    <div class="table-responsive datatable-custom">
+    <div class="datatable-custom">
       <table id="tableList" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
         <thead class="thead-light">
           <tr>
@@ -133,7 +133,17 @@
 @endsection
 
 @section('javascript')
+<script src="assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript">
+$('.js-nav-tooltip-link').tooltip({ boundary: 'window' });
+  $(document).on('ready', function () {
+    
+    $('.js-hs-action').each(function () {
+      var unfold = new HSUnfold($(this)).init();
+    });
+    // initialization of datatables
+    // var datatable = $.HSCore.components.HSDatatables.init($('#datatable'));
+  });
 $(document).ready(function(){
 
   $("#datatableSearch").keyup(function(){
