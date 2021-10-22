@@ -364,6 +364,10 @@ class ProfessionalCasesController extends Controller
 
                     $api_response = professionalCurl('cases/upload-documents',$subdomain,$insData);
                     
+
+                    $caseNot = array();
+                    $caseNot['case_id'] = $case_id;
+                    $caseNot['comment'] = "Document added in folder ";
                     if($api_response['status'] == 'success'){
                         $response['status'] = true;
                         $response['message'] = 'File uploaded!';

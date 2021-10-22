@@ -2246,15 +2246,24 @@ if(!function_exists("countUnreadDocChat")){
                     $query->where("dc.document_id",$doc_id);
                 }
             })
-            // ->where(function($query) use($doc_id){
-            //     if($doc_id != ''){
-            //         $query->where("folder_id",$doc_id);
-            //     }
-            // })
             ->count();
         }
         
           
+        return $count;
+    }
+}
+
+
+if(!function_exists("caseActivityLog")){
+    function caseActivityLog($subdomain,$case_id,$user_id,$comment){
+        $notData['case_id'] = $case_id;         
+        $notData['user_id'] = $user_id;
+        $notData['comment'] = $comment;
+        $notData['created_at'] = date("Y-m-d H:i:s");
+        $notData['updated_at'] = date("Y-m-d H:i:s");
+        DB::table(PROFESSIONAL_DATABASE.".case_activity_logs")
+        ->insert($notData);
         return $count;
     }
 }
