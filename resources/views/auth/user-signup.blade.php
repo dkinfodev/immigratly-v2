@@ -116,7 +116,7 @@
                         <div class="col-sm-6">
                             <div class="js-form-message form-group">
                                 <input type="text" class="form-control form-control-lg" name="first_name"
-                                    id="first_name" placeholder="Mark" aria-label="Mark" required
+                                    id="first_name" placeholder="First name" aria-label="First_name" required
                                     data-msg="Please enter your first name.">
                             </div>
                         </div>
@@ -124,7 +124,7 @@
                         <div class="col-sm-6">
                             <div class="js-form-message form-group">
                                 <input type="text" class="form-control form-control-lg" name="last_name"
-                                    id="last_name" placeholder="Williams" aria-label="Williams" required
+                                    id="last_name" placeholder="Last name" aria-label="last_name" required
                                     data-msg="Please enter your last name.">
                             </div>
                         </div>
@@ -198,9 +198,8 @@
                     <input type="checkbox" class="form-check-input" id="signupHeroFormPrivacyCheck"
                         name="signupFormPrivacyCheck" required>
                     <label class="form-check-label small" for="signupHeroFormPrivacyCheck"> By submitting
-                        this form I have read and acknowledged the <a href=./page-privacy.html>Privacy
-                            Policy</a></label>
-                    <span class="invalid-feedback">Please accept our Privacy Policy.</span>
+                        this form I have read and acknowledged the <a href=./page-privacy.html>Terms &amp; Conditions</a></label>
+                    <span class="invalid-feedback">Please accept our Terms &amp; Conditions.</span>
                 </div>
                 <!-- End Check -->
 

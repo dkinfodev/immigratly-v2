@@ -201,9 +201,8 @@
                     <input type="checkbox" class="form-check-input" id="signupHeroFormPrivacyCheck"
                         name="signupFormPrivacyCheck" required>
                     <label class="form-check-label small" for="signupHeroFormPrivacyCheck"> By submitting
-                        this form I have read and acknowledged the <a href=./page-privacy.html>Privacy
-                            Policy</a></label>
-                    <span class="invalid-feedback">Please accept our Privacy Policy.</span>
+                        this form I have read and acknowledged the <a href=./page-privacy.html>Terms &amp; Conditions</a></label>
+                    <span class="invalid-feedback">Please accept our Terms &amp; Conditions.</span>
                 </div>
                 <!-- End Check -->
 
