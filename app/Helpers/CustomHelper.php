@@ -801,6 +801,21 @@ if(!function_exists("professionalProfile")){
         return $url;
     }
 }
+if(!function_exists("professionalUser")){
+    function professionalUser($unique_id = '',$domain = ''){
+        if($domain == ''){
+            $domain = \Session::get("subdomain");
+        }
+        if($unique_id == ''){
+            $unique_id = \Auth::user()->unique_id;
+        }
+        
+        $user = DB::table(PROFESSIONAL_DATABASE.$domain.".users")->where("unique_id",$unique_id)->first();
+       
+        
+        return $user;
+    }
+}
 if(!function_exists("professionalDetail")){
     function professionalDetail($domain = ''){
         if($domain == ''){
@@ -2256,10 +2271,11 @@ if(!function_exists("countUnreadDocChat")){
 
 
 if(!function_exists("caseActivityLog")){
-    function caseActivityLog($subdomain,$case_id,$user_id,$comment){
+    function caseActivityLog($subdomain,$case_id,$user_id,$comment,$added_by){
         $notData['case_id'] = $case_id;         
         $notData['user_id'] = $user_id;
         $notData['comment'] = $comment;
+        $notData['added_by'] = $added_by;
         $notData['created_at'] = date("Y-m-d H:i:s");
         $notData['updated_at'] = date("Y-m-d H:i:s");
         DB::table(PROFESSIONAL_DATABASE.$subdomain.".case_activity_logs")

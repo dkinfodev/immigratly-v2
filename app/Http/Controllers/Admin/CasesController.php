@@ -26,7 +26,7 @@ use App\Models\ProfessionalDetails;
 use App\Models\CaseTasks;
 use App\Models\CaseTaskComments;
 use App\Models\CaseTaskFiles;
-
+use App\Models\CaseActivityLogs;
 
 use File;
 
@@ -561,7 +561,25 @@ class CasesController extends Controller
                     $object2->save();
                     $response['status'] = true;
                     $response['message'] = 'File uploaded!';
+                    $case_id = $record->unique_id;
+                    $user_id = \Auth::user()->unique_id;
+                    if($document_type == 'default'){
+                        $document = DB::table(MAIN_DATABASE.".documents_folder")
+                                    ->where("unique_id",$folder_id)
+                                    ->first();
+                        $comment = "File addded to folder ".$document->name; 
+        
+                    }
                     
+                    if($document_type == 'other'){
+                        $document = ServiceDocuments::where("unique_id",$folder_id)->first();
+                        $comment = "File addded to folder ".$document->name;         
+                    }
+                    if($document_type == 'extra'){
+                        $document = CaseFolders::where("unique_id",$folder_id)->first();
+                        $comment = "File addded to folder ".$document->name;         
+                    }
+                    caseActivityLog(\Session::get('subdomain'),$case_id,$user_id,$comment,\Auth::user()->role);
                 }else{
                     $response['status'] = false;
                     $response['message'] = 'File not uploaded!';
@@ -879,6 +897,10 @@ class CasesController extends Controller
         sendNotification($not_data,"user");
         // sendNotification($not_data,"user");
         
+        $user_id = \Auth::user()->unique_id;
+        $comment = "Message sent on document (".$request->input("message").")";
+        caseActivityLog($subdomain,$case_id,$user_id,$comment,'user');
+
         return response()->json($response);
     }
 
@@ -977,6 +999,10 @@ class CasesController extends Controller
                 }
                 sendNotification($not_data,"user");
                 
+                $user_id = \Auth::user()->unique_id;
+                $comment = "File sent on document (".$request->input("message").")";
+                caseActivityLog($subdomain,$case_id,$user_id,$comment,'user');
+
             }else{
                 $response['status'] = true;
                 $response['message'] = "File send failed, try again!";
@@ -1631,5 +1657,32 @@ class CasesController extends Controller
         $response['status'] = true;
         $response['content'] = $document;
         return response()->json($response);
+    }
+
+    public function activityLog($case_id){
+        $case_id = base64_decode($case_id);
+        $record = Cases::with(['AssingedMember','VisaService'])
+                    ->where("id",$case_id)
+                    ->first();
+        $temp = $record;
+        $temp->MainService = $record->Service($record->VisaService->service_id);
+        $data = $temp;
+        $subdomain = \Session::get("subdomain");
+        $viewData['subdomain'] = $subdomain;
+        $viewData['pageTitle'] = "View Case";
+        $viewData['record'] = $data;
+        $viewData['case_id'] = $record->unique_id;
+
+        $activity_logs = CaseActivityLogs::where("case_id",$record->unique_id)
+                        ->orderBy("id","desc")
+                        ->get();
+       
+        $viewData['case_id'] = $case_id;
+        $viewData['subdomain'] = $subdomain;
+        $viewData['pageTitle'] = "View Case";
+        $viewData['record'] = $record;
+        $viewData['active_nav'] = "activity";
+        $viewData['activity_logs'] = $activity_logs;
+        return view(roleFolder().'.cases.activity-logs',$viewData);
     }
 }

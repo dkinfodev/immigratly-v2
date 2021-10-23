@@ -47,25 +47,25 @@
 
                 <div class="step-content">
                     <h5 class="mb-1">
-                    @if($log['added_by'] == 'user')
-                        <?php
-                            $user = userDetail($log['user_id']);
-                        ?>
-                        @if(!empty($user))
-                            <a class="text-dark" href="javascript:;">{{ $user->first_name." ".$user->last_name  }}</a>
+                        @if($log['added_by'] == 'user')
+                            <?php
+                                $user = userDetail($log['user_id']);
+                            ?>
+                            @if(!empty($user))
+                                <a class="text-dark" href="javascript:;">{{ $user->first_name." ".$user->last_name  }}</a>
+                            @else
+                                <a class="text-danger" href="javascript:;">N/A</a>
+                            @endif
                         @else
-                            <a class="text-danger" href="javascript:;">N/A</a>
+                            <?php
+                                $user = professionalUser($log['user_id'],$subdomain);
+                            ?>
+                            @if(!empty($user))
+                                <a class="text-dark" href="javascript:;">{{ $user->first_name." ".$user->last_name  }}</a>
+                            @else
+                                <a class="text-danger" href="javascript:;">N/A</a>
+                            @endif
                         @endif
-                    @else
-                        <?php
-                            $user = professionalUser($log['user_id'],$subdomain);
-                        ?>
-                        @if(!empty($user))
-                            <a class="text-dark" href="javascript:;">{{ $user->first_name." ".$user->last_name  }}</a>
-                        @else
-                            <a class="text-danger" href="javascript:;">N/A</a>
-                        @endif
-                    @endif
                     </h5>
 
                     <p class="font-size-sm">{{$log['comment']}}</p>

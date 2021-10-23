@@ -554,7 +554,7 @@ class ProfessionalApiController extends Controller
                 $document = CaseFolders::where("unique_id",$folder_id)->first();
                 $comment = "File addded to folder ".$document->name;         
             }
-            caseActivityLog($this->subdomain,$case_id,$user_id,$comment);
+            caseActivityLog($this->subdomain,$case_id,$user_id,$comment,'user');
             $response['status'] = "success";
             $response['message'] = "File uploaded!";
 
@@ -864,7 +864,7 @@ class ProfessionalApiController extends Controller
             $case_id = $request->input("case_id");
             $user_id = $request->input("created_by");
             $comment = "Message sent on document (".$request->input("message").")";
-            caseActivityLog($this->subdomain,$case_id,$user_id,$comment);
+            caseActivityLog($this->subdomain,$case_id,$user_id,$comment,'user');
 
             $response['status'] = "success";
             $response['message'] = "Message send successfully";
@@ -1362,7 +1362,6 @@ class ProfessionalApiController extends Controller
             $case_id = $request->input("case_id");
             $client_id = $request->input("client_id");
             $records = CaseActivityLogs::where("case_id",$case_id)
-                        ->where("user_id",$client_id)
                         ->orderBy("id","desc")
                         ->get();
             
