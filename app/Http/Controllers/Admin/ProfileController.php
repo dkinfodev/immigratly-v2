@@ -27,8 +27,7 @@ class ProfileController extends Controller
         }
        
         $setting = DomainDetails::first();
-        echo $setting->profile_status;
-        exit;
+     
         if($setting->profile_status == 2){
             return redirect(baseUrl('/'));
         }

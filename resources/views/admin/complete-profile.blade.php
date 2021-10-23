@@ -14,7 +14,11 @@
       <ul class="step">
         <li class="step-item">
           <div class="step-content-wrapper">
+            @if($profile_status == 0)
             <span class="step-icon step-icon-success"><i class="bi bi-check-lg"></i></span>
+            @else
+              <span class="step-icon step-icon-soft-primary">1</span>
+            @endif
             <div class="step-content">
               <h4>Sign up</h4>
               <p class="step-text">Achieve virtually any design and layout from within the one template.</p>
@@ -24,7 +28,11 @@
 
         <li class="step-item">
           <div class="step-content-wrapper">
-            <span class="step-icon step-icon-soft-primary">2</span>
+            @if($profile_status == 1)
+              <span class="step-icon step-icon-success"><i class="bi bi-check-lg"></i></span>
+            @else
+              <span class="step-icon step-icon-soft-primary">2</span>
+            @endif
             <div class="step-content">
               <h4>Complete profile</h4>
               <p class="step-text">We strive to figure out ways to help your business grow through all platforms.</p>
@@ -33,7 +41,11 @@
         </li>
         <li class="step-item">
           <div class="step-content-wrapper">
-            <span class="step-icon step-icon-soft-primary">3</span>
+            @if($profile_status == 2)
+              <span class="step-icon step-icon-success"><i class="bi bi-check-lg"></i></span>
+            @else
+              <span class="step-icon step-icon-soft-primary">3</span>
+            @endif
             <div class="step-content">
               <h4>Profile review</h4>
               <p class="step-text">We strive to figure out ways to help your business grow through all platforms.</p>
@@ -47,7 +59,81 @@
   </div>
 
   <div class="col-lg-6 col-xl-4 justify-content-center align-items-center min-vh-lg-100 ">
-    
+    @if($profile_status == 2)
+    <!-- <div class="col-sm-auto text-right">
+        <a onclick="fetchChats()" class="btn btn-primary js-hs-unfold-invoker" href="javascript:;"
+                    data-hs-unfold-options='{
+                    "target": "#activitySidebar",
+                    "type": "css-animation",
+                    "animationIn": "fadeInRight",
+                    "animationOut": "fadeOutRight",
+                    "hasOverlay": true,
+                    "smartPositionOff": true
+                    }'>
+          <i class="tio-chat mr-1"></i> Chat with Support
+          @if($unread_chats > 0)
+                <span class="badge badge-danger">{{$unread_chats}}</span>
+          @endif
+        </a>
+    </div> -->
+    <div class="card mb-3 mb-lg-5">
+        <div class="card-body">
+        
+          <div id="validationFormSuccessMessage" style="display:block;">
+              <div class="text-center">
+                  <img class="img-fluid mb-3" src="assets/svg/illustrations/create.svg" alt="Image Description"
+                      style="max-width: 15rem;">
+
+                  <div class="mb-4">
+                      <h2>Successful!</h2>
+                      <p>Your profile have been verified successfully!!</p>
+                  </div>
+              </div>
+          </div>
+        </div>
+    </div>
+    @elseif($profile_status == 1)
+    <!-- <div class="col-sm-auto text-right">
+        <a onclick="fetchChats()" class="btn btn-primary js-hs-unfold-invoker" href="javascript:;"
+                    data-hs-unfold-options='{
+                    "target": "#activitySidebar",
+                    "type": "css-animation",
+                    "animationIn": "fadeInRight",
+                    "animationOut": "fadeOutRight",
+                    "hasOverlay": true,
+                    "smartPositionOff": true
+                    }'>
+          <i class="tio-chat mr-1"></i> Chat with Support
+          @if($unread_chats > 0)
+                <span class="badge badge-danger">{{$unread_chats}}</span>
+          @endif
+        </a>
+    </div> -->
+    <div class="card mb-3 mb-lg-5">
+        <div class="card-body">
+          <div id="validationFormSuccessMessage" style="display:block;">
+              
+              <div class="text-center">
+                  <img class="img-fluid mb-3" src="assets/svg/illustrations/create.svg" alt="Image Description"
+                      style="max-width: 15rem;">
+
+                  @if(!empty($admin_notes))
+                  <div class="mb-4" style="background:#fcf36a;padding: 30px;">
+                      <h2>Admin notes</h2>
+                      <p style="">{{$admin_notes}}</p>
+                      <span class="float-right"><small>Notes Added On {{$notes_updated_on}}</small></span>
+                  </div>
+                  @else
+                  <div class="mb-4">
+                      <h2>Awaiting Verification!</h2>
+                      <p>Your profile have been successfully saved. Waiting for admin approval!!</p>
+                  </div>
+                  @endif
+              </div>
+          </div>
+        </div>
+    </div>
+    @else
     <div class="flex-grow-1 margin-auto-sm" style="max-width: 28rem;">  
     
       <div class="type-label-holder-wrap-outer">
@@ -175,7 +261,7 @@
             <label for="stateShopCheckout" class="form-label">State</label>
             <!-- Select -->
             <div class="tom-select-custom">
-              <select name="state_id" id="state_id"           onchange="cityList(this.value,'city_id')" class="form-control">
+              <select name="state_id" id="state_id" onchange="cityList(this.value,'city_id')" class="form-control">
                 
                 <option value="">Choose...</option>
                 @foreach($states as $state)
@@ -436,7 +522,7 @@
         <div class="mb-3">  
         <label for="addressShopCheckout" class="form-label">Licencing Number</label>
           
-            <input type="text" class="form-control form-control-lg" name="licence_number" id="licence_number" placeholder="Licence Number" aria-label="Licence Number" required>
+            <input type="text" class="form-control form-control-lg" name="licence_number" value="{{ $company_details->licence_number }}" id="licence_number" placeholder="Licence Number" aria-label="Licence Number" required>
           
             <span class="invalid-feedback">Please enter a valid Licence Number.</span>
           
@@ -539,7 +625,7 @@
       <!-- Check -->
       <div class="form-check mb-3">
         <input type="checkbox" class="form-check-input" id="signupHeroFormPrivacyCheck" name="signupFormPrivacyCheck" required>
-        <label class="form-check-label small" for="signupHeroFormPrivacyCheck"> By submitting this form I have read and acknowledged the <a href=./page-privacy.html>Privacy Policy</a></label>
+        <label class="form-check-label small" for="signupHeroFormPrivacyCheck"> By submitting this form I have read and acknowledged the <a href="javascript:;">Privacy Policy</a></label>
         <span class="invalid-feedback">Please accept our Privacy Policy.</span>
       </div>
 
@@ -553,16 +639,70 @@
 
 
     </div>
-
+    @endif
   </div>
-
+<!-- Sidebar -->
+{{--<div id="activitySidebar" class="hs-unfold-content sidebar sidebar-bordered sidebar-box-shadow">
+    <div class="card card-lg sidebar-card sidebar-scrollbar">
+        <div class="card-header">
+        <h4 class="card-header-title">Support Chats</h4>
+        <!-- Toggle Button -->
+        <a class="js-hs-unfold-invoker btn btn-icon btn-xs btn-ghost-dark ml-2" href="javascript:;"
+            data-hs-unfold-options='{
+            "target": "#activitySidebar",
+            "type": "css-animation",
+            "animationIn": "fadeInRight",
+            "animationOut": "fadeOutRight",
+            "hasOverlay": true,
+            "smartPositionOff": true
+            }'>
+        <i class="tio-clear tio-lg"></i>
+        </a>
+        <!-- End Toggle Button -->
+    </div>
+    <!-- Body -->
+    <div class="card-body sidebar-body">
+        <div class="chat_window">
+            <ul class="messages">
+                
+            </ul>
+            <div class="doc_chat_input bottom_wrapper clearfix">
+                <div class="message_input_wrapper">
+                <input class="form-control msg_textbox" id="message_input" placeholder="Type your message here..." />
+                <input type="file" name="chat_file" id="chat-attachment" style="display:none" />
+                </div>
+                <div class="btn-group send-btn">
+                <button type="button" class="btn btn-primary btn-pill send-message">
+                    <i class="tio-send"></i>
+                </button>
+                <button type="button" class="btn btn-info btn-pill send-attachment">
+                    <i class="tio-attachment"></i>
+                </button>
+                </div>
+            </div>
+        </div>
+        <div class="message_template">
+            <li class="message">
+                <div class="avatar"></div>
+                <div class="text_wrapper">
+                <div class="text"></div>
+                </div>
+            </li>
+        </div>
+    </div>
+    <!-- End Body -->
+    </div>
+</div> --}}
+<!-- End Sidebar -->  
 @endsection
 
 
 @section('javascript')
-
-<script src="assets/vendor/imask/dist/imask.min.js"></script>
-
+<script src="assets/vendor/hs-navbar-vertical-aside/hs-navbar-vertical-aside.min.js"></script>
+<script src="assets/vendor/hs-nav-scroller/dist/hs-nav-scroller.min.js"></script>
+<!-- <script src="assets/vendor/imask/dist/imask.min.js"></script> -->
+<link rel="stylesheet" href="assets/vendor/mCustomScrollbar/jquery.mCustomScrollbar.css" />
+<script src="assets/vendor/mCustomScrollbar/jquery.mCustomScrollbar.min.js"></script>
 <script>
     (function () {
       
@@ -576,49 +716,128 @@
 
 <script type="text/javascript">
   
+$(document).ready(function(){
+  $(".send-message").click(function(){
+       
+    var message = $("#message_input").val();
+    if(message != ''){
+       $.ajax({
+           type: "POST",
+           url: "{{ baseUrl('send-message-to-support') }}",
+           data:{
+               _token:csrf_token,
+               message:message,
+               type:"text",
+           },
+           dataType:'json',
+           beforeSend:function(){
+               // var html = '<div class="text-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
+               // $("#activitySidebar .messages").html(html);
+               $("#message_input,.send-message,.send-attachment").attr('disabled','disabled');
+           },
+           success: function (response) {
+               if(response.status == true){
+                   $("#message_input,.send-message,.send-attachment").removeAttr('disabled');
+                   $("#message_input").val('');
+                   $("#activitySidebar .messages").html(response.html);
+                   $(".messages").mCustomScrollbar();
+                   $(".messages").animate({ scrollTop: $(".messages")[0].scrollHeight}, 1000);
+                   $(".doc_chat_input").show();
+                   fetchChats();
+               }else{
+                   errorMessage(response.message);
+               }
+           },
+           error:function(){
 
-  $("#form").submit(function(e) {
-      e.preventDefault();
-
-      var formData = new FormData($(this)[0]);
-      var url = $("#form").attr('action');
-      $.ajax({
-          url: url,
-          type: "post",
-          data: formData,
-          cache: false,
-          contentType: false,
-          processData: false,
-          dataType: "json",
-          
-          beforeSend: function() {
-               $("#validationFormFinishBtn").html("Processing...");
-               $("#validationFormFinishBtn").attr("disabled","disabled");
-               showLoader();
-          },
-          success: function(response) {
-              
-              hideLoader();
-              $("#validationFormFinishBtn").html("Save Data");
-              $("#validationFormFinishBtn").removeAttr("disabled");
-              if (response.status == true) {
-                  successMessage(response.message);
-                  setTimeout(function() {
-                      redirect('{{ baseUrl("complete-profile") }}');
-                  }, 2000);
-              } 
-              else {
-                   validation(response.message);
-              }    
-          },
-          error: function() {
-               hideLoader();                      
-               $("#validationFormFinishBtn").html("Save Data");
-               $("#validationFormFinishBtn").removeAttr("disabled");
-              internalError();
-          }
-      });
+           $("#message_input,.send-message,.send-attachment").removeAttr('disabled');
+           internalError();
+           }
+       });
+      }
   });
+
+   $(".send-attachment").click(function(){
+     document.getElementById('chat-attachment').click();
+   });
+   $("#chat-attachment").change(function(){
+     var formData = new FormData();
+     formData.append("_token",csrf_token);
+     formData.append('attachment', $('#chat-attachment')[0].files[0]);
+     var url  = "{{ baseUrl('send-file-to-support') }}";
+     $.ajax({
+        url:url,
+        type:"post",
+        data:formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        dataType:"json",
+        beforeSend:function(){
+           $("#message_input,.send-message,.send-attachment").attr('disabled','disabled');
+        },
+        success: function (response) {
+           if(response.status == true){
+              $("#message_input,.send-message,.send-attachment").removeAttr('disabled');
+              $("#chat-attachment").val('');
+              $("#activitySidebar .messages").html(response.html);
+              $(".messages").mCustomScrollbar();
+              $(".messages").animate({ scrollTop: $(".messages")[0].scrollHeight}, 1000);
+              $(".doc_chat_input").show();
+              fetchChats();
+           }else{
+              errorMessage(response.message);
+           }
+        },
+        error:function(){
+           $("#message_input,.send-message,.send-attachment").removeAttr('disabled');
+           internalError();
+        }
+     });
+   });
+});
+$("#form").submit(function(e) {
+  e.preventDefault();
+
+  var formData = new FormData($(this)[0]);
+  var url = $("#form").attr('action');
+  $.ajax({
+      url: url,
+      type: "post",
+      data: formData,
+      cache: false,
+      contentType: false,
+      processData: false,
+      dataType: "json",
+      
+      beforeSend: function() {
+            $("#validationFormFinishBtn").html("Processing...");
+            $("#validationFormFinishBtn").attr("disabled","disabled");
+            showLoader();
+      },
+      success: function(response) {
+          
+          hideLoader();
+          $("#validationFormFinishBtn").html("Save Data");
+          $("#validationFormFinishBtn").removeAttr("disabled");
+          if (response.status == true) {
+              successMessage(response.message);
+              setTimeout(function() {
+                  redirect('{{ baseUrl("complete-profile") }}');
+              }, 2000);
+          } 
+          else {
+                validation(response.message);
+          }    
+      },
+      error: function() {
+            hideLoader();                      
+            $("#validationFormFinishBtn").html("Save Data");
+            $("#validationFormFinishBtn").removeAttr("disabled");
+          internalError();
+      }
+  });
+});
 
   
   function licenceBodies(country_id) {
@@ -685,8 +904,39 @@
         }
     });
   }
-
+  
+function fetchChats(){
+alert("Tet");
+$.ajax({
+type: "POST",
+url: "{{ baseUrl('fetch-chats') }}",
+data:{
+    _token:csrf_token
+},
+dataType:'json',
+beforeSend:function(){
+    $("#message_input").val('');
+    $("#message_input,.send-message,.send-attachment").attr('disabled','disabled');
+},
+success: function (response) {
+    if(response.status == true){
+        $("#message_input,.send-message,.send-attachment").removeAttr('disabled');
+        $("#activitySidebar .messages").html(response.html);
+        setTimeout(function(){
+            $("#activitySidebar .messages").mCustomScrollbar();
+            $("#activitySidebar .messages").animate({ scrollTop: $(".messages")[0].scrollHeight}, 1000);
+        },800);
+        
+        $(".doc_chat_input").show();
+    }else{
+        errorMessage(response.message);
+    }
+},
+error:function(){
+    $("#activitySidebar .messages").html('');
+    internalError();
+}
+});
+}
 </script>
-
 @endsection
-

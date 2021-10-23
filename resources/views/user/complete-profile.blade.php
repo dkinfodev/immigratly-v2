@@ -240,7 +240,7 @@ $(document).ready(function(){
         });
     });
 
-
+});
 
 
 function stateList(country_id, id) {

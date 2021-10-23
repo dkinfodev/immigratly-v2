@@ -51,7 +51,7 @@ class MasterApiController extends Controller
             $user = $postData['data'];
             $professional = $postData['professional'];
             $checkExists = User::where("email",$user['email'])
-                                ->where("phone_no",$user['phone_no'])
+                                // ->where("phone_no",$user['phone_no'])
                                 ->first();
             $is_exists = 0;
             if(!empty($checkExists)){
@@ -124,6 +124,9 @@ class MasterApiController extends Controller
                     $object->zip_code = $user['zip_code'];
                 }
                 $object->save();
+                $response['user_exists'] = 0;
+            }else{
+                $response['user_exists'] = 1;
             }
             $checkExists = UserWithProfessional::where("user_id",$unique_id)->where("professional",$this->subdomain)->first();
             if(empty($checkExists)){

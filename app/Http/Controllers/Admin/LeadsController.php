@@ -269,6 +269,9 @@ class LeadsController extends Controller
             $object2->end_date = $request->input("end_date");
             $object2->visa_service_id = $visa_service_id;
             $object2->created_by = \Auth::user()->id;
+            if($result['user_exists'] == 0){
+                $object2->approve_status = 1;
+            }
             $object2->save();
 
             $response['status'] = true;

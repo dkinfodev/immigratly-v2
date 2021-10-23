@@ -61,7 +61,7 @@
             </div>
 
             <div class="col-auto">
-              <a href="{{ baseUrl('leads/assigned') }}" class="badge badge-soft-danger p-1">
+              <a href="{{ baseUrl('leads/clients') }}" class="badge badge-soft-danger p-1">
                 <i class="fa fa-eye"></i> View
               </a>
             </div>

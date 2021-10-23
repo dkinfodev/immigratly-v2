@@ -117,7 +117,6 @@
             <!-- Header -->
 
             <!-- End Header -->
-            @if(count($case_folders) > 0)
             <div class="row align-items-center mb-2">
                 <div class="col">
                     <h2 class="h4 mb-0">Files</h2>
@@ -321,7 +320,6 @@
                 </div>
             </div>
             <!-- End Tab Content -->
-            @endif
             <!-- Header -->
             <div class="row align-items-center mb-2 mt-4">
                 <div class="col">
@@ -359,7 +357,7 @@
                     <span class="folder-label-professional">My Documents</span>
                     <ul class="list-group" id="accordionMyDoc">
                         <!-- List Item -->
-
+                        @if(count($user_folders) > 0)
                         @foreach($user_folders as $key => $document)
                         <li class="list-group-item draggable document-folder" data-foldername="{{$document->name}}"
                             data-folder="{{$document['name']}}" data-doctype="default"
@@ -409,7 +407,9 @@
                         </li>
                         <!-- End List Item -->
                         @endforeach
-
+                        @else
+                        <li class="list-group-item mt-3 text-center text-danger">No Personal Folders</li>
+                        @endif
                     </ul>
                 </div>
             </div>
@@ -447,11 +447,11 @@ $(document).on('ready', function() {
     $('.js-nav-tooltip-link').tooltip({
         boundary: 'window'
     });
-    $('.js-sticky-block').each(function () {
-        var stickyBlock = new HSStickyBlock($(this), {
-            targetSelector: $('#header').hasClass('navbar-fixed') ? '#header' : null
-        }).init();
-    });
+    // $('.js-sticky-block').each(function () {
+    //     var stickyBlock = new HSStickyBlock($(this), {
+    //         targetSelector: $('#header').hasClass('navbar-fixed') ? '#header' : null
+    //     }).init();
+    // });
     $('.draggable').draggable({
         revert: true,
         revertDuration: 0,

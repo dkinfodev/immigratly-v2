@@ -880,11 +880,11 @@
         });
 
         // initialization of sticky blocks
-        $('.js-sticky-block').each(function () {
-          var stickyBlock = new HSStickyBlock($(this), {
-            targetSelector: $('#header').hasClass('navbar-fixed') ? '#header' : null
-          }).init();
-        });
+      //   $('.js-sticky-block').each(function () {
+      //     var stickyBlock = new HSStickyBlock($(this), {
+      //       targetSelector: $('#header').hasClass('navbar-fixed') ? '#header' : null
+      //     }).init();
+      //   });
 
         // initialization of scroll nav
         var scrollspy = new HSScrollspy($('#main-content'), {

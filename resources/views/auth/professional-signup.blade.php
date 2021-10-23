@@ -79,7 +79,7 @@
                     <div class="col-lg-8 col-xl-8">
                         <div class="mb-5 mb-md-7 text-center-xs">
                             <h1 class="h2">Create an account</h1>
-                            <p>Not a user? <a class="link" href="./page-login.html">View other sign-ups</a>
+                            <p class="text-center"><a class="link" href="{{ url('signup/user') }}">Signup as User</a>
                             </p>
 
                         </div>
