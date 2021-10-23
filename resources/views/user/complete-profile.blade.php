@@ -99,6 +99,8 @@
                             <option {{($record2->gender == 'male')?'selected':''}} value="male">Male</option>
                            <option {{($record2->gender == 'female')?'selected':''}} value="female">Female
                            </option>
+                           <option {{($record2->gender == 'other')?'selected':''}} value="other">Other
+                           </option>
                         </select>
                     </div>
                     <!-- End Select -->
@@ -106,7 +108,7 @@
                 <!-- End Form -->
                 <!-- Form -->
                 <div class="mb-3 js-form-message">
-                    <label class="form-label" for="signupModalFormSignupEmail">What is your profile?</label>
+                    <label class="form-label" for="signupModalFormSignupEmail">How do we identify you?</label>
                     <!-- Select -->
                     <div class="tom-select-custom">
                         <select name="cv_type" class="js-select form-select" autocomplete="off" data-hs-tom-select-options='{

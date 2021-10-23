@@ -186,6 +186,8 @@
               </option>
               <option {{($user->gender == 'female')?'selected':''}} value="female">Female
               </option>
+              <option {{($user->gender == 'other')?'selected':''}} value="other">Other
+              </option>
             </select> 
           </div>
         <!-- End Select -->
