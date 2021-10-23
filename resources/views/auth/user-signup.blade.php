@@ -137,7 +137,7 @@
                 <div class="mb-3 js-form-message">
                     <label class="form-label" for="signupModalFormSignupEmail">Your email</label>
                     <input type="email" class="form-control form-control-lg" name="email" id="signupSrEmail"
-                                    placeholder="Markwilliams@example.com" aria-label="Markwilliams@example.com"
+                                    placeholder="youremail@abc.com" aria-label="youremail@abc.com"
                                     required data-msg="Please enter a valid email address.">
                     <span class="invalid-feedback">Please enter a valid email address.</span>
                 </div>

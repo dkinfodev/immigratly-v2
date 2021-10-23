@@ -121,7 +121,7 @@
 
                 <div class="mb-3">
                     <label class="form-label" for="email">Your email</label>
-                    <input type="email" class="form-control form-control-lg" name="email" id="signupSrEmail" placeholder="email@site.com" aria-label="email@site.com" required>
+                    <input type="email" class="form-control form-control-lg" name="email" id="signupSrEmail" placeholder="youremail@abc.com" aria-label="youremail@abc.com" required>
                     <span class="invalid-feedback">Please enter a valid email address.</span>
                 </div>
 
