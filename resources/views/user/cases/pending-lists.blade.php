@@ -175,13 +175,20 @@
 
               <td>
                 @if($record['approve_status'] == "0")
+                <label class="toggle-switch mx-2" for="$record['unique_id']">
+                  <input type="checkbox" data-id="{{ $record['unique_id'] }}" onchange="caseApprovalStatus('<?php echo $record['unique_id']; ?>','<?php echo $professional->professional; ?>')" class="js-toggle-switch toggle-switch-input" id="$record['unique_id']" >
+                  <span class="toggle-switch-label">
+                    <span class="toggle-switch-indicator"></span>
+                  </span>
+                </label>  
+                <br>
                 <span class="badge badge-soft-warning p-2">Awaiting Approve</span>
                 @endif
                 @if($record['approve_status'] == "1")
                 <span class="badge badge-soft-info p-2">Approved</span>
                 @endif
               </td>
-              
+
               <td>
                 <!-- Avatar Group -->
                 <div class="avatar-group avatar-group-xs avatar-circle">
@@ -285,6 +292,60 @@ $('.js-nav-tooltip-link').tooltip({ boundary: 'window' });
     // initialization of datatables
     // var datatable = $.HSCore.components.HSDatatables.init($('#datatable'));
   });
+
+  function caseApprovalStatus(uid,subdomain){
+
+  var uid = uid;
+  var subdomain = subdomain;
+  if($(this).is(":checked")){
+    $.ajax({
+        type: "POST",
+        url: BASEURL + '/cases/approve-case',
+        data:{
+            _token:csrf_token,
+            uid:uid,
+            subdomain:subdomain,
+        },
+        dataType:'json',
+        beforeSend:function(){
+          showLoader();
+        },
+        success: function (result) {
+            if(result.status == true){
+                successMessage(result.message);
+                location.reload();
+            }else{
+                errorMessage(result.message);
+            }
+        },
+    });
+  }else{
+    $.ajax({
+        type: "POST",
+        url: BASEURL + '/cases/approve-case',
+        data:{
+            _token:csrf_token,
+            uid:uid,
+            subdomain:subdomain,
+        },
+        dataType:'json',
+        beforeSend:function(){
+          showLoader();
+        },
+        success: function (result) {
+            if(result.status == true){
+                successMessage(result.message);
+                location.reload();
+            }else{
+                errorMessage(result.message);
+            }
+        },
+        error: function(){
+          internalError();
+        }
+    });
+  }
+}
 </script>
 
 @endsection
