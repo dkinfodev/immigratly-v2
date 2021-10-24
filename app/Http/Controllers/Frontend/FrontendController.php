@@ -451,6 +451,7 @@ class FrontendController extends Controller
             $parameter['view'] = "emails.verify-code";
             $parameter['data'] = $mailData;
             $mailRes = sendMail($parameter);
+            // $mailRes['status'] = true;
             // $response['status'] = true;
             // $response['verify_code'] = $verify_code;
             // $response['message'] = "<h2>User Code: ".$verify_code."</h2>";

@@ -204,10 +204,12 @@ function validation(errors){
 	$(".form-control").removeClass('is-invalid');
   $(".custom-select").removeClass('is-invalid');
 	$.each(errors, function (index, value) {
+
     // alert(index+"::"+$("[name="+index+"]").val());
-	  $("*[name="+index+"]").parents(".js-form-message").find(".invalid-feedback").remove();
-	  $("*[name="+index+"]").parents(".js-form-message").find(".form-control").removeClass('is-invalid');
-	  var html = '<div id="'+index+'-error" class="invalid-feedback required-error">'+value+'</div>';
+    $("*[name="+index+"]").parents(".js-form-message").find(".invalid-feedback").remove();
+    $("*[name="+index+"]").parents(".js-form-message").find(".form-control").removeClass('is-invalid');
+    var html = '<div id="'+index+'-error" class="invalid-feedback required-error">'+value+'</div>';
+    
     // alert($("*[name="+index+"]").get(0).tagName);
 	  if($("*[name="+index+"]").get(0).tagName == 'SELECT'){
 	  	$("*[name="+index+"]").parents(".js-form-message").append(html);
@@ -217,7 +219,8 @@ function validation(errors){
       if($("*[name="+index+"]").hasClass("editor")){
         $("*[name="+index+"]").parents(".js-form-message").append(html);  
       }else{
-        $(html).insertAfter("*[name="+index+"]");  
+        // $(html).insertAfter("*[name="+index+"]");  
+        $("*[name="+index+"]").parents(".js-form-message").append(html);
       }
 	  }
 	  $("*[name="+index+"]").parents(".js-form-message").find(".form-control").addClass('is-invalid');

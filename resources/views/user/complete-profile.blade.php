@@ -71,30 +71,23 @@
                 <div class="mb-3 js-form-message">
                     <label class="form-label" for="signupModalFormSignupEmail">Country</label>
                     <!-- Select -->
-                    <div class="tom-select-custom">
-                        <select name="country_id" class="js-select form-select" autocomplete="off" data-hs-tom-select-options='{
-          "placeholder": "Select a Country...",
-          "hideSearch": true
-        }'>
+                    
+                        <select name="country_id" class="js-select form-select" autocomplete="off">
                             <option value="">Select Country...</option>
                             @foreach($countries as $country)
                                     <option {{$record2->country_id == $country->id?"selected":""}}
                                         value="{{$country->id}}">{{$country->name}}</option>
                                     @endforeach
                         </select>
-                    </div>
+                    
                     <!-- End Select -->
                 </div>
                 <!-- End Form -->
                 <!-- Form -->
                 <div class="mb-3 js-form-message">
-                    <label class="form-label" for="signupModalFormSignupEmail">Gender</label>
-                    <!-- Select -->
-                    <div class="tom-select-custom">
-                        <select class="js-select form-select" name="gender" autocomplete="off" data-hs-tom-select-options='{
-                              "placeholder": "Select a gender...",
-                              "hideSearch": true
-                           }'>
+                    <label class="form-label">Gender</label>
+                    
+                        <select class="js-select form-select" name="gender" autocomplete="off">
                             <option value="">Select a gender...</option>
                             <option {{($record2->gender == 'male')?'selected':''}} value="male">Male</option>
                            <option {{($record2->gender == 'female')?'selected':''}} value="female">Female
@@ -102,7 +95,6 @@
                            <option {{($record2->gender == 'other')?'selected':''}} value="other">Other
                            </option>
                         </select>
-                    </div>
                     <!-- End Select -->
                 </div>
                 <!-- End Form -->
@@ -110,18 +102,13 @@
                 <div class="mb-3 js-form-message">
                     <label class="form-label" for="signupModalFormSignupEmail">How do we identify you?</label>
                     <!-- Select -->
-                    <div class="tom-select-custom">
-                        <select name="cv_type" class="js-select form-select" autocomplete="off" data-hs-tom-select-options='{
-          "placeholder": "Select a profile...",
-          "hideSearch": true
-        }'>
+                        <select name="cv_type" class="js-select form-select" autocomplete="off">
                             <option value="">Select a profile...</option>
                             @foreach($cv_types as $type)
                               <option {{$record2->cv_type == $type->id?"selected":""}} value="{{$type->id}}">
                                     {{$type->name}}</option>
                               @endforeach
                         </select>
-                    </div>
                     <!-- End Select -->
                 </div>
                 <!-- End Form -->
@@ -130,7 +117,7 @@
                 <!-- Date -->
                 <div class="mb-3 js-form-message">
                     <label for="DateLabel" class="form-label">Date of Birth</label>
-                    <input type="text" name="date_of_birth" class="js-input-mask form-control" id="DateLabel" placeholder="xx/xx/xxxx"
+                    <input type="text" name="date_of_birth" autocomplete="off" class="js-input-mask form-control" id="DateLabel" placeholder="xx/xx/xxxx"
                         data-hs-mask-options='{
                         "mask": "00/00/0000"
                      }'>
@@ -180,19 +167,19 @@
       
       // INITIALIZATION OF SELECT
       // =======================================================
-      HSCore.components.HSTomSelect.init('.js-select')
+    //   HSCore.components.HSTomSelect.init('.js-select')
 
     })()
   </script>
 <script>
 $(document).ready(function(){
-    // $('#date_of_birth').datepicker({
-    //     format: 'dd/mm/yyyy',
-    //     autoclose: true,
-    //     maxDate: (new Date()).getDate(),
-    //     todayHighlight: true,
-    //     orientation: "bottom auto"
-    // });
+    $('#date_of_birth').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        maxDate: (new Date()).getDate(),
+        todayHighlight: true,
+        orientation: "bottom auto"
+    });
     // // initialization of Show Password
     // $('.js-toggle-password').each(function() {
     //     new HSTogglePassword(this).init()

@@ -120,7 +120,7 @@ class RegisterController extends Controller
             'password_confirmation' => 'required|min:8',
             // 'country_code' => 'required',
             // 'phone_no' => 'required',
-            'signupFormPrivacyCheck'=>'required'
+            'termsAndConditions'=>'required'
             // 'verify_by'=>'required',
             // 'verification_code'=>'required',
         ]);
@@ -252,7 +252,7 @@ class RegisterController extends Controller
             'password_confirmation' => 'required|min:8',
             'country_code' => 'required',
             //'phone_no' => 'required|unique:professionals',
-            // 'verify_by'=>'required',
+            'termsAndConditions'=>'required',
             //'company_name'=>'required',
             //'termsCheckbox'=>'required',
             'subdomain'=>'required|unique:professionals|max:14|min:6',

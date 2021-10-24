@@ -70,8 +70,7 @@
                     <div class="col-lg-8 col-xl-8">
                         <div class="mb-5 mb-md-7 text-center-xs">
                             <h1 class="h2">Create an account</h1>
-                            <p class="text-center"><a class="link" href="{{ url('signup/professional') }}">Signup as Professional</a>
-                            </p>
+                            <p><a class="link" href="javascript:;">Signup as User</a></p>
 
                         </div>
                     </div>
@@ -139,7 +138,6 @@
                     <input type="email" class="form-control form-control-lg" name="email" id="signupSrEmail"
                                     placeholder="youremail@abc.com" aria-label="youremail@abc.com"
                                     required data-msg="Please enter a valid email address.">
-                    <span class="invalid-feedback">Please enter a valid email address.</span>
                 </div>
                 <!-- End Form -->
 
@@ -150,7 +148,7 @@
                     <div class="input-group input-group-merge" data-hs-validation-validate-class>
                         <input type="password" class="js-toggle-password form-control form-control-lg"
                             name="password" id="password"
-                            placeholder="8+ characters required" aria-label="8+ characters required"
+                            placeholder="6+ characters required" aria-label="6+ characters required"
                             required data-hs-toggle-password-options='{
                                 "target": [".js-toggle-password-target-1", ".js-toggle-password-target-2"],
                                 "defaultClass": "bi-eye-slash",
@@ -162,10 +160,6 @@
                             <i class="js-toggle-passowrd-show-icon-1 bi-eye"></i>
                         </a>
                     </div>
-
-
-
-                    <span class="invalid-feedback">Your password is invalid. Please try again.</span>
                 </div>
                 <!-- End Form -->
                 
@@ -176,7 +170,7 @@
                     <div class="input-group input-group-merge" data-hs-validation-validate-class>
                         <input type="password" class="js-toggle-password form-control form-control-lg"
                             name="password_confirmation" id="password_confirmation"
-                            placeholder="8+ characters required" aria-label="8+ characters required"
+                            placeholder="6+ characters required" aria-label="6+ characters required"
                             required data-hs-toggle-password-options='{
                                 "target": [".js-toggle-password-target-1", ".js-toggle-password-target-2"],
                                 "defaultClass": "bi-eye-slash",
@@ -188,18 +182,15 @@
                             <i class="js-toggle-passowrd-show-icon-2 bi-eye"></i>
                         </a>
                     </div>
-
-                    <span class="invalid-feedback">Your password is invalid. Please try again.</span>
                 </div>
                 <!-- End Form -->
 
                 <!-- Check -->
-                <div class="form-check mb-3">
-                    <input type="checkbox" class="form-check-input" id="signupHeroFormPrivacyCheck"
-                        name="signupFormPrivacyCheck" required>
-                    <label class="form-check-label small" for="signupHeroFormPrivacyCheck"> By submitting
-                        this form I have read and acknowledged the <a href=./page-privacy.html>Terms &amp; Conditions</a></label>
-                    <span class="invalid-feedback">Please accept our Terms &amp; Conditions.</span>
+                <div class="form-check mb-3 js-form-message">
+                    <input type="checkbox" class="form-check-input" id="termsAndConditions"
+                        name="termsAndConditions" required>
+                    <label class="form-check-label small" for="termsAndConditions"> By submitting
+                        this form I have read and acknowledged the <a href="javascript:;">Terms &amp; Conditions</a></label>
                 </div>
                 <!-- End Check -->
 
@@ -216,11 +207,9 @@
                     <div class="row">
                         <div class="col-lg-4 col-xl-4">
                             <div class="type-label-holder-wrap text-center ">
-
                                 <div class="type-label-holder"><img class="avatar avatar-xss"
                                         src="assets/front/svg/brands/google.svg" alt="Image Description">
                                 </div>
-
                             </div>
                         </div>
 
@@ -228,7 +217,11 @@
                             <!-- Heading -->
                             <div class="mb-5 mb-md-7 text-center-xs">
                                 <h1 class="h2">Professional Signup</h1>
-                                <p>Create account for professionals</p>
+                                <p>
+                                    <a href="{{ url('signup/professional') }}">
+                                        Create account for professionals
+                                    </a>
+                                </p>
 
                             </div>
                             <!-- End Heading -->
@@ -253,7 +246,7 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalCenterTitle">Choose Verification Option
                 </h5>
-                <button type="button" class="btn btn-xs btn-icon btn-soft-secondary"
+                <button type="button" onclick="closePopupModal('verificationModal')" class="btn btn-xs btn-icon btn-soft-secondary"
                     data-dismiss="modal" aria-label="Close">
                     <svg aria-hidden="true" width="10" height="10" viewBox="0 0 18 18"
                         xmlns="http://www.w3.org/2000/svg">
@@ -282,19 +275,19 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                <button type="button" onclick="closePopupModal('verificationModal')" class="btn btn-white" data-dismiss="modal">Close</button>
                 <button type="button" onclick="sendOtp(this)" class="btn btn-primary">Send
                     OTP</button>
             </div>
         </div>
     </div>
 </div>
-<div id="verificationCodeModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div id="verificationCodeModal" data-backdrop="static" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalCenterTitle">Verification Code</h5>
-                <button type="button" class="btn btn-xs btn-icon btn-soft-secondary"
+                <button type="button" onclick="closePopupModal('verificationCodeModal')" class="btn btn-xs btn-icon btn-soft-secondary"
                     data-dismiss="modal" aria-label="Close">
                     <svg aria-hidden="true" width="10" height="10" viewBox="0 0 18 18"
                         xmlns="http://www.w3.org/2000/svg">
@@ -316,7 +309,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-white"
+                <button onclick="closePopupModal('verificationCodeModal')" type="button" class="btn btn-white"
                     data-dismiss="modal">Close</button>
                 <button type="button" onclick="verifyOtp(this)"
                     class="btn btn-primary">Verify
@@ -493,6 +486,9 @@ function verifyOtp(e) {
             hideLoader();
         }
     });
+}
+function closePopupModal(id){
+    $("#"+id).modal("hide");
 }
 </script>
 @endsection
