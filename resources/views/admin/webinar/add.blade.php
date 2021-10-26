@@ -151,13 +151,13 @@
           <div class="col-md-4">
             <div class="form-group js-form-message">
               <label>Webinar Date</label>
-              <div class="js-flatpickr flatpickr-custom input-group input-group-merge">
+              <div class="input-group input-group-merge">
                  <div class="input-group-prepend" data-toggle>
                     <div class="input-group-text">
                        <i class="tio-date-range"></i>
                     </div>
                  </div>
-                 <input data-msg="Please select start date" type="text" name="webinar_date" class="flatpickr-custom-form-control form-control" id="webinar_date" placeholder="Select Webinar Date" data-input value="">
+                 <input data-msg="Please select start date" autocomplete="off" type="text" name="webinar_date" class="form-control" id="webinar_date" placeholder="Select Webinar Date" data-input value="">
               </div>
             </div>
           </div>

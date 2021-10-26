@@ -1686,4 +1686,17 @@ class CasesController extends Controller
         $viewData['activity_logs'] = $activity_logs;
         return view(roleFolder().'.cases.activity-logs',$viewData);
     }
+
+    public function renameDocument($id,Request $request){
+        $id = base64_decode($id);
+        $record = CaseFolders::find($id);
+        $viewData['case_id'] = $id;
+        $viewData['pageTitle'] = "Rename File";
+        $viewData['record'] = $record;
+        $view = View::make(roleFolder().'.cases.modal.rename-file',$viewData);
+        $contents = $view->render();
+        $response['contents'] = $contents;
+        $response['status'] = true;
+        return response()->json($response);        
+    }
 }
