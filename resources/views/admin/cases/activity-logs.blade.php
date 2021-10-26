@@ -26,54 +26,59 @@
     <!-- Step -->
     <ul class="step">
         <!-- Step Item -->
-        @foreach($activity_logs as $log)
+        @foreach($activity_logs as $dlog)
         <li class="step-item">
             <div class="step-content-wrapper">
-                <small class="step-divider">{{dateFormat($log['created_at'])}}</small>
+                <small class="step-divider">{{dateFormat($dlog->created_at)}}</small>
             </div>
         </li>
         <!-- End Step Item -->
-
-        <!-- Step Item -->
-        <li class="step-item">
-            <div class="step-content-wrapper">
-                <div class="step-avatar">
-                    @if($log['added_by'] == 'user')
-                    <img class="step-avatar-img" src="{{ userProfile($log['user_id']) }}" alt="Image Description">
-                    @else
-                    <img class="step-avatar-img" src="{{ professionalProfile($log['user_id'],'t',$subdomain) }}" alt="Image Description">
-                    @endif
-                </div>
-
-                <div class="step-content">
-                    <h5 class="mb-1">
-                        @if($log['added_by'] == 'user')
-                            <?php
-                                $user = userDetail($log['user_id']);
-                            ?>
-                            @if(!empty($user))
-                                <a class="text-dark" href="javascript:;">{{ $user->first_name." ".$user->last_name  }}</a>
-                            @else
-                                <a class="text-danger" href="javascript:;">N/A</a>
-                            @endif
+        <?php
+        $log_date = dateFormat($dlog->created_at,"Y-m-d");
+        $logs = $dlog->dateWiseLogs($dlog->case_id,$log_date);
+        ?>
+            @foreach($logs as $log)
+            <!-- Step Item -->
+            <li class="step-item">
+                <div class="step-content-wrapper">
+                    <div class="step-avatar">
+                        @if($log->added_by == 'user')
+                        <img class="step-avatar-img" src="{{ userProfile($log->user_id) }}" alt="Image Description">
                         @else
-                            <?php
-                                $user = professionalUser($log['user_id'],$subdomain);
-                            ?>
-                            @if(!empty($user))
-                                <a class="text-dark" href="javascript:;">{{ $user->first_name." ".$user->last_name  }}</a>
-                            @else
-                                <a class="text-danger" href="javascript:;">N/A</a>
-                            @endif
+                        <img class="step-avatar-img" src="{{ professionalProfile($log->user_id,'t',$subdomain) }}" alt="Image Description">
                         @endif
-                    </h5>
+                    </div>
 
-                    <p class="font-size-sm">{{$log['comment']}}</p>
+                    <div class="step-content">
+                        <h5 class="mb-1">
+                            @if($log->added_by == 'user')
+                                <?php
+                                    $user = userDetail($log->user_id);
+                                ?>
+                                @if(!empty($user))
+                                    <a class="text-dark" href="javascript:;">{{ $user->first_name." ".$user->last_name  }}</a>
+                                @else
+                                    <a class="text-danger" href="javascript:;">N/A</a>
+                                @endif
+                            @else
+                                <?php
+                                    $user = professionalUser($log->user_id,$subdomain);
+                                ?>
+                                @if(!empty($user))
+                                    <a class="text-dark" href="javascript:;">{{ $user->first_name." ".$user->last_name  }}</a>
+                                @else
+                                    <a class="text-danger" href="javascript:;">N/A</a>
+                                @endif
+                            @endif
+                        </h5>
 
-                  
+                        <p class="font-size-sm">{{$log->comment}}</p>
+
+                    
+                    </div>
                 </div>
-            </div>
-        </li>
+            </li>
+            @endforeach
         @endforeach
         <!-- End Step Item -->
 

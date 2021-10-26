@@ -1697,7 +1697,7 @@ class ProfessionalCasesController extends Controller
         }else{
             $activity_logs = array();
         }
-       
+        
         $viewData['case_id'] = $case_id;
         $viewData['subdomain'] = $subdomain;
         $viewData['pageTitle'] = "View Case";

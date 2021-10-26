@@ -159,18 +159,18 @@
                     class="badge badge-soft-dark rounded-circle ml-1"> {{ countUnreadDocChat($case_id,$subdomain,\Auth::user()->role) }}</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link " href="{{ baseUrl('cases/activity-logs/'.base64_encode($record->id)) }}">Activity</a>
+            <a class="nav-link {{isset($active_nav) && $active_nav == 'activity'?'active':'' }}" href="{{ baseUrl('cases/activity-logs/'.base64_encode($record->id)) }}">Activity</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link " href="02-master-user-container-invoice-view.html">Invoice</a>
+            <a class="nav-link {{isset($active_nav) && $active_nav == 'invoices'?'active':'' }}" href="{{baseUrl('cases/invoices/list/'.base64_encode($record->id))}}">Invoices</a>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
             <a class="nav-link " href="project-teams.html">Teams</a>
-        </li>
+        </li> -->
 
-        <li class="nav-item">
+        <!-- <li class="nav-item">
             <a class="nav-link " href="project-settings.html">Settings</a>
-        </li>
+        </li> -->
     </ul>
 </div>
     

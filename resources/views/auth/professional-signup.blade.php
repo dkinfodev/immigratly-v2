@@ -1,15 +1,19 @@
 @extends('frontend.layouts.master')
 
-@section('style')
-<link rel="stylesheet" href="assets/vendor/hs-mega-menu/dist/hs-mega-menu.min.css">
-  <!-- CSS Front Template ---ADDITIONAL -->
-  <link rel="stylesheet" href="assets/vendor/tom-select/dist/css/tom-select.bootstrap5.css">
-
-    <link rel="stylesheet" href="assets/front/css/front.css">
-    <link rel="stylesheet" href="assets/vendor/select2/dist/css/select2.min.css">
-
-@endsection
 @section('content')
+<link rel="stylesheet" href="assets/vendor/hs-mega-menu/dist/hs-mega-menu.min.css">
+
+<link rel="stylesheet" href="assets/front/css/front.css">
+<link rel="stylesheet" href="assets/vendor/select2/dist/css/select2.min.css">
+
+<style>
+span.select2-selection.select2-selection--single {
+    height: 51px;
+}
+li.select2-selection__choice {
+    padding: 9px !important;
+}
+</style>
 <div class="row">
     <div class="col-lg-6 col-xl-4  d-none d-lg-flex justify-content-center align-items-center min-vh-lg-100 position-relative offset-xl-2 offset-md-0">
         <div class="flex-grow-1 p-5">
@@ -128,13 +132,12 @@
                     
                 </div>
 
-            <div class="mb-3"> 
+            <div class="mb-3 js-form-message"> 
              <label class="form-label" for="fullNameSrEmail">Your phone number</label>
              <!-- Form Group -->
              <div class="form-row">
               <div class="col-6 ">
                <!-- Select -->
-                 <div class="tom-select-custom">
 
                     <select class="js-select form-select" id="country_code"
                         name="country_code">
@@ -145,8 +148,6 @@
                             ({{$code->sortname}})</option>
                         @endforeach
                     </select>
-                   
-                 </div>
                
                </div>  
                 
@@ -293,7 +294,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalCenterTitle">Verification Code</h5>
-                <button type="button" onclick="closePopupModal('verificationModal')" class="btn btn-xs btn-icon btn-soft-secondary"
+                <button type="button" onclick="closePopupModal('verificationCodeModal')" class="btn btn-xs btn-icon btn-soft-secondary"
                     data-dismiss="modal" aria-label="Close">
                     <svg aria-hidden="true" width="10" height="10" viewBox="0 0 18 18"
                         xmlns="http://www.w3.org/2000/svg">
@@ -315,7 +316,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" onclick="closePopupModal('verificationModal')" class="btn btn-white"
+                <button type="button" onclick="closePopupModal('verificationCodeModal')" class="btn btn-white"
                 data-dismiss="modal">Close</button>
                 <button type="button" onclick="verifyOtp(this)"
                     class="btn btn-primary">Verify
@@ -325,7 +326,6 @@
     </div>
 </div>
 <!-- End Row -->
-
 
 <script src="assets/front/vendor/hs-toggle-password/dist/js/hs-toggle-password.js"></script>
 <script src="assets/vendor/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
@@ -353,6 +353,7 @@
 
 var verify_status = '';
 $(document).ready(function() {
+    $("select").select2();
     $(".signup-btn").click(function(e) {
         e.preventDefault();
         $(".signup-btn").attr("disabled", "disabled");

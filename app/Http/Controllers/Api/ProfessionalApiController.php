@@ -1363,10 +1363,17 @@ class ProfessionalApiController extends Controller
             $client_id = $request->input("client_id");
             $records = CaseActivityLogs::where("case_id",$case_id)
                         ->orderBy("id","desc")
+                        ->groupBy(\DB::raw("DATE(created_at)"))
                         ->get();
-            
+            $activity_logs = array();
+            foreach($records as $record){
+                $temp = $record;
+                $log_date = dateFormat($record->created_at,"Y-m-d");
+                $temp->activityLogs = $record->dateWiseLogs($record->case_id,$log_date);
+                $activity_logs[] = $temp;
+            }
             $response['status'] = 'success';
-            $response['records'] = $records;
+            $response['records'] = $activity_logs;
 
         } catch (Exception $e) {
             $response['status'] = "error";

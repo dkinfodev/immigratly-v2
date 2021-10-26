@@ -24,7 +24,20 @@ class InvoiceController extends Controller
     public function caseInvoices($case_id)
     {
         $id = base64_decode($case_id);
-        $case = Cases::find($id);
+        
+        $subdomain = \Session::get("subdomain");
+        $record = Cases::with(['AssingedMember','VisaService'])
+                    ->where("id",$id)
+                    ->first();
+        $temp = $record;
+        $temp->MainService = $record->Service($record->VisaService->service_id);
+        $data = $temp;
+        $case = $data;
+        $viewData['subdomain'] = $subdomain;
+        $viewData['record'] = $data;
+        $viewData['case_id'] = $record->unique_id;
+        $viewData['active_nav'] = "invoices";
+
         $viewData['case'] = $case;
         $viewData['pageTitle'] = "Case Invoices";
         return view(roleFolder().'.cases.invoices',$viewData);

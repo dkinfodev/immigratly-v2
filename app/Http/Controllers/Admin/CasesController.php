@@ -1001,7 +1001,7 @@ class CasesController extends Controller
                 
                 $user_id = \Auth::user()->unique_id;
                 $comment = "File sent on document (".$request->input("message").")";
-                caseActivityLog($subdomain,$case_id,$user_id,$comment,'user');
+                caseActivityLog($subdomain,$case_id,$user_id,$comment,'admin');
 
             }else{
                 $response['status'] = true;
@@ -1675,6 +1675,7 @@ class CasesController extends Controller
 
         $activity_logs = CaseActivityLogs::where("case_id",$record->unique_id)
                         ->orderBy("id","desc")
+                        ->groupBy(\DB::raw("DATE(created_at)"))
                         ->get();
        
         $viewData['case_id'] = $case_id;

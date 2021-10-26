@@ -25,6 +25,7 @@
 <!-- End Content -->
 @endsection
 @section('content')
+@include(roleFolder().'.cases.case-navbar')
 <!-- Content -->
 <div class="invoice-lists">
 

@@ -1,5 +1,13 @@
 @extends('frontend.layouts.master')
 @section('content')
+<style>
+span.select2-selection.select2-selection--single {
+    height: 51px;
+}
+li.select2-selection__choice {
+    padding: 9px !important;
+}
+</style>
 <div class="row">
     <div class="col-lg-6 col-xl-4  d-lg-flex justify-content-center position-relative offset-xl-2 offset-md-0" style="">
         <div class="flex-grow-1 p-5">
@@ -117,7 +125,7 @@
                 <!-- Date -->
                 <div class="mb-3 js-form-message">
                     <label for="DateLabel" class="form-label">Date of Birth</label>
-                    <input type="text" name="date_of_birth" autocomplete="off" class="js-input-mask form-control" id="DateLabel" placeholder="xx/xx/xxxx"
+                    <input type="text" id="date_of_birth" name="date_of_birth" autocomplete="off" class="js-input-mask form-control" id="DateLabel" placeholder="xx/xx/xxxx"
                         data-hs-mask-options='{
                         "mask": "00/00/0000"
                      }'>
@@ -173,6 +181,7 @@
   </script>
 <script>
 $(document).ready(function(){
+    $("select").select2();
     $('#date_of_birth').datepicker({
         format: 'dd/mm/yyyy',
         autoclose: true,
