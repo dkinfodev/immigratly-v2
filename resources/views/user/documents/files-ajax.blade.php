@@ -13,7 +13,8 @@
         $doc_url = $file_url."/".$doc->FileDetail->file_name;
         $url = baseUrl('documents/files/view-document/'.$doc->unique_id.'?url='.$doc_url.'&file_name='.$doc->FileDetail->file_name.'&folder_id='.$document->unique_id);
         ?>
-        <a class="d-flex align-items-center" href="{{$url}}">
+        <a data-href="{{$url}}" onclick="previewDocument(this)" data-filename="{{$doc->FileDetail->original_name}}"  data-documentid="{{ $doc->unique_id }}"  class="text-dark" href="javascript:;" data-toggle="modal" data-target=".bd-example-modal-fs">
+        
         <?php 
             
             echo $fileicon;
@@ -25,8 +26,9 @@
                 <li class="list-inline-item">Added on {{dateFormat($doc->created_at)}}</li>
                 <li class="list-inline-item">{{$filesize}}</li>
             </ul>
+
         </div>
-        </a>
+        </a>        
     </td>
     
     <td>

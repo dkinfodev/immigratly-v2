@@ -132,6 +132,8 @@ class MyDocumentsController extends Controller
             }
         }
         
+        $user_id = \Auth::user()->unique_id;
+        $viewData['user_documents'] = $user_documents;
         $user_detail = UserDetails::where("user_id",$user_id)->first();
         $viewData['user_detail'] = $user_detail;
         $viewData['user_documents'] = $user_documents;
@@ -147,67 +149,69 @@ class MyDocumentsController extends Controller
         $viewData['ext_files'] = $ext_files;
         return view(roleFolder().'.documents.files',$viewData);
     }
-    public function folderFilesAjax(Request $request){
-        $folder_id = $request->input("folder_id");
-        $search = $request->input("search");
-        $file_type = $request->input("file_type");
-        $sort_by = $request->input("sort_by");
-       
-        $document = UserFolders::where("unique_id",$folder_id)->first();
-        $user_id = \Auth::user()->unique_id;
-        $column = "files_manager.id";
-        $order = "desc";
-        if($sort_by != ''){
-            switch($sort_by){
-                case "added_by_asc":
-                    $column = "files_manager.created_at";
-                    $order = "asc";
-                    break;
-                case "added_by_desc":
-                    $column = "files_manager.created_at";
-                    $order = "desc";
-                    break;
-                case "name_asc":
-                    $column = "files_manager.original_name";
-                    $order = "asc";
-                    break;
-                case "name_desc":
-                    $column = "files_manager.original_name";
-                    $order = "desc";
-                    break;
-                default:
-                    $column = "files_manager.id";
-                    $order = "desc";
-                    break;
 
-            }
-        }
-        $user_documents = UserFiles::with('FileDetail')
-                                    ->join('files_manager', 'files_manager.unique_id', '=', 'user_files.file_id')
-                                    ->where(function ($query) use ($file_type) {
-                                        if($file_type != ''){
-                                            $query->where("files_manager.file_type",$file_type);
-                                        }
-                                    })
-                                    ->where("user_files.folder_id",$folder_id)
-                                    ->where("user_files.user_id",$user_id)
-                                    ->select("user_files.*")
-                                    ->orderBy($column,$order)
-                                    ->get();
+    // public function folderFilesAjax(Request $request){
+    //     $folder_id = $request->input("folder_id");
+    //     $search = $request->input("search");
+    //     $file_type = $request->input("file_type");
+    //     $sort_by = $request->input("sort_by");
        
-        $viewData['user_documents'] = $user_documents;
-        $file_url = userDirUrl()."/documents";
-        $file_dir = userDir()."/documents";
-        $viewData['file_url'] = $file_url;
-        $viewData['file_dir'] = $file_dir;
-        $viewData['document'] = $document;
+    //     $document = UserFolders::where("unique_id",$folder_id)->first();
+    //     $user_id = \Auth::user()->unique_id;
+    //     $column = "files_manager.id";
+    //     $order = "desc";
+    //     if($sort_by != ''){
+    //         switch($sort_by){
+    //             case "added_by_asc":
+    //                 $column = "files_manager.created_at";
+    //                 $order = "asc";
+    //                 break;
+    //             case "added_by_desc":
+    //                 $column = "files_manager.created_at";
+    //                 $order = "desc";
+    //                 break;
+    //             case "name_asc":
+    //                 $column = "files_manager.original_name";
+    //                 $order = "asc";
+    //                 break;
+    //             case "name_desc":
+    //                 $column = "files_manager.original_name";
+    //                 $order = "desc";
+    //                 break;
+    //             default:
+    //                 $column = "files_manager.id";
+    //                 $order = "desc";
+    //                 break;
+
+    //         }
+    //     }
+    //     $user_documents = UserFiles::with('FileDetail')
+    //                                 ->join('files_manager', 'files_manager.unique_id', '=', 'user_files.file_id')
+    //                                 ->where(function ($query) use ($file_type) {
+    //                                     if($file_type != ''){
+    //                                         $query->where("files_manager.file_type",$file_type);
+    //                                     }
+    //                                 })
+    //                                 ->where("user_files.folder_id",$folder_id)
+    //                                 ->where("user_files.user_id",$user_id)
+    //                                 ->select("user_files.*")
+    //                                 ->orderBy($column,$order)
+    //                                 ->get();
+       
+    //     $viewData['user_documents'] = $user_documents;
+    //     $file_url = userDirUrl()."/documents";
+    //     $file_dir = userDir()."/documents";
+    //     $viewData['file_url'] = $file_url;
+    //     $viewData['file_dir'] = $file_dir;
+    //     $viewData['document'] = $document;
         
-        $view = View::make(roleFolder().'.documents.files-ajax',$viewData);
-        $contents = $view->render();
-        $response['contents'] = $contents;
-        $response['status'] = true;
-        return response()->json($response);        
-    }
+    //     $view = View::make(roleFolder().'.documents.files-ajax',$viewData);
+    //     $contents = $view->render();
+    //     $response['contents'] = $contents;
+    //     $response['status'] = true;
+    //     return response()->json($response);        
+    // }
+
     public function uploadDocuments(Request $request){
         try{
             $id = \Auth::user()->unique_id;
@@ -367,28 +371,107 @@ class MyDocumentsController extends Controller
     }
 
     public function viewDocument($file_id,Request $request){
-   
-        
+                
+        // $url = $request->get("url");
+        // $filename = $request->get("file_name");
+        // $folder_id = $request->get("folder_id");
+        // $ext = fileExtension($filename);
+        // $subdomain = $request->get("p");
+        // $user_file = UserFiles::with('FileDetail')
+        //             ->where("unique_id",$file_id)
+        //             ->where("user_id",\Auth::user()->unique_id)
+        //             ->first();
+    
+        // if(empty($user_file)){
+        //     return redirect(baseUrl('/documents'))->with("error","Invaild file access");
+        // }
+        // $viewData['url'] = $url;
+        // $viewData['extension'] = $ext;
+        // $viewData['document_id'] = $file_id;
+        // $viewData['folder_id'] = $folder_id;
+        // $viewData['user_file'] = $user_file;
+        // $viewData['pageTitle'] = "View Documents";
+        // return view(roleFolder().'.documents.view-documents',$viewData);
+
         $url = $request->get("url");
         $filename = $request->get("file_name");
-        $folder_id = $request->get("folder_id");
-        $ext = fileExtension($filename);
+        $extension = fileExtension($filename);
         $subdomain = $request->get("p");
-        $user_file = UserFiles::with('FileDetail')
-                    ->where("unique_id",$file_id)
-                    ->where("user_id",\Auth::user()->unique_id)
-                    ->first();
-    
-        if(empty($user_file)){
-            return redirect(baseUrl('/documents'))->with("error","Invaild file access");
+        $folder_id = $request->get("folder_id");
+        
+        $doc_type = $request->get("doc_type");
+        $document = '';
+        if($extension == 'image'){
+            $document = '<div class="text-center"><img src="'.$url.'" class="img-fluid" /></div>';
+        }else{
+            if(google_doc_viewer($extension)){
+                $document = '<iframe src="http://docs.google.com/viewer?url='.$url.'&embedded=true" style="margin:0 auto; width:100%; height:700px;" frameborder="0"></iframe>';
+            }else{
+                $document = '<iframe src="'.$url.'" style="margin:0 auto; width:100%; height:700px;" frameborder="0"></iframe>';
+            }
         }
-        $viewData['url'] = $url;
-        $viewData['extension'] = $ext;
-        $viewData['document_id'] = $file_id;
-        $viewData['folder_id'] = $folder_id;
-        $viewData['user_file'] = $user_file;
-        $viewData['pageTitle'] = "View Documents";
-        return view(roleFolder().'.documents.view-documents',$viewData);
+        $response['status'] = true;
+        $response['content'] = $document;
+        return response()->json($response);
+    }
+
+    public function renameFile($id,Request $request){
+        
+        $data['document_id'] = $id;
+        $viewData['document_id'] = $id;
+        $viewData['pageTitle'] = "Rename File";
+        //$viewData['record'] = $record;
+        $view = View::make(roleFolder().'.documents.modal.rename-file',$viewData);
+        $contents = $view->render();
+        $response['contents'] = $contents;
+        $response['status'] = true;
+        return response()->json($response);        
+    }
+
+    public function updateFilename($id,Request $request){
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $response['status'] = false;
+            $response['error_type'] = 'validation';
+            $error = $validator->errors()->toArray();
+            $errMsg = array();
+            
+            foreach($error as $key => $err){
+                $errMsg[$key] = $err[0];
+            }
+            $response['message'] = $errMsg;
+            return response()->json($response);
+        }
+        
+        //
+        $uid = \Auth::user()->unique_id;
+        $current_file = UserFiles::where("file_id",$id)->first();
+        $exOb = FilesManager::where("unique_id",$id)->first();
+
+        $ext = $exOb->file_type;
+        $file_name = $request->input("name").".".$ext;
+        $new_name = $this->checkFileName($file_name);
+        $sourceDir = userDir($uid)."/documents/".$exOb->file_name;
+        $destinationDir = userDir($uid)."/documents/".$new_name;
+        if(rename($sourceDir,$destinationDir)){
+            $object = FilesManager::where("unique_id",$id)->first();
+            $object->original_name = $new_name;
+            $object->file_name = $new_name;
+            $object->save();
+
+            $response['status'] = true;
+            $response['message'] = "File name renamed";
+        }else{
+            $response['status'] = false;
+            $response['message'] = "Issue whle renaming file";
+        }
+        //
+        
+        return response()->json($response); 
+
     }
     public function deleteDocument($id){
         $id = base64_decode($id);
@@ -681,6 +764,22 @@ class MyDocumentsController extends Controller
         }
         
         return response()->json($response);
+    }
+
+    public function checkFileName($filename){
+     
+        $current_file = FilesManager::where("original_name",$filename)->count();
+
+        if($current_file > 0){
+            $ext = pathinfo($filename, PATHINFO_EXTENSION);
+            $original_name = str_replace(".".$ext,"",$filename);
+            $count = $current_file+1;
+            $new_name = $original_name."(".$count.").".$ext;
+            $name = $this->checkFileName($new_name);
+            return $name;
+        }else{
+            return $filename;
+        }
     }
 }
 
