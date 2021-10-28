@@ -105,9 +105,9 @@ ul.elg-list {
     padding-bottom: 40px;
     border-color: transparent;
 }
-.ui-draggable {
+/* .ui-draggable {
     left: 0px !important;
-}
+} */
 .mTSThumbContainer.active a {
     background-color: #57a4ff!important;
     color: #FFF;

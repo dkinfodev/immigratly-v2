@@ -37,7 +37,13 @@
                   <small class="nav-subtitle" title="Personal">Personal</small>
                   <small class="tio-more-horizontal nav-subtitle-replacer"></small>
               </li>
-
+              <li class="nav-item ">
+                  <a class="js-nav-tooltip-link nav-link" href="{{ baseUrl('/dependants') }}"
+                      data-placement="left">
+                      <i class="tio-user nav-icon"></i>
+                      <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Dependants</span>
+                  </a>
+              </li>
               <li class="nav-item ">
                   <a class="js-nav-tooltip-link nav-link" href="{{ baseUrl('/documents') }}"
                       data-placement="left">

@@ -572,7 +572,9 @@ class ProfessionalApiController extends Controller
 
             $case_id = $request->input("case_id");
             $client_id = $request->input("client_id");
-            $record = Cases::where("unique_id",$case_id)->where('client_id',$client_id)->first();
+            $record = Cases::where("unique_id",$case_id)
+                        ->where('client_id',$client_id)
+                        ->first();
             if(empty($record)){
                 $response['status'] = "error";
                 $response['message'] = "Case not found";

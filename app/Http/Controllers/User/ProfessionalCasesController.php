@@ -29,8 +29,21 @@ class ProfessionalCasesController extends Controller
     {
        	$viewData['pageTitle'] = "Cases";
         $professionals = UserWithProfessional::where('user_id',\Auth::user()->unique_id)->get();
+        $pendingApproval = 0;
+        foreach($professionals as $professional){
+            $cases = $professional->Cases($professional->professional,$professional->user_id);
+            if(isset($cases['status']) && $cases['status'] == "success"){
+                //pre($cases);
+                foreach($cases['data'] as $key => $record){
+                    if($record['approve_status'] == "0"){
+                        $pendingApproval++;
+                    }
+                }
+            }
+        }
         $viewData['active_nav'] = 'cases';
         $viewData['professionals'] = $professionals;
+        $viewData['pendingApproval'] = $pendingApproval;
         return view(roleFolder().'.cases.lists',$viewData);
     }
 
@@ -38,8 +51,22 @@ class ProfessionalCasesController extends Controller
     {
         $viewData['pageTitle'] = "Cases";
         $professionals = UserWithProfessional::where('user_id',\Auth::user()->unique_id)->get();
+        $pendingApproval = 0;
+        foreach($professionals as $professional){
+            $cases = $professional->Cases($professional->professional,$professional->user_id);
+            if(isset($cases['status']) && $cases['status'] == "success"){
+                //pre($cases);
+                foreach($cases['data'] as $key => $record){
+                    if($record['approve_status'] == "0"){
+                        $pendingApproval++;
+                    }
+                }
+            }
+        }
         $viewData['active_nav'] = 'pending-approval';
         $viewData['professionals'] = $professionals;
+        $viewData['pendingApproval'] = $pendingApproval;
+        
         return view(roleFolder().'.cases.pending-lists',$viewData);
     }
 
@@ -392,7 +419,9 @@ class ProfessionalCasesController extends Controller
     public function documentsExchanger($subdomain,$case_id){
 
         $data['case_id'] = $case_id;
+        $data['client_id'] = \Auth::user()->unique_id;
         $api_response = professionalCurl('cases/documents-exchanger',$subdomain,$data);
+        
         if($api_response['status'] == 'error'){
             return redirect(baseUrl('/cases'))->with("error",$api_response['message']);
         }

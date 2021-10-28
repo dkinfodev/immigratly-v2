@@ -57,7 +57,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{isset($active_nav) && $active_nav == 'pending-approval'?'active':'' }}"
-                        href="{{baseUrl('cases/pending')}}">Pending Approval
+                        href="{{baseUrl('cases/pending')}}">Pending Approval  <span class="text-danger">({{ $pendingApproval }})</span>
                     </a>
                 </li>
 
@@ -253,6 +253,11 @@
                                         href="{{baseUrl('cases/'.$professional->professional.'/invoices/list/'.$record['unique_id'])}}">
                                         <i class="tio-dollar dropdown-item-icon"></i>
                                         Invoices
+                                    </a>
+                                    <a class="dropdown-item"
+                                        href="{{baseUrl('cases/'.$professional->professional.'/dependants/list/'.$record['unique_id'])}}">
+                                        <i class="tio-dollar dropdown-item-icon"></i>
+                                        Users
                                     </a>
                                 </div>
                             </div>

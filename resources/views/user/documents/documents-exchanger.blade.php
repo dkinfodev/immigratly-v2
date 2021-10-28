@@ -1,27 +1,5 @@
 @extends('layouts.master')
 
-<style>
-.all_services li {
-    padding: 16px;
-    border-bottom: 1px solid #ddd;
-}
-.sub_services li {
-    border-bottom: none;
-}
-.document-exchange{
-  cursor: move;
-  padding: 10px 0px;
-}
-.droppable{
-  min-height: 65px;
-  padding-bottom:65px;
-}
-.document-drop {
-    list-style: none;
-    padding: 10px 0px;
-    border: 0.0625rem solid #e7eaf3;
-}
-</style>
 @section('pageheader')
 <!-- Content -->
 <div class="">
@@ -46,6 +24,29 @@
 @endsection
 <!-- End Content -->
 @section('content')
+
+<style>
+.all_services li {
+    padding: 16px;
+    border-bottom: 1px solid #ddd;
+}
+.sub_services li {
+    border-bottom: none;
+}
+.document-exchange{
+  cursor: move;
+  padding: 10px 0px;
+}
+.droppable{
+  min-height: 65px;
+  padding-bottom:65px;
+}
+.document-drop {
+    list-style: none;
+    padding: 10px 0px;
+    border: 0.0625rem solid #e7eaf3;
+}
+</style>
 <!-- Content -->
 <div class="document-exchanger">
   

@@ -720,6 +720,17 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
         Route::get('/fetch-comments/{id}', [App\Http\Controllers\User\ChatGroupsController::class, 'fetchComments']);
         
     }); 
+    Route::group(array('prefix' => 'dependants'), function () {
+        Route::get('/', [App\Http\Controllers\User\DependantsController::class, 'index']);
+        Route::post('/ajax-list', [App\Http\Controllers\User\DependantsController::class, 'getAjaxList']);
+        Route::get('/add', [App\Http\Controllers\User\DependantsController::class, 'add']);
+        Route::post('/save', [App\Http\Controllers\User\DependantsController::class, 'save']);
+        Route::get('/edit/{id}', [App\Http\Controllers\User\DependantsController::class, 'edit']);
+        Route::get('/view/{id}', [App\Http\Controllers\User\DependantsController::class, 'view']);
+        Route::post('/update/{id}', [App\Http\Controllers\User\DependantsController::class, 'update']);
+        Route::get('/delete/{id}', [App\Http\Controllers\User\DependantsController::class, 'deleteSingle']);
+        Route::post('/delete-multiple', [App\Http\Controllers\User\DependantsController::class, 'deleteMultiple']);
+    });
     Route::group(array('prefix' => 'assessments'), function () {
         Route::get('/', [App\Http\Controllers\User\AssessmentsController::class, 'index']);
         Route::post('/ajax-list', [App\Http\Controllers\User\AssessmentsController::class, 'getAjaxList']);

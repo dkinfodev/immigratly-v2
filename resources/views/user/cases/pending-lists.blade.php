@@ -55,8 +55,7 @@
             <a class="nav-link {{isset($active_nav) && $active_nav == 'cases'?'active':'' }}" href="{{baseUrl('cases')}}">Approved</a>                                                                                             
         </li>
         <li class="nav-item">
-            <a class="nav-link {{isset($active_nav) && $active_nav == 'pending-approval'?'active':'' }}" href="{{baseUrl('cases/pending')}}">Pending Approval 
-            </a>
+            <a class="nav-link {{isset($active_nav) && $active_nav == 'pending-approval'?'active':'' }}" href="{{baseUrl('cases/pending')}}">Pending Approval <span class="text-danger">({{ $pendingApproval }})</span></a>
         </li>
         
     </ul>
