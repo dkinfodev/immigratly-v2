@@ -2270,6 +2270,45 @@ if(!function_exists("countUnreadDocChat")){
 }
 
 
+if(!function_exists("countReadDocChat")){
+    function countReadDocChat($case_id,$subdomain,$user_type,$folder_id='',$doc_id=''){
+        if($user_type == 'client'){
+            $count = DB::table(PROFESSIONAL_DATABASE.$subdomain.".document_chats as dc")
+            ->leftJoin(PROFESSIONAL_DATABASE.$subdomain.".case_documents as cd", 'cd.unique_id', '=', 'dc.document_id')
+            ->where("dc.user_read",1)
+            ->where("dc.send_by","!=",$user_type)
+            ->where("dc.case_id",$case_id)
+            ->where(function($query) use($folder_id,$doc_id){
+                if($folder_id != ''){
+                    $query->where("cd.folder_id",$folder_id);
+                }
+                if($doc_id != ''){
+                    $query->where("dc.document_id",$doc_id);
+                }
+            })
+            ->count();
+        }else{
+            $count = DB::table(PROFESSIONAL_DATABASE.$subdomain.".document_chats as dc")
+            ->leftJoin(PROFESSIONAL_DATABASE.$subdomain.".case_documents as cd", 'cd.unique_id', '=', 'dc.document_id')
+            ->where("admin_read",1)
+            ->where("dc.send_by","!=",$user_type)
+            ->where("dc.case_id",$case_id)
+            ->where(function($query) use($folder_id,$doc_id){
+                if($folder_id != ''){
+                    $query->where("cd.folder_id",$folder_id);
+                }
+                if($doc_id != ''){
+                    $query->where("dc.document_id",$doc_id);
+                }
+            })
+            ->count();
+        }
+        
+          
+        return $count;
+    }
+}
+
 if(!function_exists("caseActivityLog")){
     function caseActivityLog($subdomain,$case_id,$user_id,$comment,$added_by){
         $notData['case_id'] = $case_id;         

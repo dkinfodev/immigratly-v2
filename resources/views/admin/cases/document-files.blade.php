@@ -108,7 +108,7 @@
                                         <i class="tio-download-to dropdown-item-icon"></i>
                                         Download
                                     </a>
-                                    <a class="dropdown-item" onclick="showPopup('<?php echo baseUrl('cases/case-documents/rename/'.base64_encode($doc->id)) ?>')">
+                                    <a class="dropdown-item" onclick="showPopup('<?php echo baseUrl('cases/case-documents/rename-file/'.$doc->file_id) ?>')">
                                         <i class="tio-edit dropdown-item-icon"></i>
                                         Rename
                                     </a>

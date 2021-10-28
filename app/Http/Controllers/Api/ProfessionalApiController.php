@@ -1381,4 +1381,50 @@ class ProfessionalApiController extends Controller
         }
         return response()->json($response); 
     }
+    
+    public function updateFilename(Request $request){
+        try{
+            $postData = $request->input();
+            $request->request->add($postData);
+            $id = $request->input("file_id");
+            $current_file = Documents::where("unique_id",$id)->first();
+            $ext = pathinfo($current_file->file_name, PATHINFO_EXTENSION);
+            $file_name = $request->input("name").".".$ext;
+            $new_name = $this->checkFileName($file_name);
+            $sourceDir = professionalDir($this->subdomain)."/documents/".$current_file->file_name;
+            $destinationDir = professionalDir($this->subdomain)."/documents/".$new_name;
+            if(rename($sourceDir,$destinationDir)){
+                $object = Documents::where("unique_id",$id)->first();
+                $object->original_name = $new_name;
+                $object->file_name = $new_name;
+                $object->save();
+
+                $response['status'] = 'success';
+                $response['message'] = "File name renamed";
+            }else{
+                $response['status'] = "error";
+                $response['message'] = "Issue whle renaming file";
+            }
+        } catch (Exception $e) {
+            $response['status'] = "error";
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response); 
+
+    }
+    public function checkFileName($filename){
+     
+        $current_file = Documents::where("original_name",$filename)->count();
+
+        if($current_file > 0){
+            $ext = pathinfo($filename, PATHINFO_EXTENSION);
+            $original_name = str_replace(".".$ext,"",$filename);
+            $count = $current_file+1;
+            $new_name = $original_name."(".$count.").".$ext;
+            $name = $this->checkFileName($new_name);
+            return $name;
+        }else{
+            return $filename;
+        }
+    }
 }

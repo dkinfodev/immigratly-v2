@@ -309,7 +309,7 @@ class CasesController extends Controller
         $case_id = $request->input("case_id");
         $folder_id = $request->input("folder_id");
         $doc_type =  $request->input("doc_type");
-        $case = Cases::find($case_id);
+        $case = Cases::where("unique_id",$case_id)->first();
         $pinned_folders = $case->pinned_folders;
         if($pinned_folders != ''){
             $pinned_folders = json_decode($pinned_folders,true);
@@ -341,7 +341,7 @@ class CasesController extends Controller
         $case_id = $request->input("case_id");
         $folder_id = $request->input("folder_id");
         $doc_type =  $request->input("doc_type");
-        $case = Cases::find($case_id);
+        $case = Cases::where("unique_id",$case_id)->first();
         $pinned_folders = $case->pinned_folders;
         if($pinned_folders != ''){
             $pinned_folders = json_decode($pinned_folders,true);
@@ -899,7 +899,7 @@ class CasesController extends Controller
         
         $user_id = \Auth::user()->unique_id;
         $comment = "Message sent on document (".$request->input("message").")";
-        caseActivityLog($subdomain,$case_id,$user_id,$comment,'user');
+        caseActivityLog($subdomain,$case_id,$user_id,$comment,\Auth::user()->role);
 
         return response()->json($response);
     }
@@ -1001,7 +1001,7 @@ class CasesController extends Controller
                 
                 $user_id = \Auth::user()->unique_id;
                 $comment = "File sent on document (".$request->input("message").")";
-                caseActivityLog($subdomain,$case_id,$user_id,$comment,'admin');
+                caseActivityLog($subdomain,$case_id,$user_id,$comment,\Auth::user()->role);
 
             }else{
                 $response['status'] = true;
@@ -1687,10 +1687,9 @@ class CasesController extends Controller
         return view(roleFolder().'.cases.activity-logs',$viewData);
     }
 
-    public function renameDocument($id,Request $request){
-        $id = base64_decode($id);
-        $record = CaseFolders::find($id);
-        $viewData['case_id'] = $id;
+    public function renameFile($id,Request $request){
+        
+        $record = Documents::where("unique_id",$id)->first();
         $viewData['pageTitle'] = "Rename File";
         $viewData['record'] = $record;
         $view = View::make(roleFolder().'.cases.modal.rename-file',$viewData);
@@ -1698,5 +1697,45 @@ class CasesController extends Controller
         $response['contents'] = $contents;
         $response['status'] = true;
         return response()->json($response);        
+    }
+
+    public function updateFilename($id,Request $request){
+        $id = base64_decode($id);
+        $current_file = Documents::where("id",$id)->first();
+        $ext = pathinfo($current_file->file_name, PATHINFO_EXTENSION);
+        $file_name = $request->input("name").".".$ext;
+        $new_name = $this->checkFileName($file_name);
+        $sourceDir = professionalDir()."/documents/".$current_file->file_name;
+        $destinationDir = professionalDir()."/documents/".$new_name;
+        if(rename($sourceDir,$destinationDir)){
+            $object = Documents::find($id);
+            $object->original_name = $new_name;
+            $object->file_name = $new_name;
+            $object->save();
+
+            $response['status'] = true;
+            $response['message'] = "File name renamed";
+        }else{
+            $response['status'] = false;
+            $response['message'] = "Issue whle renaming file";
+        }
+        return response()->json($response); 
+
+    }
+
+    public function checkFileName($filename){
+     
+        $current_file = Documents::where("original_name",$filename)->count();
+
+        if($current_file > 0){
+            $ext = pathinfo($filename, PATHINFO_EXTENSION);
+            $original_name = str_replace(".".$ext,"",$filename);
+            $count = $current_file+1;
+            $new_name = $original_name."(".$count.").".$ext;
+            $name = $this->checkFileName($new_name);
+            return $name;
+        }else{
+            return $filename;
+        }
     }
 }

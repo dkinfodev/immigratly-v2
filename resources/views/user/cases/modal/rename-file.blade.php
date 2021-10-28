@@ -7,14 +7,14 @@
       </button>
     </div>
     <div class="modal-body">
-      <form method="post" id="popup-form" class="js-validate" action="{{ baseUrl('/cases/case-documents/rename-file/'.base64_encode($record->id)) }}">  
+      <form method="post" id="popup-form" class="js-validate" action="{{ baseUrl('/cases/documents/rename-file/'.$subdomain.'/'.$record['unique_id']) }}">  
           @csrf
           <!-- Form Group -->
           <div class="row form-group js-form-message">
             <label class="col-sm-3 col-form-label input-label">Rename File</label>
             <div class="col-sm-9">
               <div class="input-group input-group-sm-down-break">
-                <input type="text" class="form-control @error('file_name') is-invalid @enderror" name="name" id="name" value="{{ $record->name }}" placeholder="Enter folder name" aria-label="Enter folder name" >
+                <input type="text" class="form-control @error('file_name') is-invalid @enderror" name="name" id="name" value="" placeholder="Enter folder name" aria-label="Enter folder name" >
                 @error('file_name')
                 <span class="invalid-feedback" role="alert">
                   <strong>{{ $message }}</strong>
@@ -56,7 +56,11 @@
                   closeModal();
                   location.reload();
                 }else{
+                  if(response.error_type=='validation'){
                     validation(response.message);
+                  }else{
+                    errorMessage(response.message);
+                  }
                 }
               },
               error:function(){

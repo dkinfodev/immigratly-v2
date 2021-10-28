@@ -904,6 +904,9 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
             // Route::post('/fetch-document-chats', [App\Http\Controllers\User\ProfessionalCasesController::class, 'fetchDocumentChats']);
             Route::post('/send-chats', [App\Http\Controllers\User\ProfessionalCasesController::class, 'saveDocumentChat']);
             Route::post('/send-chat-file', [App\Http\Controllers\User\ProfessionalCasesController::class, 'saveDocumentChatFile']);
+
+            Route::get('/rename-file/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'renameFile']);
+            Route::post('/rename-file/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'updateFilename']);
         });
         Route::post('/upload-documents/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'uploadDocuments']);
         Route::get('/documents-exchanger/{subdomain}/{case_id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'documentsExchanger']);
@@ -1130,6 +1133,9 @@ Route::group(array('prefix' => 'admin'), function () {
                 Route::post('/fetch-chats', [App\Http\Controllers\Admin\CasesController::class, 'fetchDocumentChats']);
                 Route::post('/send-chats', [App\Http\Controllers\Admin\CasesController::class, 'saveDocumentChat']);
                 Route::post('/send-chat-file', [App\Http\Controllers\Admin\CasesController::class, 'saveDocumentChatFile']);
+
+                Route::get('/rename-file/{id}', [App\Http\Controllers\Admin\CasesController::class, 'renameFile']);
+                Route::post('/rename-file/{id}', [App\Http\Controllers\Admin\CasesController::class, 'updateFilename']);
             });
         
             Route::group(array('prefix' => 'invoices'), function () {

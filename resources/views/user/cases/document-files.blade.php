@@ -88,7 +88,13 @@ span.comment-document-counter {
                                     if($doc_chats > 0){
                                 ?>
                                     <li class="list-inline-item text-danger">{{$doc_chats}} chats</li>
-                                <?php } ?>
+                                <?php }else{
+                                    $doc_chats = countReadDocChat($case_id,$subdomain,"client",$doc['folder_id'],$doc['unique_id']);
+                                ?>
+                                    <li class="list-inline-item text-dark">{{$doc_chats}} chats</li>
+                                <?php
+                                } 
+                                ?>
                             </ul>
                         </div>
 
@@ -110,6 +116,10 @@ span.comment-document-counter {
                                     <a class="dropdown-item" download href="{{ $doc_url }}">
                                         <i class="tio-download-to dropdown-item-icon"></i>
                                         Download
+                                    </a>
+                                    <a class="dropdown-item" href="javascript:;" onclick="showPopup('<?php echo baseUrl('cases/documents/rename-file/'.$subdomain.'/'.$doc['file_id']) ?>')">
+                                        <i class="tio-edit dropdown-item-icon"></i>
+                                        Rename
                                     </a>
                                     @if($doc['created_by'] == Auth::user()->unique_id)
                                     <a class="dropdown-item text-danger" href="javascript:;"

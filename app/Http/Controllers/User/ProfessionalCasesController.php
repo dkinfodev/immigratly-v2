@@ -1706,4 +1706,55 @@ class ProfessionalCasesController extends Controller
         $viewData['activity_logs'] = $activity_logs;
         return view(roleFolder().'.cases.activity-logs',$viewData);
     }
+
+    public function renameFile($subdomain,$id,Request $request){
+        
+        $data['document_id'] = $id;
+        $api_response = professionalCurl('cases/document-detail',$subdomain,$data);
+        if(isset($api_response['status']) && $api_response['status'] == 'success'){
+            $record = $api_response['data']['record'];
+        }else{
+            $record = array();
+        }
+        $viewData['subdomain'] = $subdomain;
+        $viewData['pageTitle'] = "Rename File";
+        $viewData['record'] = $record;
+        $view = View::make(roleFolder().'.cases.modal.rename-file',$viewData);
+        $contents = $view->render();
+        $response['contents'] = $contents;
+        $response['status'] = true;
+        return response()->json($response);        
+    }
+
+    public function updateFilename($subdomain,$id,Request $request){
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $response['status'] = false;
+            $response['error_type'] = 'validation';
+            $error = $validator->errors()->toArray();
+            $errMsg = array();
+            
+            foreach($error as $key => $err){
+                $errMsg[$key] = $err[0];
+            }
+            $response['message'] = $errMsg;
+            return response()->json($response);
+        }
+        $data['file_id'] = $id;
+        $data['name'] = $request->input("name");
+        $api_response = professionalCurl('cases/rename-filename',$subdomain,$data);
+        if(isset($api_response['status']) && $api_response['status'] == 'success'){
+            $response['status'] = true;
+            $response['message'] = "File name renamed";
+        }else{
+            $response['status'] = false;
+            $response['error_type'] = 'other';
+            $response['message'] = "Issue whle renaming file";
+        }
+        return response()->json($response); 
+
+    }
 }
