@@ -72,3 +72,16 @@
     display:none;
     top:0px;
 }
+.js-form-message .invalid-feedback {
+    display: block !important;
+  }
+  span.select2-selection.select2-selection--single {
+    border: 0.0625rem solid rgba(33, 50, 91, 0.1);
+}
+.select2-selection__rendered {
+    height: 50px;
+    padding: 10px 8px;
+}
+.select2-selection__arrow {
+    height: 50px !important;
+}

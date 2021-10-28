@@ -68,10 +68,16 @@
                     else{
                         $folder_data = $folder->caseDoc($folder->folder_id,$subdomain);
                     }
+
+                    if($folder->folder_type != 'mydoc'){
+                        $furl = baseUrl("cases/documents/".$folder->folder_type."/".$subdomain."/".$case_id."/".$folder->folder_id);
+                    }else{
+                        $furl = baseUrl("documents/files/lists/".$folder->folder_id);
+                    }
                 ?>
                 <div class="col mb-3 mb-lg-5">
                     <!-- Card -->
-                    <a class="card card-sm card-hover-shadow h-100 text-center" href="javascript:;">
+                    <div class="card card-sm card-hover-shadow h-100 text-center" href="javascript:;">
                         <!-- Checkbox -->
                         <div class="custom-control custom-checkbox-switch card-pinned">
                             <input type="checkbox" onchange="unpinFolder(this)" data-foldertype="{{$folder->folder_type}}" data-folderid="{{$folder->folder_id}}" data-pinid="{{$folder->id}}" id="starredCheckbox1"
@@ -100,14 +106,17 @@
 
 
                         <div class="card-footer border-top-0">
+                            <a href="{{$furl}}">
                             <span class="d-block font-size-sm text-muted mb-1">{{$file_counts}} files</span>
                             @if(!empty($folder_data))
-                            <h5>{{$folder_data->name}}</h5>
+                            <h5>{{$folder_data->name}} </h5>
                             @else
                             <h5>N/A</h5>
                             @endif
+                            </a>
+                            
                         </div>
-                    </a>
+                </div>
                     <!-- End Card -->
                 </div>
                 @endforeach
@@ -117,7 +126,6 @@
             <!-- Header -->
 
             <!-- End Header -->
-            @if(count($case_folders) > 0)
             <div class="row align-items-center mb-2">
                 <div class="col">
                     <h2 class="h4 mb-0">Files</h2>
@@ -171,7 +179,12 @@
                                                 if($doc_chats > 0){
                                             ?>
                                                 <li class="list-inline-item text-danger">{{$doc_chats}} chats</li>
-                                            <?php } ?>
+                                            <?php }else{
+                                                $doc_chats = countReadDocChat($case_id,$subdomain,"client",$document['unique_id']);
+                                            ?>
+                                                    <li class="list-inline-item text-dark">{{$doc_chats}} chats</li>
+                                            <?php
+                                            } ?>
 
                                         </ul>
                                     </a>
@@ -188,14 +201,14 @@
                                     
                                     @endif
                                     <?php
-                                        $checkPin = pinCaseFolder($case_id,$document['unique_id'],'case');
+                                        $checkPin = pinCaseFolder($case_id,$document['unique_id'],'extra');
                                         
                                         if(!empty($checkPin)){
                                     ?>
-                                    <a title="Unpin Folder" href="javascript:;" onclick="unpinFolder(this)" data-foldertype="case" data-folderid="{{$document['unique_id']}}" data-pinid="{{$checkPin->id}}"
+                                    <a title="Unpin Folder" href="javascript:;" onclick="unpinFolder(this)" data-foldertype="extra" data-folderid="{{$document['unique_id']}}" data-pinid="{{$checkPin->id}}"
                                         class="btn btn-sm btn-info js-nav-tooltip-link"><i class="tio-pin"></i></a>
                                     <?php }else{ ?>
-                                    <a title="Pin Folder" href="javascript:;" onclick="pinFolder(this)" data-foldertype="case" data-folderid="{{$document['unique_id']}}"
+                                    <a title="Pin Folder" href="javascript:;" onclick="pinFolder(this)" data-foldertype="extra" data-folderid="{{$document['unique_id']}}"
                                         class="btn btn-sm btn-primary js-nav-tooltip-link"><i class="tio-pin"></i></a>
                                     <?php } ?>
                                 </div>
@@ -238,7 +251,13 @@
                                                 if($doc_chats > 0){
                                             ?>
                                                 <li class="list-inline-item text-danger">{{$doc_chats}} chats</li>
-                                            <?php } ?>
+                                            <?php }else{
+                                                $doc_chats = countReadDocChat($case_id,$subdomain,"client",$document['unique_id']);
+                                            ?>
+                                            <li class="list-inline-item text-dark">{{$doc_chats}} chats</li>
+                                            <?php
+                                            } 
+                                            ?>
                                         </ul>
                                     </a>
                                 </div>
@@ -296,14 +315,14 @@
                                 </div>
                                 <div class="col-auto">
                                 <?php
-                                    $checkPin = pinCaseFolder($case_id,$document['unique_id'],'case');
+                                    $checkPin = pinCaseFolder($case_id,$document['unique_id'],'other');
                                     
                                     if(!empty($checkPin)){
                                 ?>
-                                <a title="Unpin Folder" href="javascript:;" onclick="unpinFolder(this)" data-foldertype="case" data-folderid="{{$document['unique_id']}}" data-pinid="{{$checkPin->id}}"
+                                <a title="Unpin Folder" href="javascript:;" onclick="unpinFolder(this)" data-foldertype="other" data-folderid="{{$document['unique_id']}}" data-pinid="{{$checkPin->id}}"
                                     class="btn btn-sm btn-info js-nav-tooltip-link"><i class="tio-pin"></i></a>
                                 <?php }else{ ?>
-                                <a title="Pin Folder" href="javascript:;" onclick="pinFolder(this)" data-foldertype="case" data-folderid="{{$document['unique_id']}}"
+                                <a title="Pin Folder" href="javascript:;" onclick="pinFolder(this)" data-foldertype="other" data-folderid="{{$document['unique_id']}}"
                                     class="btn btn-sm btn-primary js-nav-tooltip-link"><i class="tio-pin"></i></a>
                                 <?php } ?>
                                     <!-- <a href="<?php echo baseUrl("cases/documents/other/".$subdomain."/".$case_id."/".$document['unique_id']) ?>" 
@@ -321,7 +340,6 @@
                 </div>
             </div>
             <!-- End Tab Content -->
-            @endif
             <!-- Header -->
             <div class="row align-items-center mb-2 mt-4">
                 <div class="col">
@@ -359,15 +377,19 @@
                     <span class="folder-label-professional">My Documents</span>
                     <ul class="list-group" id="accordionMyDoc">
                         <!-- List Item -->
-
+                        @if(count($user_folders) > 0)
                         @foreach($user_folders as $key => $document)
                         <li class="list-group-item draggable document-folder" data-foldername="{{$document->name}}"
-                            data-folder="{{$document['name']}}" data-doctype="default"
+                            data-folder="{{$document->name}}" data-doctype="default"
                             data-docid="{{ $document->unique_id }}">
                             <div class="row">
                                 <div class="col-auto">
-                                    <img class="avatar avatar-xs avatar-4by3" src="assets/svg/folder-files.svg"
-                                        alt="Image Description">
+                                    @if(count($document->Files) > 0)
+                                    <img class="avatar avatar-xs avatar-4by3" src="assets/svg/folder-files2.svg" alt="Image Description">
+                                    @else
+                                    <img class="avatar avatar-xs avatar-4by3" src="assets/svg/folder-green.svg" alt="Image Description">
+                                    @endif
+                                 
                                 </div>
 
                                 <div class="col" data-toggle="collapse" data-target="#collapseMyDoc-{{ $key }}"
@@ -409,7 +431,9 @@
                         </li>
                         <!-- End List Item -->
                         @endforeach
-
+                        @else
+                        <li class="list-group-item mt-3 text-center text-danger">No Personal Folders</li>
+                        @endif
                     </ul>
                 </div>
             </div>
@@ -447,11 +471,11 @@ $(document).on('ready', function() {
     $('.js-nav-tooltip-link').tooltip({
         boundary: 'window'
     });
-    $('.js-sticky-block').each(function () {
-        var stickyBlock = new HSStickyBlock($(this), {
-            targetSelector: $('#header').hasClass('navbar-fixed') ? '#header' : null
-        }).init();
-    });
+    // $('.js-sticky-block').each(function () {
+    //     var stickyBlock = new HSStickyBlock($(this), {
+    //         targetSelector: $('#header').hasClass('navbar-fixed') ? '#header' : null
+    //     }).init();
+    // });
     $('.draggable').draggable({
         revert: true,
         revertDuration: 0,

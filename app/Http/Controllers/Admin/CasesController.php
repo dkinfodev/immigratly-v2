@@ -26,7 +26,7 @@ use App\Models\ProfessionalDetails;
 use App\Models\CaseTasks;
 use App\Models\CaseTaskComments;
 use App\Models\CaseTaskFiles;
-
+use App\Models\CaseActivityLogs;
 
 use File;
 
@@ -309,7 +309,7 @@ class CasesController extends Controller
         $case_id = $request->input("case_id");
         $folder_id = $request->input("folder_id");
         $doc_type =  $request->input("doc_type");
-        $case = Cases::find($case_id);
+        $case = Cases::where("unique_id",$case_id)->first();
         $pinned_folders = $case->pinned_folders;
         if($pinned_folders != ''){
             $pinned_folders = json_decode($pinned_folders,true);
@@ -341,7 +341,7 @@ class CasesController extends Controller
         $case_id = $request->input("case_id");
         $folder_id = $request->input("folder_id");
         $doc_type =  $request->input("doc_type");
-        $case = Cases::find($case_id);
+        $case = Cases::where("unique_id",$case_id)->first();
         $pinned_folders = $case->pinned_folders;
         if($pinned_folders != ''){
             $pinned_folders = json_decode($pinned_folders,true);
@@ -561,7 +561,25 @@ class CasesController extends Controller
                     $object2->save();
                     $response['status'] = true;
                     $response['message'] = 'File uploaded!';
+                    $case_id = $record->unique_id;
+                    $user_id = \Auth::user()->unique_id;
+                    if($document_type == 'default'){
+                        $document = DB::table(MAIN_DATABASE.".documents_folder")
+                                    ->where("unique_id",$folder_id)
+                                    ->first();
+                        $comment = "File addded to folder ".$document->name; 
+        
+                    }
                     
+                    if($document_type == 'other'){
+                        $document = ServiceDocuments::where("unique_id",$folder_id)->first();
+                        $comment = "File addded to folder ".$document->name;         
+                    }
+                    if($document_type == 'extra'){
+                        $document = CaseFolders::where("unique_id",$folder_id)->first();
+                        $comment = "File addded to folder ".$document->name;         
+                    }
+                    caseActivityLog(\Session::get('subdomain'),$case_id,$user_id,$comment,\Auth::user()->role);
                 }else{
                     $response['status'] = false;
                     $response['message'] = 'File not uploaded!';
@@ -879,6 +897,10 @@ class CasesController extends Controller
         sendNotification($not_data,"user");
         // sendNotification($not_data,"user");
         
+        $user_id = \Auth::user()->unique_id;
+        $comment = "Message sent on document (".$request->input("message").")";
+        caseActivityLog($subdomain,$case_id,$user_id,$comment,\Auth::user()->role);
+
         return response()->json($response);
     }
 
@@ -977,6 +999,10 @@ class CasesController extends Controller
                 }
                 sendNotification($not_data,"user");
                 
+                $user_id = \Auth::user()->unique_id;
+                $comment = "File sent on document (".$request->input("message").")";
+                caseActivityLog($subdomain,$case_id,$user_id,$comment,\Auth::user()->role);
+
             }else{
                 $response['status'] = true;
                 $response['message'] = "File send failed, try again!";
@@ -1631,5 +1657,85 @@ class CasesController extends Controller
         $response['status'] = true;
         $response['content'] = $document;
         return response()->json($response);
+    }
+
+    public function activityLog($case_id){
+        $case_id = base64_decode($case_id);
+        $record = Cases::with(['AssingedMember','VisaService'])
+                    ->where("id",$case_id)
+                    ->first();
+        $temp = $record;
+        $temp->MainService = $record->Service($record->VisaService->service_id);
+        $data = $temp;
+        $subdomain = \Session::get("subdomain");
+        $viewData['subdomain'] = $subdomain;
+        $viewData['pageTitle'] = "View Case";
+        $viewData['record'] = $data;
+        $viewData['case_id'] = $record->unique_id;
+
+        $activity_logs = CaseActivityLogs::where("case_id",$record->unique_id)
+                        ->orderBy("id","desc")
+                        ->groupBy(\DB::raw("DATE(created_at)"))
+                        ->get();
+       
+        $viewData['case_id'] = $case_id;
+        $viewData['subdomain'] = $subdomain;
+        $viewData['pageTitle'] = "View Case";
+        $viewData['record'] = $record;
+        $viewData['active_nav'] = "activity";
+        $viewData['activity_logs'] = $activity_logs;
+        return view(roleFolder().'.cases.activity-logs',$viewData);
+    }
+
+    public function renameFile($id,Request $request){
+        
+        $record = Documents::where("unique_id",$id)->first();
+        $viewData['pageTitle'] = "Rename File";
+        $viewData['record'] = $record;
+        $view = View::make(roleFolder().'.cases.modal.rename-file',$viewData);
+        $contents = $view->render();
+        $response['contents'] = $contents;
+        $response['status'] = true;
+        return response()->json($response);        
+    }
+
+    public function updateFilename($id,Request $request){
+        $id = base64_decode($id);
+        $current_file = Documents::where("id",$id)->first();
+        $ext = pathinfo($current_file->file_name, PATHINFO_EXTENSION);
+        $file_name = $request->input("name").".".$ext;
+        $new_name = $this->checkFileName($file_name);
+        $sourceDir = professionalDir()."/documents/".$current_file->file_name;
+        $destinationDir = professionalDir()."/documents/".$new_name;
+        if(rename($sourceDir,$destinationDir)){
+            $object = Documents::find($id);
+            $object->original_name = $new_name;
+            $object->file_name = $new_name;
+            $object->save();
+
+            $response['status'] = true;
+            $response['message'] = "File name renamed";
+        }else{
+            $response['status'] = false;
+            $response['message'] = "Issue whle renaming file";
+        }
+        return response()->json($response); 
+
+    }
+
+    public function checkFileName($filename){
+     
+        $current_file = Documents::where("original_name",$filename)->count();
+
+        if($current_file > 0){
+            $ext = pathinfo($filename, PATHINFO_EXTENSION);
+            $original_name = str_replace(".".$ext,"",$filename);
+            $count = $current_file+1;
+            $new_name = $original_name."(".$count.").".$ext;
+            $name = $this->checkFileName($new_name);
+            return $name;
+        }else{
+            return $filename;
+        }
     }
 }

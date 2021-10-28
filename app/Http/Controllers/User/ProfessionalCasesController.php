@@ -86,6 +86,7 @@ class ProfessionalCasesController extends Controller
     public function caseDocuments($subdomain,$case_id){
 
         $data['case_id'] = $case_id;
+       
         $case = professionalCurl('cases/documents',$subdomain,$data);
   
         $record = array();
@@ -97,11 +98,13 @@ class ProfessionalCasesController extends Controller
         $data['case_id'] = $case_id;
         $data['client_id'] = \Auth::user()->unique_id;
         $case_view = professionalCurl('cases/view',$subdomain,$data);
+        
         if(isset($case_view['status']) && $case_view['status'] == 'success'){
             $record = $case_view['data'];
         }else{
             $record = array();
         }
+    
         if(isset($case['status']) && $case['status'] == 'success'){
             $case_data = $case['data'];
             $service = $case_data['service'];
@@ -109,6 +112,7 @@ class ProfessionalCasesController extends Controller
             $documents = $case_data['documents'];
             $viewData['pageTitle'] = "Documents for ".$service['MainService']['name'];
         }
+  
         $user_id = \Auth::user()->unique_id;
         $user_folders = UserFolders::where("user_id",$user_id)->get();
         $pin_folders = PinCaseFolder::where("case_id",$case_id)->get();
@@ -1693,7 +1697,7 @@ class ProfessionalCasesController extends Controller
         }else{
             $activity_logs = array();
         }
-       
+        
         $viewData['case_id'] = $case_id;
         $viewData['subdomain'] = $subdomain;
         $viewData['pageTitle'] = "View Case";
@@ -1701,5 +1705,56 @@ class ProfessionalCasesController extends Controller
         $viewData['active_nav'] = "activity";
         $viewData['activity_logs'] = $activity_logs;
         return view(roleFolder().'.cases.activity-logs',$viewData);
+    }
+
+    public function renameFile($subdomain,$id,Request $request){
+        
+        $data['document_id'] = $id;
+        $api_response = professionalCurl('cases/document-detail',$subdomain,$data);
+        if(isset($api_response['status']) && $api_response['status'] == 'success'){
+            $record = $api_response['data']['record'];
+        }else{
+            $record = array();
+        }
+        $viewData['subdomain'] = $subdomain;
+        $viewData['pageTitle'] = "Rename File";
+        $viewData['record'] = $record;
+        $view = View::make(roleFolder().'.cases.modal.rename-file',$viewData);
+        $contents = $view->render();
+        $response['contents'] = $contents;
+        $response['status'] = true;
+        return response()->json($response);        
+    }
+
+    public function updateFilename($subdomain,$id,Request $request){
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $response['status'] = false;
+            $response['error_type'] = 'validation';
+            $error = $validator->errors()->toArray();
+            $errMsg = array();
+            
+            foreach($error as $key => $err){
+                $errMsg[$key] = $err[0];
+            }
+            $response['message'] = $errMsg;
+            return response()->json($response);
+        }
+        $data['file_id'] = $id;
+        $data['name'] = $request->input("name");
+        $api_response = professionalCurl('cases/rename-filename',$subdomain,$data);
+        if(isset($api_response['status']) && $api_response['status'] == 'success'){
+            $response['status'] = true;
+            $response['message'] = "File name renamed";
+        }else{
+            $response['status'] = false;
+            $response['error_type'] = 'other';
+            $response['message'] = "Issue whle renaming file";
+        }
+        return response()->json($response); 
+
     }
 }

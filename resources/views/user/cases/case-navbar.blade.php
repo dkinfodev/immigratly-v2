@@ -28,7 +28,7 @@
                   <div class="col-auto">Visa Service:</div>
 
                   <!-- Flatpickr -->
-                  <div id="projectDeadlineFlatpickr" class="js-flatpickr flatpickr-custom flatpickr-custom-borderless col input-group input-group-sm">
+                  <div id="projectDeadlineFlatpickr" class="mr-3 col input-group input-group-sm">
                    
                     @if(!empty($record['MainService']))
                     <span class="text-primary">
@@ -49,7 +49,7 @@
                   <div class="col-auto">Start date:</div>
 
                   <!-- Flatpickr -->
-                  <div id="projectDeadlineFlatpickr" class="js-flatpickr flatpickr-custom flatpickr-custom-borderless col input-group input-group-sm">
+                  <div id="projectDeadlineFlatpickr" class="mr-3 col input-group input-group-sm">
                     <span class="text-primary"> {{ $record['start_date'] }}</span>
                   </div>
                   <!-- End Flatpickr -->
@@ -62,7 +62,7 @@
                   <div class="col-auto">Due date:</div>
 
                   <!-- Flatpickr -->
-                  <div id="projectDeadlineFlatpickr" class="js-flatpickr flatpickr-custom flatpickr-custom-borderless col input-group input-group-sm">
+                  <div id="projectDeadlineFlatpickr" class="mr-3 col input-group input-group-sm">
                     <span class="text-primary"> {{ $record['end_date'] }}</span>
                   </div>
                   <!-- End Flatpickr -->
@@ -145,14 +145,6 @@
             <a class="nav-link {{isset($active_nav) && $active_nav == 'invoices'?'active':'' }}" href="{{baseUrl('cases/'.$subdomain.'/invoices/list/'.$record['unique_id'])}}">
             Invoice
             </a>
-            <!-- <a class="nav-link " href="02-master-user-container-invoice-view.html">Invoice</a> -->
-        </li>
-        <li class="nav-item">
-            <a class="nav-link " href="project-teams.html">Teams</a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link " href="project-settings.html">Settings</a>
         </li>
     </ul>
 </div>

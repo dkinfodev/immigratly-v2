@@ -127,7 +127,7 @@ class DashboardController extends Controller
 
         $response['status'] = true;
         $response['redirect_back'] = baseUrl('/');
-        $response['message'] = "Profile updated sucessfully";
+        $response['message'] = "Profile successfully completed";
         
         return response()->json($response);
     }

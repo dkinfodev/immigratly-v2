@@ -44,11 +44,11 @@
               <!-- Form Group -->
               <div class="form-group js-form-message">
                 <label class="input-label">Bill to:</label>
-                  <textarea class="form-control" required placeholder="Who is this invoice from?" name="bill_to" aria-label="Who is this invoice from?" rows="5">{{$client->first_name." ".$client->last_name}},
-                  {{$client->address}},
-                  {{$client->city_name}}, {{$client->state_name}},
-                  {{$client->country_name}}
-                  </textarea>
+<textarea class="form-control" required placeholder="Who is this invoice from?" name="bill_to" aria-label="Who is this invoice from?" rows="5">{{$client->first_name." ".$client->last_name}},
+{{$client->address}},
+{{$client->city_name}}, {{$client->state_name}},
+{{$client->country_name}}
+</textarea>
               </div>
               <!-- End Form Group -->
               <div class="form-group mb-0 js-form-message">
@@ -56,13 +56,13 @@
                   <dt class="col-md-3 col-md text-sm-left mb-2 mb-sm-0">Invoice date:</dt>
                   <dd class="col-md-9 col-md-auto mb-0">
                     <!-- Flatpickr -->
-                    <div class="js-flatpickr flatpickr-custom input-group input-group-merge js-form-message">
+                    <div class="input-group input-group-merge js-form-message">
                        <div class="input-group-prepend" data-toggle>
                           <div class="input-group-text">
                              <i class="tio-date-range"></i>
                           </div>
                        </div>
-                       <input required type="text" name="invoice_date" class="flatpickr-custom-form-control form-control" id="invoice_date" placeholder="Select Invoice Date" data-input value="">
+                       <input required type="text" name="invoice_date" class="form-control" id="invoice_date" placeholder="Select Invoice Date" data-input value="">
                     </div>
                     <!-- End Flatpickr -->
                   </dd>
@@ -73,14 +73,14 @@
               <!-- Form Group -->
               <div class="form-group text-left js-form-message">
                 <label class="input-label">Bill From:</label>
-        <textarea class="form-control text-right" required placeholder="Who is this invoice from?" name="bill_from" aria-label="Who is this invoice from?" rows="5">{{$professional->company_name}}
-        {{$professional->address}},
-        @if(!empty($professional->City($professional->city_id)))
-        {{$professional->City($professional->city_id)->name}},{{$professional->State($professional->state_id)->name}},
-        @endif
-        @if(!empty($professional->Country($professional->country_id)))
-        {{$professional->Country($professional->country_id)->name}}
-        @endif</textarea>
+<textarea class="form-control text-right" required placeholder="Who is this invoice from?" name="bill_from" aria-label="Who is this invoice from?" rows="5">{{$professional->company_name}}
+{{$professional->address}},
+@if(!empty($professional->City($professional->city_id)))
+{{$professional->City($professional->city_id)->name}},{{$professional->State($professional->state_id)->name}},
+@endif
+@if(!empty($professional->Country($professional->country_id)))
+{{$professional->Country($professional->country_id)->name}}
+@endif</textarea>
               </div>
               <!-- End Form Group -->
               <div class="form-group mb-0 js-form-message">
@@ -88,13 +88,13 @@
                   <dt class="col-md-3 col-md text-sm-left mb-2 mb-sm-0">Due date:</dt>
                   <dd class="col-md-9 col-md-auto mb-0">
                     <!-- Flatpickr -->
-                    <div class="js-flatpickr flatpickr-custom input-group input-group-merge js-form-message">
+                    <div class="input-group input-group-merge js-form-message">
                        <div class="input-group-prepend" data-toggle>
                           <div class="input-group-text">
                              <i class="tio-date-range"></i>
                           </div>
                        </div>
-                       <input required type="text" name="due_date" class="flatpickr-custom-form-control form-control" id="due_date" placeholder="Select Due Date" data-input value="">
+                       <input required type="text" name="due_date" class="form-control" id="due_date" placeholder="Select Due Date" data-input value="">
                     </div>
                     <!-- End Flatpickr -->
                   </dd>

@@ -554,7 +554,7 @@ class ProfessionalApiController extends Controller
                 $document = CaseFolders::where("unique_id",$folder_id)->first();
                 $comment = "File addded to folder ".$document->name;         
             }
-            caseActivityLog($this->subdomain,$case_id,$user_id,$comment);
+            caseActivityLog($this->subdomain,$case_id,$user_id,$comment,'user');
             $response['status'] = "success";
             $response['message'] = "File uploaded!";
 
@@ -864,7 +864,7 @@ class ProfessionalApiController extends Controller
             $case_id = $request->input("case_id");
             $user_id = $request->input("created_by");
             $comment = "Message sent on document (".$request->input("message").")";
-            caseActivityLog($this->subdomain,$case_id,$user_id,$comment);
+            caseActivityLog($this->subdomain,$case_id,$user_id,$comment,'user');
 
             $response['status'] = "success";
             $response['message'] = "Message send successfully";
@@ -1362,17 +1362,69 @@ class ProfessionalApiController extends Controller
             $case_id = $request->input("case_id");
             $client_id = $request->input("client_id");
             $records = CaseActivityLogs::where("case_id",$case_id)
-                        ->where("user_id",$client_id)
                         ->orderBy("id","desc")
+                        ->groupBy(\DB::raw("DATE(created_at)"))
                         ->get();
-            
+            $activity_logs = array();
+            foreach($records as $record){
+                $temp = $record;
+                $log_date = dateFormat($record->created_at,"Y-m-d");
+                $temp->activityLogs = $record->dateWiseLogs($record->case_id,$log_date);
+                $activity_logs[] = $temp;
+            }
             $response['status'] = 'success';
-            $response['records'] = $records;
+            $response['records'] = $activity_logs;
 
         } catch (Exception $e) {
             $response['status'] = "error";
             $response['message'] = $e->getMessage();
         }
         return response()->json($response); 
+    }
+    
+    public function updateFilename(Request $request){
+        try{
+            $postData = $request->input();
+            $request->request->add($postData);
+            $id = $request->input("file_id");
+            $current_file = Documents::where("unique_id",$id)->first();
+            $ext = pathinfo($current_file->file_name, PATHINFO_EXTENSION);
+            $file_name = $request->input("name").".".$ext;
+            $new_name = $this->checkFileName($file_name);
+            $sourceDir = professionalDir($this->subdomain)."/documents/".$current_file->file_name;
+            $destinationDir = professionalDir($this->subdomain)."/documents/".$new_name;
+            if(rename($sourceDir,$destinationDir)){
+                $object = Documents::where("unique_id",$id)->first();
+                $object->original_name = $new_name;
+                $object->file_name = $new_name;
+                $object->save();
+
+                $response['status'] = 'success';
+                $response['message'] = "File name renamed";
+            }else{
+                $response['status'] = "error";
+                $response['message'] = "Issue whle renaming file";
+            }
+        } catch (Exception $e) {
+            $response['status'] = "error";
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response); 
+
+    }
+    public function checkFileName($filename){
+     
+        $current_file = Documents::where("original_name",$filename)->count();
+
+        if($current_file > 0){
+            $ext = pathinfo($filename, PATHINFO_EXTENSION);
+            $original_name = str_replace(".".$ext,"",$filename);
+            $count = $current_file+1;
+            $new_name = $original_name."(".$count.").".$ext;
+            $name = $this->checkFileName($new_name);
+            return $name;
+        }else{
+            return $filename;
+        }
     }
 }

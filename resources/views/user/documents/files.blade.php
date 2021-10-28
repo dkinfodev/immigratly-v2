@@ -36,6 +36,29 @@
                 <div class="col">
                     <h1 class="page-header-title">{{$pageTitle}}</h1>
                 </div>
+                <div class="col-sm-auto">
+                    <div role="group">
+                        @if($user_detail->dropbox_auth != '')
+                        <a class="btn btn-outline-primary"
+                            onclick="showPopup('<?php echo baseUrl('documents/dropbox/folder/'.$document->unique_id) ?>')"
+                            href="javascript:;"><i class="tio-google-drive mr-1"></i> Upload from Dropbox</a>
+                        @endif
+                        @if($user_detail->google_drive_auth != '')
+                        <a class="btn btn-outline-primary"
+                            onclick="showPopup('<?php echo baseUrl('documents/google-drive/folder/'.$document->unique_id) ?>')"
+                            href="javascript:;"><i class="tio-google-drive mr-1"></i> Upload from Google Drive</a>
+                        @endif
+                        <a class="upload-btn btn btn-info collapsed" href="javascript:;" data-toggle="collapse" data-target="#collapseOne"
+                            aria-expanded="true" aria-controls="collapseOne"><i class="tio-upload-on-cloud mr-1"></i>
+                            Upload
+                            <span class="ml-2 card-btn-toggle">
+                                <i class="fa fa-plus plus text-white"></i>
+                                <i class="fa fa-minus minus text-white"></i>
+                            </span>
+                        </a>
+                        <a class="btn btn-primary" href="{{ baseUrl('/documents') }}">Back</a>
+                    </div>
+                </div>
             </div>
             <!-- End Row -->
         </div>
@@ -48,6 +71,32 @@
 <!-- Content -->
 <!-- Content -->
 <div class="files">
+    <div id="collapseOne" class="collapse" aria-labelledby="headingOne">
+        <div class="card-body">
+            <div class="float-right">
+                <button type="button" onclick="clearDropzone()" class="btn btn-outline-danger mb-3"><i class="tio-delete"></i> Clear Files</button>
+            </div>
+            <div class="clearfix"></div>
+            <!-- Dropzone -->
+            <div id="attachFilesLabel" class="js-dropzone dropzone-custom custom-file-boxed"
+                data-hs-dropzone-options='{
+                "url": "<?php echo baseUrl('documents/files/upload-documents') ?>?_token=<?php echo csrf_token() ?>&folder_id=<?php echo $document->unique_id ?>",
+                "thumbnailWidth": 100,
+                "thumbnailHeight": 100,
+                "maxFilesize":18,
+                "acceptedFiles":"{{$ext_files}}"
+            }'>
+                <div class="dz-message custom-file-boxed-label">
+                    <img class="avatar avatar-xl avatar-4by3 mb-3" src="./assets/svg/illustrations/browse.svg"
+                        alt="Image Description">
+                    <h5 class="mb-1">Drag and drop your file here</h5>
+                    <p class="mb-2">or</p>
+                    <span class="btn btn-sm btn-white">Browse files</span>
+                </div>
+            </div>
+            <!-- End Dropzone -->
+        </div>
+    </div>
     <!-- Page Header -->
   
     <!-- End Page Header -->

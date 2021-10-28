@@ -805,11 +805,11 @@
         
         // INITIALIZATION OF STICKY BLOCKS
         // =======================================================
-        $('.js-sticky-block').each(function () {
+        /*$('.js-sticky-block').each(function () {
           var stickyBlock = new HSStickyBlock($(this), {
             targetSelector: $('#header').hasClass('navbar-fixed') ? '#header' : null
           }).init();
-        });
+        });*/
  // INITIALIZATION OF QUILLJS EDITOR
         // =======================================================
         var quill = $.HSCore.components.HSQuill.init('.js-quill');

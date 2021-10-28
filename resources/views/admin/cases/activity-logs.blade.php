@@ -29,48 +29,52 @@
         @foreach($activity_logs as $dlog)
         <li class="step-item">
             <div class="step-content-wrapper">
-                <small class="step-divider">{{dateFormat($dlog['created_at'])}}</small>
+                <small class="step-divider">{{dateFormat($dlog->created_at)}}</small>
             </div>
         </li>
         <!-- End Step Item -->
-            @foreach($dlog['activityLogs'] as $log)
+        <?php
+        $log_date = dateFormat($dlog->created_at,"Y-m-d");
+        $logs = $dlog->dateWiseLogs($dlog->case_id,$log_date);
+        ?>
+            @foreach($logs as $log)
             <!-- Step Item -->
             <li class="step-item">
                 <div class="step-content-wrapper">
                     <div class="step-avatar">
-                        @if($log['added_by'] == 'user')
-                        <img class="step-avatar-img" src="{{ userProfile($log['user_id']) }}" alt="Image Description">
+                        @if($log->added_by == 'user')
+                        <img class="step-avatar-img" src="{{ userProfile($log->user_id) }}" alt="Image Description">
                         @else
-                        <img class="step-avatar-img" src="{{ professionalProfile($log['user_id'],'t',$subdomain) }}" alt="Image Description">
+                        <img class="step-avatar-img" src="{{ professionalProfile($log->user_id,'t',$subdomain) }}" alt="Image Description">
                         @endif
                     </div>
 
                     <div class="step-content">
                         <h5 class="mb-1">
-                        @if($log['added_by'] == 'user')
-                            <?php
-                                $user = userDetail($log['user_id']);
-                            ?>
-                            @if(!empty($user))
-                                <a class="text-dark" href="javascript:;">{{ $user->first_name." ".$user->last_name  }}</a>
+                            @if($log->added_by == 'user')
+                                <?php
+                                    $user = userDetail($log->user_id);
+                                ?>
+                                @if(!empty($user))
+                                    <a class="text-dark" href="javascript:;">{{ $user->first_name." ".$user->last_name  }}</a>
+                                @else
+                                    <a class="text-danger" href="javascript:;">N/A</a>
+                                @endif
                             @else
-                                <a class="text-danger" href="javascript:;">N/A</a>
+                                <?php
+                                    $user = professionalUser($log->user_id,$subdomain);
+                                ?>
+                                @if(!empty($user))
+                                    <a class="text-dark" href="javascript:;">{{ $user->first_name." ".$user->last_name  }}</a>
+                                @else
+                                    <a class="text-danger" href="javascript:;">N/A</a>
+                                @endif
                             @endif
-                        @else
-                            <?php
-                                $user = professionalUser($log['user_id'],$subdomain);
-                            ?>
-                            @if(!empty($user))
-                                <a class="text-dark" href="javascript:;">{{ $user->first_name." ".$user->last_name  }}</a>
-                            @else
-                                <a class="text-danger" href="javascript:;">N/A</a>
-                            @endif
-                        @endif
                         </h5>
 
-                        <p class="font-size-sm">{{$log['comment']}}</p>
+                        <p class="font-size-sm">{{$log->comment}}</p>
 
-                        
+                    
                     </div>
                 </div>
             </li>

@@ -127,7 +127,7 @@
                 <div class="js-form-message form-group">
                   <label class="input-label" for="signupSrEmail">Your email</label>
 
-                  <input type="email" class="form-control form-control-lg @error('email') is-invalid @enderror" name="email" id="signupSrEmail" placeholder="Markwilliams@example.com" aria-label="Markwilliams@example.com" required data-msg="Please enter a valid email address.">
+                  <input type="email" class="form-control form-control-lg @error('email') is-invalid @enderror" name="email" id="signupSrEmail" placeholder="youremail@abc.com" aria-label="Markwilliams@example.com" required data-msg="Please enter a valid email address.">
                    @error('email')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>

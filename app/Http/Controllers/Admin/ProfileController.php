@@ -27,8 +27,7 @@ class ProfileController extends Controller
         }
        
         $setting = DomainDetails::first();
-        echo $setting->profile_status;
-        exit;
+     
         if($setting->profile_status == 2){
             return redirect(baseUrl('/'));
         }
@@ -96,7 +95,7 @@ class ProfileController extends Controller
             'cp_country_id'=>'required',
             'cp_state_id'=>'required',
             'cp_city_id'=>'required',
-            // 'licence_certificate'=>'required',
+            'termsAndConditions'=>'required',
             // 'owner_id_proof'=>'required',
             // 'company_address_proof'=>'required',
         ]);
@@ -223,7 +222,7 @@ class ProfileController extends Controller
 
 
         $response['status'] = true;
-        $response['message'] = "Profile submitted sucessfully";
+        $response['message'] = "Profile successfully completed";
 
         $mailData = array();
         $mailData['mail_message'] = "Hello Admin,<Br> ".$request->input("company_name")." has completed his profile. Waiting for your approval.";

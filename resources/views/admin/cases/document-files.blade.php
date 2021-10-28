@@ -108,13 +108,16 @@
                                         <i class="tio-download-to dropdown-item-icon"></i>
                                         Download
                                     </a>
-                                    @if($doc->created_by == Auth::user()->unique_id)
+                                    <a class="dropdown-item" onclick="showPopup('<?php echo baseUrl('cases/case-documents/rename-file/'.$doc->file_id) ?>')">
+                                        <i class="tio-edit dropdown-item-icon"></i>
+                                        Rename
+                                    </a>
                                     <a class="dropdown-item text-danger" href="javascript:;"
                                         onclick="confirmAction(this)" data-href="{{baseUrl('cases/case-documents/delete/'.base64_encode($doc->id))}}">
                                         <i class="tio-delete-outlined dropdown-item-icon"></i>
                                         Delete
                                     </a>
-                                    @endif
+                                    
                                 </div>
                             </div>
                             <!-- End Unfold -->
