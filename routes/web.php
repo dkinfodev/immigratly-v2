@@ -857,6 +857,10 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
             Route::post('/save-notes', [App\Http\Controllers\User\MyDocumentsController::class, 'saveDocumentNote']);
             Route::post('/save-file-notes', [App\Http\Controllers\User\MyDocumentsController::class, 'saveDocumentNoteFile']);
 
+            Route::get('/rename-file/{id}', [App\Http\Controllers\User\MyDocumentsController::class, 'renameFile']);
+
+            Route::post('/rename-file/{id}', [App\Http\Controllers\User\MyDocumentsController::class, 'updateFilename']);
+
         });
 
         Route::get('/documents-exchanger', [App\Http\Controllers\User\MyDocumentsController::class, 'documentsExchanger']);
