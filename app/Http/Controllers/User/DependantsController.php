@@ -203,14 +203,14 @@ class DependantsController extends Controller
 
     public function deleteSingle($id){
         $id = base64_decode($id);
-        User::deleteRecord($id);
+        UserDependants::deleteRecord($id);
         return redirect()->back()->with("success","Record has been deleted!");
     }
     public function deleteMultiple(Request $request){
         $ids = explode(",",$request->input("ids"));
         for($i = 0;$i < count($ids);$i++){
             $id = base64_decode($ids[$i]);
-            User::deleteRecord($id);
+            UserDependants::deleteRecord($id);
         }
         $response['status'] = true;
         \Session::flash('success', 'Records deleted successfully'); 

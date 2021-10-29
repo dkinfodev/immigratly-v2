@@ -1786,4 +1786,23 @@ class ProfessionalCasesController extends Controller
         return response()->json($response); 
 
     }
+
+    public function caseDependants($subdomain,$case_id){
+        $data['case_id'] = $case_id;
+        $data['client_id'] = \Auth::user()->unique_id;
+        $case = professionalCurl('cases/view',$subdomain,$data);
+        if(isset($case['status']) && $case['status'] == 'success'){
+            $record = $case['data'];
+        }else{
+            $record = array();
+        }
+        $viewData['case_id'] = $case_id;
+        $viewData['subdomain'] = $subdomain;
+        $viewData['pageTitle'] = "Case Dependants";
+        $viewData['record'] = $record;
+        $viewData['active_nav'] = 'dependants';
+        $dependants = array();
+        $viewData['dependants'] = $dependants;
+        return view(roleFolder().'.cases.dependants',$viewData);
+    }
 }

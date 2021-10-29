@@ -877,6 +877,8 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
         Route::get('/', [App\Http\Controllers\User\ProfessionalCasesController::class, 'cases']);
         Route::get('/pending', [App\Http\Controllers\User\ProfessionalCasesController::class, 'pendingCases']);
         
+        Route::get('/dependants/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'caseDependants']);
+        
         Route::post('/approve-case', [App\Http\Controllers\User\ProfessionalCasesController::class, 'approveCase']);
         Route::get('/tasks/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'caseTasks']);
 

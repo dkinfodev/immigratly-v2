@@ -282,6 +282,18 @@
             todayHighlight: true,
             orientation: "bottom auto"
         });
+        $('#issue_date').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true,
+            orientation: "bottom auto"
+        });
+        $('#expiry_date').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true,
+            orientation: "bottom auto"
+        });
         $("#form").submit(function(e) {
             e.preventDefault();
             var formData = $("#form").serialize();
@@ -296,9 +308,7 @@
                     hideLoader();
                     if (response.status == true) {
                         successMessage(response.message);
-                        setTimeout(function() {
-                            redirect(response.redirect_back);
-                        }, 2000);
+                        redirect(response.redirect_back);
 
                     } else {
                         validation(response.message);

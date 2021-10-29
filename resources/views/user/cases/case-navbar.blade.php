@@ -146,6 +146,11 @@
             Invoice
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link {{isset($active_nav) && $active_nav == 'dependants'?'active':'' }}" href="{{baseUrl('cases/dependants/'.$subdomain.'/'.$record['unique_id'])}}">
+            Dependants
+            </a>
+        </li>
     </ul>
 </div>
     

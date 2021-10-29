@@ -110,7 +110,7 @@
                 </thead>
 
                 <tbody>
-                    <?php
+            <?php
             foreach($professionals as $professional){
 
               $cases = $professional->Cases($professional->professional,$professional->user_id);
@@ -133,8 +133,8 @@
                             <a class="d-flex align-items-center"
                                 href="{{baseUrl('cases/documents/'.$professional->professional.'/'.$record['unique_id'])}}">
                                 <?php
-                    $professional_info = $professional->Professional($professional->professional);
-                  ?>
+                                    $professional_info = $professional->Professional($professional->professional);
+                                ?>
                                 @if(!empty($professional_info['personal']))
 
                                 <div class="avatar avatar-soft-primary mt-4 avatar-circle">
@@ -163,8 +163,8 @@
                         <td>
                             @if(!empty($professional_info['personal']))
                             <?php
-                $profess = $professional_info['personal'];
-                ?>
+                                $profess = $professional_info['personal'];
+                            ?>
                             <a href="{{ baseUrl('professional/'.$professional->professional) }}"
                                 class="text-primary h4">{{$profess->first_name." ".$profess->last_name}}</a>
                             @else
@@ -193,14 +193,14 @@
                             <!-- Avatar Group -->
                             <div class="avatar-group avatar-group-xs avatar-circle">
                                 <?php 
-                    $more_file = 0;
-                  ?>
+                                    $more_file = 0;
+                                ?>
                                 @foreach($record['assinged_member'] as $key => $member)
                                 <?php 
-                    if($key > 1){
-                      $more_file++;
-                    }else{
-                    ?>
+                                if($key > 1){
+                                    $more_file++;
+                                }else{
+                                ?>
                                 <a class="avatar js-nav-tooltip-link" href="javascript:;" data-toggle="tooltip"
                                     data-placement="top"
                                     title="{{ $member['member']['first_name']." ".$member['member']['last_name'] }}">
@@ -232,9 +232,9 @@
                         <td>
                             <div class="hs-unfold">
                                 <a class="js-hs-action btn btn-sm btn-white" href="javascript:;" data-hs-unfold-options='{
-                      "target": "#action-{{$key}}",
-                      "type": "css-animation"
-                    }'>
+                                    "target": "#action-{{$key}}",
+                                    "type": "css-animation"
+                                    }'>
                                     More <i class="tio-chevron-down ml-1"></i>
                                 </a>
                                 <div id="action-{{$key}}"

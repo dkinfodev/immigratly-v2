@@ -1,42 +1,5 @@
 @extends('layouts.master')
-@section("style")
 
-<link rel="stylesheet" href="assets/vendor/mCustomScrollbar/jquery.mCustomScrollbar.css" />
-
-<link rel="stylesheet" href="assets/css/jquery.mThumbnailScroller.css">
-<style>
-.all_services li {
-    padding: 16px;
-    border-bottom: 1px solid #ddd;
-}
-
-.sub_services li {
-    border-bottom: none;
-}
-.dz-error-message {
-    color: red;
-}
-.upload-btn .btn-default{
-    display:none;
-}
-.upload-btn.collapsed .plus{
-    display: block !important;
-}
-.upload-btn:not(.collapsed) .plus{
-    display:none !important;
-}
-.upload-btn.collapsed .minus {
-    display: none;
-}
-.all_services li {
-padding: 16px;
-border-bottom: 1px solid #ddd;
-}
-.sub_services li {
-border-bottom: none;
-}
-</style>
-@endsection
 @section('pageheader')
 <!-- Content -->
 <div class="">
@@ -79,7 +42,42 @@ border-bottom: none;
 <!-- End Content -->
 @endsection
 @section('content')
-<!-- Content -->
+
+<link rel="stylesheet" href="assets/vendor/mCustomScrollbar/jquery.mCustomScrollbar.css" />
+
+<link rel="stylesheet" href="assets/css/jquery.mThumbnailScroller.css">
+<style>
+.all_services li {
+    padding: 16px;
+    border-bottom: 1px solid #ddd;
+}
+
+.sub_services li {
+    border-bottom: none;
+}
+.dz-error-message {
+    color: red;
+}
+.upload-btn .btn-default{
+    display:none;
+}
+.upload-btn.collapsed .plus{
+    display: block !important;
+}
+.upload-btn:not(.collapsed) .plus{
+    display:none !important;
+}
+.upload-btn.collapsed .minus {
+    display: none;
+}
+.all_services li {
+padding: 16px;
+border-bottom: 1px solid #ddd;
+}
+.sub_services li {
+border-bottom: none;
+}
+</style>
 <!-- Content -->
 <div class="files">
     <div id="collapseOne" class="collapse" aria-labelledby="headingOne">
@@ -320,7 +318,7 @@ border-bottom: none;
 @endsection
 @section('javascript')
 
-
+<link rel="stylesheet" href="assets/css/jquery.mThumbnailScroller.css">
 <script src="assets/vendor/mCustomScrollbar/jquery.mCustomScrollbar.min.js"></script>
 <script src="assets/vendor/dropzone/dist/min/dropzone.min.js"></script>
 <script src="assets/js/jquery.slidereveal.js"></script>
@@ -335,11 +333,11 @@ border-bottom: none;
 $(document).ready(function() {
     //initSelect();
       
-      // $("#document-preview-thumbs-content").mThumbnailScroller({
-      // axis: "y",
-      // type: "click-50",
-      // theme: "buttons-out"
-      // });
+      $("#document-preview-thumbs-content").mThumbnailScroller({
+        axis: "y",
+        type: "click-50",
+        theme: "buttons-out"
+      });
        
 
       sample1 = $("#shot-sidebar-app").slideReveal({
