@@ -7,7 +7,7 @@
       </button>
     </div>
     <div class="modal-body">
-      <form method="post" id="popup-form" class="js-validate" action="{{ baseUrl('/cases/case-documents/add-folder/'.$case_id) }}">  
+      <form method="post" id="popup-form" class="js-validate" action="{{ baseUrl('/services/add-folder/'.$service_id) }}">  
           @csrf
           <!-- Form Group -->
           <div class="row form-group js-form-message">
@@ -55,7 +55,15 @@
                   closeModal();
                   location.reload();
                 }else{
-                  validation(response.message);
+                  $.each(response.message, function (index, value) {
+                      $("*[name="+index+"]").parents(".js-form-message").find("#"+index+"-error").remove();
+                      $("*[name="+index+"]").parents(".js-form-message").find(".form-control").removeClass('is-invalid');
+                      
+                      var html = '<div id="'+index+'-error" class="invalid-feedback">'+value+'</div>';
+                      $("*[name="+index+"]").parents(".js-form-message").append(html);
+                      $("*[name="+index+"]").parents(".js-form-message").find(".form-control").addClass('is-invalid');
+                  });
+                  // errorMessage(response.message);
                 }
               },
               error:function(){

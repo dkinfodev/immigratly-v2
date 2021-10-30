@@ -84,6 +84,9 @@
           Delete
         </a> 
         @endif
+        <a class="dropdown-item" href="{{ baseUrl('leads/dependants/'.$record->master_id) }}">
+          <i class="tio-user dropdown-item-icon"></i> Dependants
+        </a>
         <a class="dropdown-item" onclick="showPopup('{{ baseUrl('leads/assign/'.base64_encode($record->unique_id)) }}')" href="javascript:;">
           <i class="tio-edit dropdown-item-icon"></i> Assign Lead
         </a>

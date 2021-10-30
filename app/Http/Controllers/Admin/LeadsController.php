@@ -120,6 +120,7 @@ class LeadsController extends Controller
         $object->country_code = $request->input("country_code");
         $object->phone_no = $request->input("phone_no");
         $object->visa_service_id = $request->input("visa_service_id");
+        $object->created_by = \Auth::user()->unique_id;
         $object->save();
 
         $response['status'] = true;
@@ -268,7 +269,7 @@ class LeadsController extends Controller
             $object2->start_date = $request->input("start_date");
             $object2->end_date = $request->input("end_date");
             $object2->visa_service_id = $visa_service_id;
-            $object2->created_by = \Auth::user()->id;
+            $object2->created_by = \Auth::user()->unique_id;
             if($result['user_exists'] == 0){
                 $object2->approve_status = 1;
             }
@@ -460,5 +461,18 @@ class LeadsController extends Controller
 
         return view(roleFolder().'.leads.assessments.view',$viewData);
         
+    }
+
+    public function dependants($master_id){
+        $viewData['pageTitle'] = "Mark as client";
+        $lead_id = base64_decode($id);
+        $viewData['lead_id'] = $lead_id;
+        $lead = Leads::find($lead_id);
+        $viewData['lead'] = $lead;
+        $view = View::make(roleFolder().'.leads.modal.mark-as-client',$viewData);
+        $contents = $view->render();
+        $response['contents'] = $contents;
+        $response['status'] = true;
+        return response()->json($response);
     }
 }

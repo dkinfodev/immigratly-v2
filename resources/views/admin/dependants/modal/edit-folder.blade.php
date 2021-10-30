@@ -7,14 +7,14 @@
       </button>
     </div>
     <div class="modal-body">
-      <form method="post" id="popup-form" class="js-validate" action="{{ baseUrl('/cases/case-documents/add-folder/'.$case_id) }}">  
+      <form method="post" id="popup-form" class="js-validate" action="{{ baseUrl('/services/edit-folder/'.base64_encode($record->id)) }}">  
           @csrf
           <!-- Form Group -->
           <div class="row form-group js-form-message">
             <label class="col-sm-3 col-form-label input-label">Name</label>
             <div class="col-sm-9">
               <div class="input-group input-group-sm-down-break">
-                <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name" placeholder="Enter folder name" aria-label="Enter folder name" >
+                <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name" value="{{ $record->name }}" placeholder="Enter folder name" aria-label="Enter folder name" >
                 @error('name')
                 <span class="invalid-feedback" role="alert">
                   <strong>{{ $message }}</strong>
@@ -55,7 +55,15 @@
                   closeModal();
                   location.reload();
                 }else{
-                  validation(response.message);
+                  $.each(response.message, function (index, value) {
+                      $("*[name="+index+"]").parents(".js-form-message").find("#"+index+"-error").remove();
+                      $("*[name="+index+"]").parents(".js-form-message").find(".form-control").removeClass('is-invalid');
+                      
+                      var html = '<div id="'+index+'-error" class="invalid-feedback">'+value+'</div>';
+                      $("*[name="+index+"]").parents(".js-form-message").append(html);
+                      $("*[name="+index+"]").parents(".js-form-message").find(".form-control").addClass('is-invalid');
+                  });
+                  // errorMessage(response.message);
                 }
               },
               error:function(){

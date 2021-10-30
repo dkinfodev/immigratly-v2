@@ -99,6 +99,7 @@ Route::group(array('middleware' => 'professional_curl'), function () {
 			Route::post('/fetch-case-tasks', [App\Http\Controllers\Api\ProfessionalApiController::class, 'getTasksList']);
 			Route::post('/view-case-task', [App\Http\Controllers\Api\ProfessionalApiController::class, 'viewCaseTask']);
 			Route::post('/rename-filename', [App\Http\Controllers\Api\ProfessionalApiController::class, 'updateFilename']);
+			Route::post('/fetch-dependants', [App\Http\Controllers\Api\ProfessionalApiController::class, 'dependants']);
 			
 			
 		});	

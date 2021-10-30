@@ -1101,7 +1101,17 @@ Route::group(array('prefix' => 'admin'), function () {
             Route::get('/assessments/{id}', [App\Http\Controllers\Admin\LeadsController::class, 'externalAssessments']);
             Route::post('/assesssments-list', [App\Http\Controllers\Admin\LeadsController::class, 'externalAssessmentsList']);
             Route::get('/assessments-view/{id}', [App\Http\Controllers\Admin\LeadsController::class, 'viewExternalAssessment']);
-
+            Route::group(array('prefix' => 'dependants/{client_id}'), function () {
+                Route::get('/', [App\Http\Controllers\Admin\DependantsController::class, 'index']);
+                Route::post('/ajax-list', [App\Http\Controllers\Admin\DependantsController::class, 'getAjaxList']);
+                Route::get('/add', [App\Http\Controllers\Admin\DependantsController::class, 'add']);
+                Route::post('/save', [App\Http\Controllers\Admin\DependantsController::class, 'save']);
+                Route::get('/edit/{id}', [App\Http\Controllers\Admin\DependantsController::class, 'edit']);
+                Route::get('/view/{id}', [App\Http\Controllers\Admin\DependantsController::class, 'view']);
+                Route::post('/update/{id}', [App\Http\Controllers\Admin\DependantsController::class, 'update']);
+                Route::get('/delete/{id}', [App\Http\Controllers\Admin\DependantsController::class, 'deleteSingle']);
+                Route::post('/delete-multiple', [App\Http\Controllers\Admin\DependantsController::class, 'deleteMultiple']);
+            });
         });
 
         Route::group(array('prefix' => 'cases'), function () {
