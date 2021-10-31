@@ -1,4 +1,5 @@
 @extends('layouts.master')
+
 @section('pageheader')
 <!-- Content -->
 <div class="">
@@ -11,11 +12,9 @@
                 </div>
 
                 <div class="col-auto">
-                  @if(role_permission('cases','add-cases'))
-                  <a class="btn btn-primary" href="<?php echo baseUrl('cases/add') ?>">
-                    <i class="tio-user-add mr-1"></i> Create Case
+                  <a class="btn btn-primary" href="<?php echo baseUrl('cases/invoices/add/'.base64_encode($case->id)) ?>">
+                    <i class="tio-add mr-1"></i> Create Invoice
                   </a>
-                  @endif
                 </div>
             </div>
             <!-- End Row -->
@@ -26,30 +25,29 @@
 <!-- End Content -->
 @endsection
 @section('content')
+@include(roleFolder().'.cases.case-navbar')
 <!-- Content -->
-<div class="cases">
-  
+<div class="invoice-lists">
+
   <!-- Card -->
   <div class="card">
     <!-- Header -->
     <div class="card-header">
       <div class="row justify-content-between align-items-center flex-grow-1">
-        <div class="col-sm-6 col-md-4 mb-3 mb-sm-0">
+        <!-- <div class="col-sm-6 col-md-4 mb-3 mb-sm-0">
           <form>
-            <!-- Search -->
             <div class="input-group input-group-merge input-group-flush">
               <div class="input-group-prepend">
                 <div class="input-group-text">
                   <i class="tio-search"></i>
                 </div>
               </div>
-              <input id="datatableSearch" type="search" class="form-control" placeholder="Search Case title" aria-label="Search Case">
+              <input id="datatableSearch" type="search" class="form-control" placeholder="Search Invoice" aria-label="Search Case">
             </div>
-            <!-- End Search -->
           </form>
-        </div>
+        </div> -->
 
-        <div class="col-sm-6">
+        <div class="col-sm-12">
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
             <!-- Datatable Info -->
             <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0" style="display: none;">
@@ -58,7 +56,7 @@
                   <span id="datatableCounter">0</span>
                   Selected
                 </span>
-                <a class="btn btn-sm btn-outline-danger" data-href="{{ baseUrl('cases/delete-multiple') }}" onclick="deleteMultiple(this)" href="javascript:;">
+                <a class="btn btn-sm btn-outline-danger" data-href="{{ baseUrl('cases/invoices/delete-multiple') }}" onclick="deleteMultiple(this)" href="javascript:;">
                   <i class="tio-delete-outlined"></i> Delete
                 </a>
               </div>
@@ -81,15 +79,11 @@
                 <label class="custom-control-label" for="datatableCheckAll"></label>
               </div>
             </th>
-            <th scope="col" class="table-column-pl-0" style="min-width: 15rem;">Case Title</th>
-            <th>Client</th>
-            <th scope="col">Visa Service</th>
-            <!-- <th scope="col">Start Date</th> -->
-            <th scope="col">Approval Status</th>
-            <th scope="col">Assigned</th>
-            @if(role_permission('cases','case-chat'))
-            <th scope="col"><i class="tio-chat-outlined"></i></td>
-            @endif
+            <th scope="col">Invoice ID</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Payment Status</th>
+            <th scope="col">Created Date</th>
+            
             <th scope="col"></th>
           </tr>
         </thead>
@@ -140,7 +134,17 @@
 @endsection
 
 @section('javascript')
+<script src="assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript">
+$('.js-nav-tooltip-link').tooltip({ boundary: 'window' });
+  $(document).on('ready', function () {
+    
+    $('.js-hs-action').each(function () {
+      var unfold = new HSUnfold($(this)).init();
+    });
+    // initialization of datatables
+    // var datatable = $.HSCore.components.HSDatatables.init($('#datatable'));
+  });
 $(document).ready(function(){
 
   $("#datatableSearch").keyup(function(){
@@ -159,10 +163,10 @@ function loadData(page=1){
   var search = $("#datatableSearch").val();
     $.ajax({
         type: "POST",
-        url: BASEURL + '/cases/ajax-list?page='+page,
+        url: BASEURL + '/cases/invoices/case-invoices?page='+page,
         data:{
             _token:csrf_token,
-            search:search
+            case_id:"{{$case->unique_id}}"
         },
         dataType:'json',
         beforeSend:function(){

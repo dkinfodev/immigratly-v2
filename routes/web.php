@@ -1222,6 +1222,8 @@ Route::group(array('prefix' => 'manager'), function () {
             Route::get('/delete/{id}', [App\Http\Controllers\Manager\CasesController::class, 'deleteSingle']);
             Route::post('/delete-multiple', [App\Http\Controllers\Manager\CasesController::class, 'deleteMultiple']);
             Route::get('/edit/{id}', [App\Http\Controllers\Manager\CasesController::class, 'edit']);
+            Route::get('/view/{id}', [App\Http\Controllers\Manager\CasesController::class, 'view']);
+            Route::get('/activity-logs/{id}', [App\Http\Controllers\Manager\CasesController::class, 'activityLog']);
             Route::post('/update/{id}', [App\Http\Controllers\Manager\CasesController::class, 'update']);
             Route::post('/remove-documents', [App\Http\Controllers\Manager\CasesController::class, 'removeDocuments']);
             Route::get('/chats/{id}', [App\Http\Controllers\Manager\CasesController::class, 'chats']);
@@ -1230,7 +1232,20 @@ Route::group(array('prefix' => 'manager'), function () {
             Route::post('/save-chat-file', [App\Http\Controllers\Manager\CasesController::class, 'saveChatFile']);
             Route::post('/pinned-folder', [App\Http\Controllers\Manager\CasesController::class, 'pinnedFolder']);
             Route::post('/unpinned-folder', [App\Http\Controllers\Manager\CasesController::class, 'unpinnedFolder']);
+
+            Route::group(array('prefix' => 'invoices'), function () {
+                Route::get('/list/{id}', [App\Http\Controllers\Manager\InvoiceController::class, 'caseInvoices']);
+                Route::post('/case-invoices', [App\Http\Controllers\Manager\InvoiceController::class, 'getCaseInvoice']);
+                Route::get('/add/{case_id}', [App\Http\Controllers\Manager\InvoiceController::class, 'addCaseInvoice']);
+                Route::post('/add/{case_id}', [App\Http\Controllers\Manager\InvoiceController::class, 'saveCaseInvoice']);
+                Route::get('/edit/{id}', [App\Http\Controllers\Manager\InvoiceController::class, 'editCaseInvoice']);
+                Route::post('/edit/{id}', [App\Http\Controllers\Manager\InvoiceController::class, 'updateCaseInvoice']);
+                Route::get('/view/{id}', [App\Http\Controllers\Manager\InvoiceController::class, 'viewCaseInvoice']);
+                Route::get('/delete/{id}', [App\Http\Controllers\Manager\InvoiceController::class, 'deleteSingle']);
+                Route::post('/delete-multiple', [App\Http\Controllers\Manager\InvoiceController::class, 'deleteMultiple']);
+            });
             Route::group(array('prefix' => 'case-documents'), function () {
+                Route::get('/preview-document/{case_id}/{doc_id}', [App\Http\Controllers\Manager\CasesController::class, 'previewDocument']);
                 Route::get('/documents/{id}', [App\Http\Controllers\Manager\CasesController::class, 'caseDocuments']);
                 Route::get('/add-folder/{id}', [App\Http\Controllers\Manager\CasesController::class, 'addFolder']);
                 Route::post('/add-folder/{id}', [App\Http\Controllers\Manager\CasesController::class, 'createFolder']);
@@ -1293,6 +1308,9 @@ Route::group(array('prefix' => 'telecaller'), function () {
             Route::get('/delete/{id}', [App\Http\Controllers\Telecaller\CasesController::class, 'deleteSingle']);
             Route::post('/delete-multiple', [App\Http\Controllers\Telecaller\CasesController::class, 'deleteMultiple']);
             Route::get('/edit/{id}', [App\Http\Controllers\Telecaller\CasesController::class, 'edit']);
+            Route::get('/view/{id}', [App\Http\Controllers\Telecaller\CasesController::class, 'view']);
+            Route::get('/activity-logs/{id}', [App\Http\Controllers\Telecaller\CasesController::class, 'activityLog']);
+
             Route::post('/update/{id}', [App\Http\Controllers\Telecaller\CasesController::class, 'update']);
             Route::post('/remove-documents', [App\Http\Controllers\Telecaller\CasesController::class, 'removeDocuments']);
             Route::get('/chats/{id}', [App\Http\Controllers\Telecaller\CasesController::class, 'chats']);
@@ -1301,7 +1319,22 @@ Route::group(array('prefix' => 'telecaller'), function () {
             Route::post('/save-chat-file', [App\Http\Controllers\Telecaller\CasesController::class, 'saveChatFile']);
             Route::post('/pinned-folder', [App\Http\Controllers\Telecaller\CasesController::class, 'pinnedFolder']);
             Route::post('/unpinned-folder', [App\Http\Controllers\Telecaller\CasesController::class, 'unpinnedFolder']);
+
+            Route::group(array('prefix' => 'invoices'), function () {
+                Route::get('/list/{id}', [App\Http\Controllers\Telecaller\InvoiceController::class, 'caseInvoices']);
+                Route::post('/case-invoices', [App\Http\Controllers\Telecaller\InvoiceController::class, 'getCaseInvoice']);
+                Route::get('/add/{case_id}', [App\Http\Controllers\Telecaller\InvoiceController::class, 'addCaseInvoice']);
+                Route::post('/add/{case_id}', [App\Http\Controllers\Telecaller\InvoiceController::class, 'saveCaseInvoice']);
+                Route::get('/edit/{id}', [App\Http\Controllers\Telecaller\InvoiceController::class, 'editCaseInvoice']);
+                Route::post('/edit/{id}', [App\Http\Controllers\Telecaller\InvoiceController::class, 'updateCaseInvoice']);
+                Route::get('/view/{id}', [App\Http\Controllers\Telecaller\InvoiceController::class, 'viewCaseInvoice']);
+                Route::get('/delete/{id}', [App\Http\Controllers\Telecaller\InvoiceController::class, 'deleteSingle']);
+                Route::post('/delete-multiple', [App\Http\Controllers\Telecaller\InvoiceController::class, 'deleteMultiple']);
+            });
             Route::group(array('prefix' => 'case-documents'), function () {
+
+                Route::get('/preview-document/{case_id}/{doc_id}', [App\Http\Controllers\Telecaller\CasesController::class, 'previewDocument']);
+
                 Route::get('/documents/{id}', [App\Http\Controllers\Telecaller\CasesController::class, 'caseDocuments']);
                 Route::get('/add-folder/{id}', [App\Http\Controllers\Telecaller\CasesController::class, 'addFolder']);
                 Route::post('/add-folder/{id}', [App\Http\Controllers\Telecaller\CasesController::class, 'createFolder']);
@@ -1364,6 +1397,10 @@ Route::group(array('prefix' => 'associate'), function () {
             Route::get('/delete/{id}', [App\Http\Controllers\Associate\CasesController::class, 'deleteSingle']);
             Route::post('/delete-multiple', [App\Http\Controllers\Associate\CasesController::class, 'deleteMultiple']);
             Route::get('/edit/{id}', [App\Http\Controllers\Associate\CasesController::class, 'edit']);
+            //ACTIVITY LOG ASSOCIATE
+            Route::get('/activity-logs/{id}', [App\Http\Controllers\Associate\CasesController::class, 'activityLog']);
+
+            Route::get('/view/{id}', [App\Http\Controllers\Associate\CasesController::class, 'view']);
             Route::post('/update/{id}', [App\Http\Controllers\Associate\CasesController::class, 'update']);
             Route::post('/remove-documents', [App\Http\Controllers\Associate\CasesController::class, 'removeDocuments']);
             Route::get('/chats/{id}', [App\Http\Controllers\Associate\CasesController::class, 'chats']);
@@ -1372,7 +1409,21 @@ Route::group(array('prefix' => 'associate'), function () {
             Route::post('/save-chat-file', [App\Http\Controllers\Associate\CasesController::class, 'saveChatFile']);
             Route::post('/pinned-folder', [App\Http\Controllers\Associate\CasesController::class, 'pinnedFolder']);
             Route::post('/unpinned-folder', [App\Http\Controllers\Associate\CasesController::class, 'unpinnedFolder']);
+            
+            Route::group(array('prefix' => 'invoices'), function () {
+                Route::get('/list/{id}', [App\Http\Controllers\Associate\InvoiceController::class, 'caseInvoices']);
+                Route::post('/case-invoices', [App\Http\Controllers\Associate\InvoiceController::class, 'getCaseInvoice']);
+                Route::get('/add/{case_id}', [App\Http\Controllers\Associate\InvoiceController::class, 'addCaseInvoice']);
+                Route::post('/add/{case_id}', [App\Http\Controllers\Associate\InvoiceController::class, 'saveCaseInvoice']);
+                Route::get('/edit/{id}', [App\Http\Controllers\Associate\InvoiceController::class, 'editCaseInvoice']);
+                Route::post('/edit/{id}', [App\Http\Controllers\Associate\InvoiceController::class, 'updateCaseInvoice']);
+                Route::get('/view/{id}', [App\Http\Controllers\Associate\InvoiceController::class, 'viewCaseInvoice']);
+                Route::get('/delete/{id}', [App\Http\Controllers\Associate\InvoiceController::class, 'deleteSingle']);
+                Route::post('/delete-multiple', [App\Http\Controllers\Associate\InvoiceController::class, 'deleteMultiple']);
+            });
+
             Route::group(array('prefix' => 'case-documents'), function () {
+                Route::get('/preview-document/{case_id}/{doc_id}', [App\Http\Controllers\Associate\CasesController::class, 'previewDocument']);
                 Route::get('/documents/{id}', [App\Http\Controllers\Associate\CasesController::class, 'caseDocuments']);
                 Route::get('/add-folder/{id}', [App\Http\Controllers\Associate\CasesController::class, 'addFolder']);
                 Route::post('/add-folder/{id}', [App\Http\Controllers\Associate\CasesController::class, 'createFolder']);
