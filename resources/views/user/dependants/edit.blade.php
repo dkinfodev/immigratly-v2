@@ -115,7 +115,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group js-form-message">
                             <label class="input-label" for="family_name">Date of Birth</label>
                             <div class="input-group">
@@ -139,13 +139,13 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group js-form-message">
                             <label class="input-label" for="city_of_birth">City of Birth</label>
                             <input type="text" autocomplete="off" id="city_of_birth" name="city_of_birth" class="form-control" placeholder="City of Birth" value="{{$record->city_of_birth}}">
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group js-form-message">
                             <label class="input-label">Gender</label>
                             <select name="gender" id="gender" data-msg="Please select gender."
@@ -154,6 +154,17 @@
                                 <option {{ ($record->gender == 'male')?'selected':'' }} value="male">Male</option>
                                 <option {{ ($record->gender == 'female')?'selected':'' }} value="female">Female</option>
                                 <option {{ ($record->gender == 'other')?'selected':'' }} value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group js-form-message">
+                            <label class="input-label">Status</label>
+                            <select name="is_approved" id="is_approved" data-msg="Please select gender."
+                                class="form-control">
+                                <option value="">Select Status</option>
+                                <option {{ ($record->is_approved == '1')?'selected':'' }} value="1">Approved</option>
+                                <option {{ ($record->is_approved == '0')?'selected':'' }} value="0">Pending Approval</option>
                             </select>
                         </div>
                     </div>

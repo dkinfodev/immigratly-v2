@@ -102,6 +102,7 @@
               <th scope="col" class="table-column-pl-0">Given Name</th>
               <th scope="col" class="table-column-pl-0">Date of Birth</th>
               <th scope="col" class="table-column-pl-0">Gender</th>
+              <th scope="col" class="table-column-pl-0">Approval Status</th>
               <th scope="col">Action</th>
             </tr>
           </thead>

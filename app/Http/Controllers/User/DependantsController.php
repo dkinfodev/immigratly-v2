@@ -31,7 +31,7 @@ class DependantsController extends Controller
                         ->where(function($query) use($search){
                             if($search != ''){
                                 $query->where("given_name","LIKE","%$search%");
-                                $query->where("other_name","LIKE","%$search%");
+                                $query->orWhere("other_name","LIKE","%$search%");
                             }
                         })
                         ->where("user_id",\Auth::user()->unique_id)
@@ -192,6 +192,7 @@ class DependantsController extends Controller
         if($request->input("business_phone_no")){
             $object->business_phone_no = $request->input("business_phone_no");
         }
+        $object->is_approved = $request->input("is_approved");
         $object->save();
 
         $response['status'] = true;

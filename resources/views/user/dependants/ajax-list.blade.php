@@ -19,6 +19,13 @@
     {{$record->gender}}
   </td>
   <td class="table-column-pl-0">
+    @if($record->is_approved == 1)
+      <span class="badge badge-success">Approved</span>
+    @else
+      <span class="badge badge-danger">Pending Approval</span>
+    @endif
+  </td>
+  <td class="table-column-pl-0">
    
     <div class="hs-unfold">
       <a class="js-hs-action btn btn-sm btn-white" href="javascript:;"
