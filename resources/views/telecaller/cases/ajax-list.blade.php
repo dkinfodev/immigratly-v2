@@ -48,6 +48,15 @@
     <span class="badge badge-soft-danger p-2">Service not found</span>
     @endif
   </td>
+
+  <td>
+    @if($record->approve_status == "0")
+    <span class="badge badge-soft-warning p-2">Awaiting Approve</span>
+    @endif
+    @if($record->approve_status == "1")
+    <span class="badge badge-soft-info p-2">Approved</span>
+    @endif
+  </td>
   <!-- <td>
     <span class="text-body">
       <i class="tio-calendar-month"></i> {{$record->start_date}}

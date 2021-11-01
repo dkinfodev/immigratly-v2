@@ -9,43 +9,27 @@
                 <div class="col">
                     <h1 class="page-header-title">{{$pageTitle}}</h1>
                 </div>
+
+                <div class="col-auto">
+                  @if(role_permission('cases','add-cases'))
+                  <a class="btn btn-primary" href="<?php echo baseUrl('cases/add') ?>">
+                    <i class="tio-user-add mr-1"></i> Create Case
+                  </a>
+                  @endif
+                </div>
             </div>
             <!-- End Row -->
         </div>
         <!-- End Page Header -->
     </div>
-</div> 
+</div>
 <!-- End Content -->
 @endsection
+
 @section('content')
 <!-- Content -->
 <div class="cases">
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="row align-items-end">
-      <div class="col-sm mb-2 mb-sm-0">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb breadcrumb-no-gutter">
-            <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/cases') }}">Cases</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
-          </ol>
-        </nav>
-
-        <h1 class="page-title">{{$pageTitle}}</h1>
-      </div>
-      @if(role_permission('cases','add-cases'))
-      <div class="col-sm-auto">
-        <a class="btn btn-primary" href="<?php echo baseUrl('cases/add') ?>">
-          <i class="tio-user-add mr-1"></i> Create Case
-        </a>
-      </div>
-      @endif
-    </div>
-    <!-- End Row -->
-  </div>
-  <!-- End Page Header -->
-
+  
   <!-- Card -->
   <div class="card">
     <!-- Header -->
@@ -88,7 +72,7 @@
     <!-- End Header -->
 
     <!-- Table -->
-    <div class="table-responsive datatable-custom">
+    <div class="datatable-custom">
       <table id="tableList" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
         <thead class="thead-light">
           <tr>
@@ -102,6 +86,7 @@
             <th>Client</th>
             <th scope="col">Visa Service</th>
             <!-- <th scope="col">Start Date</th> -->
+            <th scope="col">Approval Status</th>
             <th scope="col">Assigned</th>
             @if(role_permission('cases','case-chat'))
             <th scope="col"><i class="tio-chat-outlined"></i></td>

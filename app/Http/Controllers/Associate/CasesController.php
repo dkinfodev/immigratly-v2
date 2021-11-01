@@ -22,6 +22,7 @@ use App\Models\Documents;
 use App\Models\DocumentChats;
 use App\Models\Chats;
 use App\Models\ProfessionalDetails;
+use App\Models\CaseActivityLogs;
 
 class CasesController extends Controller
 {
@@ -77,6 +78,25 @@ class CasesController extends Controller
         return response()->json($response);
     }
 
+    public function view($case_id){
+        $case_id = base64_decode($case_id);
+        $subdomain = \Session::get("subdomain");
+        $record = Cases::with(['AssingedMember','VisaService'])
+                    ->where("id",$case_id)
+                    ->first();
+        $temp = $record;
+        $temp->MainService = $record->Service($record->VisaService->service_id);
+        $data = $temp;
+            
+        $viewData['subdomain'] = $subdomain;
+        $viewData['pageTitle'] = "View Case";
+        $viewData['record'] = $data;
+        $viewData['case_id'] = $record->unique_id;
+        $viewData['active_nav'] = "overview";
+        $viewData['visa_services'] = array();
+        return view(roleFolder().'.cases.view',$viewData);
+    }
+    
     public function createClient(Request $request){
         if(!role_permission('cases','create-client')){
             if($request->ajax()){
@@ -462,7 +482,7 @@ class CasesController extends Controller
         $viewData['record'] = $record;
         $viewData['case_id'] = $record->id;
         $viewData['pageTitle'] = "Documents for ".$service->Service($service->service_id)->name;
-
+        $viewData['subdomain'] = \Session::get("subdomain");
         return view(roleFolder().'.cases.document-folders',$viewData);
     }
 
@@ -496,6 +516,9 @@ class CasesController extends Controller
         $file_dir = professionalDir()."/documents";
         $viewData['file_url'] = $file_url;
         $viewData['file_dir'] = $file_dir;
+        
+        $viewData['case_id'] = $case_id;
+        $viewData['subdomain'] = \Session::get("subdomain");
         return view(roleFolder().'.cases.document-files',$viewData);
     }
     public function otherDocuments($case_id,$doc_id,Request $request){
@@ -1357,6 +1380,57 @@ class CasesController extends Controller
             $response['message'] = "File not selected!";
         }
         
+        return response()->json($response);
+    }
+
+     public function activityLog($case_id){
+        $case_id = base64_decode($case_id);
+        $record = Cases::with(['AssingedMember','VisaService'])
+                    ->where("id",$case_id)
+                    ->first();
+        $temp = $record;
+        $temp->MainService = $record->Service($record->VisaService->service_id);
+        $data = $temp;
+        $subdomain = \Session::get("subdomain");
+        $viewData['subdomain'] = $subdomain;
+        $viewData['pageTitle'] = "View Case";
+        $viewData['record'] = $data;
+        $viewData['case_id'] = $record->unique_id;
+
+        $activity_logs = CaseActivityLogs::where("case_id",$record->unique_id)
+                        ->orderBy("id","desc")
+                        ->groupBy(\DB::raw("DATE(created_at)"))
+                        ->get();
+       
+        $viewData['case_id'] = $case_id;
+        $viewData['subdomain'] = $subdomain;
+        $viewData['pageTitle'] = "View Case";
+        $viewData['record'] = $record;
+        $viewData['active_nav'] = "activity";
+        $viewData['activity_logs'] = $activity_logs;
+        return view(roleFolder().'.cases.activity-logs',$viewData);
+    }
+
+    public function previewDocument($case_id,$doc_id,Request $request){
+        $url = $request->get("url");
+        $filename = $request->get("file_name");
+        $extension = fileExtension($filename);
+        $subdomain = $request->get("p");
+        $folder_id = $request->get("folder_id");
+        
+        $doc_type = $request->get("doc_type");
+        $document = '';
+        if($extension == 'image'){
+            $document = '<div class="text-center"><img src="'.$url.'" class="img-fluid" /></div>';
+        }else{
+            if(google_doc_viewer($extension)){
+                $document = '<iframe src="http://docs.google.com/viewer?url='.$url.'&embedded=true" style="margin:0 auto; width:100%; height:700px;" frameborder="0"></iframe>';
+            }else{
+                $document = '<iframe src="'.$url.'" style="margin:0 auto; width:100%; height:700px;" frameborder="0"></iframe>';
+            }
+        }
+        $response['status'] = true;
+        $response['content'] = $document;
         return response()->json($response);
     }
 }

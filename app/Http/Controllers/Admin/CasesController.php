@@ -473,7 +473,7 @@ class CasesController extends Controller
         
         $file_url = professionalDirUrl()."/documents";
         $file_dir = professionalDir()."/documents";
-        $viewData['file_url'] = $file_url;
+        $viewData['file_url'] = $file_url; 
         $viewData['file_dir'] = $file_dir;
         return view(roleFolder().'.cases.document-files',$viewData);
     }

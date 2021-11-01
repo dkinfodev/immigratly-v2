@@ -13,7 +13,7 @@
   </td>
 
   <td class="table-column-pl-0">
-      {{$record->fetchNewsCategory->name}}
+      @if(!empty($record->fetchNewsCategory->name)){{$record->fetchNewsCategory->name}}@endif 
     </a>
   </td>
 
