@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.master-old')
 @section('pageheader')
 <!-- Content -->
 <div class="">
@@ -50,7 +50,21 @@
 
         <h1 class="page-title">{{$pageTitle}}</h1>
       </div>
-
+      <div class="col-sm-auto">
+        <div class="d-flex justify-content-center align-items-center">
+          <span></span>
+          <label class="toggle-switch mx-2" for="customSwitch">
+            <input {{$visa_service->question_as_sequence == 1?'checked':'' }} type="checkbox" class="js-toggle-switch toggle-switch-input" id="customSwitch" 
+                  data-hs-toggle-switch-options='{
+                    "targetSelector": "#pricingCount1, #pricingCount2, #pricingCount3"
+                  }'>
+            <span class="toggle-switch-label">
+              <span class="toggle-switch-indicator"></span>
+            </span>
+          </label>
+          <span>Show Sequentially</span>
+        </div>
+      </div>
       <div class="col-sm-auto">
         
         <a class="btn btn-primary btn-sm" href="{{ baseUrl('/visa-services/eligibility-questions/'.base64_encode($visa_service_id)) }}">
@@ -88,9 +102,52 @@
 @endsection
 
 @section('javascript')
+
 <link rel="stylesheet" href="{{ asset('assets/vendor/sortablejs/css/jquery-ui.css') }}">
+<script src="//code.jquery.com/jquery-1.12.4.js"></script>
 <script src="{{ asset('assets/vendor/sortablejs/js/jquery-ui.js') }}"></script>
+
+<script src="assets/vendor/hs-toggle-switch/dist/hs-toggle-switch.min.js"></script>
+
 <script>
+  $(document).ready(function(){
+      $('.js-toggle-switch').each(function () {
+        var toggleSwitch = new HSToggleSwitch($(this)).init();
+      });
+      $("#customSwitch").change(function(){
+        var is_seq;
+        if($(this).is(":checked")){
+          is_seq = 1;
+        }else{
+          is_seq = 0;
+        }
+        $.ajax({
+            type: "POST",
+            url: BASEURL + '/visa-services/question-as-sequence',
+            data:{
+                _token:csrf_token,
+                show_as_sequence:is_seq,
+                visa_service_id:"{{$visa_service->unique_id}}"
+            },
+            dataType:'json',
+            beforeSend:function(){
+                showLoader();
+            },
+            success: function (response) {
+                hideLoader();
+                if(response.status == true){
+                  successMessage(response.message);
+                }else{
+                  errorMessage(response.message);
+                }
+                
+            },
+            error:function(){
+              internalError();
+            }
+        });
+      });
+  })
   $( function() {
     $('#sortable').sortable({
         start: function(event, ui) {

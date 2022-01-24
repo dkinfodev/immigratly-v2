@@ -174,6 +174,18 @@ Route::group(array('prefix' => 'super-admin', 'middleware' => 'super_admin'), fu
         Route::post('/search/{key}', [App\Http\Controllers\SuperAdmin\LanguageProficiencyController::class, 'search']); 
     });
     
+    Route::group(array('prefix' => 'visa-service-groups'), function () {
+        Route::get('/', [App\Http\Controllers\SuperAdmin\VisaServiceGroupsController::class, 'index']);
+        Route::post('/ajax-list', [App\Http\Controllers\SuperAdmin\VisaServiceGroupsController::class, 'getAjaxList']); 
+        Route::get('/add', [App\Http\Controllers\SuperAdmin\VisaServiceGroupsController::class, 'add']);
+        Route::post('/save', [App\Http\Controllers\SuperAdmin\VisaServiceGroupsController::class, 'save']); 
+        Route::get('/delete/{id}', [App\Http\Controllers\SuperAdmin\VisaServiceGroupsController::class, 'deleteSingle']); 
+        Route::post('/delete-multiple', [App\Http\Controllers\SuperAdmin\VisaServiceGroupsController::class, 'deleteMultiple']); 
+        Route::get('/edit/{id}', [App\Http\Controllers\SuperAdmin\VisaServiceGroupsController::class, 'edit']); 
+        Route::post('/update/{id}', [App\Http\Controllers\SuperAdmin\VisaServiceGroupsController::class, 'update']);
+        Route::post('/search/{key}', [App\Http\Controllers\SuperAdmin\VisaServiceGroupsController::class, 'search']); 
+    });
+
     Route::group(array('prefix' => 'visa-services'), function () {
         Route::get('/', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'visaServices']);
         Route::post('/ajax-list', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'getAjaxList']); 
@@ -187,6 +199,23 @@ Route::group(array('prefix' => 'super-admin', 'middleware' => 'super_admin'), fu
         
         Route::get('/fetch-educations', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'fetchEducations']); 
         Route::get('/fetch-proficiency', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'fetchProficiency']); 
+
+        Route::post('/question-as-sequence', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'questionAsSequence']); 
+
+        Route::group(array('prefix' => 'additional-information/{visa_service_id}'), function () {
+            Route::get('/', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'additionalInfo']);
+            // Route::post('/ajax-list', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'visaCutoffList']); 
+            Route::get('/add-block', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'addBlock']);
+            Route::post('/save-visa-block', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'saveVisaBlocks']); 
+            Route::post('/delete-block', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'deleteBlock']); 
+            // Route::post('/delete-multiple', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'deleteMultipleCutoff']); 
+            Route::get('/edit-block/{id}', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'editBlock']); 
+            Route::post('/update-visa-block/{id}', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'updateVisaBlocks']);
+            Route::post('/string-replace', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'stringReplace']); 
+        });
+
+
+
         Route::group(array('prefix' => 'cutoff/{visa_service_id}'), function () {
             Route::get('/', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'visaServiceCutoff']);
             Route::post('/ajax-list', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'visaCutoffList']); 
@@ -217,6 +246,11 @@ Route::group(array('prefix' => 'super-admin', 'middleware' => 'super_admin'), fu
             Route::get('/set-conditions/{id}', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'setCondition']); 
             Route::post('/set-conditions/{id}', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'saveCondition']); 
 
+            Route::get('/multi-option-groups/{id}', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'multipleGroupQuestions']); 
+            Route::post('/multi-option-groups/{id}/save', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'saveMultipleOptionsGroup']); 
+            Route::post('/fetch-group-options', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'fetchGroupOptions']); 
+            Route::get('/multi-option-groups/{id}/delete', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'deleteMultipleOptionsGroup']); 
+
             Route::get('/combinational-options/{id}', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'combinationalOptions']); 
             Route::post('/combinational-options/{id}/fetch-options', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'fetchCombinationalOptions']); 
             Route::post('/combinational-options/{id}/save', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'saveCombinationalOptions']); 
@@ -224,6 +258,9 @@ Route::group(array('prefix' => 'super-admin', 'middleware' => 'super_admin'), fu
 
             Route::get('/set-group-conditions/{id}', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'setGroupCondition']); 
             Route::post('/set-group-conditions/{id}', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'saveGroupCondition']); 
+
+            Route::get('/set-pre-conditions/{id}', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'setPreConditions']); 
+            Route::post('/set-pre-conditions/{id}', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'savePreConditions']); 
 
             Route::get('/arrange-questions', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'arrangeQuestions']); 
             Route::post('/arrange-questions', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'saveArrangedQuestions']); 
@@ -370,6 +407,7 @@ Route::group(array('prefix' => 'super-admin', 'middleware' => 'super_admin'), fu
         Route::post('/fetch-chats', [App\Http\Controllers\SuperAdmin\ProfessionalController::class, 'fetchSupportChats']);
         Route::post('/send-message-to-support', [App\Http\Controllers\SuperAdmin\ProfessionalController::class, 'sendChatToSupport']);
         Route::post('/send-file-to-support', [App\Http\Controllers\SuperAdmin\ProfessionalController::class, 'saveDocumentChatFile']);
+        Route::post('/update-database', [App\Http\Controllers\SuperAdmin\ProfessionalController::class, 'updateDatabase']);
     });
     Route::group(array('prefix' => 'privileges'), function () {
         Route::get('/', [App\Http\Controllers\SuperAdmin\PrivilegesController::class, 'index']);
@@ -682,7 +720,9 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
 
     });
     Route::group(array('prefix' => 'eligibility-check'), function () {
-        Route::get('/', [App\Http\Controllers\User\EligibilityCheckController::class, 'list']);
+        Route::get('/', [App\Http\Controllers\User\EligibilityCheckController::class, 'groupList']);
+        Route::post('/group-ajax-list', [App\Http\Controllers\User\EligibilityCheckController::class, 'groupAjaxList']);
+        Route::get('/lists/{id}', [App\Http\Controllers\User\EligibilityCheckController::class, 'list']);
         Route::post('/ajax-list', [App\Http\Controllers\User\EligibilityCheckController::class, 'getAjaxList']);
         Route::get('/check/{id}', [App\Http\Controllers\User\EligibilityCheckController::class, 'eligibilityCheck']);
         Route::post('/check/{id}', [App\Http\Controllers\User\EligibilityCheckController::class, 'saveEligibilityScore']);
@@ -696,7 +736,8 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
         Route::get('/report/{id}', [App\Http\Controllers\User\EligibilityCheckController::class, 'eligibilityReport']);
         Route::get('/all-eligibility', [App\Http\Controllers\User\EligibilityCheckController::class, 'allEligibility']);
         Route::get('/eligibility-form', [App\Http\Controllers\User\EligibilityCheckController::class, 'eligibilityForm']);
-
+        Route::post('/check-pre-condition', [App\Http\Controllers\User\EligibilityCheckController::class, 'checkPreCondition']);
+        
 
         
         Route::get('/download-report/{id}', [App\Http\Controllers\User\EligibilityCheckController::class, 'downloadReport']);
@@ -704,7 +745,13 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
     });
     Route::get('/cv', [App\Http\Controllers\User\DashboardController::class, 'manageCv']);
     Route::post('/save-language-proficiency', [App\Http\Controllers\User\DashboardController::class, 'saveLanguageProficiency']);
-    
+    Route::group(array('prefix' => 'messages-center'), function () {
+        Route::get('/', [App\Http\Controllers\User\MessagesCenterController::class, 'allMessages']);
+        Route::post('/save-chat', [App\Http\Controllers\User\MessagesCenterController::class, 'saveChat']);
+        Route::get('/general-chats', [App\Http\Controllers\User\MessagesCenterController::class, 'generalChats']);
+        Route::get('/case-chats', [App\Http\Controllers\User\MessagesCenterController::class, 'caseChats']);
+        Route::get('/document-chats', [App\Http\Controllers\User\MessagesCenterController::class, 'documentChats']);
+    });
     Route::group(array('prefix' => 'chat-groups'), function () {
         Route::get('/', [App\Http\Controllers\User\ChatGroupsController::class, 'index']);
         Route::post('/ajax-list', [App\Http\Controllers\User\ChatGroupsController::class, 'getAjaxList']); 
@@ -1081,7 +1128,16 @@ Route::group(array('prefix' => 'admin'), function () {
             Route::get('/change-password/{id}', [App\Http\Controllers\Admin\StaffController::class, 'changePassword']);
             Route::post('/update-password/{id}', [App\Http\Controllers\Admin\StaffController::class, 'updatePassword']);
         });
-
+        Route::group(array('prefix' => 'working-schedules'), function () {
+            Route::get('/', [App\Http\Controllers\Admin\WorkingSchedulesController::class, 'index']);
+            Route::post('/ajax-list', [App\Http\Controllers\Admin\WorkingSchedulesController::class, 'getAjaxList']);
+            Route::get('/add', [App\Http\Controllers\Admin\WorkingSchedulesController::class, 'add']);
+            Route::post('/save', [App\Http\Controllers\Admin\WorkingSchedulesController::class, 'save']);
+            Route::get('/edit/{id}', [App\Http\Controllers\Admin\WorkingSchedulesController::class, 'edit']);
+            Route::post('/update/{id}', [App\Http\Controllers\Admin\WorkingSchedulesController::class, 'update']);
+            Route::get('/delete/{id}', [App\Http\Controllers\Admin\WorkingSchedulesController::class, 'deleteSingle']);
+            Route::post('/delete-multiple', [App\Http\Controllers\Admin\WorkingSchedulesController::class, 'deleteMultiple']);
+        });
         Route::group(array('prefix' => 'leads'), function () {
             Route::get('/', [App\Http\Controllers\Admin\LeadsController::class, 'newLeads']);
             Route::post('/ajax-list', [App\Http\Controllers\Admin\LeadsController::class, 'getNewList']);
@@ -1114,20 +1170,37 @@ Route::group(array('prefix' => 'admin'), function () {
             });
         });
 
+        Route::group(array('prefix' => 'messages-center'), function () {
+            Route::get('/', [App\Http\Controllers\Admin\MessagesCenterController::class, 'allMessages']);
+            Route::post('/save-chat', [App\Http\Controllers\Admin\MessagesCenterController::class, 'saveChat']);
+            Route::get('/general-chats', [App\Http\Controllers\Admin\MessagesCenterController::class, 'generalChats']);
+            Route::get('/case-chats', [App\Http\Controllers\Admin\MessagesCenterController::class, 'caseChats']);
+            Route::get('/document-chats', [App\Http\Controllers\Admin\MessagesCenterController::class, 'documentChats']);
+        });
         Route::group(array('prefix' => 'cases'), function () {
             Route::get('/', [App\Http\Controllers\Admin\CasesController::class, 'cases']);
             Route::post('/ajax-list', [App\Http\Controllers\Admin\CasesController::class, 'getAjaxList']);
             Route::get('/add', [App\Http\Controllers\Admin\CasesController::class, 'add']);
             Route::post('/save', [App\Http\Controllers\Admin\CasesController::class, 'save']);
+            Route::get('/add-group-case', [App\Http\Controllers\Admin\CasesController::class, 'addGroupCase']);
+            Route::post('/add-group-case', [App\Http\Controllers\Admin\CasesController::class, 'saveGroupCase']);
             Route::get('/create-client', [App\Http\Controllers\Admin\CasesController::class, 'createClient']);
             Route::post('/create-client', [App\Http\Controllers\Admin\CasesController::class, 'createNewClient']);
+            Route::post('/fetch-client-dependents', [App\Http\Controllers\Admin\CasesController::class, 'fetchClientDependents']);
             Route::get('/delete/{id}', [App\Http\Controllers\Admin\CasesController::class, 'deleteSingle']);
             Route::post('/delete-multiple', [App\Http\Controllers\Admin\CasesController::class, 'deleteMultiple']);
-            Route::get('/edit/{id}', [App\Http\Controllers\Admin\CasesController::class, 'edit']);
             Route::get('/activity-logs/{id}', [App\Http\Controllers\Admin\CasesController::class, 'activityLog']);
             Route::get('/view/{id}', [App\Http\Controllers\Admin\CasesController::class, 'view']);
+            
+            Route::get('/edit/{id}', [App\Http\Controllers\Admin\CasesController::class, 'edit']);
             Route::post('/update/{id}', [App\Http\Controllers\Admin\CasesController::class, 'update']);
+
+            Route::get('/edit-group-case/{id}', [App\Http\Controllers\Admin\CasesController::class, 'editGroupCase']);
+            Route::post('/update-group-case/{id}', [App\Http\Controllers\Admin\CasesController::class, 'updateGroupCase']);
+            Route::get('/remove-assigned-user/{id}', [App\Http\Controllers\Admin\CasesController::class, 'removeAssignedUser']);
+
             Route::get('/view/{id}', [App\Http\Controllers\Admin\CasesController::class, 'view']);
+            Route::get('/dependents/{id}', [App\Http\Controllers\Admin\CasesController::class, 'caseDependents']);
             Route::post('/remove-documents', [App\Http\Controllers\Admin\CasesController::class, 'removeDocuments']);
             Route::get('/chats/{id}', [App\Http\Controllers\Admin\CasesController::class, 'chats']);
             Route::post('/fetch-chats', [App\Http\Controllers\Admin\CasesController::class, 'fetchChats']);
@@ -1282,6 +1355,14 @@ Route::group(array('prefix' => 'manager'), function () {
                 Route::post('/send-chat-file', [App\Http\Controllers\Manager\CasesController::class, 'saveDocumentChatFile']);
             });
         });
+
+        Route::group(array('prefix' => 'messages-center'), function () {
+            Route::get('/', [App\Http\Controllers\Manager\MessagesCenterController::class, 'allMessages']);
+            Route::post('/save-chat', [App\Http\Controllers\Manager\MessagesCenterController::class, 'saveChat']);
+            Route::get('/general-chats', [App\Http\Controllers\Manager\MessagesCenterController::class, 'generalChats']);
+            Route::get('/case-chats', [App\Http\Controllers\Manager\MessagesCenterController::class, 'caseChats']);
+            Route::get('/document-chats', [App\Http\Controllers\Manager\MessagesCenterController::class, 'documentChats']);
+        });
     });
 });
 
@@ -1372,6 +1453,14 @@ Route::group(array('prefix' => 'telecaller'), function () {
             });
         });
     });
+
+    Route::group(array('prefix' => 'messages-center'), function () {
+        Route::get('/', [App\Http\Controllers\Telecaller\MessagesCenterController::class, 'allMessages']);
+        Route::post('/save-chat', [App\Http\Controllers\Telecaller\MessagesCenterController::class, 'saveChat']);
+        Route::get('/general-chats', [App\Http\Controllers\Telecaller\MessagesCenterController::class, 'generalChats']);
+        Route::get('/case-chats', [App\Http\Controllers\Telecaller\MessagesCenterController::class, 'caseChats']);
+        Route::get('/document-chats', [App\Http\Controllers\Telecaller\MessagesCenterController::class, 'documentChats']);
+    });
 });
 
 // Associate of Professional Side
@@ -1459,5 +1548,13 @@ Route::group(array('prefix' => 'associate'), function () {
                 Route::post('/send-chats', [App\Http\Controllers\Associate\CasesController::class, 'saveDocumentChat']);
                 Route::post('/send-chat-file', [App\Http\Controllers\Associate\CasesController::class, 'saveDocumentChatFile']);
             });
+        });
+
+        Route::group(array('prefix' => 'messages-center'), function () {
+            Route::get('/', [App\Http\Controllers\Associate\MessagesCenterController::class, 'allMessages']);
+            Route::post('/save-chat', [App\Http\Controllers\Associate\MessagesCenterController::class, 'saveChat']);
+            Route::get('/general-chats', [App\Http\Controllers\Associate\MessagesCenterController::class, 'generalChats']);
+            Route::get('/case-chats', [App\Http\Controllers\Associate\MessagesCenterController::class, 'caseChats']);
+            Route::get('/document-chats', [App\Http\Controllers\Associate\MessagesCenterController::class, 'documentChats']);
         });
 });

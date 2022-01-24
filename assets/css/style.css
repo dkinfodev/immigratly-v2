@@ -119,3 +119,32 @@ ul.elg-list {
     background-color: transparent;
     color: #FFF !important;
 }
+.table-responsive.datatable-custom {
+    overflow-x: unset;
+}
+.option-heading a {
+    float: right;
+}
+.w-90{
+    width: 90%;
+}
+.toast{
+    display: none;
+}
+
+.additional-section fieldset {
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    padding: 14px 0px 30px;
+}
+
+.additional-section legend {
+    width: auto;
+    padding: 11px 11px;
+    margin-left: 10px;
+}
+.criteria-remove {
+    position: relative;
+    top: 42px;
+}

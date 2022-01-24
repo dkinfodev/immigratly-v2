@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.master-old')
 @section('pageheader')
 <!-- Content -->
 <div class="">
@@ -48,9 +48,12 @@
 
   <div class="accordion" id="accordionExample">
       @foreach($group->Components as $component)
+        @if(!empty($component->Component))
         <div class="card" id="heading-{{$component->component_id}}">
             <a class="card-header card-btn btn-block" href="javascript:;" data-toggle="collapse" data-target="#collapse-{{$component->component_id}}" aria-expanded="true" aria-controls="collapse-{{$component->component_id}}">
+            @if(!empty($component->Component))
             {{$component->Component->component_title}}
+            @endif
             <span class="card-btn-toggle">
                 <span class="card-btn-toggle-default">
                 <i class="tio-add"></i>
@@ -100,6 +103,7 @@
             </div>
             </div>
         </div>  
+        @endif
       @endforeach
   </div>
   @endsection

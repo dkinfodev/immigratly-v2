@@ -2,13 +2,17 @@
 
 @section('pageheader')
 <style>
-   .all_services li {
+ul.nav.nav-tabs.dependents-list {
+    margin-bottom: 35px;
+    text-transform: capitalize;
+}
+.all_services li {
    padding: 16px;
    border-bottom: 1px solid #ddd;
-   }
-   .sub_services li {
+}
+.sub_services li {
    border-bottom: none;
-   }
+}
 </style>
 <!-- Content -->
 <div class="">
@@ -30,6 +34,36 @@
 @section('content')
 <!-- Content -->
 @include(roleFolder().'.cases.case-navbar')
+
+@if($record->case_type == 'group')
+<div class="row">
+   <div class="col-md-12">
+      <ul class="nav nav-tabs dependents-list" role="tablist">
+            <li>
+          
+               @if(!empty($record->Client($record->client_id)))
+               <?php
+               $client = $record->Client($record->client_id);
+               ?>
+               <a href="{{ baseUrl('cases/case-documents/'.$doc_type.'/'.$case_id.'/'.$doc_id) }}" class="nav-link {{($dependent_id == '')?'active':''}}">{{$client->first_name." ".$client->last_name}}</a>
+               @else
+               <a href="{{ baseUrl('cases/case-documents/'.$doc_type.'/'.$case_id.'/'.$doc_id) }}" class="nav-link {{($dependent_id == '')?'active':''}}">Client not found</a>
+               @endif
+            </li>
+            @foreach($dependents as $dependent)
+               @if(!empty($dependent->Dependent($dependent->dependent_id)))
+               <li class="nav-item">
+                  <?php 
+                     $case_dependent = $dependent->Dependent($dependent->dependent_id);
+                  ?>
+                  <a href="{{ baseUrl('cases/case-documents/'.$doc_type.'/'.$case_id.'/'.$doc_id.'?dependent_id='.$dependent->dependent_id.'&visa_service='.$dependent->visa_service_id) }}" class="nav-link {{($dependent_id == $dependent->dependent_id)?'active':''}}">{{$case_dependent->given_name}}</a>
+               </li>
+               @endif
+            @endforeach
+      </ul>
+   </div>
+</div>
+@endif
 <div class="">
     <div class="row">
         <div class="col-lg-9 mb-5 mb-lg-0">
@@ -38,7 +72,7 @@
                     <!-- Dropzone -->
                     <div id="attachFilesLabel" class="js-dropzone dropzone-custom custom-file-boxed"
                            data-hs-dropzone-options='{
-                              "url": "<?php echo baseUrl('cases/case-documents/upload-documents/'.base64_encode($record->id)) ?>?_token=<?php echo csrf_token() ?>&folder_id=<?php echo $document->unique_id ?>&doc_type=<?php echo $doc_type ?>",
+                              "url": "<?php echo baseUrl('cases/case-documents/upload-documents/'.base64_encode($record->id)) ?>?_token=<?php echo csrf_token() ?>&folder_id=<?php echo $document->unique_id ?>&doc_type=<?php echo $doc_type ?>&user_type=<?php echo $user_type ?>&dependent_id=<?php echo $dependent_id ?>",
                               "thumbnailWidth": 100,
                               "thumbnailHeight": 100
                            }'

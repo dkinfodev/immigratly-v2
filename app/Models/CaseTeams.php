@@ -18,4 +18,9 @@ class CaseTeams extends Model
     static function deleteRecord($id){
         CaseTeams::where("id",$id)->delete();
     }
+
+    public function Staff()
+    {
+        return $this->belongsTo('App\Models\User','user_id','unique_id');
+    }
 }

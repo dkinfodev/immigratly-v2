@@ -90,7 +90,7 @@ if($dbname2 != ''){
         $results = $conn_host->query($sql);
         $columns = array();
         while($row = $results->fetch_assoc()) {
-            pre($row);
+            // pre($row);
             $null = '';
             $primary = '';
             if($row['Null'] == 'NO'){
@@ -109,13 +109,13 @@ if($dbname2 != ''){
         
         // echo nl2br($sql2)."<br><br>";
         if($conn_local->query($sql2)){
-            echo "success<br>";
+            // echo "success<br>";
             $success++;
         }else{
             $error++;
             $errorMsg .='<i class="fa fa-check"></i> Error while creating Table '.$tables_new[$t].'<br>';
             $errorMsg .='<div class="text-warning">'.$sql2.'</div>';
-            echo $errorMsg;
+            // echo $errorMsg;
         }
         // echo $sql2."<br>";
     }
@@ -241,14 +241,14 @@ if($dbname2 != ''){
                             if($value != ''){
                                 if($conn_local->query($sql3)){
                                     $success++;
-                                    echo "success";
+                                    // echo "success";
                                 }else{
                                     $error++;
                                     $errorMsg .='Error while Alter Table '.$tbl.'<br>';
                                     $errorMsg .='<div class="text-warning">'.$sql3.'</div>';
-                                    echo "<pre>";
-                                    print_r($errorMsg);
-                                    echo "</pre>";
+                                    // echo "<pre>";
+                                    // print_r($errorMsg);
+                                    // echo "</pre>";
                                 }
                             }
                         }
@@ -273,7 +273,7 @@ if($dbname2 != ''){
     }else{
         $response['error_exists'] = false;
     }
-    echo $message;
+    // echo $message;
     $html = '<tr><td>'.$dbname2.'</td>';
     $html .= '<td>'.$message.'</td></tr>';
     $response['html'] = $html;

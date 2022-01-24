@@ -65,12 +65,13 @@ if($chat->send_by != 'client'){
          <?php
             $file_url = professionalDirUrl($subdomain)."/documents/".$chat->FileDetail->file_name;
          ?>
-         <a href="{{$file_url}}" class="d-flex" download>
+         <a href="{{$file_url}}" class="d-block" download>
            <?php 
               $fileicon = fileIcon($chat->message);
               echo $fileicon;
            ?>
            <div class="text-msg text-dark">{{$chat->message}}</div>
+           <div class="text-msg text-dark">{{$chat->file_message}}</div>
          </a>
         @else
         <p class="mb-0">

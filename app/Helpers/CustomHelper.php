@@ -5,6 +5,7 @@ require dirname(__DIR__)."/../library/google-api/vendor/autoload.php";
 require dirname(__DIR__)."/../library/dropbox/demo-lib.php";
 require dirname(__DIR__)."/../library/dropbox/DropboxClient.php";
 require dirname(__DIR__)."/../library/sendgrid/SendGridApi.php";
+require dirname(__DIR__)."/../library/typesetsh.lib/Typesetsh.php";
 
 use Illuminate\Support\Str;
 use Illuminate\Encryption\Encrypter;
@@ -32,6 +33,8 @@ use App\Models\LicenceBodies;
 use App\Models\Languages;
 use App\Models\PinCaseFolder;
 use App\Models\UserFiles;
+use App\Models\ComponentPreConditions;
+use App\Models\Tags;
 
 if (! function_exists('getFileType')) {
     function getFileType($ext) {
@@ -506,7 +509,22 @@ if(!function_exists("userInitial")){
        return $init;
     }
 }
-
+if(!function_exists("findInitial")){
+    function findInitial($name) { 
+       $name = explode(" ",$name);
+       if(count($name) > 1){
+         $first_name = substr($name[0],0,1); 
+         $last_name = substr($name[1],0,1);
+       }else{
+        $first_name = substr($name[0],0,1); 
+        $last_name = '';
+       }
+       $init = $first_name.$last_name;
+       $init = strtoupper($init);
+       
+       return $init;
+    }
+}
 if(!function_exists("createSubDomain")){
     function createSubDomain($subdomain,$dbname){
         $rootdomain = Settings::where("meta_key",'rootdomain')->first();
@@ -1921,6 +1939,7 @@ if(!function_exists("cvBasedOptions")){
 
         $option_selected = '';
         $option_label = '';
+        $option_score = '';
         if($cv_section == 'age'){
             
             $dob = \Auth::user()->UserDetail->date_of_birth;
@@ -1935,37 +1954,43 @@ if(!function_exists("cvBasedOptions")){
                             if($age > $option_value){
                                 $option_selected = $option->option_value;
                                 $option_label = $option->option_label;
+                                $option_score = $option->score;
                             }
                             break;
                         case 'greater_then_equalto':
                             if($age >= $option_value){
                                 $option_selected = $option->option_value;
                                 $option_label = $option->option_label;
+                                $option_score = $option->score;
                             }
                             break;
                         case 'less_then':
                             if($age < $option_value){
                                 $option_selected = $option->option_value;
                                 $option_label = $option->option_label;
+                                $option_score = $option->score;
                             }
                             break;
                         case 'less_then_equalto':
                             if($age <= $option_value){
                                 $option_selected = $option->option_value;
                                 $option_label = $option->option_label;
+                                $option_score = $option->score;
                             }
                             break;
                         case 'equalto':
                             if($age == $option_value){
                                 $option_selected = $option->option_value;
                                 $option_label = $option->option_label;
+                                $option_score = $option->score;
                             }
                             break;
                         case 'between':
                             $btw_values = explode(":",$option->option_value);
-                            if( $diff >= $btw_values[0] && $diff <= $btw_values[1]){
-                                $option_selected = $option->id;
+                            if( $age >= $btw_values[0] && $age <= $btw_values[1]){
+                                $option_selected = $option->option_value;
                                 $option_label = $option->option_label;
+                                $option_score = $option->score;
                             }
                             break;
                     }
@@ -1993,30 +2018,35 @@ if(!function_exists("cvBasedOptions")){
                             if($diff > $option_value){
                                 $option_selected = $option->id;
                                 $option_label = $option->option_label;
+                                $option_score = $option->score;
                             }
                             break;
                         case 'greater_then_equalto':
                             if($diff >= $option_value){
                                 $option_selected = $option->id;
                                 $option_label = $option->option_label;
+                                $option_score = $option->score;
                             }
                             break;
                         case 'less_then':
                             if($diff < $option_value){
                                 $option_selected = $option->id;
                                 $option_label = $option->option_label;
+                                $option_score = $option->score;
                             }
                             break;
                         case 'less_then_equalto':
                             if($diff <= $option_value){
                                 $option_selected = $option->id;
                                 $option_label = $option->option_label;
+                                $option_score = $option->score;
                             }
                             break;
                         case 'equalto':
                             if($diff == $option_value){
                                 $option_selected = $option->id;
                                 $option_label = $option->option_label;
+                                $option_score = $option->score;
                             }
                             break;
                         case 'between':
@@ -2026,57 +2056,152 @@ if(!function_exists("cvBasedOptions")){
                             if(count($btw_values) == 2 && ($diff >= $btw_values[0] && $diff <= $btw_values[1])){
                                 $option_selected = $option->id;
                                 $option_label = $option->option_label;
+                                $option_score = $option->score;
                             }
                             break;
                     }
                 }
             }
         }
-
+        // echo $cv_section;
         if($cv_section == 'language_proficiency'){
-            $clb_score = '';
+            
             if($question->language_type == 'first_official'){
+                $clb_score = '';
                 $first_official = \Auth::user()->FirstProficiency;
                 if(!empty($first_official)){
                     $language_proficiency = LanguageProficiency::where("unique_id",$first_official->proficiency)->first();
                     $clb_level = $language_proficiency->ClbLevels;
-                   
-                    foreach($clb_level as $level){
-                        if($first_official->reading == $level->reading && 
-                           $first_official->writing == $level->writing && 
-                           $first_official->listening == $level->listening && 
-                           $first_official->speaking == $level->speaking
-                        ) {
-                            $clb_score = $level->clb_level;
+                    $lng_scores['reading'] = $first_official->reading;
+                    $lng_scores['writing'] = $first_official->writing;
+                    $lng_scores['listening'] = $first_official->listening;
+                    $lng_scores['speaking'] = $first_official->speaking;
+                    $min_score = min($lng_scores);
+                    $lowest_index = '';
+                    foreach($lng_scores as $key => $value){
+                        if($min_score == $value){
+                            $lowest_index = $key;
+                        }
+                    }
+                    
+                    if($question->score_count_type == 'lowest_matching'){
+                        foreach($clb_level as $level){
+                            if($first_official->$lowest_index == $level->$lowest_index){
+                                $clb_score = $level->clb_level;    
+                            }
+                        }
+                    }
+
+                    if($question->score_count_type == 'range_matching'){
+                        $clb_level_arr = $clb_level->toArray();
+                        $final_match_count = 0;
+                        $next_level_clb = array();
+                        $current_level_clb = array();
+                        // pre($clb_level->toArray());
+                        foreach($clb_level as $c_key => $level){
+                            $current_match_count = 0;
+                            foreach($lng_scores as $key => $score){
+                                if($score >= $level->$key){
+                                    $current_match_count++;
+                                }
+                            }
+                            // echo "current_match_count: ".$current_match_count."<br>";
+                            // echo "final_match_count: ".$final_match_count."<br>";
+                            if($current_match_count >= $final_match_count){
+                                $final_match_count = $current_match_count;
+                                if(isset($clb_level_arr[$c_key+1])){
+                                    $current_level_clb = $level;
+                                    $clb_score = $level->clb_level;
+                                }else{
+                                    $current_level_clb = array();
+                                    $clb_score = $level->clb_level;
+                                }
+                            }
                         }
                     }
                 }
             }
-
+            // echo "<h2>SOFF:</h2>";
+            // pre($question->language_type);
+            // echo "<br>quest: ".$question->question."<br>";
             if($question->language_type == 'second_official'){
+                $clb_score = '';
+                // echo "<br>Second Official:<br>";
                 $second_offical = \Auth::user()->SecondProficiency;
+                // pre($second_offical->toArray());
                 if(!empty($second_offical)){
                     $language_proficiency = LanguageProficiency::where("unique_id",$second_offical->proficiency)->first();
                     $clb_level = $language_proficiency->ClbLevels;
+                    $lng_scores['reading'] = $second_offical->reading;
+                    $lng_scores['writing'] = $second_offical->writing;
+                    $lng_scores['listening'] = $second_offical->listening;
+                    $lng_scores['speaking'] = $second_offical->speaking;
+                    $min_score = min($lng_scores);
+                    $lowest_index = '';
+                    foreach($lng_scores as $key => $value){
+                        if($min_score == $value){
+                            $lowest_index = $key;
+                        }
+                    }
+                    foreach($lng_scores as $key => $value){
+                        if($min_score == $value){
+                            $lowest_index = $key;
+                        }
+                    }
+                    if($question->score_count_type == 'lowest_matching'){
+                        foreach($clb_level as $level){
+                            if($second_offical->$lowest_index == $level->$lowest_index){
+                                $clb_score = $level->clb_level;    
+                            }
+                        }
+                    }
+                    // echo "<br>score_count_type: ".$question->score_count_type."<br>";
+                    if($question->score_count_type == 'range_matching'){
+                        $final_match_count = 0;
+                        $next_level_clb = array();
+                        $current_level_clb = array();
+                        $clb_level_arr = $clb_level->toArray();
+                        foreach($clb_level as $c_key => $level){
+                            $current_match_count = 0;
+                            foreach($lng_scores as $key => $score){
+                                if($score >= $level->$key){
+                                    $current_match_count++;
+                                }
+                            }
+                            if($current_match_count >= $final_match_count){
+                                $final_match_count = $current_match_count;
+                                if(isset($clb_level_arr[$c_key+1])){
+                                    $current_level_clb = $level;
+                                    $clb_score = $level->clb_level;
+                                }else{
+                                    $current_level_clb = array();
+                                    $clb_score = $level->clb_level;
+                                }
+                            }
+                        }
+                    }
                     
-                    foreach($clb_level as $level){
-                        if($second_offical->reading == $level->reading && 
-                           $second_offical->writing == $level->writing && 
-                           $second_offical->listening == $level->listening && 
-                           $second_offical->speaking == $level->speaking
-                        ) {
-                            $clb_score = $level->clb_level;
+                }
+            }
+            foreach($options as $option){
+                if($option->option_value == $clb_score){
+                    if($question->language_type == 'first_official'){
+                        if($option->language_proficiency_id == Auth::user()->FirstProficiency->proficiency){
+                            $option_label = $option->option_label;
+                            $option_selected = $option->option_value;
+                            $option_score = $option->score;
+                        }
+                    }
+                    if($question->language_type == 'second_official'){
+                        if($option->language_proficiency_id == Auth::user()->SecondProficiency->proficiency){
+                            $option_label = $option->option_label;
+                            $option_selected = $option->option_value;
+                            $option_score = $option->score;
                         }
                     }
                 }
             }
-
-            foreach($options as $option){
-                if($option->option_value == $clb_score){
-                    $option_label = $option->option_label;
-                    $option_selected = $option->option_value;
-                }
-            }
+            
         }
 
         if($cv_section == 'education'){
@@ -2096,11 +2221,18 @@ if(!function_exists("cvBasedOptions")){
             $degrees = array_values($degrees);
             if(!empty($degrees)){
                 $option_label = $degrees[0]['name'];
-                $option_selected = $degrees[0]['id'];
+                
+                foreach($options as $option){
+                    if($option->option_label == $option_label){
+                        $option_selected = $option->option_value;
+                        $option_score = $option->score;
+                    }
+                }
             }
         }
         $response['option_label'] = $option_label;
         $response['option_selected'] = $option_selected;
+        $response['option_score'] = $option_score;
         return $response;
     }
 }
@@ -2322,3 +2454,49 @@ if(!function_exists("caseActivityLog")){
         return true;
     }
 }
+if(!function_exists("languageProficiency")){
+    function languageProficiency($id){
+        $language_proficiency = LanguageProficiency::where("unique_id",$id)->first();
+        return $language_proficiency;
+    }
+}
+if(!function_exists("generatePdf")){
+    function generatePdf($contents,$pdfpath){
+        $obj = new Typesetsh();
+        $response = $obj->generatePdf($contents,$pdfpath);
+     
+        return $response;
+    }
+}
+
+if(!function_exists("componentPreConditions")){
+    function componentPreConditions($condition_for,$id){
+        if($condition_for == 'question'){
+            $is_conditional = ComponentPreConditions::where("question_id",$id)
+                            ->select("component_id","option_id")
+                            ->get();
+            return $is_conditional;
+        }else{
+            $is_conditional = ComponentPreConditions::where("component_id",$id)->first();
+            return $is_conditional;
+        }
+    }
+}
+if(!function_exists("generalTags")){
+    function generalTags($id){
+        if(is_array($id)){
+            $tags = Tags::whereIn("id",$id)->get();
+        }else{
+            $tags = Tags::where("id",$id)->first();
+        }
+        return $tags;
+   }
+}
+
+if(!function_exists("monthsName")){
+    function monthsName(){
+        $months = array("January","February","March","April","May","June","July","August","September","October","November","December");
+        return $months;
+   }
+}
+

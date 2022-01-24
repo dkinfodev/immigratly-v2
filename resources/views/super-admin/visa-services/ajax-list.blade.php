@@ -46,6 +46,10 @@
           <i class="tio-pages dropdown-item-icon"></i>
           Contents
           </a>
+          <a class="dropdown-item" href="{{baseUrl('visa-services/additional-information/'.base64_encode($record->id))}}">
+          <i class="tio-pages dropdown-item-icon"></i>
+          Additional Information
+          </a>
           <a class="dropdown-item" href="{{baseUrl('visa-services/eligibility-questions/'.base64_encode($record->id))}}">
           <i class="tio-pages dropdown-item-icon"></i>
           Eligibility Questions

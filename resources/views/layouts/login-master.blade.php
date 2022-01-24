@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="assets/vendor/select2/dist/css/select2.min.css">
 
     <!-- CSS Front Template -->
-    <link rel="stylesheet" href="assets/css/theme.min.css">
+    <link rel="stylesheet" href="assets/css/theme.min-old.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/custom.css">
     @yield('style')

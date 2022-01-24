@@ -59,7 +59,8 @@
     @endif
   </td>
    <td>
-    <div class="avatar-group avatar-group-xs avatar-circle">
+     {{$record->case_type}}
+   {{--<div class="avatar-group avatar-group-xs avatar-circle">
       <?php 
         $more_file = 0;
       ?>
@@ -79,7 +80,7 @@
           <span class="avatar-initials">{{ $more_file }}+</span>
         </span>
       @endif
-    </div>
+    </div> --}}
   </td>
   <td width="10%">
    <div class="hs-unfold">
@@ -105,7 +106,11 @@
           }'>More  <i class="tio-chevron-down ml-1"></i>
         </a>
         <div id="action-{{$key}}" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right">
+          @if($record->case_type == 'group')
+          <a class="dropdown-item" href="{{baseUrl('cases/edit-group-case/'.base64_encode($record->id))}}">
+          @else
           <a class="dropdown-item" href="{{baseUrl('cases/edit/'.base64_encode($record->id))}}">
+          @endif
           <i class="tio-edit dropdown-item-icon"></i>
           Edit
           </a>

@@ -1,31 +1,37 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+// error_reporting(E_ALL);
+$db = '';
+if(!isset($_POST['db'])){
+    return false;
+}else{
+    $db = $_POST['db'];
+}
 if($_SERVER['HTTP_HOST'] == 'localhost'){
     $servername = "localhost";
     $username = "root";
     $password = "";
-    $dbname = "new_immigratly"; // Host Database
+    $dbname = "immigrat_sampledb"; // Host Database
 
     // Users database
 
     $servername2 = "localhost";
     $username2 = "root";
     $password2 = "";
-    $dbname2 = 'main_immigration';
+    $dbname2 = $db;
 }else{
     $servername = "localhost";
     $username = "immigrat_immigratly";
     $password = "PHx#t;qv1p]S";
-    $dbname = "immigrat_new_immigratly"; // Host Database
+    $dbname = "immigrat_sampledb"; // Host Database
 
     // Users database
 
     $servername2 = "localhost";
     $username2 = "immigrat_immigratly";
     $password2 = "PHx#t;qv1p]S";
-    $dbname2 = 'immigrat_main_immigratly';
+    $dbname2 = $db;
 }
 
 $conn_host = new mysqli($servername, $username, $password, $dbname);
@@ -90,11 +96,11 @@ if($dbname2 != ''){
         $results = $conn_host->query($sql);
         $columns = array();
         while($row = $results->fetch_assoc()) {
-            pre($row);
+            // pre($row);
             $null = '';
             $primary = '';
             if($row['Null'] == 'NO'){
-                $null = "NOT NULL";
+                $null = "";
             }
             if($row['Null'] == 'YES'){
                 $null = "NULL";
@@ -106,16 +112,16 @@ if($dbname2 != ''){
         }
         $cols = implode(",",$columns);
         $sql2 = "CREATE TABLE `$tables_new[$t]` ($cols) ".$primary;
-        
+        // echo "Table Created:".$tables_new[$t]."<br><br>";
         // echo nl2br($sql2)."<br><br>";
         if($conn_local->query($sql2)){
-            echo "success<br>";
+            // echo "success<br>";
             $success++;
         }else{
             $error++;
             $errorMsg .='<i class="fa fa-check"></i> Error while creating Table '.$tables_new[$t].'<br>';
             $errorMsg .='<div class="text-warning">'.$sql2.'</div>';
-            echo $errorMsg;
+            // echo $errorMsg;
         }
         // echo $sql2."<br>";
     }
@@ -141,12 +147,13 @@ if($dbname2 != ''){
                     $null = '';
                     $primary = '';
                     if($row['Null'] == 0){
-                        $null = "NOT NULL";
+                        $null = "";
                     }
                     if($row['Key'] == 'PRI'){
                         $primary = "PRIMARY KEY AUTO_INCREMENT";
                     }
                     $sql3 = "ALTER TABLE $tbl ADD COLUMN $column ".$row['Type']." ".$null." ".$primary;
+                    // echo "New Column Added:".$tbl."::".$column."<br><br>";
                     if($conn_local->query($sql3)){
                         $success++;
                     }else{
@@ -230,25 +237,25 @@ if($dbname2 != ''){
                                     if($value == 'current_timestamp()' || $value == 'CURRENT_TIMESTAMP'){;
                                         $default = " NOT NULL DEFAULT CURRENT_TIMESTAMP";
                                     }else{
-                                        $default = " NOT NULL DEFAULT '".$value."'";
+                                        $default = " DEFAULT '".$value."'";
                                     }
                                     
                                 }else{
-                                    $default = " NOT NULL DEFAULT ".$value;
+                                    $default = " DEFAULT ".$value;
                                 }
                             }
                             $sql3 = "ALTER TABLE `$tbl` CHANGE `$column` `$column` $type ".$key.$null.$default;
                             if($value != ''){
                                 if($conn_local->query($sql3)){
                                     $success++;
-                                    echo "success";
+                                    // echo "success";
                                 }else{
                                     $error++;
                                     $errorMsg .='Error while Alter Table '.$tbl.'<br>';
                                     $errorMsg .='<div class="text-warning">'.$sql3.'</div>';
-                                    echo "<pre>";
-                                    print_r($errorMsg);
-                                    echo "</pre>";
+                                    // echo "<pre>";
+                                    // print_r($errorMsg);
+                                    // echo "</pre>";
                                 }
                             }
                         }
@@ -273,7 +280,7 @@ if($dbname2 != ''){
     }else{
         $response['error_exists'] = false;
     }
-    echo $message;
+    // echo $message;
     $html = '<tr><td>'.$dbname2.'</td>';
     $html .= '<td>'.$message.'</td></tr>';
     $response['html'] = $html;

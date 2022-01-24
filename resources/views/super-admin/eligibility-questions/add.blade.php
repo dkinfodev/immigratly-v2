@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.master-old')
 @section('pageheader')
 <!-- Content -->
 <div class="">
@@ -102,16 +102,57 @@
                   </select>
               </div>
           </div>
-
+          <div class="js-form-message form-group row">
+              <label class="col-sm-2 col-form-label">Score Count Type</label>
+              <div class="col-sm-10">
+                  <select name="score_count_type" onchange="scoreCount(this.value)" disabled>
+                      <option value="">Select Option</option>
+                      <option  value="lowest_matching">Lowest Matching</option>
+                      <option  value="range_matching">Range Matching</option>
+                  </select>
+              </div>
+          </div>
+          <!-- <div class="js-form-message form-group row score_points"  style="display:none">
+              <div class="col-md-12">
+                  <table class="table table-bordered">
+                      <thead>
+                          <tr>
+                              <th colspan="3">Score Point</th>
+                          </tr>
+                          <tr>
+                              <th>One Match</th>
+                              <th>Two Match</th>
+                              <th>Three Match</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr>
+                              <td>
+                                  <input type="text" class="form-control" name="one_match" placeholder="Enter One Match Point" value="" />
+                              </td>
+                              <td>
+                                  <input type="text" class="form-control" name="two_match" placeholder="Enter Two Match Point" value="" />
+                              </td>
+                              <td>
+                                  <input type="text" class="form-control" name="three_match" placeholder="Enter Three Match Point" value="" />
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+          </div> -->
           <div class="js-form-message form-group row">
               <label class="col-sm-2 col-form-label">Language Proficiency</label>
-              <div class="col-sm-10">
-                  <select name="language_proficiency" disabled onchange="checkProficiency(this.value)">
+              <div class="col-sm-8">
+                  <select id="lang_prof" name="language_proficiency" disabled >
                       <option value="">Select Option</option>
                       @foreach($language_proficiencies as $proficiency)
                         <option  value="{{$proficiency->unique_id}}">{{$proficiency->name}}</option>
                       @endforeach
                   </select>
+              </div>
+              <div class="col-md-2">
+                  <button type="button" onclick="checkProficiency()" class="btn btn-outline-primary w-100 ">Add Options</button>
               </div>
           </div>
         </div>
@@ -157,59 +198,82 @@
             </div>
             <div class="form-group">
             <!-- Container For Input Field -->
-            <div id="addOptionsContainer"></div>
+                <div id="addOptionsContainer"></div>
 
-            <a id="add-item" href="javascript:;" class="js-create-field form-link btn btn-sm btn-no-focus btn-ghost-primary">
-              <i class="tio-add"></i> Add item
-            </a>
-
-            <!-- Add Phone Input Field -->
-            <div id="addOptionsTemplate" class="item-row" style="display: none;">
-              <!-- Content -->
-              <div class="input-group-add-field">
-              <?php
-              $index = randomNumber(4);
-              ?>
-                <div class="row">
-                  <div class="col-md-2 js-form-message criteria_block" style="display:none">
-                      <!-- <select class="criteria">
-                          <option value="">Select Option</option>
-                          @foreach(criteria_options() as $criteria)
-                          <option value="{{ $criteria['value'] }}">{{$criteria['label']}}</option>
-                          @endforeach
-                      </select> -->
-                  </div>
-                  <div class="col-md-2 js-form-message">
-                    <input type="text" class="form-control mb-3 option_value" placeholder="Option Value" aria-label="Option Value">
-                  </div>
-                  <div class="col-md-2 js-form-message">
-                    <input type="text" class="form-control mb-3 option_label" placeholder="Option Label" aria-label="Option Label">
-                  </div>
-                  <div class="col-md-2 js-form-message">
-                    <input type="number" class="form-control mb-3 score" placeholder="Score" aria-label="Score">
-                  </div>
-                  <div class="col-md-2 js-form-message">
-                    <input type="file" accept="image/*" class="form-control-plaintext mb-3 image" placeholder="Image" aria-label="Image">
-                  </div>
-                  <div class="col-md-2 non-elg-area js-form-message text-left">
-                    <div class="custom-control custom-checkbox">
-                      <input onchange="checkEligible(this)" type="checkbox" class="custom-control-input row-checkbox non-eligible" value="1" >
-                      <label class="custom-control-label non-eligible-label" for="row-0">Non eligible</label>
-                    </div>
-                    <textarea style="display:none" placeholder="Enter reason for non eligible" class="form-control mt-2 non-eligible-reason"></textarea> 
-                  </div>
-                </div>
-                <!-- End Row -->
-
-                <a class="js-delete-field input-group-add-field-delete" href="javascript:;" data-toggle="tooltip" data-placement="top" title="Remove item">
-                  <i class="tio-clear"></i>
+                <a id="add-item" href="javascript:;" class="js-create-field form-link btn btn-sm btn-no-focus btn-ghost-primary">
+                  <i class="tio-add"></i> Add item
                 </a>
-              </div>
-              <!-- End Content -->
-            </div>
+
+                <!-- Add Phone Input Field -->
+                <div id="addOptionsTemplate" class="item-row" style="display: none;">
+                  <!-- Content -->
+                  <div class="input-group-add-field">
+                  <?php
+                  $index = randomNumber(4);
+                  ?>
+                    <div class="row">
+                      <div class="col-md-12">
+                          <div class="option-heading h3"></div>
+                      </div>
+                      <div class="col-md-2 js-form-message criteria_block" style="display:none">
+                          <!-- <select class="criteria">
+                              <option value="">Select Option</option>
+                              @foreach(criteria_options() as $criteria)
+                              <option value="{{ $criteria['value'] }}">{{$criteria['label']}}</option>
+                              @endforeach
+                          </select> -->
+                      </div>
+                      <input type="hidden" class="language_proficiency_id" value="" />
+                      <div class="col-md-2 js-form-message">
+                        <input type="text" class="form-control mb-3 option_value" placeholder="Option Value" aria-label="Option Value">
+                      </div>
+                      <div class="col-md-2 js-form-message">
+                        <input type="text" class="form-control mb-3 option_label" placeholder="Option Label" aria-label="Option Label">
+                      </div>
+                      <div class="col-md-2 js-form-message">
+                        <input type="number" class="form-control mb-3 score" placeholder="Score" aria-label="Score">
+                      </div>
+                      <div class="col-md-2 js-form-message">
+                        <input type="file" accept="image/*" class="form-control-plaintext mb-3 image" placeholder="Image" aria-label="Image">
+                      </div>
+                      <div class="col-md-2 non-elg-area js-form-message text-left">
+                        <div class="custom-control custom-checkbox">
+                          <input onchange="checkEligible(this)" type="checkbox" class="custom-control-input row-checkbox non-eligible" value="1" >
+                          <label class="custom-control-label non-eligible-label" for="row-0">Non eligible</label>
+                        </div>
+                        <textarea style="display:none" placeholder="Enter reason for non eligible" class="form-control mt-2 non-eligible-reason"></textarea> 
+                      </div>
+                    </div>
+                    <!-- End Row -->
+
+                    <a class="js-delete-field input-group-add-field-delete" href="javascript:;" data-toggle="tooltip" data-placement="top" title="Remove item">
+                      <i class="tio-clear"></i>
+                    </a>
+                  </div>
+                  <!-- End Content -->
+                </div>
             <!-- End Add Phone Input Field -->
-        </div>
-       
+          </div>
+          <div class="js-form-message form-group row score_points" style="display:none">
+              <div class="col-md-12">
+                  <table class="table table-bordered">
+                      <thead>
+                          <tr>
+                              <th colspan="3">Score Points</th>
+                          </tr>
+                          <tr>
+                              <th>Language</th>
+                              <th>One Match</th>
+                              <th>Two Match</th>
+                              <th>Three Match</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          
+                      </tbody>
+                  </table>
+              </div>
+          </div>
         <div class="js-form-message form-group row">
           <label class="col-sm-2 col-form-label">Components Linked to</label>
           <div class="col-sm-10">
@@ -233,7 +297,7 @@
                 <textarea name="response_comment" data-msg="Please enter description." id="response_comment" class="form-control editor"></textarea>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group text-center">
           <button type="submit" class="btn add-btn btn-primary">Save</button>
         </div>
         <!-- End Input Group -->
@@ -275,6 +339,7 @@ $(document).ready(function(){
           initSelect("#addOptionsContainer > .item-row:last");
           $("#addOptionsContainer > .item-row:last").find(".criteria").attr("name","options[" + index + "][criteria]");
         },100);
+        
         $("#addOptionsContainer > .item-row:last").find(".option_value").attr("name","options["+index+"][option_value]");
         $("#addOptionsContainer > .item-row:last").find(".option_value").attr("required","true");
         $("#addOptionsContainer > .item-row:last").find(".option_label").attr("name","options["+index+"][option_label]");
@@ -283,12 +348,15 @@ $(document).ready(function(){
         $("#addOptionsContainer > .item-row:last").find(".score").attr("required","true");
         $("#addOptionsContainer > .item-row:last").find(".image").attr("name","options["+index+"][image]");
 
+        $("#addOptionsContainer > .item-row:last").find(".language_proficiency_id").attr("name", "options[" + index + "][language_proficiency_id]");
+
         $("#addOptionsContainer > .item-row:last").find(".non-eligible").attr("name","options["+index+"][non_eligible]");
         $("#addOptionsContainer > .item-row:last").find(".non-eligible").attr("id","row-"+index);
         $("#addOptionsContainer > .item-row:last").find(".non-eligible-label").attr("for","row-"+index);
         
         $("#addOptionsContainer > .item-row:last").find(".non-eligible-reason").attr("name","options["+index+"][non_eligible_reason]");
-        
+        $("#addOptionsContainer > .item-row:last").find(".non-eligible").attr("id","row-"+index);
+                $("#addOptionsContainer > .item-row:last").find(".non-eligible-label").attr("for","row-"+index);
         $("#addOptionsContainer > .item-row:last").find(".non-eligible").attr("name","options["+index+"][non_eligible]");
         $("#addOptionsContainer > .item-row:last").find(".non-eligible").attr("id","row-"+index);
         $("#addOptionsContainer > .item-row:last").find(".non-eligible-label").attr("for","row-"+index);
@@ -357,8 +425,12 @@ function linkToDefault(e){
   }
 }
 function checkProficiency(value){
-    
+    var value = $("#lang_prof").val();
     if(value != ''){
+        if($(".option-heading[data-langprof="+value+"]").html() != undefined){
+            errorMessage("Language Proficiency already added");
+            return false;
+        }
         $.ajax({
             url: "{{ baseUrl('visa-services/fetch-proficiency') }}",
             type: "get",
@@ -372,19 +444,51 @@ function checkProficiency(value){
             success: function(response) {
                 hideLoader();
                 if (response.status == true) {
-                    $("#addOptionsContainer .item-row").remove();
+                    // $("#addOptionsContainer .item-row").remove();
                     var proficiencies = response.proficiencies;
+                    var language_proficiency = response.language_proficiency;
+                    var index = 0;
                     $.each(proficiencies, function(key, item) {
                         $("#add-item").trigger("click");
+                        if(key == 0){
+                            var lngprof = language_proficiency.name+" <a href='javascript:;' onclick='removeLangProf("+language_proficiency.unique_id+")' class='text-danger'>Remove</a>";
+                            $("#addOptionsContainer .item-row:last-child").find(".option-heading").html(lngprof);
+                            $("#addOptionsContainer .item-row:last-child").find(".option-heading").attr("data-langprof",language_proficiency.unique_id);
+                        }
+                        
+                        $("#addOptionsContainer .item-row:last-child").attr("class","item-row "+language_proficiency.unique_id);
                         $("#addOptionsContainer .item-row:last-child").find(".option_value").val(item.clb_level);
                         $("#addOptionsContainer .item-row:last-child").find(".option_label").val(item.clb_level);
+                        $("#addOptionsContainer .item-row:last-child").find(".language_proficiency_id").val(item.language_proficiency_id);
                     });
+                    $("#lang_prof").val('');
+                    $("#lang_prof").trigger("change");
+
+                    var match_points = '<tr class="'+language_proficiency.unique_id+'">';
+                    match_points += '<td>';
+                    match_points += language_proficiency.name;
+                    match_points += '</td>';
+                    match_points += '<td>';
+                    match_points += '<input type="text" class="form-control" name="match_score['+language_proficiency.unique_id+'][one_match]" placeholder="Enter One Match Point" value="" />';
+                    match_points += '</td>';
+                    match_points += '<td>';
+                    match_points += '<input type="text" class="form-control" name="match_score['+language_proficiency.unique_id+'][two_match]" placeholder="Enter Two Match Point" value="" />';
+                    match_points += '</td>';
+                    match_points += '<td>';
+                    match_points += '<input type="text" class="form-control" name="match_score['+language_proficiency.unique_id+'][three_match]" placeholder="Enter Three Match Point" value="" />';
+                    match_points += '</td>';
+                    
+                    match_points += '</tr>';
+
+                    $(".score_points tbody").append(match_points);
                 }
             },
             error: function() {
                 internalError();
             }
         });
+    }else{
+        errorMessage("Please select language proficiency");
     }
 }
 function checkCvOption(value){
@@ -395,6 +499,7 @@ function checkCvOption(value){
         $("#language_proficiency").show();
         $("#language_proficiency select").removeAttr('disabled');
     }
+    $("#addOptionsContainer .item-row").remove();
     if(value == 'age' || value == 'expirences'){
         $(".criteria_block").show();
         $(".criteria_block select").removeAttr('disabled');
@@ -424,6 +529,16 @@ function checkCvOption(value){
             }
         });
     }
+}
+function scoreCount(value){
+    if(value == 'range_matching'){
+        $(".score_points").show();
+    }else{
+        $(".score_points").hide();
+    }
+}
+function removeLangProf(lang_prof_id){
+  $("."+lang_prof_id).remove();
 }
 </script>
 

@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.master-old')
 @section('pageheader')
 <!-- Content -->
 <div class="">
@@ -98,25 +98,39 @@
                       </div>
                     </div>
                     <div id="language_proficiency" style="display:{{$record->cv_section == 'language_proficiency'?'block':'none'}}" id="language_proficiency">
-                    <div class="js-form-message form-group row">
-                        <label class="col-sm-2 col-form-label">Language Type</label>
-                        <div class="col-sm-10">
-                            <select name="language_type" disabled>
-                                <option value="">Select Option</option>
-                                <option {{ ($record->language_type == 'first_official')?'selected':''}} value="first_official">First Official</option>
-                                <option {{ ($record->language_type == 'second_official')?'selected':''}} value="second_official">Second Official</option>
-                            </select>
+                        <div class="js-form-message form-group row">
+                            <label class="col-sm-2 col-form-label">Language Type</label>
+                            <div class="col-sm-10">
+                                <select name="language_type" {{$record->cv_section == 'language_proficiency'?'':'disabled'}}>
+                                    <option value="">Select Option</option>
+                                    <option {{ ($record->language_type == 'first_official')?'selected':''}} value="first_official">First Official</option>
+                                    <option {{ ($record->language_type == 'second_official')?'selected':''}} value="second_official">Second Official</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                      <div class="js-form-message form-group row">
-                          <label class="col-sm-2 col-form-label">Select Language Proficiency</label>
-                          <div class="col-sm-10">
-                              <select name="language_proficiency" {{$record->cv_section != 'language_proficiency'?'disabled':''}} onchange="checkProficiency(this.value)">
+                        <div class="js-form-message form-group row">
+                            <label class="col-sm-2 col-form-label">Score Count Type</label>
+                            <div class="col-sm-10">
+                                <select name="score_count_type" onchange="scoreCount(this.value)" {{$record->cv_section == 'language_proficiency'?'':'disabled'}}>
+                                    <option value="">Select Option</option>
+                                    <option {{ ($record->score_count_type == 'lowest_matching')?'selected':''}} value="lowest_matching">Lowest Matching</option>
+                                    <option {{ ($record->score_count_type == 'range_matching')?'selected':''}} value="range_matching">Range Matching</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="js-form-message form-group row">
+                          <label class="col-sm-2 col-form-label">Language Proficiency</label>
+                          <div class="col-sm-8">
+                              <select id="lang_prof" name="language_proficiency" {{$record->cv_section != 'language_proficiency'?'disabled':''}}>
                                   <option value="">Select Option</option>
                                   @foreach($language_proficiencies as $proficiency)
                                     <option {{ ($record->language_proficiency == $proficiency->unique_id)?'selected':''}} value="{{$proficiency->unique_id}}">{{$proficiency->name}}</option>
                                   @endforeach
                               </select>
+                          </div>
+                          <div class="col-md-2">
+                              <button type="button" onclick="checkProficiency()" class="btn btn-outline-primary w-100 ">Add Options</button>
                           </div>
                       </div>
                     </div>
@@ -163,19 +177,45 @@
                     <div class="form-group">
                         <!-- Container For Input Field -->
                         <div id="addOptionsContainer">
+
+                        <?php 
+                            $prev_lang_prof = '';
+                        ?>
                           @foreach($record->Options as $option)
-                          <div class="item-row">
+                          <div class="item-row {{$option->language_proficiency_id}}">
                             <div class="input-group-add-field">
                                 
                                 <?php
                                 $index = randomNumber(4);
+
                                 ?>
                                 <div class="row">
-                                    <input type="hidden" name="options[{{$index}}][id]" class="option_id"
-                                        value="{{base64_encode($option->id)}}" />
+                                    <div class="col-md-12">
+                                        <div class="option-heading h3" data-langprof="{{$option->language_proficiency_id}}">
+
+                                            <?php 
+                                            if($option->language_proficiency_id != ''){
+                                                if($prev_lang_prof == ''){
+                                                    $prev_lang_prof = $option->language_proficiency_id;
+                                                    $lang_prof = languageProficiency($prev_lang_prof);
+                                                    echo $lang_prof->name;
+
+                                                    echo "<a href='javascript:;' onclick='removeLangProf(".$prev_lang_prof.")' class='text-danger'>Remove</a>";
+                                                }
+                                                if($prev_lang_prof != $option->language_proficiency_id){
+                                                    $prev_lang_prof = $option->language_proficiency_id;
+                                                    $lang_prof = languageProficiency($prev_lang_prof);
+                                                    echo $lang_prof->name;
+                                                    echo "<a href='javascript:;' onclick='removeLangProf(".$prev_lang_prof.")' class='text-danger'>Remove</a>";
+                                                }
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="options[{{$index}}][id]" class="option_id" value="{{base64_encode($option->id)}}" />
+                                    <input type="hidden" name="options[{{$index}}][language_proficiency_id]" class="language_proficiency_id" value="{{ $option->language_proficiency_id }}" />
                                     <div class="col-md-2 js-form-message criteria_block" style="display:{{($record->cv_section == 'age' || $record->cv_section == 'expirence')?'block':'none'}}" >
-                                   
-                                        <select name="options[{{$index}}][criteria]" class="criteria no_select2">
+                                        <select name="options[{{$index}}][criteria]" class="criteria">
                                             <option value="">Select Option</div>
                                             @foreach(criteria_options() as $criteria)
                                             <option {{($criteria['value'] == $option->criteria)?'selected':''}} value="{{ $criteria['value'] }}">{{$criteria['label']}}</option>
@@ -239,6 +279,11 @@
 
                                 <div class="row">
                                     <input type="hidden" class="option_id" value="0" />
+                                    <input type="hidden" class="language_proficiency_id" value="" />
+
+                                    <div class="col-md-12">
+                                        <div class="option-heading h3"></div>
+                                    </div>
                                     <div class="col-md-2 js-form-message criteria_block" style="display:none">
                                         <select class="criteria no-select2" disabled>
                                             <option value="">Select Option</div>
@@ -282,7 +327,50 @@
                         </div>
                         <!-- End Add Phone Input Field -->
                     </div>
-                    
+                    <div class="js-form-message form-group row score_points" style="display:{{ ($record->score_count_type == 'range_matching')?'block':'none'}}">
+                        <div class="col-md-12">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th colspan="3">Score Points</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Language</th>
+                                        <th>One Match</th>
+                                        <th>Two Match</th>
+                                        <th>Three Match</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($record->LanguageScorePoints as $score)
+                                    <tr class="{{ $score->language_proficiency_id }}">
+                                        <td>{{$score->LanguageProficiency->name}}</td>
+                                        <td>
+                                            <input type="text" class="form-control" name="match_score[{{$score->language_proficiency_id}}][one_match]" placeholder="Enter One Match Point" value="{{ $score->one_match }}" />
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" name="match_score[{{$score->language_proficiency_id}}][two_match]" placeholder="Enter Two Match Point" value="{{ $score->two_match }}" />
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" name="match_score[{{$score->language_proficiency_id}}][three_match]" placeholder="Enter Three Match Point" value="{{ $score->three_match }}" />
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                    <!-- <tr>
+                                        <td>
+                                            <input type="text" class="form-control" name="one_match" placeholder="Enter One Match Point" value="{{ $record->one_match }}" />
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" name="two_match" placeholder="Enter Two Match Point" value="{{ $record->two_match }}" />
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" name="three_match" placeholder="Enter Three Match Point" value="{{ $record->three_match }}" />
+                                        </td>
+                                    </tr> -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                     <div class="js-form-message form-group row">
                         <label class="col-sm-2 col-form-label">Component Linked to</label>
                         <div class="col-sm-10">
@@ -307,7 +395,7 @@
                         </div>
                     </div>
                    
-                    <div class="form-group">
+                    <div class="form-group text-center">
                         <button type="submit" class="btn add-btn btn-primary">Save</button>
                     </div>
                     <!-- End Input Group -->
@@ -339,9 +427,8 @@ $(document).ready(function() {
     });
     
     $('.js-add-field').each(function() {
-        new HSAddField($(this), {
+        var addField =  new HSAddField($(this), {
             addedField: function() {
-                var index = randomNumber();
                 var index = randomNumber();
                 var criteria ='<select class="criteria">';
                 criteria +='<option value="">Select Option</option>';
@@ -362,6 +449,11 @@ $(document).ready(function() {
                 $("#addOptionsContainer > .item-row:last").find(".score").attr("name","options[" + index + "][score]");
                 $("#addOptionsContainer > .item-row:last").find(".score").attr("required","true");
                 $("#addOptionsContainer > .item-row:last").find(".image").attr("name","options[" + index + "][image]");
+
+                $("#addOptionsContainer > .item-row:last").find(".language_proficiency_id").attr("name", "options[" + index + "][language_proficiency_id]");
+
+                $("#addOptionsContainer > .item-row:last").find(".non-eligible").attr("id","row-"+index);
+                $("#addOptionsContainer > .item-row:last").find(".non-eligible-label").attr("for","row-"+index);
                 
                 
                 $("#addOptionsContainer > .item-row:last").find(".criteria").attr("name","options[" + index + "][criteria]");
@@ -427,9 +519,14 @@ function linkToDefault(e){
     $("#components").removeAttr("disabled");
   }
 }
-function checkProficiency(value){
+function checkProficiency(){
+    var value = $("#lang_prof").val();
     
     if(value != ''){
+        if($(".option-heading[data-langprof="+value+"]").html() != undefined){
+            errorMessage("Language Proficiency already added");
+            return false;
+        }
         $.ajax({
             url: "{{ baseUrl('visa-services/fetch-proficiency') }}",
             type: "get",
@@ -443,19 +540,51 @@ function checkProficiency(value){
             success: function(response) {
                 hideLoader();
                 if (response.status == true) {
-                    $("#addOptionsContainer .item-row").remove();
+                    // $("#addOptionsContainer .item-row").remove();
                     var proficiencies = response.proficiencies;
+                    var language_proficiency = response.language_proficiency;
+                    var index = 0;
                     $.each(proficiencies, function(key, item) {
                         $("#add-item").trigger("click");
+                        if(key == 0){
+                            var lngprof = language_proficiency.name+" <a href='javascript:;' onclick='removeLangProf("+language_proficiency.unique_id+")' class='text-danger'>Remove</a>";
+                            $("#addOptionsContainer .item-row:last-child").find(".option-heading").html(lngprof);
+                            $("#addOptionsContainer .item-row:last-child").find(".option-heading").attr("data-langprof",language_proficiency.unique_id);
+                        }
+                        // $("#addOptionsContainer .item-row").addClass(language_proficiency.unique_id);
+                        $("#addOptionsContainer .item-row:last-child").attr("class","item-row "+language_proficiency.unique_id);
                         $("#addOptionsContainer .item-row:last-child").find(".option_value").val(item.clb_level);
                         $("#addOptionsContainer .item-row:last-child").find(".option_label").val(item.clb_level);
+                        $("#addOptionsContainer .item-row:last-child").find(".language_proficiency_id").val(item.language_proficiency_id);
                     });
+                    $("#lang_prof").val('');
+                    $("#lang_prof").trigger("change");
+
+                    var match_points = '<tr class="'+language_proficiency.unique_id+'">';
+                    match_points += '<td>';
+                    match_points += language_proficiency.name;
+                    match_points += '</td>';
+                    match_points += '<td>';
+                    match_points += '<input type="text" class="form-control" name="match_score['+language_proficiency.unique_id+'][one_match]" placeholder="Enter One Match Point" value="" />';
+                    match_points += '</td>';
+                    match_points += '<td>';
+                    match_points += '<input type="text" class="form-control" name="match_score['+language_proficiency.unique_id+'][two_match]" placeholder="Enter Two Match Point" value="" />';
+                    match_points += '</td>';
+                    match_points += '<td>';
+                    match_points += '<input type="text" class="form-control" name="match_score['+language_proficiency.unique_id+'][three_match]" placeholder="Enter Three Match Point" value="" />';
+                    match_points += '</td>';
+                    
+                    match_points += '</tr>';
+
+                    $(".score_points tbody").append(match_points);
                 }
             },
             error: function() {
                 internalError();
             }
         });
+    }else{
+        errorMessage("Please select language proficiency");
     }
 }
 function checkCvOption(value){
@@ -466,6 +595,7 @@ function checkCvOption(value){
         $("#language_proficiency").show();
         $("#language_proficiency select").removeAttr('disabled');
     }
+    $("#addOptionsContainer .item-row").remove();
     if(value == 'age' || value == 'expirences'){
         initSelect("#addOptionsContainer > .item-row:last");
         $(".criteria_block").show();
@@ -495,6 +625,17 @@ function checkCvOption(value){
                 internalError();
             }
         });
+    }
+}
+
+function removeLangProf(lang_prof_id){
+    $("."+lang_prof_id).remove();
+}
+function scoreCount(value){
+    if(value == 'range_matching'){
+        $(".score_points").show();
+    }else{
+        $(".score_points").hide();
     }
 }
 </script>

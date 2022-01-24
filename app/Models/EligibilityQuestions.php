@@ -56,22 +56,30 @@ class EligibilityQuestions extends Model
         return $this->hasOne('App\Models\ArrangeQuestions','question_id','unique_id');
     }
     
+    public function CombinationalOptions()
+    {
+        return $this->hasMany('App\Models\CombinationalOptions','question_id','unique_id');
+    }
     public function ComponentQuestionIds()
     {
         return $this->hasMany('App\Models\ComponentQuestionIds','question_id','unique_id')
                 ->with("Component");
     }
 
-    static function optionScore($value,$field,$question_id){
+    static function optionScore($value,$field,$question_id,$lang_prof_id = ''){
         $option = QuestionOptions::where("question_id",$question_id)
-                                ->where(function($query) use($value,$field){
+                                ->where(function($query) use($value,$field,$lang_prof_id){
                                     if($field == 'value'){
                                         $query->where("option_value",$value);
                                     }
                                     if($field == 'id'){
                                         $query->where("id",$value);
                                     }
+                                    if($lang_prof_id != ''){
+                                        $query->where("language_proficiency_id",$lang_prof_id);
+                                    }
                                 })
+                                
                                 ->first();
         return $option;
     }
@@ -85,5 +93,8 @@ class EligibilityQuestions extends Model
                                     ->count();
         return $record;
     }
-
+    public function LanguageScorePoints()
+    {
+        return $this->hasMany('App\Models\LanguageScorePoints','question_id','unique_id');
+    }
 }

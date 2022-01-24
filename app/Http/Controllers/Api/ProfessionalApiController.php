@@ -1429,4 +1429,339 @@ class ProfessionalApiController extends Controller
             return $filename;
         }
     }
+
+    public function allMessages(Request $request)
+    {
+        try{
+            $postData = $request->input();
+            $request->request->add($postData);
+            $client_id = $request->input("client_id");
+            $unread_general_chat = Chats::where("case_id",0)
+                                        ->where("chat_client_id",$request->input("client_id"))
+                                        ->doesntHave("UserChatGenRead")
+                                        ->count();
+            $unread_case_chat = Chats::where("case_id",'!=',0)
+                                    ->where("chat_client_id",$request->input("client_id"))
+                                    ->doesntHave("UserChatGenRead")
+                                    ->count();
+            $unread_doc_chat = DocumentChats::where("send_by","!=","client")
+                                            ->where('user_read',0)
+                                            ->whereHas("Case",function($query) use($client_id){
+                                                $query->where("client_id",$client_id);
+                                            })
+                                            ->count();
+
+
+            $general_messages = Chats::with(['Case','FileDetail'])
+                                    ->where("case_id",0)
+                                    ->where("chat_client_id",$request->input("client_id"))
+                                    ->groupBy("chat_client_id")
+                                    ->orderBy("created_at","desc")
+                                    ->get();
+            
+
+            $case_messages = Chats::with(['Case','FileDetail'])
+                                ->where("case_id","!=",0)
+                                ->where("chat_client_id",$request->input("client_id"))
+                                ->groupBy("chat_client_id")
+                                ->orderBy("created_at","desc")
+                                ->get();
+            
+            $document_chats = DocumentChats::with(['Case','FileDetail'])
+                                        ->where("send_by","!=","client")
+                                        ->whereHas("Case",function($query) use($client_id){
+                                            $query->where("client_id",$client_id);
+                                        })
+                                        ->groupBy("document_id")
+                                        ->get();
+            
+            $grouped_messages = array();
+            foreach($general_messages as $msg){
+                $temp = $msg;
+                $temp->subdomain = $this->subdomain;
+                $temp->message_type = 'general';
+                $temp->href = "messages-center/general-chats?client_id=".$msg->client_id."&professional=".$this->subdomain;
+                $temp->message_type = "general";
+                $temp->chat_users = $msg->ChatUsers($temp->client_id,"general");
+                $grouped_messages[] = $temp;
+            }    
+            foreach($case_messages as $msg){
+                $temp = $msg;
+                $temp->subdomain = $this->subdomain;
+                $temp->message_type = 'case';
+                $temp->href = "/messages-center/case-chats?case_id=".$msg->case_id."&professional=".$this->subdomain;
+                $temp->message_type = "case";
+                $temp->chat_users = $msg->ChatUsers($temp->client_id,"case");
+                $grouped_messages[] = $temp;
+            }
+            foreach($document_chats as $msg){
+                $temp = $msg;
+                $temp->subdomain = $this->subdomain;
+                $temp->message_type = 'document';
+                $temp->href = "/messages-center/document-chats?client_id=".$msg->client_id."&professional=".$this->subdomain;
+                $temp->message_type = "document";
+                $temp->chat_users = $msg->ChatUsers($temp->document_id);
+                $grouped_messages[] = $temp;
+            }
+            // foreach($general_messages as $msg){
+            //     $temp = $msg;
+            //     $temp->href = baseUrl("messages-center/document-chats?document_id=".$msg->document_id);
+
+            //     $grouped_messages[] = $temp;
+            // }
+            $messages = array();
+            array_multisort( array_column($grouped_messages, "created_at"), SORT_DESC, $grouped_messages );
+
+            
+            $response['unread_general_chat'] = $unread_general_chat;
+            $response['unread_case_chat'] = $unread_case_chat;
+            $response['unread_doc_chat'] = $unread_doc_chat;
+            $response['grouped_messages'] = $grouped_messages;
+            $response['messages'] = $messages;
+            $response['status'] = "success";
+         
+        } catch (Exception $e) {
+            $response['status'] = "error";
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response); 
+    } 
+
+    public function generalChats(Request $request)
+    {
+        try{
+            $postData = $request->input();
+            $request->request->add($postData);
+            $client_id = $request->input("client_id");
+            
+            $unread_general_chat = Chats::where("case_id",0)
+                                        ->where("chat_client_id",$request->input("client_id"))
+                                        ->doesntHave("UserChatGenRead")
+                                        ->count();
+            $unread_case_chat = Chats::where("case_id",'!=',0)
+                                        ->where("chat_client_id",$request->input("client_id"))
+                                        ->doesntHave("UserChatGenRead")
+                                        ->count();
+            $unread_doc_chat = DocumentChats::where("send_by","!=","client")
+                                        ->where('user_read',0)
+                                        ->whereHas("Case",function($query) use($client_id){
+                                            $query->where("client_id",$client_id);
+                                        })
+                                        ->count();
+            $chat_messages = Chats::with(['Case','FileDetail'])
+                                ->where("case_id",0)
+                                ->groupBy("case_id")
+                                ->orderBy("id","desc")
+                                ->get();
+            $messages = array();
+            $grouped_messages = array();
+            foreach($chat_messages as $msg){
+                $temp = $msg;
+                $temp->subdomain = $this->subdomain;
+         
+                $temp->chat_users = $msg->ChatUsers($temp->client_id,"general");
+                $grouped_messages[] = $temp;
+            }   
+            if($request->input("client_id")){
+                $all_messages = Chats::with(['Case','FileDetail'])
+                                    ->where("case_id",0)
+                                    ->where("chat_client_id",$request->input("client_id"))
+                                    ->orderBy("created_at","asc")
+                                    ->get();
+            }else{
+                if(!empty($grouped_messages)){
+                    
+                    $all_messages = Chats::with(['Case','FileDetail'])
+                                        ->where("case_id",0)
+                                        ->where("chat_client_id",$grouped_messages[0]->chat_client_id)
+                                        ->orderBy("created_at","asc")
+                                        ->get();
+                }
+                foreach($grouped_messages as $msg){
+                    $msg->subdomain = $this->subdomain;
+                }
+                  
+            }
+            foreach($all_messages as $msg){
+                $temp = $msg;
+                $msg->subdomain = $this->subdomain;
+                $msg->chat_users = $msg->ChatUsers($temp->client_id,"general");
+                $messages[] = $temp;
+            } 
+            $response['subdomain'] = $this->subdomain;
+            $response['unread_general_chat'] = $unread_general_chat;
+            $response['unread_case_chat'] = $unread_case_chat;
+            $response['unread_doc_chat'] = $unread_doc_chat;
+            $response['grouped_messages'] = $grouped_messages;
+            $response['messages'] = $messages;
+            $response['status'] = "success";
+        } catch (Exception $e) {
+            $response['status'] = "error";
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response); 
+    }
+
+    public function caseChats(Request $request)
+    {
+        try{
+            $postData = $request->input();
+            $request->request->add($postData);
+            $client_id = $request->input("client_id");
+            if($request->input("case_id")){
+                $case_id = $request->input("case_id");
+            }else{
+                $case_id = '';
+            }
+            $unread_general_chat = Chats::where("case_id",0)
+                                    ->where("chat_client_id",$request->input("client_id"))
+                                    ->doesntHave("UserChatGenRead")
+                                    ->count();
+            $unread_case_chat = Chats::where("case_id",'!=',0)
+                                    ->where("chat_client_id",$request->input("client_id"))
+                                    ->doesntHave("UserChatGenRead")
+                                    ->count();
+            $unread_doc_chat = DocumentChats::where("send_by","!=","client")
+                                        ->where('user_read',0)
+                                        ->whereHas("Case",function($query) use($client_id){
+                                            $query->where("client_id",$client_id);
+                                        })
+                                        ->count();
+            $chat_messages = Chats::with(['Case','FileDetail'])
+                                ->where(function($query) use($case_id){
+                                    if($case_id != ''){
+                                        $query->where("case_id",$case_id);
+                                    }
+                                })
+                                ->where("case_id","!=",0)
+                                ->where("chat_client_id",$client_id)
+                                ->groupBy("case_id")
+                                ->orderBy("id","desc")
+                                ->get();
+            
+            $messages = array();
+            $grouped_messages = array();
+            foreach($chat_messages as $msg){
+                $temp = $msg;
+                $temp->subdomain = $this->subdomain;
+         
+                $temp->chat_users = $msg->ChatUsers($temp->client_id,"case");
+                $grouped_messages[] = $temp;
+            }   
+            $all_messages = array();
+            if($request->input("case_id")){
+                $all_messages = Chats::with(['Case','FileDetail'])
+                                    ->where("case_id",$case_id)
+                                    ->orderBy("created_at","asc")
+                                    ->get();
+            }else{
+                if(!empty($grouped_messages)){
+                    
+                    $all_messages = Chats::with(['Case','FileDetail'])
+                                        ->where("case_id",$grouped_messages[0]->case_id)
+                                        ->orderBy("created_at","asc")
+                                        ->get();
+                }
+                foreach($grouped_messages as $msg){
+                    $msg->subdomain = $this->subdomain;
+                }
+            }
+            foreach($all_messages as $msg){
+                $temp = $msg;
+                $msg->subdomain = $this->subdomain;
+                $msg->chat_users = $msg->ChatUsers($temp->client_id,"case");
+                $messages[] = $temp;
+            }  
+            $response['subdomain'] = $this->subdomain;
+            $response['unread_general_chat'] = $unread_general_chat;
+            $response['unread_case_chat'] = $unread_case_chat;
+            $response['unread_doc_chat'] = $unread_doc_chat;
+            $response['grouped_messages'] = $grouped_messages;
+            $response['messages'] = $messages;
+            $response['status'] = "success";
+        } catch (Exception $e) {
+            $response['status'] = "error";
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response); 
+    }
+
+    public function documentChats(Request $request)
+    {
+        try{
+            $postData = $request->input();
+            $request->request->add($postData);
+            $case_id = $request->input("case_id");
+            $client_id = $request->input("client_id");
+            $unread_general_chat = Chats::where("case_id",0)
+                                    ->where("chat_client_id",$request->input("client_id"))
+                                    ->doesntHave("UserChatGenRead")
+                                    ->count();
+            $unread_case_chat = Chats::where("case_id",'!=',0)
+                                    ->where("chat_client_id",$request->input("client_id"))
+                                    ->doesntHave("UserChatGenRead")
+                                    ->count();
+            $unread_doc_chat = DocumentChats::where("send_by","!=","client")
+                                        ->where('user_read',0)
+                                        ->whereHas("Case",function($query) use($client_id){
+                                            $query->where("client_id",$client_id);
+                                        })
+                                        ->count();
+            $chat_messages = DocumentChats::with(['Case','FileDetail'])
+                                        ->where("send_by","!=","client")
+                                        ->where('user_read',0)
+                                        ->whereHas("Case",function($query) use($client_id){
+                                            $query->where("client_id",$client_id);
+                                        })
+                                        ->groupBy("document_id")
+                                        ->orderBy("created_at","desc")
+                                        ->get();
+            $messages = array();
+            $grouped_messages = array();
+            $all_messages  = array();
+            foreach($chat_messages as $msg){
+                $temp = $msg;
+                $temp->subdomain = $this->subdomain;
+            
+                $temp->chat_users = $msg->ChatUsers($temp->client_id);
+                $grouped_messages[] = $temp;
+            }   
+            if($request->input("document_id")){
+                $all_messages = DocumentChats::with(['Case','FileDetail'])
+                                        ->where('document_id',$request->input("document_id"))
+                                        ->orderBy("created_at","asc")
+                                        ->get();
+            }else{
+                if(!empty($grouped_messages)){
+                    $all_messages = DocumentChats::with(['Case','FileDetail'])
+                                            ->where('document_id',$grouped_messages[0]->document_id)
+                                            
+                                            ->orderBy("created_at","asc")
+                                            ->get();
+
+                    
+                }
+                foreach($grouped_messages as $msg){
+                    $msg->subdomain = $this->subdomain;
+                }
+            }
+            foreach($all_messages as $msg){
+                $temp = $msg;
+                $msg->subdomain = $this->subdomain;
+                $msg->chat_users = $msg->ChatUsers($temp->document_id);
+                $messages[] = $temp;
+            }  
+            $response['subdomain'] = $this->subdomain;
+            $response['unread_general_chat'] = $unread_general_chat;
+            $response['unread_doc_chat'] = $unread_doc_chat;
+            $response['unread_case_chat'] = $unread_case_chat;
+            $response['grouped_messages'] = $grouped_messages;
+            $response['messages'] = $messages;
+            $response['status'] = "success";
+        } catch (Exception $e) {
+            $response['status'] = "error";
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response); 
+    }
 }

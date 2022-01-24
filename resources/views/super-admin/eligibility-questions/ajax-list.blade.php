@@ -45,10 +45,16 @@
 
         <div id="action-{{$key}}" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm dropdown-menu-right">
           <a class="dropdown-item" href="{{baseUrl('visa-services/eligibility-questions/'.$visa_service_id.'/edit/'.base64_encode($record->id))}}">Edit</a>
+          <a class="dropdown-item" href="{{baseUrl('visa-services/eligibility-questions/'.$visa_service_id.'/set-pre-conditions/'.base64_encode($record->id))}}">Set Pre Condition</a>
           @if($record->QuestionInGroup)
           <!-- <a class="dropdown-item" href="{{baseUrl('visa-services/eligibility-questions/'.$visa_service_id.'/set-group-conditions/'.base64_encode($record->id))}}">Set Group Condition</a> -->
           @endif
+          @if($visa_service->eligible_type != 'group_eligible')
           <a class="dropdown-item" href="{{baseUrl('visa-services/eligibility-questions/'.$visa_service_id.'/set-conditions/'.base64_encode($record->id))}}">Set Condition</a>
+          @endif
+          @if($record->CombinationalOptions->count() > 0)
+            <a class="dropdown-item" href="{{baseUrl('visa-services/eligibility-questions/'.$visa_service_id.'/multi-option-groups/'.base64_encode($record->id))}}">Set Multi Options Group</a>
+          @endif
           <a class="dropdown-item" href="{{baseUrl('visa-services/eligibility-questions/'.$visa_service_id.'/combinational-options/'.base64_encode($record->id))}}">Multiple Options</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item text-danger" href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('visa-services/eligibility-questions/'.$visa_service_id.'/delete/'.base64_encode($record->id))}}">Delete</a> 

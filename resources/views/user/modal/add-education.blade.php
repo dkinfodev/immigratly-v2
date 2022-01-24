@@ -7,10 +7,16 @@
 <div class="modal-dialog modal-lg" role="document">
   <div class="modal-content">
     <div class="modal-header">
-      <h5 class="modal-title" id="staticBackdropLabel">{{$pageTitle}}</h5>
-      <button type="button" class="btn btn-xs btn-icon btn-ghost-secondary" data-dismiss="modal" aria-label="Close">
-        <i class="tio-clear tio-lg"></i>
-      </button>
+        <div class="imm-modal-slanted-div angled lower-start">
+          <div class="row">
+            <div class="col-10">
+              <h3 class="modal-title" id="exampleModalLongTitle">{{$pageTitle}}</h3>
+            </div>
+            <div class="col-2" style="text-align:right"> <button type="button" class="btn-close"
+                data-bs-dismiss="modal" aria-label="Close"></button></div>
+
+          </div>
+        </div>
     </div>
     <div class="modal-body">
       <form method="post" id="popup-form"  action="{{ baseUrl('/educations/add') }}">  

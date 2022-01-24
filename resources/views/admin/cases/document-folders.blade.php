@@ -20,6 +20,10 @@
 @endsection
 @section('content')
 <style>
+ul.nav.nav-tabs.dependents-list {
+    margin-bottom: 35px;
+    text-transform: capitalize;
+}
 .all_services li {
     padding: 16px;
     border-bottom: 1px solid #ddd;
@@ -29,6 +33,34 @@
 }
 </style>
 @include(roleFolder().'.cases.case-navbar')
+@if($record->case_type == 'group')
+<div class="row">
+   <div class="col-md-12">
+      <ul class="nav nav-tabs dependents-list" role="tablist">
+            <li>
+               @if(!empty($record->Client($record->client_id)))
+               <?php
+               $client = $record->Client($record->client_id);
+               ?>
+               <a href="{{ baseUrl('cases/case-documents/documents/'.base64_encode($record->id)) }}" class="nav-link {{($dependent_id == '')?'active':''}}">{{$client->first_name." ".$client->last_name}}</a>
+               @else
+               <a href="{{ baseUrl('cases/case-documents/documents/'.base64_encode($record->id)) }}" class="nav-link {{($dependent_id == '')?'active':''}}">Client not found</a>
+               @endif
+            </li>
+            @foreach($dependents as $dependent)
+               @if(!empty($dependent->Dependent($dependent->dependent_id)))
+               <li class="nav-item">
+                  <?php 
+                     $case_dependent = $dependent->Dependent($dependent->dependent_id);
+                  ?>
+                  <a href="{{ baseUrl('cases/case-documents/documents/'.base64_encode($record->id)) }}?dependent_id={{$dependent->dependent_id}}&visa_service={{$dependent->visa_service_id}}" class="nav-link {{($dependent_id == $dependent->dependent_id)?'active':''}}">{{$case_dependent->given_name}}</a>
+               </li>
+               @endif
+            @endforeach
+      </ul>
+   </div>
+</div>
+@endif
 <div class="row">
    <div class="col-lg-9 mb-5 mb-lg-0">
       <h2 class="h4 mb-3">Pinned access <i class="tio-help-outlined text-muted" data-toggle="tooltip" data-placement="right" title="Pinned access to files you've been working on."></i></h2>
@@ -39,7 +71,7 @@
               @foreach($folders as $folder)
                @if(!empty($record->documentInfo($folder,$key)))
                <?php
-                  $count_files = $record->caseDocuments($record->unique_id,$folder,"count");
+                  $count_files = $record->caseDocuments($record->unique_id,$folder,$doc_user_id,"count");
                ?>
                   <div class="col mb-3 mb-lg-5">
                      <!-- Card -->
@@ -107,7 +139,7 @@
                      <li class="list-group-item">
                         <div class="row">
                            <div class="col-auto">
-                              @if($record->caseDocuments($record->unique_id,$document->unique_id,'count') > 0)
+                              @if($record->caseDocuments($record->unique_id,$document->unique_id,$doc_user_id,'count') > 0)
                               <img class="avatar avatar-xs avatar-4by3" src="assets/svg/folder-files.svg" alt="Image Description">
                               @else
                               <img class="avatar avatar-xs avatar-4by3" src="assets/svg/folder.svg" alt="Image Description">
@@ -116,12 +148,12 @@
 
                            <div class="col" data-toggle="collapse" data-target="#collapseDefaultDoc-{{ $key }}"
                               aria-expanded="true" aria-controls="collapseDefaultDoc-{{ $key }}">
-                              <a href="<?php echo baseUrl("cases/case-documents/default/".$record->unique_id."/".$document->unique_id) ?>" onclick="fetchFiles(this)" data-subdomain="{{$subdomain}}">
+                              <a href="<?php echo baseUrl("cases/case-documents/default/".$record->unique_id."/".$document->unique_id) ?><?php echo $query_string ?>" onclick="fetchFiles(this)" data-subdomain="{{$subdomain}}">
                                     <h5 class="mb-0">
                                        {{$document->name}}
                                     </h5>
                                     <ul class="list-inline list-separator small">
-                                       <li class="list-inline-item">{{$record->caseDocuments($record->unique_id,$document->unique_id,'count')}} Files</li>
+                                       <li class="list-inline-item">{{$record->caseDocuments($record->unique_id,$document->unique_id,$doc_user_id,'count')}} Files</li>
                                        <?php
                                           $doc_chats = countUnreadDocChat($case_id,$subdomain,\Auth::user()->role,$document->unique_id);
                                           if($doc_chats > 0){
@@ -176,7 +208,7 @@
                      <li class="list-group-item">
                         <div class="row">
                            <div class="col-auto">
-                              @if($record->caseDocuments($record->unique_id,$document->unique_id,'count') > 0)
+                              @if($record->caseDocuments($record->unique_id,$document->unique_id,$doc_user_id,'count') > 0)
                               <img class="avatar avatar-xs avatar-4by3" src="assets/svg/folder-files.svg" alt="Image Description">
                               @else
                               <img class="avatar avatar-xs avatar-4by3" src="assets/svg/folder.svg" alt="Image Description">
@@ -185,12 +217,12 @@
 
                            <div class="col" data-toggle="collapse" data-target="#collapseDefaultDoc-{{ $key }}"
                               aria-expanded="true" aria-controls="collapseDefaultDoc-{{ $key }}">
-                              <a href="<?php echo baseUrl("cases/case-documents/extra/".$record->unique_id."/".$document->unique_id) ?>" onclick="fetchFiles(this)" data-subdomain="{{$subdomain}}">
+                              <a href="<?php echo baseUrl("cases/case-documents/extra/".$record->unique_id."/".$document->unique_id) ?><?php echo $query_string ?>" onclick="fetchFiles(this)" data-subdomain="{{$subdomain}}">
                                     <h5 class="mb-0">
                                        {{$document->name}}
                                     </h5>
                                     <ul class="list-inline list-separator small">
-                                       <li class="list-inline-item">{{$record->caseDocuments($record->unique_id,$document->unique_id,'count')}} Files</li>
+                                       <li class="list-inline-item">{{$record->caseDocuments($record->unique_id,$document->unique_id,$doc_user_id,'count')}} Files</li>
                                        <?php
                                           $doc_chats = countUnreadDocChat($case_id,$subdomain,\Auth::user()->role,$document->unique_id);
                                           if($doc_chats > 0){

@@ -129,6 +129,12 @@
                       </a>
                     </li>
                     <li class="nav-item">
+                      <a class="nav-link " href="{{ baseUrl('visa-service-groups') }}">
+                        <span class="tio-circle nav-indicator-icon"></span>
+                        <span class="text-truncate">Visa Service Groups</span>
+                      </a>
+                    </li>
+                    <li class="nav-item">
                       <a class="nav-link " href="{{ baseUrl('licence-bodies') }}">
                         <span class="tio-circle nav-indicator-icon"></span>
                         <span class="text-truncate">Licence Bodies</span>

@@ -1,55 +1,133 @@
 @extends('layouts.master')
 
-@section('pageheader')
+@section('breadcrumb')
 <!-- Content -->
-<div class="">
-    <div class="content container" style="height: 25rem;">
-        <!-- Page Header -->
-        <div class="page-header page-header-light page-header-reset">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h1 class="page-header-title">{{$pageTitle}}</h1>
-                </div>
-            </div>
-            <!-- End Row -->
-        </div>
-        <!-- End Page Header -->
-    </div>
-</div>
+<ol class="breadcrumb breadcrumb-no-gutter">
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/eligibility-check') }}">Visa Groups</a></li>
+  <li class="breadcrumb-item active" aria-current="page">{{$record->group_title}}</li>
+</ol>
 <!-- End Content -->
 @endsection
 @section('content')
 <!-- Content -->
-<div class="eligibility_check">
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="row align-items-end">
-      <div class="col-sm mb-2 mb-sm-0">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb breadcrumb-no-gutter">
-            <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
-          </ol>
-        </nav>
+<!-- Sidebar Detached Content -->
+<div class="sidebar-detached-content mt-3 mt-lg-0" style="background:#f8fafd">
+            <!-- Page Header -->
+            <div class="imm-view-program-details-container-header">
+              <div class="page-header">
+                <!-- Profile Cover -->
+                <div class="profile-cover">
+                  <div class="profile-cover-img-wrapper">
+                    <img class="profile-cover-img" src="./assets/img/1920x400/img1.jpg" alt="Image Description">
+                  </div>
+                </div>
+                <!-- End Profile Cover -->
+                <div class="imm-view-details-main-title">
+                  <div class="row mb-3 align-items-center">
 
-        <h1 class="page-title">{{$pageTitle}}</h1>
-      </div>
+                    <!-- End Col -->
+                    <div class="col-xs-12 col-sm-3">
+                      <!-- Media -->
+                      <div class="d-flex">
+                        <div class="imm-program-logo-container w-100">
+                        @if(file_exists(public_path('uploads/visa-groups/'.$record->image)))
+                              <img class="imm-program-logo" src="{{ asset('/public/uploads/visa-groups/'.$record->image) }}"  />
+                        @endif
+                        </div>
+                      </div>
+                      <!-- End Media -->
+                    </div>
+                    <!-- End Col -->
+                    <div class="col-xs-12 col-sm-9">
+                      <div class="imm-view-details-main-title-program">
+                        <h3 class="card-title mb-2">
+                          <a class="text-dark" href="javascript:;">{{$record->group_title}}</a>
+                        </h3>
+                        <div class="imm-self-assessment-container">
+                          <div class="row">
+                            <div class="col-5">
+                              <div class="d-flex" style="text-align:right">
 
-      <div class="col-sm-auto">
-        <a class="btn btn-secondary" href="{{ baseUrl('/eligibility-check/all-group-eligibility') }}">
-          Check all Group Eligibility
-        </a>
-        <!--<a class="btn btn-secondary" href="{{ baseUrl('/eligibility-check/all-eligibility') }}">-->
-        <!--  Check all Eligibility-->
-        <!--</a>-->
-        <!--<a class="btn btn-primary" href="{{ baseUrl('/eligibility-check/add') }}">-->
-        <!--  <i class="tio-add mr-1"></i> Add -->
-        <!--</a>-->
-      </div>
-    </div>
-    <!-- End Row -->
-  </div>
-  <!-- End Page Header -->
+                                <img class="me-1" src="./assets/img/checked.svg" alt="" style="width:18px">
+
+                                <p><b>{{$record->VisaServices->count()}}</b> Nomination pathways</p>
+                              </div>
+
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- End Row -->
+
+
+
+                </div>
+
+
+
+
+
+
+
+
+
+
+                <!-- Nav Scroller -->
+
+                <div class="imm-vieww-program-details-menu bg-white zi-2">
+
+                  <!-- Nav -->
+                  <ul class="nav nav-tabs page-header-tabs bg-white" id="pageHeaderTab">
+                    <li class="nav-item active">
+                      <a class="nav-link" href="#about-section">All programs</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="#jobs-section">My assessments<span
+                          class="badge bg-info rounded-pill ms-1">+9</span></a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="#reviews-section">Latest news</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="#interview-section">Recent draws</a>
+                    </li>
+
+                  </ul>
+                  <!-- End Nav -->
+                </div>
+
+                <!-- End Nav Scroller -->
+
+              </div>
+            </div>
+            <!-- End Page Header -->
+            <!-- Card Grid -->
+            <div class="imm-specific-program-container">
+              <div class="row">
+
+
+                <div class="col-lg-12">
+                  
+                  <div class="row mb-3" id="visa-services-list">
+                    
+                  </div>
+                  <!-- End Row -->
+
+
+                </div>
+                <!-- End Col -->
+              </div>
+              <!-- End Row -->
+            </div>
+            <!-- End Card Grid -->
+          </div>
+          <!-- End Sidebar Detached Content -->
+{{-- <div class="eligibility_check">
+  
 
   <!-- Card -->
   <div class="card">
@@ -151,7 +229,7 @@
     <!-- End Footer -->
   </div>
   <!-- End Card -->
-</div>
+</div> --}}
 <!-- End Content -->
 @endsection
 
@@ -181,7 +259,8 @@ function loadData(page=1){
         url: BASEURL + '/eligibility-check/ajax-list?page='+page,
         data:{
             _token:csrf_token,
-            search:search
+            search:search,
+            visa_group_id:"{{$visa_group_id}}"
         },
         dataType:'json',
         beforeSend:function(){
@@ -189,7 +268,7 @@ function loadData(page=1){
         },
         success: function (data ) {
             hideLoader();
-            $("#tableList tbody").html(data.contents);
+            $("#visa-services-list").html(data.contents);
             initPagination(data);
         },
         error:function(){

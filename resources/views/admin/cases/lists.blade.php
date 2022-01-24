@@ -12,9 +12,20 @@
                 </div>
 
                 <div class="col-auto">
-                  <a class="btn btn-primary" href="<?php echo baseUrl('cases/add') ?>">
+                  <!-- Dropdown -->
+                  <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Create Case
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <a class="dropdown-item" href="<?php echo baseUrl('cases/add') ?>">Single Case</a>
+                      <a class="dropdown-item" href="<?php echo baseUrl('cases/add-group-case') ?>">Group Case</a>
+                    </div>
+                  </div>
+                  <!-- End Dropdown -->
+                  <!-- <a class="btn btn-primary" href="<?php echo baseUrl('cases/add') ?>">
                     <i class="tio-user-add mr-1"></i> Create Case
-                  </a>
+                  </a> -->
                 </div>
             </div>
             <!-- End Row -->
@@ -86,7 +97,7 @@
             <th scope="col">Visa Service</th>
             <!-- <th scope="col">Start Date</th> -->
             <th scope="col">Approval Status</th>
-            <th scope="col">Assigned</th>
+            <th scope="col">Case Type</th>
             <th scope="col"><i class="tio-chat-outlined"></i></th>
             <th scope="col"></th>
           </tr>

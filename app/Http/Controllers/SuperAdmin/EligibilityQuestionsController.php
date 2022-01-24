@@ -24,6 +24,9 @@ use App\Models\PrimaryDegree;
 use App\Models\LanguageProficiency;
 use App\Models\EligibilityPattern;
 use App\Models\CombinationalOptions;
+use App\Models\LanguageScorePoints;
+use App\Models\ComponentPreConditions;
+use App\Models\MultipleOptionsGroups;
 
 class EligibilityQuestionsController extends Controller
 {
@@ -38,7 +41,7 @@ class EligibilityQuestionsController extends Controller
         $viewData['visa_service_id'] = $visa_service_id;
         $id = base64_decode($visa_service_id);
         $visa_service = VisaServices::where("id",$id)->first();
-        $viewData['visa_services'] = $visa_service;
+        $viewData['visa_service'] = $visa_service;
         $viewData['pageTitle'] = $visa_service->name." Eligibility Questions";
         return view(roleFolder().'.eligibility-questions.lists',$viewData);
     } 
@@ -60,6 +63,7 @@ class EligibilityQuestionsController extends Controller
         
         $viewData['records'] = $records;
         $viewData['visa_service_id'] = base64_encode($visa_service_id);
+        $viewData['visa_service'] = $visa_service;
         $view = View::make(roleFolder().'.eligibility-questions.ajax-list',$viewData);
         $contents = $view->render();
         $response['contents'] = $contents;
@@ -106,6 +110,7 @@ class EligibilityQuestionsController extends Controller
             $response['message'] = $errMsg;
             return response()->json($response);
         }
+        // pre($request->all());
         
         $options = $request->options;
 
@@ -130,6 +135,35 @@ class EligibilityQuestionsController extends Controller
         if($request->input("language_type")){
             $object->language_type = $request->input("language_type");
         }
+        if($request->input("score_count_type")){
+            $object->score_count_type = $request->input("score_count_type");
+        }else{
+            $object->score_count_type = '';
+        }
+        if($request->input("score_count_type") == 'range_matching'){
+            if($request->input("one_match")){
+                $object->one_match = $request->input("one_match");
+            }else{
+                $object->one_match = '';
+            }
+
+            if($request->input("two_match")){
+                $object->two_match = $request->input("two_match");
+            }else{
+                $object->two_match = '';
+            }
+
+            if($request->input("three_match")){
+                $object->three_match = $request->input("three_match");
+            }else{
+                $object->three_match = '';
+            }
+        }else{
+            $object->one_match = '';
+            $object->two_match = '';
+            $object->three_match = '';
+        }
+
         $object->added_by = \Auth::user()->unique_id;
         $object->save();
 
@@ -149,6 +183,9 @@ class EligibilityQuestionsController extends Controller
                 $obj->non_eligible = 0;
                 $obj->non_eligible_reason = '';
             }
+            if(isset($option['language_proficiency_id']) && $option['language_proficiency_id'] != ''){
+                $obj->language_proficiency_id = $option['language_proficiency_id'];
+            }
             if(isset($option['image'])){
                 $file = $option['image'];
                 $fileName        = $file->getClientOriginalName();
@@ -164,6 +201,18 @@ class EligibilityQuestionsController extends Controller
             $obj->save();
         }
         
+        if($request->input("match_score")){
+            $match_scores = $request->input("match_score");
+            foreach($match_scores as $lang_prof_id => $lang_prof){
+                $object_lang_prof = new LanguageScorePoints();
+                $object_lang_prof->language_proficiency_id = $lang_prof_id;
+                $object_lang_prof->question_id = $unique_id;
+                foreach($lang_prof as $key => $score){     
+                    $object_lang_prof->$key = $score;                                  
+                }
+                $object_lang_prof->save();
+            }
+        }
         if($request->input("components")){
             $components[] = $request->input("components");
             foreach($components as $component){
@@ -290,6 +339,36 @@ class EligibilityQuestionsController extends Controller
         }else{
             $object->language_type = '';
         }
+
+        if($request->input("score_count_type")){
+            $object->score_count_type = $request->input("score_count_type");
+        }else{
+            $object->score_count_type = '';
+        }
+        if($request->input("score_count_type") == 'range_matching'){
+            if($request->input("one_match")){
+                $object->one_match = $request->input("one_match");
+            }else{
+                $object->one_match = '';
+            }
+
+            if($request->input("two_match")){
+                $object->two_match = $request->input("two_match");
+            }else{
+                $object->two_match = '';
+            }
+
+            if($request->input("three_match")){
+                $object->three_match = $request->input("three_match");
+            }else{
+                $object->three_match = '';
+            }
+        }else{
+            $object->one_match = '';
+            $object->two_match = '';
+            $object->three_match = '';
+        }
+
         $object->save();
         $option_ids = array();
         $options = $request->options;
@@ -304,7 +383,9 @@ class EligibilityQuestionsController extends Controller
             $obj->question_id = $unique_id;
             $obj->option_label = $option['option_label'];
             $obj->option_value = $option['option_value'];
-
+            if(isset($option['language_proficiency_id']) && $option['language_proficiency_id'] != ''){
+                $obj->language_proficiency_id = $option['language_proficiency_id'];
+            }
             if(isset($option['criteria'])){
                 $obj->criteria = $option['criteria'];
             }
@@ -350,7 +431,19 @@ class EligibilityQuestionsController extends Controller
                 QuestionOptions::deleteRecord($opt_ids[$i]);
             }
         }
-        
+        if($request->input("match_score")){
+            $match_scores = $request->input("match_score");
+            LanguageScorePoints::where("question_id",$unique_id)->delete();
+            foreach($match_scores as $lang_prof_id => $lang_prof){
+                $object_lang_prof = new LanguageScorePoints();
+                $object_lang_prof->language_proficiency_id = $lang_prof_id;
+                $object_lang_prof->question_id = $unique_id;
+                foreach($lang_prof as $key => $score){     
+                    $object_lang_prof->$key = $score;                                  
+                }
+                $object_lang_prof->save();
+            }
+        }
         
                     
         if($request->input("components")){
@@ -563,7 +656,9 @@ class EligibilityQuestionsController extends Controller
         $visa_service_id = base64_decode($visa_service_id);
         $id = base64_decode($id);
         $visa_service = VisaServices::where("id",$visa_service_id)->first();
-        $record = ComponentQuestions::with('Questions')->where("id",$id)->first();
+        $record = ComponentQuestions::with('Questions')->where("id",$id)
+                                    ->whereHas('Questions')
+                                    ->first();
         $this->defaultGroup($visa_service->unique_id);
         $question_ids = $record->Questions->pluck("question_id")->toArray();
         $group_ids = $record->GroupComponents->pluck("group_id")->toArray();
@@ -886,6 +981,7 @@ class EligibilityQuestionsController extends Controller
             }
         }
         $question_sequence = ArrangeGroups::where("visa_service_id",$visa_service->unique_id)
+                                        ->whereHas("Group")
                                         ->orderBy('sort_order','asc')
                                         ->get();
         $viewData['question_sequence'] = $question_sequence;
@@ -1394,14 +1490,14 @@ class EligibilityQuestionsController extends Controller
 
         $component_lists = GroupComponentIds::where("group_id",$group->unique_id)
                                     ->where("component_id","!=",$component_id)
+                                    ->whereHas("Component")
                                     ->get();
                                     
         $components = array();
         $exists_id = GroupConditionalQuestions::where('group_id',$group->unique_id)->get()->toArray();
        
         foreach($component_lists as $comp){
-            $exists_id = GroupConditionalQuestions::where('group_id',$group->unique_id)
-                                ->where("component_id",$component_id)
+            $exists_id = GroupConditionalQuestions::where("component_id",$component_id)
                                 ->where("parent_component_id",$comp->component_id)
                                 ->count();
         
@@ -1637,9 +1733,9 @@ class EligibilityQuestionsController extends Controller
                                 ->whereHas("OptionTwo")
                                 ->get();
         CombinationalOptions::where("question_id",$question->unique_id)
-        ->doesntHave("OptionOne")
-        ->doesntHave("OptionTwo")
-        ->delete();
+                            ->doesntHave("OptionOne")
+                            ->doesntHave("OptionTwo")
+                            ->delete();
                                 
         $viewData['records'] = $records;
         return view(roleFolder().'.combinational-options.add',$viewData);
@@ -1692,6 +1788,7 @@ class EligibilityQuestionsController extends Controller
         $visa_service = VisaServices::where("id",$visa_id)->first();
         $question = EligibilityQuestions::where("id",$question_id)->first();        
         $options = $request->input("option");
+        $combinational_id = randomNumber();
         foreach($options as $option){
             $checkOption = CombinationalOptions::where("option_one_id",$option['option_one_id'])->where("option_two_id",$option['option_two_id'])->first();
             if(!empty($checkOption)){
@@ -1718,6 +1815,177 @@ class EligibilityQuestionsController extends Controller
     public function deleteCombinationOption(Request $request, $visa_id,$comb_id){
         $id = base64_decode($com_id);
         CombinationalOptions::deleteRecord($id);
+        return redirect()->back()->with("success","Record deleted successfully");
+    }
+
+    public function setPreConditions($visa_service_id,$question_id){
+        $visa_id = base64_decode($visa_service_id);
+        
+        $visa_service = VisaServices::where("id",$visa_id)->first();
+      
+        $question_id = base64_decode($question_id);
+        $record = EligibilityQuestions::where("id",$question_id)->first();
+        $question_options = QuestionOptions::where("question_id",$record->unique_id)->get();
+        $question_group = ComponentQuestionIds::with('ComponentGroups')
+                                            ->where("question_id",$record->unique_id)
+                                            ->first();
+
+        $components = array();
+        $conditionalComponents = array();
+        if(!empty($question_group)){
+            $ques_group = $question_group->ComponentGroups->QuestionsGroups;
+            $group_sequence = ArrangeGroups::where("group_id",$ques_group->unique_id)
+                                        ->where("visa_service_id",$ques_group->visa_service_id)
+                                        ->first();
+
+            $group_components = ArrangeGroups::with('Components')
+                                    ->where("group_id","!=",$ques_group->unique_id)
+                                    ->where("visa_service_id",$ques_group->visa_service_id)
+                                    ->where("sort_order",">",$group_sequence->sort_order)
+                                    ->get();
+            foreach($group_components as $comp){
+                $components = array_merge($components,$comp->Components->toArray());
+            }
+        }
+        $preConditions = ComponentPreConditions::where("question_id",$record->unique_id)->get();
+        foreach($preConditions as $cond){
+            $conditionalComponents[$cond->option_id] = $cond->component_id;
+        }
+        
+        $viewData['question_options'] = $question_options;
+        $viewData['conditionalComponents'] = $conditionalComponents;
+        $viewData['components'] = $components;
+        $viewData['pageTitle'] = "Set Pre Condition";
+        $viewData['record'] = $record;
+        $viewData['visa_service'] = $visa_service;
+        
+        return view(roleFolder().'.eligibility-questions.set-pre-condition',$viewData);        
+    }
+
+    public function savePreConditions($visa_service_id,$question_id,Request $request){
+        ComponentPreConditions::where("question_id",$request->question_id)->delete();
+
+        $components = $request->input("component");
+        foreach($components as $opt_id => $component_id){
+            if($component_id != ''){
+                $object = new ComponentPreConditions();
+                $object->question_id = $request->input("question_id");
+                $object->option_id = $opt_id;
+                $object->component_id = $component_id;
+                $object->save();
+            }
+        }
+        $response['status'] = true;
+        $response['message'] = "Record saved successfully";
+        return response()->json($response);
+    }
+
+    public function multipleGroupQuestions($visa_service_id,$question_id)
+    {
+        $question_id = base64_decode($question_id);
+        $visa_service_id = base64_decode($visa_service_id);
+        $viewData['visa_service_id'] = $visa_service_id;
+        $visa_service = VisaServices::where("id",$visa_service_id)->first();
+        $current_question = EligibilityQuestions::where("id",$question_id)->first();
+        $questions = EligibilityQuestions::where("visa_service_id",$visa_service->unique_id)
+                                        ->doesntHave("CombinationalOptions")
+                                        ->where("id","!=",$question_id)
+                                        ->get();
+        $question_combinations = MultipleOptionsGroups::where("current_question_id",$current_question->unique_id)
+                                                ->whereHas("CombinationalOption")
+                                                ->whereHas("QuestionOption")
+                                                ->whereHas("Question")
+                                                ->get();
+   
+        $viewData['current_question'] = $current_question;
+        $viewData['visa_service'] = $visa_service;
+        $viewData['questions'] = $questions;
+        $viewData['question_combinations'] = $question_combinations;
+        $viewData['question'] = $current_question;
+        $viewData['pageTitle'] = "Multiple Options Combinations";
+
+        $records = QuestionCombination::where("visa_service_id",$visa_service->unique_id)->get();
+        $viewData['records'] = $records;
+        return view(roleFolder().'.combinational-options.multiple-group-questions',$viewData);
+    }
+
+    public function fetchGroupOptions(Request $request,$visa_id){
+        // pre($request->all());
+        $visa_id = base64_decode($visa_id);
+        $question_id = $request->input("current_question");
+        $visa_service = VisaServices::where("id",$visa_id)->first();
+        $question = EligibilityQuestions::where("unique_id",$question_id)->first();
+        $combination_options = CombinationalOptions::with(['OptionOne','OptionTwo'])->where("question_id",$question_id)->get();
+        $viewData['question'] = $question;
+        $viewData['visa_service'] = $visa_service;
+        
+        $selected_question = EligibilityQuestions::where("unique_id",$request->input("selected_question"))->first();
+        $options = $selected_question->Options;
+        $comb_options = array();
+        foreach($combination_options as $comb_option){
+            foreach($options as $option){
+                $temp = array();
+                $temp['comb_group'] = $comb_option->toArray();
+                $temp['option'] = $option->toArray();
+                $checkOption = array();
+                $checkOption = MultipleOptionsGroups::where("comb_option_id",$comb_option->id)
+                                                   ->where("option_id",$option->id)
+                                                   ->first();
+                if(!empty($checkOption)){
+                    $temp['score'] = $checkOption->score;
+                }else{
+                    $temp['score'] = '';
+                }
+                $comb_options[] = $temp;
+            }   
+        }
+       
+        $viewData['comb_options'] = $comb_options;
+        // return view(roleFolder().'.combinational-options.combinational-options',$viewData);
+        $view = View::make(roleFolder().'.combinational-options.group-combinational-options',$viewData);
+        $contents = $view->render();
+        $response['status'] = true;
+        $response['contents'] = $contents;
+        return response()->json($response);
+    }
+
+    public function saveMultipleOptionsGroup(Request $request,$visa_id,$question_id){
+        $visa_id = base64_decode($visa_id);
+        $question_id = base64_decode($question_id);
+        
+        $visa_service = VisaServices::where("id",$visa_id)->first();
+        $question = EligibilityQuestions::where("id",$question_id)->first();        
+        $options = $request->input("option");
+        $combinational_id = randomNumber();
+        
+        foreach($options as $option){
+            $checkOption = MultipleOptionsGroups::where("comb_option_id",$option['comb_option_id'])
+                                            ->where("option_id",$option['option_id'])
+                                            ->first();
+            if(!empty($checkOption)){
+                $object = MultipleOptionsGroups::find($checkOption->id);
+            }else{
+                $object = new MultipleOptionsGroups();
+            }
+            $object->comb_option_id = $option['comb_option_id'];
+            $object->question_id = $option['question_id'];
+            $object->option_id = $option['option_id'];
+            $object->option_value = $option['option_value'];
+            $object->score = $option['score'];
+            $object->current_question_id = $request->input("current_question_id");
+            $object->visa_service_id = $request->input("visa_service_id");
+            $object->save();
+        }
+        $response['status'] = true;
+        $response['redirect_back'] = baseUrl('visa-services/eligibility-questions/'.base64_encode($visa_service->id).'/multi-option-groups/'.base64_encode($question_id));
+        $response['message'] = "Combination added successfully";;
+        return response()->json($response);
+    }
+
+    public function deleteMultipleOptionsGroup($visa_id,$id){
+        $id = base64_decode($id);
+
+        MultipleOptionsGroups::where("id",$id)->delete();
         return redirect()->back()->with("success","Record deleted successfully");
     }
 }

@@ -13,7 +13,9 @@ class QuestionsGroups extends Model
         $ques = QuestionsGroups::where("id",$id)->first();
         GroupQuestionIds::where("group_id",$ques->unique_id)->delete();
         GroupComponentIds::where("group_id",$ques->unique_id)->delete();
+        ArrangeGroups::where("group_id",$ques->unique_id)->delete();
         QuestionsGroups::where("id",$id)->delete();
+        
     }
 
    
@@ -32,6 +34,7 @@ class QuestionsGroups extends Model
     {
         return $this->hasMany('App\Models\GroupComponentIds','group_id','unique_id')
                 ->with("Component")
+                ->whereHas("Component")
                 ->orderBy('sort_order',"asc");
     }
 

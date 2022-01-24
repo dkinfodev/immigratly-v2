@@ -400,4 +400,11 @@ class ProfessionalController extends Controller
         
         return response()->json($response);
     }
+
+    // public function updateDatabase(Request $request){
+    //     $professionals = Professionals::get();        
+    //     foreach($professionals as $professional){
+
+    //     }
+    // }
 }

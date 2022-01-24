@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.master-old')
 @section('pageheader')
 <!-- Content -->
 <div class="">
@@ -36,9 +36,8 @@
 
         <h1 class="page-title">{{$pageTitle}}</h1>
       </div>
-
       <div class="col-sm-auto">
-     
+      
         <a class="btn btn-primary" href="{{ baseUrl('/visa-services/eligibility-questions/'.$visa_service_id.'/groups-questions/add') }}">
           <i class="tio-add mr-1"></i> Add 
         </a>
@@ -151,12 +150,10 @@
 @endsection
 
 @section('javascript')
-<script src="assets/vendor/hs-toggle-switch/dist/hs-toggle-switch.min.js"></script>
+
 <script type="text/javascript">
 $(document).ready(function(){
-  $('.js-toggle-switch').each(function () {
-    var toggleSwitch = new HSToggleSwitch($(this)).init();
-  });
+  
   $("#datatableSearch").keyup(function(){
     var value = $(this).val();
     if(value == ''){

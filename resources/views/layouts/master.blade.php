@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <!-- Required Meta Tags Always Come First -->
   <meta charset="utf-8">
@@ -9,692 +10,257 @@
   <title>{{ companyName() }}</title>
 
   <!-- Favicon -->
-  <link rel="shortcut icon" href="./favicon.ico">
-
-  <!-- Font -->
+  <link rel="shortcut icon" href="assets/img/favicon.ico">
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 
-  <!-- CSS Implementing Plugins -->
-  <link rel="stylesheet" href="assets/vendor/icon-set/style.css">
-  <link rel="stylesheet" href="assets/vendor/hs-mega-menu/dist/hs-mega-menu.min.css">
-  <link rel="stylesheet" href="assets/vendor/select2/dist/css/select2.min.css">
-  <link rel="stylesheet" href="assets/vendor/@yaireo/tagify/dist/tagify.css">
-  <link rel="stylesheet" href="assets/vendor/quill/dist/quill.snow.css">
-  <link rel="stylesheet" href="assets/vendor/flatpickr/dist/flatpickr.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css" />
-  <!-- CSS Front Template -->
-  <link rel="stylesheet" href="assets/css/theme.min.css">
-  <link rel="stylesheet" href="assets/vendor/toastr/toastr.css">
-  <link rel="stylesheet" type="text/css" href="assets/vendor/sweetalert2/sweetalert2.min.css">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="assets/css/custom.css">
-    @yield('style')
+<!-- CSS Implementing Plugins -->
+<link rel="stylesheet" href="assets/vendor/bootstrap-icons/font/bootstrap-icons.css">
+<link rel="stylesheet" href="assets/vendor/icon-set/style.css">
+<link rel="stylesheet" href="assets/vendor/hs-mega-menu/dist/hs-mega-menu.min.css">
+<link rel="stylesheet" href="assets/vendor/select2/dist/css/select2.min.css">
+<link rel="stylesheet" href="assets/vendor/@yaireo/tagify/dist/tagify.css">
+<link rel="stylesheet" href="assets/vendor/quill/dist/quill.snow.css">
+<link rel="stylesheet" href="assets/vendor/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css" />
+<!-- CSS Front Template -->
+<link rel="stylesheet" href="assets/css/theme.min.css">
+<!-- <link rel="stylesheet" href="assets/vendor/toastr/toastr.css"> -->
+<link rel="stylesheet" type="text/css" href="assets/vendor/sweetalert2/sweetalert2.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/custom.css">
+  @yield('style')
     <script>
     var BASEURL = "{{ baseUrl('/') }}";
     var SITEURL = "{{ url('/') }}";
     var csrf_token = "{{ csrf_token() }}";
     </script>
 </head>
-<body class="bg-light">
-  <div class="loader">
-    <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
-      <span class="sr-only">Loading...</span>
-    </div>
-    <h4 class="text-danger">Loading...</h4>
-  </div>
-  <!-- Search Form -->
-  <div id="searchDropdown" class="hs-unfold-content dropdown-unfold search-fullwidth d-md-none">
-    <form class="input-group input-group-merge input-group-borderless">
-      <div class="input-group-prepend">
-        <div class="input-group-text">
-          <i class="tio-search"></i>
-        </div>
-      </div>
 
-      <input class="form-control rounded-0" type="search" placeholder="Search in front" aria-label="Search in front">
-
-      <div class="input-group-append">
-        <div class="input-group-text">
-          <div class="hs-unfold">
-            <a class="js-hs-unfold-invoker" href="javascript:;"
-               data-hs-unfold-options='{
-                 "target": "#searchDropdown",
-                 "type": "css-animation",
-                 "animationIn": "fadeIn",
-                 "hasOverlay": "rgba(46, 52, 81, 0.1)",
-                 "closeBreakpoint": "md"
-               }'>
-              <i class="tio-clear tio-lg"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-    </form>
-  </div>
-  <!-- End Search Form -->
-
+<body>
+<div class="loader">
+<div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+    <span class="sr-only"></span>
+</div>
+<h4 class="text-danger">Loading...</h4>
+</div>
   <!-- ========== HEADER ========== -->
   @include(roleFolder().'.layouts.header')
-  
+
+
   <!-- ========== END HEADER ========== -->
 
- <!-- ========== MAIN CONTENT ========== -->
-  <main id="content" role="main" class="main">
-    @yield("pageheader")
+
+  <!-- ========== MAIN CONTENT ========== -->
+  <main id="content" role="main" class="bg-light mt-lg-n3">
+
+
     <!-- Content -->
-    <!-- Content -->
-    <div class="content container" style="margin-top: -20rem;">
-      @include(roleFolder().'.layouts.sidebar')
-    <!-- Sidebar Detached Content -->
-      <div class="sidebar-detached-content mt-3 mt-lg-0">
-       <div class="">
-          <div class="content p-0 container-fluid">
+    <div class="container content-space-1 content-space-t-lg-0 content-space-b-lg-2   imm-dashboard-content">
+      <div class="row">
+        <div class="col-lg-3">
+            @include(roleFolder().'.layouts.sidebar')
+        </div>
+        <!-- End Col -->
+
+        <div class="col-lg-9">
             @yield("content")
+        </div>
+        <!-- End Col -->
+      </div>
+      <!-- End Row -->
+    </div>
+    <!-- End Content -->
+  </main>
+  <!-- ========== END MAIN CONTENT ========== -->
+  <div class="modal fade imm-addeducation-modal" id="popupModal" tabindex="-1" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  </div>
+  <!-- ========== FOOTER ========== -->
+  <footer class="bg-dark">
+    <div class="container pb-1 pb-lg-5">
+      <div class="row content-space-t-2">
+        <div class="col-lg-3 mb-7 mb-lg-0">
+          <!-- Logo -->
+          <div class="mb-5">
+            <a class="navbar-brand" href="index.html" aria-label="Space">
+              <img class="navbar-brand-logo" src="assets/svg/logos/logo-white.svg" alt="Image Description">
+            </a>
           </div>
+          <!-- End Logo -->
+
+          <!-- List -->
+          <ul class="list-unstyled list-py-1">
+            <li><a class="link-sm link-light" href="#"><i class="bi-geo-alt-fill me-1"></i> 153 Williamson Plaza,
+                Maggieberg</a></li>
+            <li><a class="link-sm link-light" href="tel:1-062-109-9222"><i class="bi-telephone-inbound-fill me-1"></i>
+                +1 (062) 109-9222</a></li>
+          </ul>
+          <!-- End List -->
+
+        </div>
+        <!-- End Col -->
+
+        <div class="col-sm mb-7 mb-sm-0">
+          <h5 class="text-white mb-3">Company</h5>
+
+          <!-- List -->
+          <ul class="list-unstyled list-py-1 mb-0">
+            <li><a class="link-sm link-light" href="#">About</a></li>
+            <li><a class="link-sm link-light" href="#">Careers <span
+                  class="badge bg-warning text-dark rounded-pill ms-1">We're hiring</span></a></li>
+            <li><a class="link-sm link-light" href="#">Blog</a></li>
+            <li><a class="link-sm link-light" href="#">Customers <i class="bi-box-arrow-up-right small ms-1"></i></a>
+            </li>
+            <li><a class="link-sm link-light" href="#">Hire us</a></li>
+          </ul>
+          <!-- End List -->
+        </div>
+        <!-- End Col -->
+
+        <div class="col-sm mb-7 mb-sm-0">
+          <h5 class="text-white mb-3">Features</h5>
+
+          <!-- List -->
+          <ul class="list-unstyled list-py-1 mb-0">
+            <li><a class="link-sm link-light" href="#">Press <i class="bi-box-arrow-up-right small ms-1"></i></a></li>
+            <li><a class="link-sm link-light" href="#">Release Notes</a></li>
+            <li><a class="link-sm link-light" href="#">Integrations</a></li>
+            <li><a class="link-sm link-light" href="#">Pricing</a></li>
+          </ul>
+          <!-- End List -->
+        </div>
+        <!-- End Col -->
+
+        <div class="col-sm">
+          <h5 class="text-white mb-3">Documentation</h5>
+
+          <!-- List -->
+          <ul class="list-unstyled list-py-1 mb-0">
+            <li><a class="link-sm link-light" href="#">Support</a></li>
+            <li><a class="link-sm link-light" href="#">Docs</a></li>
+            <li><a class="link-sm link-light" href="#">Status</a></li>
+            <li><a class="link-sm link-light" href="#">API Reference</a></li>
+            <li><a class="link-sm link-light" href="#">Tech Requirements</a></li>
+          </ul>
+          <!-- End List -->
+        </div>
+        <!-- End Col -->
+
+        <div class="col-sm">
+          <h5 class="text-white mb-3">Resources</h5>
+
+          <!-- List -->
+          <ul class="list-unstyled list-py-1 mb-5">
+            <li><a class="link-sm link-light" href="#"><i class="bi-question-circle-fill me-1"></i> Help</a></li>
+            <li><a class="link-sm link-light" href="#"><i class="bi-person-circle me-1"></i> Your Account</a></li>
+          </ul>
+          <!-- End List -->
+        </div>
+        <!-- End Col -->
+      </div>
+      <!-- End Row -->
+
+      <div class="border-top border-white-10 my-7"></div>
+
+      <div class="row mb-7">
+        <div class="col-sm mb-3 mb-sm-0">
+          <!-- Socials -->
+          <ul class="list-inline list-separator list-separator-light mb-0">
+            <li class="list-inline-item">
+              <a class="link-sm link-light" href="#">Privacy &amp; Policy</a>
+            </li>
+            <li class="list-inline-item">
+              <a class="link-sm link-light" href="#">Terms</a>
+            </li>
+            <li class="list-inline-item">
+              <a class="link-sm link-light" href="#">Site Map</a>
+            </li>
+          </ul>
+          <!-- End Socials -->
+        </div>
+
+        <div class="col-sm-auto">
+          <!-- Socials -->
+          <ul class="list-inline mb-0">
+            <li class="list-inline-item">
+              <a class="btn btn-soft-light btn-xs btn-icon" href="#">
+                <i class="bi-facebook"></i>
+              </a>
+            </li>
+
+            <li class="list-inline-item">
+              <a class="btn btn-soft-light btn-xs btn-icon" href="#">
+                <i class="bi-google"></i>
+              </a>
+            </li>
+
+            <li class="list-inline-item">
+              <a class="btn btn-soft-light btn-xs btn-icon" href="#">
+                <i class="bi-twitter"></i>
+              </a>
+            </li>
+
+            <li class="list-inline-item">
+              <a class="btn btn-soft-light btn-xs btn-icon" href="#">
+                <i class="bi-github"></i>
+              </a>
+            </li>
+
+            <li class="list-inline-item">
+              <!-- Button Group -->
+              <div class="btn-group">
+                <button type="button" class="btn btn-soft-light btn-xs dropdown-toggle" id="footerSelectLanguage"
+                  data-bs-toggle="dropdown" aria-expanded="false" data-bs-dropdown-animation>
+                  <span class="d-flex align-items-center">
+                    <img class="avatar avatar-xss avatar-circle me-2"
+                      src="assets/vendor/flag-icon-css/flags/1x1/us.svg" alt="Image description" width="16" />
+                    <span>English (US)</span>
+                  </span>
+                </button>
+
+                <div class="dropdown-menu" aria-labelledby="footerSelectLanguage">
+                  <a class="dropdown-item d-flex align-items-center active" href="#">
+                    <img class="avatar avatar-xss avatar-circle me-2"
+                      src="assets/vendor/flag-icon-css/flags/1x1/us.svg" alt="Image description" width="16" />
+                    <span>English (US)</span>
+                  </a>
+                  <a class="dropdown-item d-flex align-items-center" href="#">
+                    <img class="avatar avatar-xss avatar-circle me-2"
+                      src="assets/vendor/flag-icon-css/flags/1x1/de.svg" alt="Image description" width="16" />
+                    <span>Deutsch</span>
+                  </a>
+                  <a class="dropdown-item d-flex align-items-center" href="#">
+                    <img class="avatar avatar-xss avatar-circle me-2"
+                      src="assets/vendor/flag-icon-css/flags/1x1/es.svg" alt="Image description" width="16" />
+                    <span>Español</span>
+                  </a>
+                  <a class="dropdown-item d-flex align-items-center" href="#">
+                    <img class="avatar avatar-xss avatar-circle me-2"
+                      src="assets/vendor/flag-icon-css/flags/1x1/cn.svg" alt="Image description" width="16" />
+                    <span>中文 (繁體)</span>
+                  </a>
+                </div>
+              </div>
+              <!-- End Button Group -->
+            </li>
+          </ul>
+          <!-- End Socials -->
         </div>
       </div>
-    </div>
-    
-    <!-- End Content -->
 
-  </main>
-  <div class="modal fade" id="popupModal" tabindex="-1" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  </div>
-  <!-- ========== END MAIN CONTENT ========== -->
+      <!-- Copyright -->
+      <div class="w-md-85 text-lg-center mx-lg-auto">
+        <p class="text-white-50 small">&copy; Front. 2021 Htmlstream. All rights reserved.</p>
+        <p class="text-white-50 small">When you visit or interact with our sites, services or tools, we or our
+          authorised service providers may use cookies for storing information to help provide you with a better, faster
+          and safer experience and for marketing purposes.</p>
+      </div>
+      <!-- End Copyright -->
+    </div>
+  </footer>
+
+  <!-- ========== END FOOTER ========== -->
 
   <!-- ========== SECONDARY CONTENTS ========== -->
-  <!-- Keyboard Shortcuts -->
-  <div id="keyboardShortcutsSidebar" class="hs-unfold-content sidebar sidebar-bordered sidebar-box-shadow">
-    <div class="card card-lg sidebar-card">
-      <div class="card-header">
-        <h4 class="card-header-title">Keyboard shortcuts</h4>
-
-        <!-- Toggle Button -->
-        <a class="js-hs-unfold-invoker btn btn-icon btn-xs btn-ghost-dark ml-2" href="javascript:;"
-           data-hs-unfold-options='{
-              "target": "#keyboardShortcutsSidebar",
-              "type": "css-animation",
-              "animationIn": "fadeInRight",
-              "animationOut": "fadeOutRight",
-              "hasOverlay": true,
-              "smartPositionOff": true
-             }'>
-          <i class="tio-clear tio-lg"></i>
-        </a>
-        <!-- End Toggle Button -->
-      </div>
-
-      <!-- Body -->
-      <div class="card-body sidebar-body sidebar-scrollbar">
-        <div class="list-group list-group-sm list-group-flush list-group-no-gutters mb-5">
-          <div class="list-group-item">
-            <h5 class="mb-1">Formatting</h5>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <span class="font-weight-bold">Bold</span>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">Ctrl</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">b</kbd>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <em>italic</em>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">Ctrl</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">i</kbd>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <u>Underline</u>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">Ctrl</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">u</kbd>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <s>Strikethrough</s>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">Ctrl</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">Alt</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">s</kbd>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <span class="small">Small text</span>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">Ctrl</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">s</kbd>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <mark>Highlight</mark>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">Ctrl</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">e</kbd>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="list-group list-group-sm list-group-flush list-group-no-gutters mb-5">
-          <div class="list-group-item">
-            <h5 class="mb-1">Insert</h5>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <span>Mention person <a href="#">(@Brian)</a></span>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">@</kbd>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <span>Link to doc <a href="#">(+Meeting notes)</a></span>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">+</kbd>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <a href="#">#hashtag</a>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">#hashtag</kbd>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <span>Date</span>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">/date</kbd>
-                <kbd class="d-inline-block mb-1">Space</kbd>
-                <kbd class="d-inline-block mb-1">/datetime</kbd>
-                <kbd class="d-inline-block mb-1">/datetime</kbd>
-                <kbd class="d-inline-block mb-1">Space</kbd>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <span>Time</span>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">/time</kbd>
-                <kbd class="d-inline-block mb-1">Space</kbd>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <span>Note box</span>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">/note</kbd>
-                <kbd class="d-inline-block mb-1">Enter</kbd>
-                <kbd class="d-inline-block mb-1">/note red</kbd>
-                <kbd class="d-inline-block mb-1">/note red</kbd>
-                <kbd class="d-inline-block mb-1">Enter</kbd>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="list-group list-group-sm list-group-flush list-group-no-gutters mb-5">
-          <div class="list-group-item">
-            <h5 class="mb-1">Editing</h5>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <span>Find and replace</span>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">Ctrl</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">r</kbd>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <span>Find next</span>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">Ctrl</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">n</kbd>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <span>Find previous</span>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">Ctrl</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">p</kbd>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <span>Indent</span>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">Tab</kbd>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <span>Un-indent</span>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">Shift</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">Tab</kbd>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <span>Move line up</span>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">Ctrl</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">Shift</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1"><i class="tio-arrow-large-upward-outlined"></i></kbd>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <span>Move line down</span>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">Ctrl</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">Shift</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1"><i class="tio-arrow-large-downward-outlined font-size-sm"></i></kbd>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <span>Add a comment</span>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">Ctrl</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">Alt</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">m</kbd>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <span>Undo</span>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">Ctrl</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">z</kbd>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <span>Redo</span>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">Ctrl</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">y</kbd>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="list-group list-group-sm list-group-flush list-group-no-gutters">
-          <div class="list-group-item">
-            <h5 class="mb-1">Application</h5>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <span>Create new doc</span>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">Ctrl</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">Alt</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">n</kbd>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <span>Present</span>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">Ctrl</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">Shift</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">p</kbd>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <span>Share</span>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">Ctrl</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">Shift</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">s</kbd>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <span>Search docs</span>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">Ctrl</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">Shift</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">o</kbd>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-5">
-                <span>Keyboard shortcuts</span>
-              </div>
-              <div class="col-7 text-right">
-                <kbd class="d-inline-block mb-1">Ctrl</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">Shift</kbd> <small class="text-muted">+</small> <kbd class="d-inline-block mb-1">/</kbd>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- End Body -->
-    </div>
-  </div>
-  <!-- End Keyboard Shortcuts -->
-
-  <!-- Activity -->
-  <div id="activitySidebar" class="hs-unfold-content sidebar sidebar-bordered sidebar-box-shadow">
-    <div class="card card-lg sidebar-card">
-      <div class="card-header">
-        <h4 class="card-header-title">Activity stream</h4>
-
-        <!-- Toggle Button -->
-        <a class="js-hs-unfold-invoker btn btn-icon btn-xs btn-ghost-dark ml-2" href="javascript:;"
-           data-hs-unfold-options='{
-            "target": "#activitySidebar",
-            "type": "css-animation",
-            "animationIn": "fadeInRight",
-            "animationOut": "fadeOutRight",
-            "hasOverlay": true,
-            "smartPositionOff": true
-           }'>
-          <i class="tio-clear tio-lg"></i>
-        </a>
-        <!-- End Toggle Button -->
-      </div>
-
-      <!-- Body -->
-      <div class="card-body sidebar-body sidebar-scrollbar">
-        <!-- Step -->
-        <ul class="step step-icon-sm step-avatar-sm">
-          <!-- Step Item -->
-          <li class="step-item">
-            <div class="step-content-wrapper">
-              <div class="step-avatar">
-                <img class="step-avatar-img" src="assets/img/160x160/img9.jpg" alt="Image Description">
-              </div>
-
-              <div class="step-content">
-                <h5 class="mb-1">Iana Robinson</h5>
-
-                <p class="font-size-sm mb-1">Added 2 files to task <a class="text-uppercase" href="#"><i class="tio-folder-bookmarked"></i> Fd-7</a></p>
-
-                <ul class="list-group list-group-sm">
-                  <!-- List Item -->
-                  <li class="list-group-item list-group-item-light">
-                    <div class="row gx-1">
-                      <div class="col-6">
-                        <div class="media">
-                            <span class="mt-1 mr-2">
-                              <img class="avatar avatar-xs" src="assets/svg/brands/excel.svg" alt="Image Description">
-                            </span>
-                          <div class="media-body text-truncate">
-                            <span class="d-block font-size-sm text-dark text-truncate" title="weekly-reports.xls">weekly-reports.xls</span>
-                            <small class="d-block text-muted">12kb</small>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="media">
-                            <span class="mt-1 mr-2">
-                              <img class="avatar avatar-xs" src="assets/svg/brands/word.svg" alt="Image Description">
-                            </span>
-                          <div class="media-body text-truncate">
-                            <span class="d-block font-size-sm text-dark text-truncate" title="weekly-reports.xls">weekly-reports.xls</span>
-                            <small class="d-block text-muted">4kb</small>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <!-- End List Item -->
-                </ul>
-
-                <small class="text-muted text-uppercase">Now</small>
-              </div>
-            </div>
-          </li>
-          <!-- End Step Item -->
-
-          <!-- Step Item -->
-          <li class="step-item">
-            <div class="step-content-wrapper">
-              <span class="step-icon step-icon-soft-dark">B</span>
-
-              <div class="step-content">
-                <h5 class="mb-1">Bob Dean</h5>
-
-                <p class="font-size-sm mb-1">Marked <a class="text-uppercase" href="#"><i class="tio-folder-bookmarked"></i> Fr-6</a> as <span class="badge badge-soft-success badge-pill"><span class="legend-indicator bg-success"></span>"Completed"</span></p>
-
-                <small class="text-muted text-uppercase">Today</small>
-              </div>
-            </div>
-          </li>
-          <!-- End Step Item -->
-
-          <!-- Step Item -->
-          <li class="step-item">
-            <div class="step-content-wrapper">
-              <div class="step-avatar">
-                <img class="step-avatar-img" src="assets/img/160x160/img3.jpg" alt="Image Description">
-              </div>
-
-              <div class="step-content">
-                <h5 class="h5 mb-1">Crane</h5>
-
-                <p class="font-size-sm mb-1">Added 5 card to <a href="#">Payments</a></p>
-
-                <ul class="list-group list-group-sm">
-                  <li class="list-group-item list-group-item-light">
-                    <div class="row gx-1">
-                      <div class="col">
-                        <img class="img-fluid rounded ie-sidebar-activity-img" src="assets/svg/illustrations/card-1.svg" alt="Image Description">
-                      </div>
-                      <div class="col">
-                        <img class="img-fluid rounded ie-sidebar-activity-img" src="assets/svg/illustrations/card-2.svg" alt="Image Description">
-                      </div>
-                      <div class="col">
-                        <img class="img-fluid rounded ie-sidebar-activity-img" src="assets/svg/illustrations/card-3.svg" alt="Image Description">
-                      </div>
-                      <div class="col-auto align-self-center">
-                        <div class="text-center">
-                          <a href="#">+2</a>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-
-                <small class="text-muted text-uppercase">May 12</small>
-              </div>
-            </div>
-          </li>
-          <!-- End Step Item -->
-
-          <!-- Step Item -->
-          <li class="step-item">
-            <div class="step-content-wrapper">
-              <span class="step-icon step-icon-soft-info">D</span>
-
-              <div class="step-content">
-                <h5 class="mb-1">David Lidell</h5>
-
-                <p class="font-size-sm mb-1">Added a new member to Front Dashboard</p>
-
-                <small class="text-muted text-uppercase">May 15</small>
-              </div>
-            </div>
-          </li>
-          <!-- End Step Item -->
-
-          <!-- Step Item -->
-          <li class="step-item">
-            <div class="step-content-wrapper">
-              <div class="step-avatar">
-                <img class="step-avatar-img" src="assets/img/160x160/img7.jpg" alt="Image Description">
-              </div>
-
-              <div class="step-content">
-                <h5 class="mb-1">Rachel King</h5>
-
-                <p class="font-size-sm mb-1">Marked <a class="text-uppercase" href="#"><i class="tio-folder-bookmarked"></i> Fr-3</a> as <span class="badge badge-soft-success badge-pill"><span class="legend-indicator bg-success"></span>"Completed"</span></p>
-
-                <small class="text-muted text-uppercase">Apr 29</small>
-              </div>
-            </div>
-          </li>
-          <!-- End Step Item -->
-
-          <!-- Step Item -->
-          <li class="step-item">
-            <div class="step-content-wrapper">
-              <div class="step-avatar">
-                <img class="step-avatar-img" src="assets/img/160x160/img5.jpg" alt="Image Description">
-              </div>
-
-              <div class="step-content">
-                <h5 class="mb-1">Finch Hoot</h5>
-
-                <p class="font-size-sm mb-1">Earned a "Top endorsed" <i class="tio-verified text-primary"></i> badge</p>
-
-                <small class="text-muted text-uppercase">Apr 06</small>
-              </div>
-            </div>
-          </li>
-          <!-- End Step Item -->
-
-          <!-- Step Item -->
-          <li class="step-item">
-            <div class="step-content-wrapper">
-                <span class="step-icon step-icon-soft-primary">
-                  <i class="tio-user"></i>
-                </span>
-
-              <div class="step-content">
-                <h5 class="mb-1">Project status updated</h5>
-
-                <p class="font-size-sm mb-1">Marked <a class="text-uppercase" href="#"><i class="tio-folder-bookmarked"></i> Fr-3</a> as <span class="badge badge-soft-primary badge-pill"><span class="legend-indicator bg-primary"></span>"In progress"</span></p>
-
-                <small class="text-muted text-uppercase">Feb 10</small>
-              </div>
-            </div>
-          </li>
-          <!-- End Step Item -->
-        </ul>
-        <!-- End Step -->
-
-        <a class="btn btn-block btn-white" href="javascript:;">View all <i class="tio-chevron-right"></i></a>
-      </div>
-      <!-- End Body -->
-    </div>
-  </div>
-  <!-- End Activity -->
-
-  <!-- Welcome Message Modal -->
-  <div class="modal fade" id="welcomeMessageModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <!-- Header -->
-        <div class="modal-close">
-          <button type="button" class="btn btn-icon btn-sm btn-ghost-secondary" data-dismiss="modal" aria-label="Close">
-            <i class="tio-clear tio-lg"></i>
-          </button>
-        </div>
-        <!-- End Header -->
-
-        <!-- Body -->
-        <div class="modal-body p-sm-5">
-          <div class="text-center">
-            <div class="w-75 w-sm-50 mx-auto mb-4">
-              <img class="img-fluid" src="assets/svg/illustrations/graphs.svg" alt="Image Description">
-            </div>
-
-            <h4 class="h1">Welcome to Front</h4>
-
-            <p>We're happy to see you in our community.</p>
-          </div>
-        </div>
-        <!-- End Body -->
-
-        <!-- Footer -->
-        <div class="modal-footer d-block text-center py-sm-5">
-          <small class="text-cap mb-4">Trusted by the world's best teams</small>
-
-          <div class="w-85 mx-auto">
-            <div class="row justify-content-between">
-              <div class="col">
-                <img class="img-fluid ie-welcome-brands" src="assets/svg/brands/gitlab-gray.svg" alt="Image Description">
-              </div>
-              <div class="col">
-                <img class="img-fluid ie-welcome-brands" src="assets/svg/brands/fitbit-gray.svg" alt="Image Description">
-              </div>
-              <div class="col">
-                <img class="img-fluid ie-welcome-brands" src="assets/svg/brands/flow-xo-gray.svg" alt="Image Description">
-              </div>
-              <div class="col">
-                <img class="img-fluid ie-welcome-brands" src="assets/svg/brands/layar-gray.svg" alt="Image Description">
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- End Footer -->
-      </div>
-    </div>
-  </div>
-  <!-- End Welcome Message Modal -->
-  <!-- ========== END SECONDARY CONTENTS ========== -->
 
 
   <!-- JS Global Compulsory  -->
@@ -711,7 +277,7 @@
   <script src="assets/vendor/select2/dist/js/select2.full.min.js"></script>
   <script src="assets/vendor/flatpickr/dist/flatpickr.min.js"></script>
   <script src="assets/vendor/hs-quantity-counter/dist/hs-quantity-counter.min.js"></script>
-  <script src="assets/vendor/hs-add-field/dist/hs-add-field.min.js"></script>
+  <!-- <script src="assets/vendor/hs-add-field/dist/hs-add-field.min.js"></script> -->
   <script src="assets/vendor/hs-sticky-block/dist/hs-sticky-block.min.js"></script>
   <script src="assets/vendor/quill/dist/quill.min.js"></script>
   <script src="assets/vendor/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
@@ -727,7 +293,7 @@
   <script src="assets/vendor/datatables.net-buttons/js/buttons.html5.min.js"></script>
   <script src="assets/vendor/datatables.net-buttons/js/buttons.print.min.js"></script>
   <script src="assets/vendor/datatables.net-buttons/js/buttons.colVis.min.js"></script>
-  <script src="assets/vendor/toastr/toastr.min.js"></script>
+  <!-- <script src="assets/vendor/toastr/toastr.min.js"></script> -->
   <script src="assets/vendor/ckeditor/ckeditor.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
   <script src="assets/vendor/sweetalert2/sweetalert2.all.min.js"></script>
@@ -737,8 +303,8 @@
 
   <!-- JS Plugins Init. -->
   <script>
-    initSelect();
     $(document).on('ready', function () {
+      initSelect();
       // INITIALIZATION OF UNFOLD
       // =======================================================
       $('.js-hs-unfold-invoker').each(function () {
@@ -752,211 +318,14 @@
 
               // INITIALIZATION OF FILE ATTACH
         // =======================================================
-        $('.js-file-attach').each(function () {
-          var customFile = new HSFileAttach($(this)).init();
-        });
+
 
         
         // INITIALIZATION OF SELECT2
         // =======================================================
-        $('.js-select2-custom').each(function () {
-          var select2 = $.HSCore.components.HSSelect2.init($(this));
-        });
-
-        
-        // INITIALIZATION OF FLATPICKR
-        // =======================================================
-        $('.js-flatpickr').each(function () {
-          $.HSCore.components.HSFlatpickr.init($(this));
-        });
-
-        
-        // INITIALIZATION OF QUANTITY COUNTER
-        // =======================================================
-        $('.js-quantity-counter').each(function () {
-          var quantityCounter = new HSQuantityCounter($(this)).init();
-        });
-
-        
-        // INITIALIZATION OF ADD INPUT FILED
-        // =======================================================
-        $('.js-add-field').each(function () {
-          new HSAddField($(this), {
-            addedField: function() {
-              $('.js-add-field .js-select2-custom-dynamic').each(function () {
-                var select2dynamic = $.HSCore.components.HSSelect2.init($(this));
-              });
-
-              $('[data-toggle="tooltip"]').tooltip();
-
-              
-              // INITIALIZATION OF QUANTITY COUNTER
-              // =======================================================
-              $('.js-quantity-counter').each(function () {
-                var quantityCounter = new HSQuantityCounter($(this)).init();
-              });
-            },
-            deletedField: function() {
-              $('.tooltip').hide();
-            }
-          }).init();
-        });
-
-        
-        // INITIALIZATION OF STICKY BLOCKS
-        // =======================================================
-        /*$('.js-sticky-block').each(function () {
-          var stickyBlock = new HSStickyBlock($(this), {
-            targetSelector: $('#header').hasClass('navbar-fixed') ? '#header' : null
-          }).init();
-        });*/
- // INITIALIZATION OF QUILLJS EDITOR
-        // =======================================================
-        var quill = $.HSCore.components.HSQuill.init('.js-quill');
-
-        
-        // INITIALIZATION OF TAGIFY
-        // =======================================================
-        $('.js-tagify').each(function () {
-          var tagify = $.HSCore.components.HSTagify.init($(this));
-        });
-
-        $('.js-tagify-avatars').each(function () {
-          var settings = $(this).attr('data-hs-tagify-options') ? JSON.parse($(this).attr('data-hs-tagify-options')) : {},
-            tagifyAvatars = $.HSCore.components.HSTagify.init($(this), {
-              templates: {
-                tag: function tag(tagData) {
-                  try {
-                    return "<tag title=\"" + tagData.value + "\" contenteditable=\"false\" spellcheck=\"false\" class=\"tagify__tag " + (tagData["class"] ? tagData["class"] : "") + "\" " + this.getAttributes(tagData) + ">" +
-                              "<x title=\"remove tag\" class=\"tagify__tag__removeBtn\"></x>" +
-                              "<div class=\"d-flex align-items-center\">" +
-                              "" + (tagData.src ? "<img class=\"avatar avatar-xss avatar-circle mr-2\" src=\"" + tagData.src.toLowerCase() + "\">" : "") + "" +
-                                "<span>" + tagData.value + "</span>" +
-                              "</div>" +
-                            "</tag>";
-                  } catch (err) {}
-                },
-                dropdownItem: function dropdownItem(tagData) {
-                  try {
-                    return "<div " + this.getAttributes(tagData) + " class=\"tagify__dropdown__item " + (tagData["class"] ? tagData["class"] : "") + "\">" +
-                             "<img class=\"avatar avatar-xss avatar-circle mr-2\" src=\"" + tagData.src.toLowerCase() + "\">" +
-                             "<span>" + tagData.value + "</span>" +
-                           "</div>";
-                  } catch (err) {}
-                }
-              }
-            }).addTags(settings.whitelist.slice(0, 1));
-        });
-
-        
-        // INITIALIZATION OF DROPZONE FILE ATTACH MODULE
-        // =======================================================
-        // $('.js-dropzone').each(function () {
-        //   var dropzone = $.HSCore.components.HSDropzone.init('#' + $(this).attr('id'));
+        // $('.js-select2-custom').each(function () {
+        //   var select2 = $.HSCore.components.HSSelect2.init($(this));
         // });
-
-        
-        // INITIALIZATION OF DATATABLES
-        // =======================================================
-        var datatable = $.HSCore.components.HSDatatables.init($('#datatable'), {
-          dom: 'Bfrtip',
-          buttons: [
-            {
-              extend: 'copy',
-              className: 'd-none'
-            },
-            {
-              extend: 'excel',
-              className: 'd-none'
-            },
-            {
-              extend: 'csv',
-              className: 'd-none'
-            },
-            {
-              extend: 'pdf',
-              className: 'd-none'
-            },
-            {
-              extend: 'print',
-              className: 'd-none'
-            },
-          ],
-          select: {
-            style: 'multi',
-            selector: 'td:first-child input[type="checkbox"]',
-            classMap: {
-              checkAll: '#datatableCheckAll',
-              counter: '#datatableCounter',
-              counterInfo: '#datatableCounterInfo'
-            }
-          },
-          language: {
-            zeroRecords: '<div class="text-center p-4">' +
-                '<img class="mb-3" src="assets/svg/illustrations/sorry.svg" alt="Image Description" style="width: 7rem;">' +
-                '<p class="mb-0">No data to show</p>' +
-                '</div>'
-          }
-        });
-
-        $('#export-copy').click(function() {
-          datatable.button('.buttons-copy').trigger()
-        });
-
-        $('#export-excel').click(function() {
-          datatable.button('.buttons-excel').trigger()
-        });
-
-        $('#export-csv').click(function() {
-          datatable.button('.buttons-csv').trigger()
-        });
-
-        $('#export-pdf').click(function() {
-          datatable.button('.buttons-pdf').trigger()
-        });
-
-        $('#export-print').click(function() {
-          datatable.button('.buttons-print').trigger()
-        });
-
-        $('.js-datatable-filter').on('change', function() {
-          var $this = $(this),
-            elVal = $this.val(),
-            targetColumnIndex = $this.data('target-column-index');
-
-          datatable.column(targetColumnIndex).search(elVal).draw();
-        });
-
-        $('#datatableSearch').on('search', function () {
-          datatable.search('').draw();
-        });
-
-        
-        // INITIALIZATION OF CHARTJS
-        // =======================================================
-        $('.js-chart').each(function () {
-          $.HSCore.components.HSChartJS.init($(this));
-        });
-
-        // $('.js-hs-unfold-invoker').each(function () {
-        //   var unfold = new HSUnfold($(this)).init();
-        // });
-        // INITIALIZATION OF QUICK VIEW POPOVER
-        // =======================================================
-        $('#newProjectPopover').popover('show')
-          .on('shown.bs.popover', function () {
-            $('.popover').last().addClass('popover-dark')
-          });
-
-        $(document).on('click', '#closeNewProjectPopover' , function() {
-          $('#newProjectPopover').popover('dispose');
-        });
-
-        $('#newProjectModal').on('show.bs.modal', function() {
-          $('#newProjectPopover').popover('dispose');
-        });
-
-
 
 
       // INITIALIZATION OF MEGA MENU
@@ -1011,4 +380,5 @@
   </script>
   @yield('javascript')
 </body>
+
 </html>

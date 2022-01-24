@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.master-old')
 @section('pageheader')
 <!-- Content -->
 <div class="">
@@ -81,6 +81,7 @@
                 <div class="js-add-field" data-hs-add-field-options='{
                       "template": "#addOptionsTemplate",
                       "container": "#addOptionsContainer",
+                      "limit":15,
                       "defaultCreated": 0
                     }'>
                     <!-- Title -->
@@ -107,42 +108,43 @@
                     <div class="js-form-message form-group">
                         <!-- Container For Input Field -->
                         <div id="addOptionsContainer">
-                            @foreach($record->ClbLevels as $level)
-                              <div class="item-row">
-                              <div class="input-group-add-field">
-                                  <?php
-                                    $index = randomNumber(4);
-                                  ?>
-                                  <div class="row">
-                                      <div class="col-md-2 js-form-message">
-                                          <input type="number" name="clb_level[{{$index}}][clb_level]" class="form-control mb-3 clb_level" required
-                                              placeholder="CLB Level" aria-label="CLB Level" value="{{ $level->clb_level }}">
-                                      </div>
-                                      <div class="col-md-2 js-form-message">
-                                          <input type="number" name="clb_level[{{$index}}][reading]" class="form-control mb-3 reading" required
-                                              placeholder="CLB Level" aria-label="Reading" value="{{ $level->reading }}">
-                                      </div>
-                                      <div class="col-md-2 js-form-message">
-                                          <input type="number" name="clb_level[{{$index}}][writing]" class="form-control mb-3 writing" required
-                                              placeholder="CLB Level" aria-label="CLB Level" value="{{ $level->writing }}">
-                                      </div>
-                                      <div class="col-md-2 js-form-message">
-                                          <input type="number" name="clb_level[{{$index}}][listening]" class="form-control mb-3 listening" required
-                                              placeholder="CLB Level" aria-label="CLB Level" value="{{ $level->listening }}">
-                                      </div>
-                                      <div class="col-md-2 js-form-message">
-                                          <input type="number" name="clb_level[{{$index}}][speaking]" class="form-control mb-3 speaking" required
-                                              placeholder="CLB Level" aria-label="CLB Level" value="{{ $level->speaking }}">
-                                      </div>
-                                  </div>
-                                  <!-- End Row -->
+                            @foreach($record->ScoreCharts as $level)
+                              <div class="ui-state-default item-row">
+                                <div class="input-group-add-field">
+                                    <?php
+                                      $index = randomNumber(4);
+                                    ?>
+                                    <div class="row">
+                                        <div class="col-md-2 js-form-message">
+                                            <input type="hidden" class="form-control mb-3 sort_order" name="clb_level[{{$index}}][sort_order]" value="{{ $level->sort_order }}" required>
+                                            <input type="text" step="0.01" name="clb_level[{{$index}}][clb_level]" class="form-control mb-3 clb_level" required
+                                                placeholder="CLB Level" aria-label="CLB Level" value="{{ $level->clb_level }}">
+                                        </div>
+                                        <div class="col-md-2 js-form-message">
+                                            <input type="text" step="0.01" name="clb_level[{{$index}}][reading]" class="form-control mb-3 reading" required
+                                                placeholder="CLB Level" aria-label="Reading" value="{{ $level->reading }}">
+                                        </div>
+                                        <div class="col-md-2 js-form-message">
+                                            <input type="text" step="0.01" name="clb_level[{{$index}}][writing]" class="form-control mb-3 writing" required
+                                                placeholder="CLB Level" aria-label="CLB Level" value="{{ $level->writing }}">
+                                        </div>
+                                        <div class="col-md-2 js-form-message">
+                                            <input type="text" step="0.01" name="clb_level[{{$index}}][listening]" class="form-control mb-3 listening" required
+                                                placeholder="CLB Level" aria-label="CLB Level" value="{{ $level->listening }}">
+                                        </div>
+                                        <div class="col-md-2 js-form-message">
+                                            <input type="text" step="0.01" name="clb_level[{{$index}}][speaking]" class="form-control mb-3 speaking" required
+                                                placeholder="CLB Level" aria-label="CLB Level" value="{{ $level->speaking }}">
+                                        </div>
+                                    </div>
+                                    <!-- End Row -->
 
-                                  <a class="js-delete-field input-group-add-field-delete ext-delete"
-                                      href="javascript:;" data-toggle="tooltip" data-placement="top"
-                                      title="Remove item">
-                                      <i class="tio-clear"></i>
-                                  </a>
-                              </div>
+                                    <a class="js-delete-field input-group-add-field-delete ext-delete"
+                                        href="javascript:;" data-toggle="tooltip" data-placement="top"
+                                        title="Remove item">
+                                        <i class="tio-clear"></i>
+                                    </a>
+                                </div>
                               </div>
                             @endforeach
                         </div>
@@ -153,7 +155,7 @@
                         </a>
 
                         <!-- Add Phone Input Field -->
-                        <div id="addOptionsTemplate" class="item-row" style="display: none;">
+                        <div id="addOptionsTemplate" class="item-row ui-state-default" style="display: none;">
                             <!-- Content -->
                             <div class="input-group-add-field">
                                 <?php
@@ -161,23 +163,23 @@
                                 ?>
                                 <div class="row">
                                     <div class="col-md-2 js-form-message">
-                                        <input type="number" class="form-control mb-3 clb_level" required
-                                            placeholder="CLB Level" aria-label="CLB Level">
+                                        <input type="hidden" class="form-control mb-3 sort_order" required>
+                                        <input type="text" class="form-control mb-3 clb_level" required placeholder="CLB Level" aria-label="CLB Level">
                                     </div>
                                     <div class="col-md-2 js-form-message">
-                                        <input type="number" class="form-control mb-3 reading" required
+                                        <input type="text" class="form-control mb-3 reading" required
                                             placeholder="Reading" aria-label="Readimg">
                                     </div>
                                     <div class="col-md-2 js-form-message">
-                                        <input type="number" class="form-control mb-3 writing" required
+                                        <input type="text" class="form-control mb-3 writing" required
                                             placeholder="Writing" aria-label="Writing">
                                     </div>
                                     <div class="col-md-2 js-form-message">
-                                        <input type="number" class="form-control mb-3 listening" required
+                                        <input type="text" class="form-control mb-3 listening" required
                                             placeholder="Listening" aria-label="Listening">
                                     </div>
                                     <div class="col-md-2 js-form-message">
-                                        <input type="number" class="form-control mb-3 speaking" required
+                                        <input type="text" class="form-control mb-3 speaking" required
                                             placeholder="Speaking" aria-label="Speaking">
                                     </div>
                                 </div>
@@ -212,12 +214,19 @@
   @endsection
 
   @section('javascript')
+  <link rel="stylesheet" href="{{ asset('assets/vendor/sortablejs/css/jquery-ui.css') }}">
+  <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="{{ asset('assets/vendor/sortablejs/js/jquery-ui.js') }}"></script>
+
   <script src="assets/vendor/hs-add-field/dist/hs-add-field.min.js"></script>
   <script type="text/javascript">
+    
     $(document).ready(function(){
       $(".ext-delete").click(function() {
         $(this).parents(".item-row").remove();
+        sortOrder();
       });
+      initSortable();
       $('.js-add-field').each(function() {
           new HSAddField($(this), {
               addedField: function() {
@@ -226,6 +235,12 @@
                       "name", "clb_level[" + index + "][clb_level]");
                   $("#addOptionsContainer > .item-row:last").find(".clb_level").attr(
                       "required", "true");
+
+                  $("#addOptionsContainer > .item-row:last").find(".sort_order").attr(
+                      "name", "clb_level[" + index + "][sort_order]");
+                  $("#addOptionsContainer > .item-row:last").find(".sort_order").attr(
+                      "required", "true");
+                      
 
                   $("#addOptionsContainer > .item-row:last").find(".reading").attr(
                       "name", "clb_level[" + index + "][reading]");
@@ -248,10 +263,12 @@
                       "required", "true");
 
                   $('[data-toggle="tooltip"]').tooltip();
-
+                  initSortable();
+                  sortOrder();
               },
               deletedField: function() {
                   $('.tooltip').hide();
+                  sortOrder();
               }
           }).init();
       });
@@ -296,6 +313,35 @@
      });
       });
     });
+    function initSortable(){
+      $( function() {
+        $('#addOptionsContainer').sortable({
+            start: function(event, ui) {
+                var start_pos = ui.item.index();
+            },
+            change: function(event, ui) {
+                var start_pos = ui.item.data('start_pos');
+                var index = ui.placeholder.index();
+                if (start_pos < index) {
+                    $('#sortable li:nth-child(' + index + ')').addClass('highlights');
+                } else {
+                    $('#sortable li:eq(' + (index + 1) + ')').addClass('highlights');
+                }
+            },
+            update: function(event, ui) {
+                // $('#sortable li').removeClass('highlights');
+                sortOrder();
+            }
+        });
+      });
+    }
+    function sortOrder(){
+      var index = 1;
+      $("#addOptionsContainer .sort_order").each(function(){
+        $(this).val(index);
+        index++;
+      });
+    }
   </script>
 
 

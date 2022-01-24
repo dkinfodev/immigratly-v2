@@ -19,6 +19,8 @@ use App\Models\PrimaryDegree;
 use App\Models\LanguageProficiency;
 use App\Models\LanguageScoreChart;
 use App\Models\EligibilityScoreRanges;
+use App\Models\VisaServicesBlocks;
+use App\Models\Tags;
 
 class VisaServicesController extends Controller
 {
@@ -142,6 +144,8 @@ class VisaServicesController extends Controller
         $object->slug = str_slug($request->input("name"));
         if($request->input('parent_id')){
             $object->parent_id = $request->input("parent_id");
+        }else{
+            $object->parent_id = 0;
         }
         if($request->input("document_folders")){
             $object->document_folders = implode(",",$request->input("document_folders"));
@@ -488,10 +492,14 @@ class VisaServicesController extends Controller
 
     public function fetchProficiency(Request $request){
         $proficiency_id = $request->input('proficiency_id');
-        $proficiencies = LanguageScoreChart::select('clb_level')->where("language_proficiency_id",$proficiency_id)->get();
+        $language_proficiency = LanguageProficiency::where("unique_id",$proficiency_id)->first();
+        $proficiencies = LanguageScoreChart::select('clb_level','language_proficiency_id')
+                            ->where("language_proficiency_id",$proficiency_id)
+                            ->get();
         
         $response['status'] = true;
         $response['proficiencies'] = $proficiencies;
+        $response['language_proficiency'] = $language_proficiency;
         return response()->json($response);
     }
 
@@ -547,5 +555,188 @@ class VisaServicesController extends Controller
         $response['message'] = "Score saved successfully";
         
         return response()->json($response);
+    }
+
+    public function questionAsSequence(Request $request){
+        $show_as_sequence = $request->input("show_as_sequence");
+
+        $visa_id = VisaServices::where("unique_id",$request->input("visa_service_id"))->update(['question_as_sequence'=>$show_as_sequence]);
+
+        $response['status'] = true;
+        if($show_as_sequence == 1){
+            $response['message'] = "Group Question will display as sequence";
+        }else{
+            $response['message'] = "Group Question will display all together";
+        }
+
+        return response()->json($response);
+    }
+
+    public function additionalInfo($id){
+        $id = base64_decode($id);
+        $visa_service = VisaServices::where("id",$id)->first();
+        $viewData['visa_service'] = $visa_service;
+        $viewData['pageTitle'] = $visa_service->name.' Additional Info';
+        $viewData['additional_data'] = VisaServicesBlocks::where("visa_service_id",$visa_service->unique_id)->orderBy('sort_order',"asc")->get();
+        return view(roleFolder().'.visa-services.additional-info.additional-info',$viewData);
+    }
+    public function changeBlockOrder(Request $request){
+        try{
+            $orders = $request->input("orders");
+            foreach($orders as $key => $value){
+                $object = VisaServicesBlocks::find($key);
+                $object->sort_order = $value;
+                $object->save();
+            }
+            $response['status'] = true;
+            $response['message'] = "Order change successfully";
+        } catch (Exception $e) {
+            $response['status'] = false;
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response);
+    }
+    public function addBlock($visa_type_id,Request $request){
+        try{
+            $visa_type_id = base64_decode($visa_type_id);
+            $block = $request->input("block");
+            $visa_service = VisaServices::where("id",$visa_type_id)->first();
+            $viewData['visa_type_id'] = $visa_type_id;
+            if($block == 'overview'){
+                $viewData['tags'] = Tags::get();
+            }
+            $viewData['visa_service'] = $visa_service;
+            $view = View::make(roleFolder().'.visa-services.additional-info.'.$block,$viewData);
+            $contents = $view->render();
+            $response['status'] = true;
+            $response['contents'] = $contents;
+        } catch (Exception $e) {
+            $response['status'] = false;
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response);
+    }
+
+    public function editBlock($id,Request $request){
+        try{
+            $record = VisaServicesBlocks::find($id);
+            $block = $record->block;
+            $visa_type_id = $record->visa_type_id;
+            
+            $viewData['visa_type_id'] = $visa_type_id;
+            if($block == 'overview'){
+                $viewData['tags'] = GeneralTags::get();
+            }
+            $record = VisaServicesBlocks::find($id);
+            $viewData['record'] = $record;
+            if($block == 'language'){
+                $block = "edit_language";
+            }
+            if($block == 'expirence'){
+                $block = "edit_expirence";
+            }
+            if($block == 'cost'){
+                $block = "edit_cost";
+            }
+            if($block == 'education'){
+                $block = "edit_education";
+            }
+            $view = View::make(roleFolder().'.visa-services.additional-info.'.$block,$viewData);
+            $contents = $view->render();
+            $response['status'] = true;
+            $response['contents'] = $contents;
+        } catch (Exception $e) {
+            $response['status'] = false;
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response);
+    }
+
+    public function saveVisaBlocks($visa_service_id,Request $request){
+        try{
+            $visa_type_id = $request->input("visa_type_id");
+            $vsb = VisaServicesBlocks::where("visa_service_id",$visa_type_id)->orderBy("sort_order","desc")->first();
+            $block = $request->input("block");
+            
+            $object = new VisaServicesBlocks();
+            $object->visa_service_id = $request->input("visa_type_id");
+            $object->block = $block;
+            $object->title = $request->input("title");
+            $object->description = $request->input("description");
+            if($block == 'overview'){
+                $additional_data = array("tags"=>$request->input("tags"));
+                $object->additional_data = json_encode($additional_data);
+            }
+            
+            if($request->input("ads")){
+                $additional_data = $request->input("ads");
+                $additional_data = array_values($additional_data);
+                $object->additional_data = json_encode($additional_data);
+            }
+            if(!empty($vsb)){
+                $object->sort_order = $vsb->sort_order + 1;
+            }else{
+                $object->sort_order = 1;
+            }
+            $object->save();
+            $response['status'] = true;
+            $response['message'] = "Block added successfully";
+        } catch (Exception $e) {
+            $response['status'] = false;
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response);
+    }
+
+    public function updateVisaBlocks($id,Request $request){
+        try{
+            $block = $request->input("block");
+            $object = VisaServicesBlocks::find($id);
+            // $object->visa_type_id = $request->input("visa_type_id");
+            // $object->block = $block;
+            $object->title = $request->input("title");
+            $object->description = $request->input("description");
+            if($block == 'overview'){
+                $additional_data = array("tags"=>$request->input("tags"));
+                $object->additional_data = json_encode($additional_data);
+            }
+            
+            if($request->input("ads")){
+                $additional_data = $request->input("ads");
+                $additional_data = array_values($additional_data);
+                $object->additional_data = json_encode($additional_data);
+            }
+            $object->save();
+            $response['status'] = true;
+            $response['message'] = "Block added successfully";
+        } catch (Exception $e) {
+            $response['status'] = false;
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response);
+    }
+
+    public function deleteBlock(Request $request){
+        try{
+            $id = $request->input("id");
+            VisaServicesBlocks::where("id",$id)->delete();
+            $response['status'] = true;
+            $response['message'] = "Block added successfully";
+        } catch (Exception $e) {
+            $response['status'] = false;
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response);
+    }
+
+    public function stringReplace(Request $request){
+        $html = $request->input("html");
+        $from = $request->input("from");
+        $to = $request->input("to");
+
+        $new_html = str_replace($from,$to,$html);
+
+        echo $new_html;
+
     }
 }

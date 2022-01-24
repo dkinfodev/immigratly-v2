@@ -23,6 +23,7 @@ class ComponentQuestions extends Model
     {
         return $this->hasMany('App\Models\ComponentQuestionIds','component_id','unique_id')
             ->with('EligibilityQuestion')
+            ->whereHas("EligibilityQuestion")
             ->orderBy("sort_order","asc");
     }
 

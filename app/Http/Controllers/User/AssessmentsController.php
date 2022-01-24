@@ -906,12 +906,48 @@ class AssessmentsController extends Controller
         $viewData['report'] = $report->toArray();
         $viewData['record'] = $assessment->toArray();
 
-        // $view = View::make(roleFolder().'.assessments.report',$viewData);
-        // $contents = $view->render();
+        $view = View::make(roleFolder().'.assessments.report',$viewData);
+        $contents = $view->render();
+        $user_id = \Auth::user()->unique_id;
+        $pdf_path = public_path("/uploads/users/".$user_id."/assessments/".$id."/report-".$report->id.".pdf");
+        // $html = fopen(public_path(public_path("/uploads/users/".$user_id."/assessments/".$id."/report-".$report->id.".html")),"w");
+        // echo public_path("uploads/users/".$user_id."/assessments/".$id."/report-".$report->id.".html");
+        // $fp = fopen(public_path("uploads/users/".$user_id."/assessments/".$id."/report-".$report->id.".html"),"w+");
+        // fwrite($fp,$contents);
+        // fclose($fp);
+
+        // $file = time() .rand(). '_file.json';
+        $destinationPath= public_path("uploads/users/".$user_id."/assessments/".$id);
+        // echo $destinationPath;
+        $file = "/report-".$report->id.".html";
+        if (!is_dir($destinationPath)) {  
+            mkdir($destinationPath,0777,true);  
+        }
+        \File::put($destinationPath.$file,$contents);
+        // return response()->download($destinationPath.$file);
+        
+        // echo "<br>".$pdf_path."<br>";
+        $response = generatePdf($destinationPath.$file,$pdf_path);
+
+        if($response['status'] == 'success'){
+            if (file_exists($pdf_path)) {
+                    // header('Content-Type: application/pdf');
+                    // header("Content-Disposition: attachment; filename=\"$pdf_path\"");
+                    // readfile($pdf_path);
+                    return response()->download($pdf_path);
+
+            }else{
+                // echo "not exits";
+                return redirect()->back()->with("success","File not found!");    
+            }
+        }else{
+            // return redirect()->back()->with("success",$response['message']);
+        }
+        exit;
         // echo $contents;
         // exit;
-        $pdf_doc = \PDF::loadView(roleFolder().'.assessments.report', $viewData);
-        return $pdf_doc->download('report.pdf');
+        // $pdf_doc = \PDF::loadView(roleFolder().'.assessments.report', $viewData);
+        // return $pdf_doc->download('report.pdf');
     }
 
     public function forms($id,Request $request){

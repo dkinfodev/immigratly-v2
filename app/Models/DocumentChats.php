@@ -27,12 +27,20 @@ class DocumentChats extends Model
         }
         return $user;
     }
-
+    public function Case()
+    {
+        return $this->belongsTo('App\Models\Cases','case_id','unique_id');
+    }
     public function FileDetail()
     {
         return $this->belongsTo('App\Models\Documents','file_id','unique_id');
     }
 
-    
+    static function ChatUsers($document_id){
+        $users = DocumentChats::where("document_id",$document_id)
+                                ->groupBy("created_by")
+                                ->get();
+        return $users;
+    }
 
 }

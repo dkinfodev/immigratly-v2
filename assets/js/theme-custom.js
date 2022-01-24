@@ -85,13 +85,28 @@ function hideLoader(){
     $(".loader").hide();
 }
 function successMessage(message){
-  toastr.success(message, 'Success');
+  // toastr.success(message, 'Success');
+  $('#successToast').toast({
+    delay: 2000
+  });
+  $('#successToast').find(".toast-body").html(message);
+  $('#successToast').toast('show');
 }
 function errorMessage(message){  
-  toastr.error(message, 'Warning');
+  // toastr.error(message, 'Warning');
+  $('#errorToast').toast({
+    delay: 2500
+  });
+  $('#errorToast').find(".toast-body").html(message);
+  $('#errorToast').toast('show');
 }
 function warningMessage(message){
-  toastr.warning(message, 'Warning');
+  // toastr.warning(message, 'Warning');
+  $('#warningToast').toast({
+    delay: 2500
+  });
+  $('#warningToast').find(".toast-body").html(message);
+  $('#warningToast').toast('show');
 }
 function bottomMessage(message,type){
   toastr.options = {

@@ -17,7 +17,20 @@ class Chats extends Model
     static function deleteRecord($id){
         Chats::where("id",$id)->delete();
     }
-
+    static function ChatUsers($client_id,$chat_type){
+        if($chat_type == 'general'){
+            $users = Chats::where("chat_client_id",$client_id)
+                        ->where("case_id",0)
+                        ->groupBy("created_by")
+                        ->get();
+        }else{
+            $users = Chats::where("chat_client_id",$client_id)
+                        ->where("case_id","!=",0)
+                        ->groupBy("created_by")
+                        ->get();
+        }
+        return $users;
+    }
     public function FileDetail()
     {
         return $this->belongsTo('App\Models\Documents','file_id','unique_id');
@@ -42,5 +55,9 @@ class Chats extends Model
     public function UserChatRead()
     {
         return $this->hasOne('App\Models\ChatRead','chat_id')->where("user_type","user");
+    }
+    public function Case()
+    {
+        return $this->belongsTo('App\Models\Cases','case_id','unique_id');
     }
 }

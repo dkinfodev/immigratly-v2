@@ -53,6 +53,13 @@
                   </a>
                 </li>
                 @endif
+                <li class="nav-item">
+                    <a class="js-nav-tooltip-link nav-link" href="<?php echo baseUrl('/messages-center') ?>" data-placement="left">
+                        <i class="tio-comment-text-outlined nav-icon"></i>
+                        <span
+                            class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Messages</span>
+                    </a>
+                </li>
               </ul>
             <!-- End Navbar Nav -->
           </div>

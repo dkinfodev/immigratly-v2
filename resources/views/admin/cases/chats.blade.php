@@ -199,10 +199,12 @@ $(document).ready(function(){
 
     $("#chat-attachment").change(function(){
        var formData = new FormData();
+       var message = $("#message_input").val();
        formData.append("_token",csrf_token);
        formData.append("case_id","{{$case_id}}");
        formData.append("chat_type","{{$chat_type}}");
        formData.append("client_id","{{$client_id}}");
+       formData.append("message",message);
        formData.append('attachment', $('#chat-attachment')[0].files[0]);
        var url  = "{{ baseUrl('cases/save-chat-file') }}";
        $.ajax({

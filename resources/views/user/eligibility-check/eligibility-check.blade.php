@@ -1,65 +1,26 @@
 @extends('layouts.master')
-@section('pageheader')
+@section('breadcrumb')
 <!-- Content -->
-<div class="">
-    <div class="content container" style="height: 25rem;">
-        <!-- Page Header -->
-        <div class="page-header page-header-light page-header-reset">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h1 class="page-header-title">{{$pageTitle}}</h1>
-                </div>
-            </div>
-            <!-- End Row -->
-        </div>
-        <!-- End Page Header -->
-    </div>
-</div>
+<ol class="breadcrumb breadcrumb-no-gutter">
+    <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item"><a class="breadcrumb-link"
+            href="{{ baseUrl('/visa-services') }}">Visa Services</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
+</ol>
 <!-- End Content -->
 @endsection
-
+@section('header-right')
+<a class="btn btn-primary btn-sm"
+    href="{{ baseUrl('/eligibility-check') }}">
+    Back
+</a>
+@endsection
 @section('content')
-<style>
-.sortable {
-    list-style: none;
-    margin: 0px;
-    padding: 0px;
-}
 
-.sortable li {
-    margin: 12px;
-    border-radius: 7px;
-}
-</style>
 <!-- Content -->
 <div class="eligibility_check">
-    <!-- Page Header -->
-    <div class="page-header">
-        <div class="row align-items-end">
-            <div class="col-sm mb-2 mb-sm-0">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb breadcrumb-no-gutter">
-                        <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a>
-                        </li>
-                        <li class="breadcrumb-item"><a class="breadcrumb-link"
-                                href="{{ baseUrl('/visa-services') }}">Visa Services</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
-                    </ol>
-                </nav>
-
-                <h1 class="page-title">{{$pageTitle}}</h1>
-            </div>
-
-            <div class="col-sm-auto">
-
-                <a class="btn btn-primary btn-sm"
-                    href="{{ baseUrl('/eligibility-check') }}">
-                    Back
-                </a>
-            </div>
-        </div>
-        <!-- End Row -->
-    </div>
+  
     <!-- Card -->
     <div class="card">
         <!-- Table -->

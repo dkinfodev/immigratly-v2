@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.master-old')
 @section('pageheader')
 <!-- Content -->
 <div class="">
@@ -95,7 +95,7 @@
                             <div class="input-group-add-field">
                                 
                                 <?php
-                                $index = randomNumber(4);
+                                    $index = randomNumber(4);
                                 ?>
                                 <div class="row">
                                     <div class="col-md-3 js-form-message">

@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.master-old')
 @section('pageheader')
 <!-- Content -->
 <div class="">
@@ -124,23 +124,23 @@
                                         ?>
                                         <div class="row">
                                             <div class="col-md-2 js-form-message">
-                                                <input type="number" class="form-control mb-3 clb_level" required
+                                                <input type="text" class="form-control mb-3 clb_level" required
                                                     placeholder="CLB Level" aria-label="CLB Level">
                                             </div>
                                             <div class="col-md-2 js-form-message">
-                                                <input type="number" class="form-control mb-3 reading" required
+                                                <input type="text" class="form-control mb-3 reading" required
                                                     placeholder="Reading" aria-label="Readimg">
                                             </div>
                                             <div class="col-md-2 js-form-message">
-                                                <input type="number" class="form-control mb-3 writing" required
+                                                <input type="text" class="form-control mb-3 writing" required
                                                     placeholder="Writing" aria-label="Writing">
                                             </div>
                                             <div class="col-md-2 js-form-message">
-                                                <input type="number" class="form-control mb-3 listening" required
+                                                <input type="text" class="form-control mb-3 listening" required
                                                     placeholder="Listening" aria-label="Listening">
                                             </div>
                                             <div class="col-md-2 js-form-message">
-                                                <input type="number" class="form-control mb-3 speaking" required
+                                                <input type="text" class="form-control mb-3 speaking" required
                                                     placeholder="Speaking" aria-label="Speaking">
                                             </div>
                                         </div>
@@ -176,6 +176,7 @@
     <script src="assets/vendor/hs-add-field/dist/hs-add-field.min.js"></script>
     <script type="text/javascript">
     $(document).ready(function() {
+        initSortable();
         $('.js-add-field').each(function() {
             new HSAddField($(this), {
                 addedField: function() {
@@ -183,6 +184,11 @@
                         $("#addOptionsContainer > .item-row:last").find(".clb_level").attr(
                             "name", "clb_level[" + index + "][clb_level]");
                         $("#addOptionsContainer > .item-row:last").find(".clb_level").attr(
+                            "required", "true");
+
+                        $("#addOptionsContainer > .item-row:last").find(".sort_order").attr(
+                            "name", "clb_level[" + index + "][sort_order]");
+                        $("#addOptionsContainer > .item-row:last").find(".sort_order").attr(
                             "required", "true");
 
                         $("#addOptionsContainer > .item-row:last").find(".reading").attr(
@@ -250,6 +256,35 @@
             });
         });
     });
+    function initSortable(){
+      $( function() {
+        $('#addOptionsContainer').sortable({
+            start: function(event, ui) {
+                var start_pos = ui.item.index();
+            },
+            change: function(event, ui) {
+                var start_pos = ui.item.data('start_pos');
+                var index = ui.placeholder.index();
+                if (start_pos < index) {
+                    $('#sortable li:nth-child(' + index + ')').addClass('highlights');
+                } else {
+                    $('#sortable li:eq(' + (index + 1) + ')').addClass('highlights');
+                }
+            },
+            update: function(event, ui) {
+                // $('#sortable li').removeClass('highlights');
+                sortOrder();
+            }
+        });
+      });
+    }
+    function sortOrder(){
+      var index = 1;
+      $("#addOptionsContainer .sort_order").each(function(){
+        $(this).val(index);
+        index++;
+      });
+    }
     </script>
 
     @endsection

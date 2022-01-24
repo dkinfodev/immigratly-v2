@@ -27,6 +27,7 @@ use App\Models\CaseTasks;
 use App\Models\CaseTaskComments;
 use App\Models\CaseTaskFiles;
 use App\Models\CaseActivityLogs;
+use App\Models\CaseDependents;
 
 use File;
 
@@ -209,6 +210,58 @@ class CasesController extends Controller
         return response()->json($response);
     }
 
+
+    public function addGroupCase(){
+        $viewData['pageTitle'] = "Add Group Case";
+        $viewData['staffs'] = User::where("role","!=","admin")->get();
+
+        $viewData['clients'] = User::ProfessionalClients(\Session::get('subdomain'));
+
+        $viewData['visa_services'] = ProfessionalServices::orderBy('id',"asc")->get();
+        return view(roleFolder().'.cases.add-group-case',$viewData);
+    } 
+    
+    public function saveGroupCase(Request $request){
+        $validator = Validator::make($request->all(), [
+            'client_id' => 'required',
+            'case_title' => 'required',
+            'start_date' => 'required',
+        ]);
+       
+        if ($validator->fails()) {
+            $response['status'] = false;
+            $error = $validator->errors()->toArray();
+            $errMsg = array();
+            
+            foreach($error as $key => $err){
+                $errMsg[$key] = $err[0];
+            }
+            $response['message'] = $errMsg;
+            return response()->json($response);
+        }
+        
+        $case_unique_id = randomNumber();
+        $object = new Cases();
+        $object->client_id = $request->input("client_id");
+        $object->case_title = $request->input("case_title");
+        $object->start_date = $request->input("start_date");
+        $object->case_type = "group";
+        $object->unique_id = $case_unique_id;
+        if($request->input("end_date")){
+            $object->end_date = $request->input("end_date");
+        }
+        if($request->input("description")){
+            $object->description = $request->input("description");
+        }
+        $object->created_by = \Auth::user()->unique_id;
+        $object->save();
+        $case_id = $object->id;
+        $response['status'] = true;
+        $response['message'] = "Case created successfully";
+        $response['redirect_back'] = baseUrl('cases/edit-group-case/'.base64_encode($case_id)."?step=2");
+        return response()->json($response);
+    }
+
     public function deleteSingle($id){
         $id = base64_decode($id);
         Cases::deleteRecord($id);
@@ -300,6 +353,147 @@ class CasesController extends Controller
         return response()->json($response);
     }
 
+
+    public function editGroupCase($id,Request $request){
+        $id = base64_decode($id);
+        $record = Cases::with('AssingedMember')->find($id);
+        $cs_dependents = CaseDependents::where("case_id",$record->unique_id)->get();
+        $case_dependents = array();
+        foreach($cs_dependents as $dependent){
+            $case_dependents[$dependent->dependent_id] = array('applicant_type'=>$dependent->applicant_type,"visa_service_id"=>$dependent->visa_service_id);
+        }
+        $assignedMember = $record->AssingedMember;
+        
+        if($request->get("step")){
+            $step = $request->get("step");
+        }else{
+            $step = 1;
+        }
+        
+        $viewData['step'] = $step;
+        $viewData['record'] = $record;
+        $viewData['case_dependents'] = $case_dependents;
+        $viewData['assignedMember'] = $assignedMember;
+        $viewData['staffs'] = User::where("role","!=","admin")->get();
+        $viewData['clients'] = User::ProfessionalClients(\Session::get('subdomain'));
+        $viewData['visa_services'] = ProfessionalServices::orderBy('id',"asc")->get();
+        $dependents = DB::table(MAIN_DATABASE.".user_dependants")
+                        ->where("user_id",$record->client_id)
+                        ->get();
+        $viewData['dependents'] = $dependents;
+        $viewData['pageTitle'] = "Edit Group Case";
+        return view(roleFolder().'.cases.edit-group-case',$viewData);
+    }
+
+    public function updateGroupCase($id,Request $request){
+        $id = base64_decode($id);
+        if($request->input("step") == 1){
+            $validator = Validator::make($request->all(), [
+                'client_id' => 'required',
+                'case_title' => 'required',
+                'start_date' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                $response['status'] = false;
+                $error = $validator->errors()->toArray();
+                $errMsg = array();
+                
+                foreach($error as $key => $err){
+                    $errMsg[$key] = $err[0];
+                }
+                $response['error_type'] = 'validation';
+                $response['message'] = $errMsg;
+                return response()->json($response);
+            }
+        }
+        if($request->input("step") == 3){
+            $validator = Validator::make($request->all(), [
+                'assign_teams' => 'required'
+            ]);
+
+            if ($validator->fails()) {
+                $response['status'] = false;
+                $error = $validator->errors()->toArray();
+                $errMsg = array();
+                
+                foreach($error as $key => $err){
+                    $errMsg[$key] = $err[0];
+                }
+                $response['message'] = $errMsg;
+                $response['error_type'] = 'validation';
+                return response()->json($response);
+            }
+        }
+        $object = Cases::find($id);
+        if($request->input("step") == 1){
+            $object->client_id = $request->input("client_id");
+            $object->case_title = $request->input("case_title");
+            $object->start_date = $request->input("start_date");
+            if($request->input("end_date")){
+                $object->end_date = $request->input("end_date");
+            }
+            if($request->input("description")){
+                $object->description = $request->input("description");
+            }
+            $object->save();
+            $response['redirect_back'] = baseUrl('cases/edit-group-case/'.base64_encode($object->id)."?step=2");
+        }
+        
+        $case_id = $object->unique_id;
+        if($request->input("step") == 2){
+            $main_user = $request->input("main_user");
+            $object->applicant_type = $main_user['applicant_type'];
+            $object->visa_service_id = $main_user['visa_service_id'];
+            $object->save();
+
+            $dependents = $request->input("dependents");
+            if(!empty($dependents)){
+                
+                foreach($dependents as $dependant){
+                    $checkExists = CaseDependents::where("dependent_id",$dependant['dependent_id'])
+                                    ->where("case_id",$case_id)
+                                    ->first();
+                    if(empty($checkExists)){
+                        $object2 = new CaseDependents();
+                        $object2->unique_id = randomNumber();
+                    }else{
+                        $object2 = CaseDependents::find($checkExists->id);
+                    }
+                    $object2->dependent_id = $dependant['dependent_id'];
+                    $object2->applicant_type = $dependant['applicant_type'];
+                    $object2->visa_service_id = $dependant['visa_service_id'];
+                    $object2->case_id = $case_id;
+                    $object2->save();
+                }
+            }
+            $response['redirect_back'] = baseUrl('cases/edit-group-case/'.base64_encode($object->id)."?step=3");
+        }
+        if($request->input("step") == 3){
+            $assign_teams = $request->input("assign_teams");
+            $checkExists = CaseTeams::where("user_id",$assign_teams)
+                                    ->where("case_id",$case_id)
+                                    ->count();
+            if($checkExists == 0){
+                $object2 = new CaseTeams();
+                $object2->unique_id = randomNumber();
+                $object2->user_id = $assign_teams;
+                $object2->case_id = $case_id;
+                $object2->save();
+            }else{
+                $response['error_type'] = 'exists';
+                $response['message'] = "Staff already assigned";
+                $response['status'] = false;
+                return response()->json($response);
+            }
+            $response['redirect_back'] = baseUrl('cases/edit-group-case/'.base64_encode($object->id)."?step=3");
+        }
+        $response['status'] = true;
+        $response['message'] = "Case edited successfully";
+        
+        return response()->json($response);
+    }
+
     public function pinnedFolder(Request $request){
         $validator = Validator::make($request->all(), [
             'folder_id' => 'required',
@@ -369,7 +563,6 @@ class CasesController extends Controller
         $case_folders = CaseFolders::where("case_id",$record->unique_id)->get();
         $service->MainService = $service->Service($service->service_id);
         
-        // $visa_service = $service->MainService;
         $subdomain = \Session::get("subdomain");
         $default_documents = $service->DefaultDocuments($service->service_id);
         foreach($default_documents as $document){
@@ -407,20 +600,31 @@ class CasesController extends Controller
         $viewData['record'] = $record;
         $viewData['active_nav'] = "files";
 
-        // if(!empty($visa_service)){
-        //     $viewData['pageTitle'] = "Documents for ".$service->Service($service->service_id)->name;
-        // }else{
-        //     return redirect()->back()->with("error","No visa service found");
-        // }
+        $dependents = CaseDependents::where("case_id",$record->unique_id)->get();
+
 
         return view(roleFolder().'.cases.document-folders',$viewData);
 
     }
-    public function caseDocuments($id){
+    public function caseDocuments($id, Request $request){
         $id = base64_decode($id);
         $record = Cases::find($id);
+        if($request->get("dependent_id")){
+            $visa_service_id = $request->input("visa_service");
+            $user_type = "dependent";
+            $query_string = "?dependent_id=".$request->get("dependent_id")."&visa_service=".$request->get("visa_service");
+            $dependent_id = $request->get("dependent_id");
+            $doc_user_id = $dependent_id;
+        }else{
+            $query_string = '';
+            $dependent_id = '';
+            $user_type = "client";
+            $visa_service_id = $record->visa_service_id;
+            $doc_user_id = $record->client_id;
+        }
+        
         $subdomain = \Session::get("subdomain");
-        $service = ProfessionalServices::where("unique_id",$record->visa_service_id)->first();
+        $service = ProfessionalServices::where("unique_id",$visa_service_id)->first();
         $documents = ServiceDocuments::where("service_id",$service->unique_id)->get();
         $case_folders = CaseFolders::where("case_id",$record->unique_id)->get();
         $pinned_folders = $record->pinned_folders;
@@ -439,6 +643,7 @@ class CasesController extends Controller
         $viewData['documents'] = $documents;
         $viewData['case_folders'] = $case_folders;
         $viewData['record'] = $record;
+        $viewData['doc_user_id'] = $doc_user_id;
         // $viewData['case_id'] = $record->id;
         $viewData['case_id'] = $record->unique_id;
         $visa_service = $service->Service($service->service_id);
@@ -447,20 +652,36 @@ class CasesController extends Controller
         }else{
             return redirect()->back()->with("error","No visa service found");
         }
-
+        $viewData['active_nav'] = "files";
+        $dependents = CaseDependents::where("case_id",$record->unique_id)->get();
+        $viewData['dependents'] = $dependents;
+        
+        $viewData['user_type'] = $user_type;
+        $viewData['dependent_id'] = $dependent_id;
+        $viewData['query_string'] = $query_string;
         return view(roleFolder().'.cases.document-folders',$viewData);
     }
 
-    public function defaultDocuments($case_id,$doc_id){
+    public function defaultDocuments($case_id,$doc_id,Request $request){
         // $case_id = base64_decode($case_id);
         // $doc_id = base64_decode($doc_id);
         $record = Cases::where("unique_id",$case_id)->first();
+        if($request->get("dependent_id")){
+            $doc_user_id = $request->get("dependent_id");
+            $user_type = 'dependent';
+        }else{
+            $doc_user_id = $record->client_id;
+            $user_type = 'client';
+        }
+        
         $document = DB::table(MAIN_DATABASE.".documents_folder")->where("unique_id",$doc_id)->first();
         $folder_id = $document->unique_id;
         $service = ProfessionalServices::where("unique_id",$record->visa_service_id)->first();
         $case_documents = CaseDocuments::with(['FileDetail','Chats'])
                                         ->where("case_id",$record->unique_id)
                                         ->where("folder_id",$folder_id)
+                                        ->where("user_id",$doc_user_id)
+                                        ->where("user_type",$user_type)
                                         ->get();
         $viewData['service'] = $service;
         $viewData['case_documents'] = $case_documents;
@@ -469,16 +690,50 @@ class CasesController extends Controller
         $viewData['record'] = $record;
         $viewData['doc_type'] = "default";
         $viewData['case_id'] = $case_id;
+        $viewData['doc_id'] = $doc_id;
         $viewData['subdomain'] = \Session::get("subdomain");
         
         $file_url = professionalDirUrl()."/documents";
         $file_dir = professionalDir()."/documents";
         $viewData['file_url'] = $file_url; 
         $viewData['file_dir'] = $file_dir;
+        
+        if($request->get("dependent_id")){
+            $visa_service_id = $request->input("visa_service");
+            $user_type = "dependent";
+            $query_string = "?dependent_id=".$request->get("dependent_id")."&visa_service=".$request->get("visa_service");
+            
+            $dependent_id = $request->get("dependent_id");
+        }else{
+            $query_string = '';
+            $dependent_id = '';
+            $user_type = "client";
+            $visa_service_id = $record->visa_service_id;
+        }
+
+        $viewData['user_type'] = $user_type;
+        $viewData['visa_service_id'] = $visa_service_id;
+        $viewData['dependent_id'] = $dependent_id;
+        $viewData['query_string'] = $query_string;
+        $dependents = CaseDependents::where("case_id",$record->unique_id)->get();
+        $viewData['dependents'] = $dependents;
+        
         return view(roleFolder().'.cases.document-files',$viewData);
     }
-    public function otherDocuments($case_id,$doc_id){
-        
+    public function otherDocuments($case_id,$doc_id,Request $request){
+        if($request->get("dependent_id")){
+            $visa_service_id = $request->input("visa_service");
+            $user_type = "dependent";
+            $query_string = "?dependent_id=".$request->get("dependent_id")."&visa_service=".$request->get("visa_service");
+            $dependent_id = $request->get("dependent_id");
+            $doc_user_id = $dependent_id;
+        }else{
+            $query_string = '';
+            $dependent_id = '';
+            $user_type = "client";
+            $visa_service_id = $record->visa_service_id;
+            $doc_user_id = $record->client_id;
+        }
         // $doc_id = base64_decode($doc_id);
         $record = Cases::where("unique_id",$case_id)->first();
         $document = ServiceDocuments::where("unique_id",$doc_id)->first();
@@ -487,6 +742,8 @@ class CasesController extends Controller
         $case_documents = CaseDocuments::with(['FileDetail','Chats'])
                                         ->where("case_id",$record->unique_id)
                                         ->where("folder_id",$folder_id)
+                                        ->where("user_id",$doc_user_id)
+                                        ->where("user_type",$user_type)
                                         ->get();
         $viewData['service'] = $service;
         $viewData['case_documents'] = $case_documents;
@@ -498,10 +755,32 @@ class CasesController extends Controller
         $file_dir = professionalDir()."/documents";
         $viewData['file_url'] = $file_url;
         $viewData['file_dir'] = $file_dir;
+        $viewData['doc_id'] = $doc_id;
+        $viewData['case_id'] = $case_id;
+        $dependents = CaseDependents::where("case_id",$record->unique_id)->get();
+        $viewData['dependents'] = $dependents;
+
+        
+        $viewData['query_string'] = $query_string;
+        $viewData['user_type'] = $user_type;
+        $viewData['visa_service_id'] = $visa_service_id;
+        $viewData['dependent_id'] = $dependent_id;
         return view(roleFolder().'.cases.document-files',$viewData);
     }
-    public function extraDocuments($case_id,$doc_id){
-        
+    public function extraDocuments($case_id,$doc_id,Request $request){
+        if($request->get("dependent_id")){
+            $visa_service_id = $request->input("visa_service");
+            $user_type = "dependent";
+            $query_string = "?dependent_id=".$request->get("dependent_id")."&visa_service=".$request->get("visa_service");
+            $dependent_id = $request->get("dependent_id");
+            $doc_user_id = $dependent_id;
+        }else{
+            $query_string = '';
+            $dependent_id = '';
+            $user_type = "client";
+            $visa_service_id = $record->visa_service_id;
+            $doc_user_id = $record->client_id;
+        }
         // $doc_id = base64_decode($doc_id);
         $record = Cases::where("unique_id",$case_id)->first();
         $document = CaseFolders::where("unique_id",$doc_id)->first();
@@ -510,6 +789,8 @@ class CasesController extends Controller
         $case_documents = CaseDocuments::with(['FileDetail','Chats'])
                                         ->where("case_id",$record->unique_id)
                                         ->where("folder_id",$folder_id)
+                                        ->where("user_id",$doc_user_id)
+                                        ->where("user_type",$user_type)
                                         ->get();
         $viewData['service'] = $service;
         $viewData['case_documents'] = $case_documents;
@@ -522,7 +803,18 @@ class CasesController extends Controller
         $viewData['file_url'] = $file_url;
         $viewData['file_dir'] = $file_dir;
         $viewData['case_id'] = $case_id;
+        $viewData['doc_id'] = $doc_id;
         $viewData['subdomain'] =\Session::get("subdomain");
+
+        $dependents = CaseDependents::where("case_id",$record->unique_id)->get();
+        $viewData['dependents'] = $dependents;
+
+        
+        $viewData['query_string'] = $query_string;
+        $viewData['user_type'] = $user_type;
+        $viewData['visa_service_id'] = $visa_service_id;
+        $viewData['dependent_id'] = $dependent_id;
+
         return view(roleFolder().'.cases.document-files',$viewData);
     }
     
@@ -530,6 +822,11 @@ class CasesController extends Controller
         $id = base64_decode($id);
         $folder_id = $request->input("folder_id");
         $record = Cases::find($id);
+        if($request->get("dependent_id")){
+            $doc_user_id = $request->get("dependent_id");
+        }else{
+            $doc_user_id = $record->client_id;
+        }
         $document_type = $request->input("doc_type");
         $failed_files = array();
         if($file = $request->file('file'))
@@ -547,7 +844,7 @@ class CasesController extends Controller
                     $object->file_name = $newName;
                     $object->original_name = $fileName;
                     $object->unique_id = $unique_id;
-                    $object->created_by = \Auth::user()->id;
+                    $object->created_by = \Auth::user()->unique_id;
                     $object->save();
 
                     $object2 = new CaseDocuments();
@@ -555,8 +852,10 @@ class CasesController extends Controller
                     $object2->unique_id = randomNumber();
                     $object2->folder_id = $folder_id;
                     $object2->file_id = $unique_id;
+                    $object2->user_id = $doc_user_id;
+                    $object2->user_type = $request->input("user_type");
                     $object2->added_by = \Auth::user()->role;
-                    $object2->created_by = \Auth::user()->id;
+                    $object2->created_by = \Auth::user()->unique_id;
                     $object2->document_type = $document_type;
                     $object2->save();
                     $response['status'] = true;
@@ -1212,9 +1511,7 @@ class CasesController extends Controller
 
     public function saveChatFile(Request $request){
 
-        if ($file = $request->file('attachment')){
-           
-
+        if($file = $request->file('attachment')){
             $fileName        = $file->getClientOriginalName();
             $extension       = $file->getClientOriginalExtension() ?: 'png';
             $newName        = mt_rand(1,99999)."-".$fileName;
@@ -1236,6 +1533,9 @@ class CasesController extends Controller
                 $object->case_id = $request->input("case_id");
                 $object->chat_type = $request->input("chat_type");
                 $object->message = $fileName;
+                if($request->input("message")){
+                    $object->file_message = $request->input("message");   
+                }
                 $object->type = 'file';
                 $object->file_id = $file_id;
                 $object->send_by = \Auth::user()->role;
@@ -1737,5 +2037,51 @@ class CasesController extends Controller
         }else{
             return $filename;
         }
+    }
+
+    public function fetchClientDependents(Request $request){
+        $client_id = $request->input("client_id");
+        $dependents = DB::table(MAIN_DATABASE.".user_dependants")->where("user_id",$client_id)->get();
+        $response['status'] = true;
+        $response['dependents'] = $dependents;
+        $response['count'] = count($dependents);
+        return response()->json($response);
+    }
+
+    public function removeAssignedUser($id){
+        $id = base64_decode($id);
+        CaseTeams::deleteRecord($id);
+        
+        return redirect()->back()->with("success","Record has been deleted!");        
+    }
+
+    public function caseDependents($case_id){
+        $case_id = base64_decode($case_id);
+        $subdomain = \Session::get("subdomain");
+        $record = Cases::with(['AssingedMember','VisaService'])
+                    ->where("id",$case_id)
+                    ->first();
+        $temp = $record;
+        $temp->MainService = $record->Service($record->VisaService->service_id);
+        $data = $temp;
+            
+        $cs_dependents = CaseDependents::where("case_id",$record->unique_id)->get();
+        $case_dependents = array();
+        foreach($cs_dependents as $dependent){
+            $case_dependents[$dependent->dependent_id] = array('applicant_type'=>$dependent->applicant_type,"visa_service_id"=>$dependent->visa_service_id);
+        }
+        $dependents = DB::table(MAIN_DATABASE.".user_dependants")
+                        ->where("user_id",$record->client_id)
+                        ->get();
+        $viewData['case_dependents'] = $case_dependents;
+        $viewData['dependents'] = $dependents;
+        
+        $viewData['subdomain'] = $subdomain;
+        $viewData['pageTitle'] = "Case Dependents";
+        $viewData['record'] = $data;
+        $viewData['case_id'] = $record->unique_id;
+        $viewData['active_nav'] = "dependents";
+        $viewData['visa_services'] = ProfessionalServices::orderBy('id',"asc")->get();
+        return view(roleFolder().'.cases.case-dependents',$viewData);
     }
 }

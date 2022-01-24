@@ -62,7 +62,10 @@ class VisaServices extends Model
     {
         return $this->hasMany('App\Models\EligibilityQuestions','visa_service_id','unique_id');
     }
-    
+    public function visaGroup()
+    {
+        return $this->hasOne('App\Models\GroupVisaIds','visa_service_id','unique_id')->with("VisaGroup");
+    }
     static function deleteRecord($id){
         $visa_service = VisaServices::where("id",$id)->first();
         if(!empty($visa_service)){

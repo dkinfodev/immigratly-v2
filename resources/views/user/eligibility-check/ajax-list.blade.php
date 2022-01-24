@@ -1,6 +1,68 @@
 @if(count($records) > 0)
 @foreach($records as $key => $record)
-<tr>
+<!-- End Col -->
+<div class="col-12  mb-5">
+  <!-- Card -->
+  <div class="card card-bordered h-100 imm-specific-program-list">
+    <!-- Card Body -->
+
+    <div class="imm-specific-program-list-header">
+      <a href="javacript:;">{{$record->VisaGroup->ProgramType->name}}</a>
+    </div>
+
+
+
+    <div class="imm-specific-program-list-body mb-2 ">
+      <div class="row align-items-center">
+
+
+        <div class="col-12">
+          <h4 class="card-title mb-2">
+            <a class="text-dark" href="javascript:;">{{$record->VisaService->name}}</a><span class="imm-specific-program-score-status">Score based</span>
+          </h4>
+          <div class="imm-self-assessment-container">
+            <div class="row">
+              <div class="col-12">
+                <div class="d-flex">
+
+                  <img class="me-2" src="./assets/img/checked.svg" alt="" style="width:18px">
+                  <p>{{$record->VisaGroup->group_title}}</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Row -->
+
+    </div>
+    <!-- End Card Body -->
+
+    <!-- Card Footer -->
+    <div class="imm-specific-program-list-footer">
+      <div class="row align-items-center">
+        <div class="col-5"> </div>
+        <div class="col-4">
+        @if($record->VisaService->eligible_type == 'group_eligible')
+            <a href="{{baseUrl('eligibility-check/g/'.$record->VisaService->unique_id)}}" class="btn btn-info btn-sm w-100">
+          @else
+            <a href="{{baseUrl('eligibility-check/check/'.$record->VisaService->unique_id)}}" class="btn btn-info btn-sm w-100">
+          @endif
+          Start self-assessment
+        </a>
+          
+        </div>
+        <div class="col-3">
+          <button type="button" class="btn btn-outline-secondary btn-sm w-100">Learn more</button>
+        </div>
+      </div>
+    </div>
+    <!-- End Card Footer -->
+  </div>
+  <!-- End Card -->
+</div>
+{{--<tr>
   <!-- <th scope="row">
     <div class="custom-control custom-checkbox">
       <input type="checkbox" class="custom-control-input row-checkbox parent-check" data-key="{{ $key }}" id="row-{{$key}}" value="{{ base64_encode($record->id) }}">
@@ -38,7 +100,7 @@
         </div>
     </div>
 </td>
-</tr>
+</tr> --}}
 
 @endforeach
 @endif

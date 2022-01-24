@@ -83,6 +83,13 @@
               <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Articles</span>
             </a>
           </li> -->
+          <li class="nav-item">
+              <a class="js-nav-tooltip-link nav-link" href="<?php echo baseUrl('/messages-center') ?>" data-placement="left">
+                  <i class="tio-comment-text-outlined nav-icon"></i>
+                  <span
+                      class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Messages</span>
+              </a>
+          </li>
           <li class="navbar-vertical-aside-has-menu">
             <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ baseUrl('/webinar') }}">
               <i class="tio-globe nav-icon"></i>
@@ -95,7 +102,12 @@
             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
           </li>
           
-
+          <li class="navbar-vertical-aside-has-menu">
+            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ baseUrl('/working-schedules') }}">
+              <i class="tio-book-opened nav-icon"></i>
+              <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Working Schedules</span>
+            </a>
+          </li>
           <li class="navbar-vertical-aside-has-menu">
             <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ baseUrl('staff') }}">
               <i class="tio-user nav-icon"></i>

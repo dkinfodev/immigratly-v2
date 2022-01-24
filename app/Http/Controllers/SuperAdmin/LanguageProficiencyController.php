@@ -10,6 +10,7 @@ use View;
 use App\Models\LanguageProficiency;
 use App\Models\LanguageScoreChart;
 use App\Models\OfficialLanguages;
+use App\Models\LanguageScorePoints;
 
 class LanguageProficiencyController extends Controller
 {
@@ -92,6 +93,7 @@ class LanguageProficiencyController extends Controller
             $obj->language_proficiency_id = $unique_id;
             $obj->unique_id = randomNumber();;
             $obj->clb_level = $level['clb_level'];
+            $obj->sort_order = $level['sort_order'];
             $obj->reading = $level['reading'];
             $obj->writing = $level['writing'];
             $obj->listening = $level['listening'];
@@ -110,6 +112,7 @@ class LanguageProficiencyController extends Controller
     public function edit($id){
         $id = base64_decode($id);
         $viewData['record'] = LanguageProficiency::where("id",$id)->first();
+       
         $viewData['pageTitle'] = "Edit Language Proficiency";
         $official_languages = OfficialLanguages::get();
         $viewData['official_languages'] = $official_languages;
@@ -143,6 +146,7 @@ class LanguageProficiencyController extends Controller
             return response()->json($response);
         }
         $clb_level = $request->input("clb_level");
+     
         foreach($clb_level as $key => $level){
             if($level['clb_level'] == ''){
                 $response['status'] = false;
@@ -161,6 +165,7 @@ class LanguageProficiencyController extends Controller
             $obj->language_proficiency_id = $language_proficiency_id;
             $obj->unique_id = randomNumber();;
             $obj->clb_level = $level['clb_level'];
+            $obj->sort_order = $level['sort_order'];
             $obj->reading = $level['reading'];
             $obj->writing = $level['writing'];
             $obj->listening = $level['listening'];

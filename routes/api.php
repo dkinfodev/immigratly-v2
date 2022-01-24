@@ -100,8 +100,13 @@ Route::group(array('middleware' => 'professional_curl'), function () {
 			Route::post('/view-case-task', [App\Http\Controllers\Api\ProfessionalApiController::class, 'viewCaseTask']);
 			Route::post('/rename-filename', [App\Http\Controllers\Api\ProfessionalApiController::class, 'updateFilename']);
 			Route::post('/fetch-dependants', [App\Http\Controllers\Api\ProfessionalApiController::class, 'dependants']);
-			
-			
 		});	
+		Route::group(array('prefix' => 'messages-center'), function () {
+			Route::post('/all-messages', [App\Http\Controllers\Api\ProfessionalApiController::class, 'allMessages']);
+			Route::post('/save-chat', [App\Http\Controllers\Api\ProfessionalApiController::class, 'saveChat']);
+			Route::post('/general-chats', [App\Http\Controllers\Api\ProfessionalApiController::class, 'generalChats']);
+			Route::post('/case-chats', [App\Http\Controllers\Api\ProfessionalApiController::class, 'caseChats']);
+			Route::post('/document-chats', [App\Http\Controllers\Api\ProfessionalApiController::class, 'documentChats']);
+		});
 	});	
 });

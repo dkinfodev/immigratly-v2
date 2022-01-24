@@ -193,7 +193,7 @@ class DashboardController extends Controller
             'city_id'=>'required',
             'address'=>'required',
             'zip_code'=>'required',
-            'cv_type'=>'required',
+            // 'cv_type'=>'required',
         ]);
 
         if ($validator->fails()) {
@@ -251,6 +251,9 @@ class DashboardController extends Controller
         $object2->state_id = $request->input("state_id");
         $object2->city_id = $request->input("city_id");
         $object2->address = $request->input("address");
+        if($request->address_2){
+            $object2->address_2 = $request->input("address_2");
+        }
         $object2->zip_code = $request->input("zip_code");
         $object2->languages_known = json_encode($request->input("languages_known"));
         $object2->save();
@@ -386,6 +389,7 @@ class DashboardController extends Controller
        
         $viewData['pageTitle'] = "Add Work Experience";
         $viewData['noc_codes'] = NocCode::get();
+        $viewData['countries'] = Countries::get();
         $view = View::make(roleFolder().'.modal.add-work-experience',$viewData);
         $contents = $view->render();
         $response['contents'] = $contents;
@@ -396,11 +400,15 @@ class DashboardController extends Controller
     public function saveWorkExperience(Request $request){
         try{
             $validator = Validator::make($request->all(), [
-                'employment_agency' => 'required',
-                'position' => 'required',
-                'join_date' => 'required',
-                'leave_date' => 'required',
+                'company' => 'required',
+                'job_title' => 'required',
                 'exp_details' => 'required',
+                'from_month' => 'required',
+                'from_year' => 'required',
+                'to_month' => 'required',
+                'to_year' => 'required',
+                'country_id' => 'required',
+                'state_id' => 'required',
                 'job_type' => 'required',
                 'noc_code' => 'required',
             ]);
@@ -419,12 +427,13 @@ class DashboardController extends Controller
             }
 
             $object = new ClientExperience();
-            $object->employment_agency = $request->input("employment_agency");
+            $object->employment_agency = $request->input("company");
             $object->user_id = \Auth::user()->unique_id;
-            $object->position = $request->input("position");
+            $object->position = $request->input("job_title");
             $object->join_date = $request->input("join_date");
             $object->leave_date = $request->input("leave_date");
-            $object->exp_details = $request->input("exp_details");
+            $object->country_id = $request->input("country_id");
+            $object->state_id = $request->input("state_id");
             $object->job_type = $request->input("job_type");
             $object->noc_type = $request->input("noc_type");
             $object->noc_code = implode(",",$request->input("noc_code"));

@@ -25,6 +25,13 @@ use App\Models\EligibilityPattern;
 use App\Models\CombinationalOptions;
 use App\Models\VisaServiceCutoff;
 use App\Models\EligibilityScoreRanges;
+use App\Models\LanguageProficiency;
+use App\Models\LanguageScoreChart;
+use App\Models\LanguageScorePoints;
+use App\Models\ComponentPreConditions;
+use App\Models\VisaServiceGroups;
+use App\Models\ProgramTypes;
+use App\Models\GroupVisaIds;
 
 class EligibilityCheckController extends Controller
 {
@@ -33,28 +40,74 @@ class EligibilityCheckController extends Controller
         $this->middleware('user');
     }
 
-    public function list()
+    public function groupList()
     {
         $visa_services = VisaServices::get();
+        $viewData['pageTitle'] ="Visa Groups";
+        $program_types = ProgramTypes::get();
+        $viewData['program_types'] = $program_types;
+        return view(roleFolder().'.eligibility-check.visa-groups',$viewData);
+    } 
+
+    public function groupAjaxList(Request $request)
+    {   
+        $search = $request->input("search");
+        $program_types = $request->input("program_types");
+        $records = VisaServiceGroups::where(function($query) use($search,$program_types){
+                                if($search != ''){
+                                    $query->where("group_title","LIKE","%".$search."%");
+                                }
+                                if(!empty($program_types)){
+                                    $query->whereIn("program_type",$program_types);
+                                }
+                            })
+                            ->whereHas("VisaServices")
+                            ->orderBy('id',"desc")
+                            ->paginate(2);
+       
+        $viewData['records'] = $records;
+        $view = View::make(roleFolder().'.eligibility-check.group-ajax-lists',$viewData);
+        $contents = $view->render();
+        $response['contents'] = $contents;
+        $response['last_page'] = $records->lastPage();
+        $response['current_page'] = $records->currentPage();
+        $response['total_records'] = $records->total();
+        return response()->json($response);
+    }
+
+    public function list($visa_group_id)
+    {
+        $visa_services = VisaServices::get();
+        $group = VisaServiceGroups::where("unique_id",$visa_group_id)->first();
+        $viewData['record'] = $group;
         $viewData['visa_services'] = $visa_services;
-        $viewData['pageTitle'] ="Eligibility Check";
+        $viewData['visa_group_id'] = $visa_group_id;
+        $viewData['pageTitle'] ="Group Programs of ".$group->group_title;
         return view(roleFolder().'.eligibility-check.lists',$viewData);
     } 
 
     public function getAjaxList(Request $request)
     {   
         $search = $request->input("search");
-     
-        $records = VisaServices::where(function($query) use($search){
+        $visa_group_id = $request->input("visa_group_id");
+        $records = GroupVisaIds::where("visa_group_id",$visa_group_id)
+                            ->whereHas("VisaService",function($query) use($search){
                                 if($search != ''){
                                     $query->where("name","LIKE","%".$search."%");
                                 }
                             })
-                            // ->whereHas("ArrangeQuestions")
-                            ->where("cv_type",\Auth::user()->UserDetail->cv_type)
-                            ->where("parent_id",0)
-                            ->orderBy('id',"desc")
+                            ->with("VisaService")
                             ->paginate();
+        // $records = VisaServices::where(function($query) use($search){
+        //                         if($search != ''){
+        //                             $query->where("name","LIKE","%".$search."%");
+        //                         }
+        //                     })
+        //                     // ->whereHas("ArrangeQuestions")
+        //                     ->where("cv_type",\Auth::user()->UserDetail->cv_type)
+        //                     ->where("parent_id",0)
+        //                     ->orderBy('id',"desc")
+        //                     ->paginate();
        
         $viewData['records'] = $records;
         $view = View::make(roleFolder().'.eligibility-check.ajax-list',$viewData);
@@ -70,9 +123,11 @@ class EligibilityCheckController extends Controller
         $visa_service = VisaServices::where("unique_id",$visa_service_id)->first();
     
         $question_sequence = ArrangeQuestions::where("visa_service_id",$visa_service->unique_id)->get();
-        
+        $group = $visa_service->visaGroup;
+        $viewData['group'] = $group;
         $viewData['question_sequence'] = $question_sequence;
         $viewData['visa_service'] = $visa_service;
+        
         $viewData['visa_service_id'] = $visa_service_id;
         $viewData['questions'] = EligibilityQuestions::where("visa_service_id",$visa_service->unique_id)->get();
         $viewData['pageTitle'] = "Eligibility Check of ".$visa_service->name;
@@ -93,6 +148,64 @@ class EligibilityCheckController extends Controller
         $viewData['cutoff_points'] = $cutoff_points;
         $viewData['pageTitle'] = "Eligibility Score";
         
+        
+        
+        // Report 
+        
+        $questions = json_decode($record->response,true);
+        $final_questions = array();
+        
+        if($record->eligible_type == 'group'){
+            foreach($questions as $group_id => $component_ids){
+                $temp = array();
+                $group = QuestionsGroups::where("unique_id",$group_id)->first();
+                // echo "Group ID: ".$group->group_title."<BR>";
+                $temp['group_title'] = $group->group_title;
+                $temp['max_score'] = $group->max_score;
+                $temp['min_score'] = $group->min_score;
+                $components = array();
+                foreach($component_ids as $component_id => $question_ids){
+                    $comp_temp = array();
+                    $component = ComponentQuestions::where("unique_id",$component_id)->first();
+                    $comp_temp['component_title'] = $component->component_title;
+                    $comp_temp['max_score'] = $component->max_score;
+                    $comp_temp['min_score'] = $component->min_score;
+                    foreach($question_ids as $q_id => $opt_value){
+                        if($opt_value != ''){
+                            $question = EligibilityQuestions::where("unique_id",$q_id)->first();
+                            $comp_ques['question'] = $question->question;
+                            $ques_option = QuestionOptions::where("question_id",$q_id)
+                                                        ->where("option_value",$opt_value)->first();
+                            $comp_ques['option_value'] = $ques_option->option_label;
+                            $comp_ques['score'] = $ques_option->score;
+                            $comp_ques['non_eligible'] = $ques_option->non_eligible;
+                            $comp_ques['non_eligible_reason'] = $ques_option->non_eligible_reason;
+                            $comp_temp['questions'][] = $comp_ques;
+                        }
+                    }
+                    $components[] = $comp_temp;
+                }
+                $temp['components'] = $components;
+                $final_questions[] = $temp;
+            }
+        }else{
+            foreach($questions as $question_id => $ques_value){
+                $temp = array();
+                if($ques_value != ''){
+                    $question = EligibilityQuestions::where("unique_id",$question_id)->first();
+                    $temp['question'] = $question->question;
+                    $ques_option = QuestionOptions::where("question_id",$question_id)
+                                                ->where("option_value",$ques_value)->first();
+                    $temp['option_value'] = $ques_option->option_label;
+                    $temp['score'] = $ques_option->score;
+                    $temp['non_eligible'] = $ques_option->non_eligible;
+                    $temp['non_eligible_reason'] = $ques_option->non_eligible_reason;
+                
+                    $final_questions[] = $temp;
+               }
+            }   
+        }
+        $viewData['final_questions'] = $final_questions;
         return view(roleFolder().'.eligibility-check.score',$viewData);
     }
     public function fetchConditional(Request $request){
@@ -149,6 +262,7 @@ class EligibilityCheckController extends Controller
         $record = GroupConditionalQuestions::where("parent_component_id",$component_id)
                                             ->where("group_id",$group_id)
                                             ->where("option_id",$option_value)
+                                            ->whereHas("Group")
                                             ->first();  
         
         if(!empty($record)){
@@ -195,7 +309,18 @@ class EligibilityCheckController extends Controller
         $question_ids = array(); 
         foreach($questions as $key => $value){
             $question = EligibilityQuestions::where("unique_id",$key)->first();
-            $option = $question->optionScore($value,"value",$key);
+            $lang_prof_id = '';
+            if($question->language_type == 'first_official'){
+                if(!empty(\Auth::user()->FirstProficiency)){
+                    $lang_prof_id = \Auth::user()->FirstProficiency->proficency;
+                }
+            }
+            if($question->language_type == 'second_official'){
+                if(!empty(\Auth::user()->SecondProficiency)){
+                    $lang_prof_id = \Auth::user()->SecondProficiency->proficency;
+                }
+            }
+            $option = $question->optionScore($value,"value",$key,$lang_prof_id);
             if(!empty($option)){
                 $score += $option->score;
                 $option_ids[] = $option->id;
@@ -352,6 +477,8 @@ class EligibilityCheckController extends Controller
         $question_sequence = ArrangeGroups::where("visa_service_id",$visa_service->unique_id)
                                         ->orderBy("sort_order","asc")
                                         ->get();
+        $group = $visa_service->visaGroup;
+        $viewData['group'] = $group;
         $viewData['eligible_check'] = 'group';
         $viewData['question_sequence'] = $question_sequence;
         $viewData['visa_service'] = $visa_service;
@@ -364,8 +491,6 @@ class EligibilityCheckController extends Controller
         
         $viewData['group_form'] = $group_form;
         $viewData['pageTitle'] = "Eligibility Check of ".$visa_service->name;
-        
-
         return view(roleFolder().'.eligibility-check.group-eligibility-check',$viewData);
     }
 
@@ -423,7 +548,7 @@ class EligibilityCheckController extends Controller
         
         
         $questions = $request->input("question");
-        
+        $is_minimum_score = 0;
         $component_questions = array();
         $ques_response = array();
         foreach($questions as $group => $comp){
@@ -432,20 +557,43 @@ class EligibilityCheckController extends Controller
             }
         }
         $comp_ques_score = array();
+        // pre($component_questions);
+        
         foreach($component_questions as $comp_id => $question_ids){
             
             foreach($question_ids as $key => $value){
                 $question = EligibilityQuestions::where("unique_id",$key)->first();
-                $option = $question->optionScore($value,"value",$key);
+                if($question->linked_to_cv != 'no'){
+                    $lang_prof_id = '';
+                    // pre(\Auth::user()->FirstProficiency->toArray());
+                    // pre(\Auth::user()->SecondProficiency->toArray());
+                    if($question->language_type == 'first_official'){
+                        if(!empty(\Auth::user()->FirstProficiency)){
+                            $lang_prof_id = \Auth::user()->FirstProficiency->proficiency;
+                        }
+                    }
+                    if($question->language_type == 'second_official'){
+                        if(!empty(\Auth::user()->SecondProficiency)){
+                            $lang_prof_id = \Auth::user()->SecondProficiency->proficiency;
+                        }
+                    }
+                    // echo "lang_prof_id: ".$lang_prof_id."<br>";
+                    $option = $question->optionScore($value,"value",$key,$lang_prof_id);
+                }else{
+                    $option = $question->optionScore($value,"value",$key);
+                }
+                // echo "OPTION SCORE:";
+                // pre($option);
                 if(!empty($option)){       
                     $option_ids[] = $option->id;
+                    
                     $comp_ques_score[$comp_id][$option->question_id]['score'] = $option->score;
                     $comp_ques_score[$comp_id][$option->question_id]['option_id'] = $option->id;
                     $ques_response[$option->question_id] = $option->option_value;
                 }
             }
         }
-        
+       
         $comp_final_score = array();
         foreach($comp_ques_score as $comp_id => $question_ids){
             $component = ComponentQuestions::with('Questions')
@@ -468,6 +616,7 @@ class EligibilityCheckController extends Controller
             
             $question_combinations = QuestionCombination::where("component_id",$component->unique_id)->get();
             // echo "Combination Exists: ".count($question_combinations)."<br>";
+            // pre($question_combinations->toArray());
             if(count($question_combinations)>0){
                 foreach($question_combinations as $combination){
                     if(in_array($combination->option_id_one,$option_ids) && in_array($combination->option_id_two,$option_ids)){
@@ -490,7 +639,12 @@ class EligibilityCheckController extends Controller
                         }
                         if($cqs_score > $component_max_score){
                             $diff = $cqs_score - $component_max_score;
-                            $cqs_score = $cqs_score - $diff;
+                            // $cqs_score = $cqs_score - $diff;
+                            $cqs_score = $component_max_score;
+                        }
+                        if($cqs_score < $component_min_score){
+                            $cqs_score = $component_min_score;
+                            $is_minimum_score = 1;
                         }
                         $comp_final_score[$component->unique_id] = $cqs_score;
                         // echo "Component AFTER Score: ".$cqs_score."<br>";
@@ -498,14 +652,27 @@ class EligibilityCheckController extends Controller
                     }
                 }
             }else{
+                
+                // echo "BEFORE cqs_score: ".$cqs_score." comp max: ".$component_max_score."<br>";
+                if($cqs_score > $component_max_score){
+                    $diff = $cqs_score - $component_max_score;
+                    // $cqs_score = $cqs_score - $diff;
+                    $cqs_score = $component_max_score;
+                }
+                if($cqs_score < $component_min_score){
+                    $cqs_score = $component_min_score;
+                    $is_minimum_score = 1;
+                }
+                // echo "AFTER cqs_score: ".$cqs_score." comp max: ".$component_max_score."<br><BR><BR><Hr>";
                 $comp_final_score[$component->unique_id] = $cqs_score;
             }
-            // if($cqs_score < $component_min_score){
-            //     $cqs_score = $component_min_score;
-            // }
+          
+            
         }
+        //   pre($comp_final_score);
+         
         $scores = 0;
-        
+      
         foreach($comp_final_score as $key => $value){
             $group = GroupComponentIds::with('QuestionsGroups')->where("component_id",$key)->first();
             if(!empty($group)  && $group->QuestionsGroups->is_default != 1){
@@ -517,7 +684,7 @@ class EligibilityCheckController extends Controller
             $scores += $value;
         }
         
-        // echo "Score Before: ".$scores."<br>";
+        // echo "Score Before 1: ".$scores."<br>";
         $checkPatterns = EligibilityPattern::where('visa_service_id',$visa_service_id)->get();
         $match_pattern = array();
         foreach($checkPatterns as $pattern){
@@ -557,7 +724,190 @@ class EligibilityCheckController extends Controller
                     }
                 }
             }
+            $first_official = \Auth::user()->FirstProficiency;
+            if(!empty($elg_question) && $elg_question->linked_to_cv == 'yes' && $elg_question->cv_section == 'language_proficiency'){
+                if($elg_question->score_count_type == 'range_matching'){
+                    
+                    $option_selected = $ques_response[$elg_question->unique_id];
+                    // echo "Lang Type: ".$elg_question->language_type."<br>";
+                    if($elg_question->language_type == 'first_official'){
+                        
+                        if(!empty($first_official)){
+                            $language_proficiency = LanguageProficiency::where("unique_id",$first_official->proficiency)->first();
+                            // $clb_level = $language_proficiency->ClbLevels;
+                            if(!empty($first_official)){
+                                $language_proficiency = LanguageProficiency::where("unique_id",$first_official->proficiency)->first();
+                                // $clb_level = $language_proficiency->ClbLevels;
+                                $clb_level = LanguageScoreChart::where("language_proficiency_id",$first_official->proficiency)->orderBy("clb_level")->get();
+                               
+                                $lng_scores['reading'] = $first_official->reading;
+                                $lng_scores['writing'] = $first_official->writing;
+                                $lng_scores['listening'] = $first_official->listening;
+                                $lng_scores['speaking'] = $first_official->speaking;
+                                // pre($lng_scores);
+                                if($option_selected != ''){
+                                    if(!empty($clb_level)){
+                                        $final_match_count = 0;
+                                        $next_level_clb = array();
+                                        $current_level_clb = array();
+                                        $clb_level_arr = $clb_level->toArray();
+                                        //  pre($clb_level_arr);
+                                        // pre($clb_level->toArray());
+                                        // pre($clb_level_arr);
+                                        foreach($clb_level as $c_key => $level){
+                                            
+                                            $current_match_count = 0;
+                                            foreach($lng_scores as $key => $score){
+                                                // echo $score." >= ".$level->$key."<br>";
+                                                if($score >= $level->$key){
+                                                    $current_match_count++;
+                                                }
+                                            }
+                                            // echo "<br>clb_level: ".$level->clb_level." = ".$current_match_count;
+                                            if($current_match_count >= $final_match_count){
+                                                // echo "<br> > clb_level: ".$level->clb_level;
+                                                $final_match_count = $current_match_count;
+                                                // echo "KEY: ".$c_key."<br>";
+                                                if(isset($clb_level_arr[$c_key+1])){
+                                                    $current_level_clb = $level;
+                                                    $next_level_clb = array();
+                                                    $next_level_clb[] = $clb_level_arr[$c_key+1];
+                                                }else{
+                                                    $current_level_clb = array();
+                                                    $next_level_clb = array();
+                                                }
+                                            }
+                                        }
+                                        // echo "CURRENT LEVEL:";
+                                        // pre($current_level_clb->toArray());
+                                        // echo "NEXT LEVEL:";
+                                        // pre($next_level_clb);
+
+                                        // echo "<br>final_match_count:".$final_match_count;
+                                        // echo "<Br>Next Level:";
+                                        $final_match_count = 0;
+                                    //   pre($next_level_clb->toArray());
+                                        foreach($next_level_clb as $c_key => $level){
+                                            $current_match_count = 0;
+                                            foreach($lng_scores as $key => $score){
+                                                if($score >= $level[$key]){
+                                                    $current_match_count++;
+                                                }
+                                            }
+                                            if($current_match_count >= $final_match_count){
+                                                $final_match_count = $current_match_count;
+                                            }
+                                        }
+                                    
+                                        if(!empty($next_level_clb) && !empty($match_scores)){
+                                            if($final_match_count == 1){
+                                                $scores += $match_scores->one_match;
+                                            }
+                                            if($final_match_count == 2){
+                                                $scores += $match_scores->two_match;
+                                            }
+                                            if($final_match_count == 3){
+                                                $scores += $match_scores->three_match;
+                                            }
+                                        }
+                                        // echo "AFTER: ".$scores."<BR>";
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    $second_official = \Auth::user()->SecondProficiency;
+                    if($elg_question->language_type == 'second_official'){
+                        
+                        if(!empty($second_official)){
+                            $lng_scores['reading'] = $second_official->reading;
+                            $lng_scores['writing'] = $second_official->writing;
+                            $lng_scores['listening'] = $second_official->listening;
+                            $lng_scores['speaking'] = $second_official->speaking;
+                            $language_proficiency = LanguageProficiency::where("unique_id",$second_official->proficiency)->first();
+                            // $clb_level = $language_proficiency->ClbLevels;
+                            $clb_level = LanguageScoreChart::where("language_proficiency_id",$first_official->proficiency)->orderBy("clb_level")->get();
+                            $match_scores = LanguageScorePoints::where("language_proficiency_id",$first_official->proficiency)
+                                            ->where("question_id",$elg_question->unique_id)
+                                            ->first();
+                            
+                            if($option_selected != ''){
+                                if(!empty($clb_level)){
+                                    $final_match_count = 0;
+                                    $next_level_clb = array();
+                                    $current_level_clb = array();
+                                    $clb_level_arr = $clb_level->toArray();
+                                    //  pre($clb_level_arr);
+                                    // pre($clb_level->toArray());
+                                    // pre($clb_level_arr);
+                                    foreach($clb_level as $c_key => $level){
+                                        
+                                        $current_match_count = 0;
+                                        foreach($lng_scores as $key => $score){
+                                            // echo $score." >= ".$level->$key."<br>";
+                                            if($score >= $level->$key){
+                                                $current_match_count++;
+                                            }
+                                        }
+                                        // echo "<Br><br>";
+                                        // echo "<br>clb_level: ".$level->clb_level." = ".$current_match_count;
+                                        if($current_match_count >= $final_match_count){
+                                            // echo "<br> > clb_level: ".$level->clb_level;
+                                            $final_match_count = $current_match_count;
+                                            // echo "KEY: ".$c_key."<br>";
+                                            if(isset($clb_level_arr[$c_key+1])){
+                                                $current_level_clb = $level;
+                                                $next_level_clb = array();
+                                                $next_level_clb[] = $clb_level_arr[$c_key+1];
+                                            }else{
+                                                $current_level_clb = array();
+                                                $next_level_clb = array();
+                                            }
+                                        }
+                                    }
+                                    // echo "CURRENT LEVEL:";
+                                    // pre($current_level_clb->toArray());
+                                    // echo "NEXT LEVEL:";
+                                    // pre($next_level_clb);
+
+                                    // echo "<hr><Br><br>";
+                                    // echo "<br>final_match_count:".$final_match_count;
+                                    // echo "<Br>Next Level:";
+                                    $final_match_count = 0;
+                                    //   pre($next_level_clb->toArray());
+                                    foreach($next_level_clb as $c_key => $level){
+                                        $current_match_count = 0;
+                                        foreach($lng_scores as $key => $score){
+                                            if($score >= $level[$key]){
+                                                $current_match_count++;
+                                            }
+                                        }
+                                        if($current_match_count >= $final_match_count){
+                                            $final_match_count = $current_match_count;
+                                        }
+                                    }
+                                   
+                                    if(!empty($next_level_clb) && !empty($match_scores)){
+                                        if($final_match_count == 1){
+                                            $scores += $match_scores->one_match;
+                                        }
+                                        if($final_match_count == 2){
+                                            $scores += $match_scores->two_match;
+                                        }
+                                        if($final_match_count == 3){
+                                            $scores += $match_scores->three_match;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
+        // echo "<br>final_match_count:".$final_match_count;
+        // echo "<br>scores after:".$scores;
+        // exit;
         // echo "Score After: ".$scores."<br>";
         // pre($ques_response);
         // exit;
@@ -899,5 +1249,20 @@ class EligibilityCheckController extends Controller
         $viewData['report'] = $report;
         $pdf_doc = \PDF::loadView(roleFolder().'.eligibility-check.group-report', $viewData);
         return $pdf_doc->download('report.pdf');
+    }
+
+    public function checkPreCondition(Request $request){
+        $option_id = $request->input("option_id");
+        $question_id = $request->input("question_id");
+        $option = QuestionOptions::where("option_value",$option_id)->where("question_id",$question_id)->first();
+        $component = ComponentPreConditions::where("question_id",$question_id)->where("option_id",$option->id)->first();
+        if(!empty($component)){
+            $response['status'] = true;
+            $response['component_id'] = $component->component_id;
+        }else{
+            $response['status'] = false;
+        }
+
+        return response()->json($response);
     }
 }

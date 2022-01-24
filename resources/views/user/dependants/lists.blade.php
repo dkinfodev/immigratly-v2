@@ -1,5 +1,11 @@
 @extends('layouts.master')
 
+@section("breadcrumb")
+<ol class="breadcrumb breadcrumb-dark mb-0">
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
+  <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
+</ol>
+@endsection
 @section('pageheader')
 <!-- Content -->
 <div class="">
@@ -21,29 +27,7 @@
 @section('content')
 <!-- Content -->
 <div class="dependants">
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="row align-items-end">
-      <div class="col-sm mb-2 mb-sm-0">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb breadcrumb-no-gutter">
-            <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
-          </ol>
-        </nav>
 
-        <h1 class="page-title">{{$pageTitle}}</h1>
-      </div>
-
-      <div class="col-sm-auto">
-        <a class="btn btn-primary" href="{{ baseUrl('/dependants/add') }}">
-          <i class="tio-add mr-1"></i> Add 
-        </a>
-      </div>
-    </div>
-    <!-- End Row -->
-  </div>
-  <!-- End Page Header -->
 
   <!-- Card -->
   <div class="card">

@@ -24,16 +24,22 @@
                 @endif
               </div>
               <div class="col-auto">
-                <div class="row align-items-center g-0">
+                <div class="row align-items-center g-0 mr-2">
                   <div class="col-auto">Visa Service:</div>
 
                   <!-- Flatpickr -->
-                  <div id="projectDeadlineFlatpickr" class="js-flatpickr flatpickr-custom flatpickr-custom-borderless col input-group input-group-sm">
+                  <div id="projectDeadlineFlatpickr" class="col input-group input-group-sm">
   
-                    
-                    @if(!empty($record->Service($record->VisaService->service_id)))
+                    <?php 
+                      if(request()->get('visa_service')){
+                        $visa_service_id = request()->get('visa_service');
+                      }else{
+                        $visa_service_id = $record->VisaService->service_id;
+                      }
+                    ?>
+                    @if(!empty($record->Service($visa_service_id)))
                     <span class="text-primary">
-                       {{$record->Service($record->VisaService->service_id)->name}} 
+                       {{$record->Service($visa_service_id)->name}} 
                     </span>
                     @else
                     <span class="text-danger">
@@ -154,9 +160,15 @@
             <a class="nav-link {{isset($active_nav) && $active_nav == 'overview'?'active':'' }}" href="{{baseUrl('cases/view/'.base64_encode($record->id))}}">Overview</a>
                                                                                                               
         </li>
+        @if($record->case_type == 'group')
         <li class="nav-item">
-            <a class="nav-link {{isset($active_nav) && $active_nav == 'files'?'active':'' }}" href="{{baseUrl('cases/case-documents/documents/'.base64_encode($record->id))}}">Files <span
-                    class="badge badge-soft-dark rounded-circle ml-1"> {{ countUnreadDocChat($case_id,$subdomain,\Auth::user()->role) }}</span></a>
+            <a class="nav-link {{isset($active_nav) && $active_nav == 'dependents'?'active':'' }}" href="{{baseUrl('cases/dependents/'.base64_encode($record->id))}}">Dependents</a>
+        </li>
+        @endif
+        <li class="nav-item">
+            <a class="nav-link {{isset($active_nav) && $active_nav == 'files'?'active':'' }}" href="{{baseUrl('cases/case-documents/documents/'.base64_encode($record->id))}}">Files 
+
+              <span class="badge badge-soft-dark rounded-circle ml-1"> {{ countUnreadDocChat($case_id,$subdomain,\Auth::user()->role) }}</span></a>
         </li>
         <li class="nav-item">
             <a class="nav-link {{isset($active_nav) && $active_nav == 'activity'?'active':'' }}" href="{{ baseUrl('cases/activity-logs/'.base64_encode($record->id)) }}">Activity</a>
@@ -164,13 +176,7 @@
         <li class="nav-item">
             <a class="nav-link {{isset($active_nav) && $active_nav == 'invoices'?'active':'' }}" href="{{baseUrl('cases/invoices/list/'.base64_encode($record->id))}}">Invoices</a>
         </li>
-        <!-- <li class="nav-item">
-            <a class="nav-link " href="project-teams.html">Teams</a>
-        </li> -->
-
-        <!-- <li class="nav-item">
-            <a class="nav-link " href="project-settings.html">Settings</a>
-        </li> -->
+      
     </ul>
 </div>
     

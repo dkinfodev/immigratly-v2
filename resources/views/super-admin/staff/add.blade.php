@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.master-old')
 @section('pageheader')
 <!-- Content -->
 <div class="">
@@ -273,22 +273,12 @@
             redirect(response.redirect_back);
           }else{
             validation(response.message);
-            // $.each(response.message, function (index, value) {
-            //   $("*[name="+index+"]").parents(".js-form-message").find("#"+index+"-error").remove();
-            //   $("[name="+index+"]").parents(".js-form-message").find(".form-control").removeClass('is-invalid');
-              
-            //   var html = '<div id="'+index+'-error" class="invalid-feedback">'+value+'</div>';
-            //   $("[name="+index+"]").parents(".js-form-message").append(html);
-            //   $("[name="+index+"]").parents(".js-form-message").find(".form-control").addClass('is-invalid');
-            // });
-              // errorMessage(response.message);
             }
           },
           error:function(){
             internalError();
           }
         });
-      
     });
   });
   

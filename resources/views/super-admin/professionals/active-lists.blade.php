@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.master-old')
 @section('pageheader')
 <!-- Content -->
 <div class="">
@@ -77,17 +77,24 @@
         <div class="col-sm-6">
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
             <!-- Datatable Info -->
+            
             <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0" style="display: none;">
               <div class="d-flex align-items-center">
                 <span class="font-size-sm mr-3">
                   <span id="datatableCounter">0</span>
                   Selected
                 </span>
-                <a class="btn btn-sm btn-outline-danger" href="javascript:;">
+                <!-- <a class="btn btn-sm btn-outline-danger" href="javascript:;">
                   <i class="tio-delete-outlined"></i> Delete
+                </a> -->
+                <a class="btn btn-sm btn-outline-primary ml-2" onclick="updateDatabase()" href="javascript:;">
+                  <i class="tio-category-outlined"></i> Update Database
                 </a>
               </div>
             </div>
+            <a class="btn btn-sm btn-primary ml-2" onclick="updateMainDatabase()" href="javascript:;">
+              <i class="tio-category-outlined"></i> Update Main Database
+            </a>
           </div>
         </div>
       </div>
@@ -158,6 +165,35 @@
   <!-- End Card -->
 </div>
 <!-- End Content -->
+<div class="modal fade" id="showUpgrade" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Database Upgrade</h5>
+        <button type="button" class="btn btn-xs btn-icon btn-ghost-secondary" data-dismiss="modal" aria-label="Close">
+          <i class="tio-clear tio-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Database</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+          <tfoot></tfoot>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button> -->
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
 
 @section('javascript')
@@ -177,6 +213,7 @@ $(document).ready(function(){
       changePage('prev');
     }
   });
+  
   $("#datatableCheckAll").change(function(){
     if($(this).is(":checked")){
       $(".row-checkbox").prop("checked",true);
@@ -223,6 +260,7 @@ function loadData(page=1){
                 $(".previous").addClass("disabled","disabled");
               }
               $("#pageno").attr("max",data.last_page);
+              initCheckbox();
             }else{
               $(".datatable-custom").find(".norecord").remove();
               var html = '<div class="text-center text-danger norecord">No records available</div>';
@@ -230,6 +268,17 @@ function loadData(page=1){
             }
         },
     });
+}
+function initCheckbox(){
+  $(".row-checkbox").change(function(){
+    
+    if($(".row-checkbox:checked").length > 0){
+      $("#datatableCounterInfo").show();
+    }else{
+      $("#datatableCounterInfo").hide();
+    }
+    $("#datatableCounter").html($(".row-checkbox:checked").length);
+  });
 }
 function changePage(action){
   var page = parseInt($("#pageno").val());
@@ -399,6 +448,69 @@ function updateAllDatabase(e){
         redirect(url);
       }
     })
+}
+var database = [];
+function updateDatabase(dbname='',index=''){
+  database = [];
+  if($(".row-checkbox:checked").length > 0){
+    $(".row-checkbox:checked").each(function(){
+      database.push($(this).attr("data-subdomain"));
+    });
+    $("#showUpgrade").modal("show");
+    $("#showUpgrade table tbody").html('');
+    $("#showUpgrade tfoot").html("<tr><td colspan='2'><div class='alert alert-warning'>Upgrade is under process please wait until it get completed....</div></td></tr>");
+    upgradeDB(database[0],0);
+  }else{
+    errorMessage("Please select the record");
+  }
+}
+function updateMainDatabase(){
+  $("#showUpgrade").modal("show");
+  $("#showUpgrade table tbody").html('');
+  $("#showUpgrade tfoot").html("<tr><td colspan='2'><div class='alert alert-warning'>Upgrade is under process please wait until it get completed....</div></td></tr>");
+  $.ajax({
+      type: "POST",
+      url: SITEURL + '/replicate-db.php',
+      dataType:'json',
+      beforeSend:function(){
+      },
+      success: function (data) {
+        $("#showUpgrade table tbody").append(data.html);
+        $("#showUpgrade tfoot").html("<tr><td colspan='2'><div  class='alert alert-success'>All database are upgrade</div></td></tr>");
+         
+      },
+  });
+}
+function upgradeDB(dbname,index){
+  $.ajax({
+      type: "POST",
+      url: SITEURL + '/replicate-prof-db.php',
+      data:{
+        db:dbname
+      },
+      dataType:'json',
+      beforeSend:function(){
+        // showLoader();
+        // var html = "<tr class='sub-"+dbname+"'><td>"+dbname+"</td>";
+        // html +="<td class='status'><i class='fa fa-spinner fa-spin fa-2x'></i></td></tr>";
+        // $("#showUpgrade table tbody").append(html);
+      },
+      success: function (data) {
+        //  hideLoader();
+        //  $(".sub-"+dbname).find(".status").html(data.html);
+         $("#showUpgrade table tbody").append(data.html);
+         if(index < (database.length - 1)){
+          var next_index = index + 1;
+          upgradeDB(database[next_index],next_index);
+         }else{
+          $("#showUpgrade tfoot").html("<tr><td colspan='2'><div  class='alert alert-success'>All database are upgrade</div></td></tr>");
+          // setTimeout(function(){
+          //   $("#showUpgrade").modal("hide");
+          //   $("#showUpgrade table tbody").html('');
+          // },2000);
+         }
+      },
+  });
 }
 </script>
 @endsection

@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.master-old')
 
 @section('style')
 <link rel="stylesheet" href="assets/vendor/quill/dist/quill.snow.css">

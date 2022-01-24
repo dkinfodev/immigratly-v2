@@ -16,6 +16,12 @@ class LanguageProficiency extends Model
 
     public function ClbLevels()
     {
-        return $this->hasMany('App\Models\LanguageScoreChart','language_proficiency_id','unique_id');
+        return $this->hasMany('App\Models\LanguageScoreChart','language_proficiency_id','unique_id')->orderBy("clb_level","asc");
     }
+    public function ScoreCharts()
+    {
+        return $this->hasMany('App\Models\LanguageScoreChart','language_proficiency_id','unique_id')->orderBy("clb_level","desc");
+    }
+   
+    
 }

@@ -21,6 +21,7 @@ class ComponentQuestionIds extends Model
 
     public function ComponentGroups()
     {
-        return $this->belongsTo('App\Models\GroupComponentIds','component_id','component_id')->with("QuestionsGroups");
+        return $this->belongsTo('App\Models\GroupComponentIds','component_id','component_id')
+                    ->with("QuestionsGroups");
     }
 }

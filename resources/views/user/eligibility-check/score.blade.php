@@ -127,12 +127,109 @@
                     @endforeach
                 </div>
             <?php } ?>
-
+            
+            
         </div>
         <!-- End Table -->
 
     </div>
     <!-- End Card -->
+    @if($record->eligible_type == 'normal')
+        <div class="card">
+            <div class="card-header">
+                <h2>Report</h2>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Question</th>
+                        <th>Score</th>
+                    </tr>    
+                    @foreach($final_questions as $question)
+                    <tr>
+                        <th>{{$question['question']}}</th>
+                        <td>
+                            @if($question['non_eligible'] == 1)
+                            <span class="text-danger">
+                            {{$question['option_value']}} ({{$question['score']}})<br>
+                            {{$question['non_eligible_reason']}}
+                            </span>
+                            @else
+                            {{$question['option_value']}} ({{$question['score']}})
+                            @endif
+                            
+                        </td>
+                    </tr>
+                    @endforeach
+                </table>
+            </div>
+        </div>
+    @else
+        @foreach($final_questions as $groups)
+        <div class="card mt-3">
+            <div class="card-header p-2">
+                <h2>{{ $groups['group_title'] }} <small>MAX SCORE: ({{$groups['max_score']}}) MIN SCORE: ({{$groups['min_score']}})</small></h2>
+            </div>
+            <?php 
+                $components = $groups['components'];
+            ?>
+            <div class="card-body">
+                <?php
+                    $group_score = 0;
+                ?>
+                @foreach($components as $component)
+                <?php
+                    $comp_score = 0;
+                ?>
+                @if(isset($component['questions']) && !empty($component['questions']))
+                <div class="component-block">
+                    <h3>{{$component['component_title']}} <small>MAX SCORE: ({{$component['max_score']}}) MIN SCORE: ({{$component['min_score']}})</small></h3>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Question</th>
+                            <th>Score</th>
+                        </tr>    
+                        @foreach($component['questions'] as $question)
+                        <tr>
+                            <th>{{$question['question']}}</th>
+                            <td>
+                                @if($question['non_eligible'] == 1)
+                                <span class="text-danger">
+                                {{$question['option_value']}} ({{$question['score']}})<br>
+                                {{$question['non_eligible_reason']}}
+                                </span>
+                                @else
+                                {{$question['option_value']}} ({{$question['score']}})
+                                @endif
+                                
+                                <?php $comp_score += $question['score']; ?>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </table>
+                </div>
+                @endif
+                @if($comp_score < $component['min_score'])
+                <div class="col-md-12">
+                    <div class="alert alert-danger">
+                        Component score is less then minimum component score
+                    </div>
+                </div>
+                @endif
+                <?php $group_score += $comp_score ?>
+                @endforeach
+            </div>
+            @if($group_score < $groups['min_score'])
+            <div class="col-md-12">
+                <div class="alert alert-danger">
+                    Group score is less then minimum group score
+                </div>
+            </div>
+            @endif
+        </div>
+        @endforeach
+        
+    @endif
 </div>
 <!-- End Content -->
 
