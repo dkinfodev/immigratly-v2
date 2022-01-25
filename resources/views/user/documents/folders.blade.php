@@ -10,36 +10,33 @@
 }
 </style>
 @endsection
-@section('pageheader')
+
+@section('breadcrumb')
 <!-- Content -->
-<div class="">
-    <div class="content container" style="height: 25rem;">
-        <!-- Page Header -->
-        <div class="page-header page-header-light page-header-reset">
-            <div class="row align-items-center">
-                  <div class="col">
-                    <h1 class="page-header-title">{{$pageTitle}}</h1>
-                  </div>
-                  <div class="col-sm-auto">
-                     <a class="btn btn-success" href="{{ baseUrl('documents/documents-exchanger') }}">
-                        <i class="tio-swap-horizontal mr-1"></i> Documents Exchanger
-                     </a>
-                     <a onclick="showPopup('{{ baseUrl('documents/add-folder') }}')" class="btn btn-primary" href="javascript:;">
-                        <i class="tio-folder-add mr-1"></i> Add folder
-                     </a>
-                  </div>
-            </div>
-            <!-- End Row -->
-        </div>
-        <!-- End Page Header -->
-    </div>
-</div>
+<ol class="breadcrumb breadcrumb-no-gutter">
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
+
+  <li class="breadcrumb-item active" aria-current="page">Documents</li>
+</ol>
 <!-- End Content -->
 @endsection
+
 @section('content')
 <!-- Content -->
 <div class="documents">
  
+  <div class="content container" style="height: 5rem;">
+    <div class="row align-items-center">
+      <div class="col-sm-auto">
+         <a class="btn btn-success" href="{{ baseUrl('documents/documents-exchanger') }}">
+            <i class="tio-swap-horizontal mr-1"></i> Documents Exchanger
+         </a>
+         <a onclick="showPopup('{{ baseUrl('documents/add-folder') }}')" class="btn btn-primary" href="javascript:;">
+            <i class="tio-folder-add mr-1"></i> Add folder
+         </a>
+      </div>
+    </div>
+  </div>
   <!-- Card -->
   <div class="tab-content" id="connectionsTabContent">
           

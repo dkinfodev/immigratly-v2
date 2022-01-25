@@ -1,4 +1,14 @@
 @extends('layouts.master')
+
+@section('breadcrumb')
+<!-- Content -->
+<ol class="breadcrumb breadcrumb-no-gutter">
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
+  <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
+</ol><!-- End Content -->
+@endsection
+
+
 @section('pageheader')
 <!-- Content -->
 <div class="">

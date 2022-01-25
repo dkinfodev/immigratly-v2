@@ -9,6 +9,7 @@
 </ol>
 <!-- End Content -->
 @endsection
+
 @section('content')
 <!-- Content -->
 <!-- Sidebar Detached Content -->

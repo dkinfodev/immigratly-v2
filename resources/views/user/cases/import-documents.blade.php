@@ -31,19 +31,23 @@
 }
 </style>
 @endsection
+
+@section('breadcrumb')
+<!-- Content -->
+<ol class="breadcrumb breadcrumb-no-gutter">
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/cases') }}">Cases</a></li>
+  <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
+</ol><!-- End Content -->
+@endsection
+
 @section('content')
 <!-- Content -->
 <div class="content container-fluid">
   <div class="page-header">
     <div class="row align-items-end">
       <div class="col-sm mb-2 mb-sm-0">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb breadcrumb-no-gutter">
-            <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/cases') }}">Cases</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
-          </ol>
-        </nav>
+        
         <h1 class="page-title">{{$pageTitle}}<small class="text-danger"> (Drag and move the files between folders)</small></h1>
         <div class="text-dark">{{$record['case_title']}}</div>
       </div>

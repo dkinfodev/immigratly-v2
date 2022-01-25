@@ -22,25 +22,16 @@
 }
 </style>
 @endsection
-@section('pageheader')
+
+@section('breadcrumb')
 <!-- Content -->
-<div class="">
-    <div class="content container" style="height: 25rem;">
-        <!-- Page Header -->
-        <div class="page-header page-header-light page-header-reset">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h1 class="page-header-title">{{$pageTitle}}</h1>
-                    <div class="text-dark">{{$record['case_title']}}</div>
-                </div>
-            </div>
-            <!-- End Row -->
-        </div>
-        <!-- End Page Header -->
-    </div>
-</div>
-<!-- End Content -->
+<ol class="breadcrumb breadcrumb-no-gutter">
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/cases') }}">Cases</a></li>
+  <li class="breadcrumb-item active" aria-current="page">{{$record['case_title']}}</li>
+</ol><!-- End Content -->
 @endsection
+
 @section('content')
 <!-- Content -->
 <div class="documents-list">

@@ -1,4 +1,6 @@
 @extends('layouts.master')
+
+
 @section("style")
 <style>
 .custom-select {
@@ -20,6 +22,17 @@ span#select2-bchg-container {
 }
 </style>
 @endsection
+
+
+@section('breadcrumb')
+<!-- Content -->
+<ol class="breadcrumb breadcrumb-no-gutter">
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
+  <li class="breadcrumb-item active" aria-current="page">Manage CV</li>
+</ol>
+<!-- End Content -->
+@endsection
+
 @section('content')
 <div class="sidebar-detached-content mt-3 mt-lg-0">
    <div class="imm-cv-user-block">

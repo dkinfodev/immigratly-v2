@@ -10,6 +10,12 @@
 <!-- End Content -->
 @endsection
 
+@section('header-right')
+<a class="btn btn-primary btn-sm"
+    href="{{ baseUrl('/eligibility-check') }}">
+    Back
+</a>
+@endsection
 @section('content')
 
 <!-- Sidebar Detached Content -->

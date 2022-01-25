@@ -1,21 +1,21 @@
 @extends('layouts.master')
-@section('pageheader')
+
+@section('breadcrumb')
 <!-- Content -->
-<div class="">
-    <div class="content container" style="height: 25rem;">
-        <!-- Page Header -->
-        <div class="page-header page-header-light page-header-reset">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h1 class="page-header-title">{{$pageTitle}}</h1>
-                </div>
-            </div>
-            <!-- End Row -->
-        </div>
-        <!-- End Page Header -->
-    </div>
-</div>
+<ol class="breadcrumb breadcrumb-no-gutter">
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
+  <li class="breadcrumb-item">
+  <a class="breadcrumb-link" href="{{ baseUrl('/eligibility-check') }}">Eligibility Check</a></li>
+  <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
+</ol>
 <!-- End Content -->
+@endsection
+
+
+@section('header-right')
+<a class="btn btn-primary btn-sm" href="{{ baseUrl('/eligibility-check') }}">
+    Back
+</a>
 @endsection
 
 @section('content')

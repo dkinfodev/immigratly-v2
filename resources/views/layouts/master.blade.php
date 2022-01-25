@@ -304,15 +304,18 @@
   <!-- JS Plugins Init. -->
   <script>
     $(document).on('ready', function () {
+
       initSelect();
+
       // INITIALIZATION OF UNFOLD
       // =======================================================
-      $('.js-hs-unfold-invoker').each(function () {
+      $('.js-hs-action').each(function () {
         var unfold = new HSUnfold($(this)).init();
       });
+
       $('[data-toggle="tooltip"]').tooltip();
       $('.js-nav-tooltip-link').tooltip({ boundary: 'window' });
- // INITIALIZATION OF NAVBAR VERTICAL NAVIGATION
+      // INITIALIZATION OF NAVBAR VERTICAL NAVIGATION
       // =======================================================
       var sidebar = $('.js-navbar-vertical-aside').hsSideNav();
 
