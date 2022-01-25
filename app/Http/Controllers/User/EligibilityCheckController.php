@@ -32,6 +32,7 @@ use App\Models\ComponentPreConditions;
 use App\Models\VisaServiceGroups;
 use App\Models\ProgramTypes;
 use App\Models\GroupVisaIds;
+use App\Models\MultipleOptionsGroups;
 
 class EligibilityCheckController extends Controller
 {
@@ -63,7 +64,7 @@ class EligibilityCheckController extends Controller
                             })
                             ->whereHas("VisaServices")
                             ->orderBy('id',"desc")
-                            ->paginate(2);
+                            ->paginate();
        
         $viewData['records'] = $records;
         $view = View::make(roleFolder().'.eligibility-check.group-ajax-lists',$viewData);
@@ -476,6 +477,7 @@ class EligibilityCheckController extends Controller
     
         $question_sequence = ArrangeGroups::where("visa_service_id",$visa_service->unique_id)
                                         ->orderBy("sort_order","asc")
+                                        ->whereHas("Group")
                                         ->get();
         $group = $visa_service->visaGroup;
         $viewData['group'] = $group;
@@ -506,7 +508,9 @@ class EligibilityCheckController extends Controller
 
     public function getGroupEligibilityForm(Request $request){
         
-        $records = ArrangeGroups::orderBy("sort_order","asc")->paginate(1);
+        $records = ArrangeGroups::orderBy("sort_order","asc")
+                                ->whereHas("Group")
+                                ->paginate(1);
         $record = $records[0];
         $visa_service_id = $record->visa_service_id;
         $visa_service = VisaServices::where("unique_id",$visa_service_id)->first();

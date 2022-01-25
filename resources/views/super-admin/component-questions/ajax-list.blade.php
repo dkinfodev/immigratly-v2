@@ -24,6 +24,8 @@
 
         <div id="action-{{$key}}" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm dropdown-menu-right">
           <a class="dropdown-item" href="{{baseUrl('visa-services/component-questions/'.$visa_service_id.'/edit/'.base64_encode($record->id))}}">Edit</a>
+          <a class="dropdown-item" href="{{baseUrl('visa-services/eligibility-questions/'.$visa_service_id.'/combination-questions/add/'.$record->unique_id)}}">Combination Questions</a>
+          <a class="dropdown-item" href="{{baseUrl('visa-services/eligibility-questions/'.$visa_service_id.'/multi-option-groups/add/'.$record->unique_id)}}">Multiple Options Combination</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item text-danger" href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('visa-services/component-questions/'.$visa_service_id.'/delete/'.base64_encode($record->id))}}">Delete</a> 
         </div>

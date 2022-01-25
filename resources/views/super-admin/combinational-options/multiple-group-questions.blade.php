@@ -51,13 +51,20 @@
 
   <!-- Card -->
   <div class="card">
-    <!-- Header -->
-    <div class="card-header">
-      <h2>{{$question->question}}</h2>
-    </div>
-    <!-- End Header -->
+    
     <div class="card-body">
         <div class="row">
+            <div class="col-md-5">
+              <div class="form-group">
+                  <label>Multi Options Questions</label>
+                  <select class="group_question_id" name="group_question_id"> 
+                      <option value="">Select Question</option>
+                      @foreach($group_questions as $question)
+                        <option value="{{ $question->unique_id }}">{{$question->question}}</option>
+                      @endforeach
+                  </select>
+              </div>
+            </div>
             <div class="col-md-5">
               <div class="form-group">
                   <label>Select Question</label>
@@ -69,14 +76,6 @@
                   </select>
               </div>
             </div>
-            <!-- <div class="col-md-5">
-              <div class="form-group">
-                  <label>Option Two</label>
-                  <select class="option_two" name="option_two[]"> 
-                      <option value="">Select Option Two</option>
-                  </select>
-              </div>
-            </div> -->
             <div class="col-md-2">
               <div class="form-group pt-4">
                   <button onclick="fetchCombination()" type="button" class="btn btn-primary"><i class="tio-refresh"></i></button>
@@ -136,7 +135,7 @@ $(document).ready(function(){
 })
 function fetchCombination(){
   var selected_question = $(".selected_question").val();
-  var current_question = "{{$current_question->unique_id}}";
+  var group_question_id = $(".group_question_id").val();
   if(selected_question != ''){
     $.ajax({
         type: "POST",
@@ -144,7 +143,7 @@ function fetchCombination(){
         data:{
             _token:csrf_token,
             selected_question:selected_question,
-            current_question:current_question,
+            group_question_id:group_question_id,
         },
         dataType:'json',
         beforeSend:function(){

@@ -49,9 +49,9 @@
         <a class="btn btn-secondary btn-sm" data-toggle="tooltip" data-html="true" title="Group Questions" href="{{ baseUrl('/visa-services/eligibility-questions/'.$visa_service_id.'/groups-questions') }}">
           <i class="tio-table mr-1"></i> 
         </a>
-        <a class="btn btn-danger btn-sm" data-toggle="tooltip" data-html="true" title="Combination Questions" href="{{ baseUrl('/visa-services/eligibility-questions/'.$visa_service_id.'/combination-questions') }}">
+        <!-- <a class="btn btn-danger btn-sm" data-toggle="tooltip" data-html="true" title="Combination Questions" href="{{ baseUrl('/visa-services/eligibility-questions/'.$visa_service_id.'/combination-questions') }}">
           <i class="tio-refresh mr-1"></i> 
-        </a>
+        </a> -->
         <a class="btn btn-info btn-sm" data-toggle="tooltip" data-html="true" title="Arrange Questions" href="{{ baseUrl('/visa-services/eligibility-questions/'.$visa_service_id.'/arrange-questions') }}">
           <i class="tio-sort mr-1"></i> 
         </a>
