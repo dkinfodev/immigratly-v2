@@ -246,10 +246,10 @@ Route::group(array('prefix' => 'super-admin', 'middleware' => 'super_admin'), fu
             Route::get('/set-conditions/{id}', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'setCondition']); 
             Route::post('/set-conditions/{id}', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'saveCondition']); 
 
-            Route::get('/multi-option-groups/{id}', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'multipleGroupQuestions']); 
-            Route::post('/multi-option-groups/{id}/save', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'saveMultipleOptionsGroup']); 
+            Route::get('/multi-option-groups/add/{component_id}', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'multipleGroupQuestions']); 
+            Route::post('/multi-option-groups/save', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'saveMultipleOptionsGroup']); 
             Route::post('/fetch-group-options', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'fetchGroupOptions']); 
-            Route::get('/multi-option-groups/{id}/delete', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'deleteMultipleOptionsGroup']); 
+            Route::get('/multi-option-groups/delete/{id}', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'deleteMultipleOptionsGroup']); 
 
             Route::get('/combinational-options/{id}', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'combinationalOptions']); 
             Route::post('/combinational-options/{id}/fetch-options', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'fetchCombinationalOptions']); 
@@ -306,7 +306,7 @@ Route::group(array('prefix' => 'super-admin', 'middleware' => 'super_admin'), fu
             });
 
             Route::group(array('prefix' => 'combination-questions'), function () {
-                Route::get('/', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'combinationQuestions']);
+                Route::get('/add/{id}', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'combinationQuestions']);
                 Route::post('/fetch-combinations', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'fetchCombinationQuestions']); 
                 Route::post('/save', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'saveCombinationQuestions']); 
                 Route::get('/delete/{id}', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'deleteSingleCombination']); 

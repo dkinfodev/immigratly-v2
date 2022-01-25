@@ -57,7 +57,7 @@
     </div>
     <!-- End Header -->
     <div class="card-body">
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-md-5">
               <div class="form-group">
                   <label>Component</label>
@@ -69,14 +69,16 @@
                   </select>
               </div>
             </div>
-          </div>
+        </div> -->
         <div class="row">
             <div class="col-md-5">
               <div class="form-group">
                   <label>Question One</label>
                   <select class="question_one" name="question_one"> 
                       <option value="">Select Question One</option>
-                      
+                      @foreach($questions as $question)
+                        <option value="{{$question->EligibilityQuestion->unique_id}}">{{$question->EligibilityQuestion->question}}</option>
+                      @endforeach
                   </select>
               </div>
             </div>
@@ -155,7 +157,7 @@ $(document).ready(function(){
             url: BASEURL + '/visa-services/eligibility-questions/{{$visa_service_id}}/fetch-questions',
             data:{
                 _token:csrf_token,
-                component_id:$(".component_id").val(),
+                component_id:"{{ $component_id }}",
                 question_id:$(this).val()
             },
             dataType:'json',
