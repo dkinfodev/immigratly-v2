@@ -94,6 +94,7 @@
                   <tr>
                     <th>Group Option</th>
                     <th>Question Option</th>
+                    <th>Behaviour</th>
                     <th>Score</th>
                     <th>Action</th>
                   </tr>
@@ -102,12 +103,16 @@
                   @foreach($question_combinations as $record)
                     <tr>
                       <td>
-                        <b>Option One: </b>{{$record->CombinationalOption->OptionOne->option_label}}<br>
-                        <b>Option Two: </b>{{$record->CombinationalOption->OptionTwo->option_label}}
+                        <div><b>Question: </b> {{$record->GroupQuestion->question}}</div>
+                        <div><b>Option One: </b>{{$record->CombinationalOption->OptionOne->option_label}}</div>
+                        <div><b>Option Two: </b>{{$record->CombinationalOption->OptionTwo->option_label}}</div>
                       </td>
                       <td>
-                        <div><b>{{$record->Question->question}}</b></div>
-                        {{$record->QuestionOption->option_label}}
+                        <div><b>Question: </b>{{$record->Question->question}}</div>
+                        <div><b>Option:</b>{{$record->QuestionOption->option_label}}</div>
+                      </td>
+                      <td>
+                        {{$record->behaviour}}
                       </td>
                       <td>
                         {{$record->score}}
@@ -142,6 +147,7 @@ function fetchCombination(){
         url: BASEURL + '/visa-services/eligibility-questions/{{base64_encode($visa_service->id)}}/fetch-group-options',
         data:{
             _token:csrf_token,
+            component_id:"{{$component_id}}",
             selected_question:selected_question,
             group_question_id:group_question_id,
         },

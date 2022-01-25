@@ -18,7 +18,10 @@ class MultipleOptionsGroups extends Model
     {
         return $this->belongsTo('App\Models\QuestionOptions','option_id');
     }
-
+    public function GroupQuestion()
+    {
+        return $this->belongsTo('App\Models\EligibilityQuestions','group_question_id','unique_id');
+    }
     public function Question()
     {
         return $this->belongsTo('App\Models\EligibilityQuestions','question_id','unique_id');
