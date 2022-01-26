@@ -1,4 +1,19 @@
 @extends('layouts.master')
+
+@section('breadcrumb')
+<!-- Content -->
+<ol class="breadcrumb breadcrumb-no-gutter">
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
+   <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/cases') }}">Cases</a></li>
+  <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
+</ol>
+<!-- End Content -->
+@endsection
+
+@section('header-right')
+<a class="btn btn-primary" href="{{ baseUrl('cases/case-documents/upload-documents/'.base64_encode($record->id)) }}"><i class="tio-upload-on-cloud mr-1"></i> Upload</a>
+@endsection
+
 @section('pageheader')
 <!-- Content -->
 <div class="">
@@ -37,14 +52,14 @@
    <div class="page-header">
       <div class="row align-items-end mb-3">
          <div class="col-sm mb-2 mb-sm-0">
-            <nav aria-label="breadcrumb">
+            <!-- <nav aria-label="breadcrumb">
                <ol class="breadcrumb breadcrumb-no-gutter">
                   <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
                   <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/cases') }}">Cases</a></li>
                   <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
                </ol>
             </nav>
-            <h1 class="page-header-title">{{$pageTitle}}</h1>
+            <h1 class="page-header-title">{{$pageTitle}}</h1> -->
             <div clas="d-block">
                @if(!empty($service->Service($service->service_id)))
                 <h4 class="text-primary p-2">{{$service->Service($service->service_id)->name}}</h4>
@@ -55,7 +70,7 @@
          </div>
          <div class="col-sm-auto">
             <div class="btn-group" role="group">
-               <a class="btn btn-primary" href="{{ baseUrl('cases/case-documents/upload-documents/'.base64_encode($record->id)) }}"><i class="tio-upload-on-cloud mr-1"></i> Upload</a>
+               <!-- <a class="btn btn-primary" href="{{ baseUrl('cases/case-documents/upload-documents/'.base64_encode($record->id)) }}"><i class="tio-upload-on-cloud mr-1"></i> Upload</a> -->
             </div>
          </div>
       </div>

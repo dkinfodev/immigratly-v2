@@ -1,4 +1,16 @@
 @extends('layouts.master')
+
+
+@section('breadcrumb')
+<!-- Content -->
+<ol class="breadcrumb breadcrumb-no-gutter">
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/leads') }}">Leads</a></li>
+  <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
+</ol>
+<!-- End Content -->
+@endsection
+
 @section('pageheader')
 <!-- Content -->
 <div class="">
@@ -20,30 +32,7 @@
 @section('content')
 <!-- Content -->
 <div class="leads">
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="row align-items-end">
-      <div class="col-sm mb-2 mb-sm-0">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb breadcrumb-no-gutter">
-            <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/leads') }}">Leads</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
-          </ol>
-        </nav>
-
-        <h1 class="page-title">{{$pageTitle}}</h1>
-      </div>
-
-      <div class="col-sm-auto">
-        <a class="btn btn-primary" onclick="showPopup('<?php echo baseUrl('leads/quick-lead') ?>')" href="javascript:;">
-          <i class="tio-user-add mr-1"></i> Quick Lead
-        </a>
-      </div>
-    </div>
-    <!-- End Row -->
-  </div>
-  <!-- End Page Header -->
+  
 
   <!-- Stats -->
   @include(roleFolder().".leads.leads-count")

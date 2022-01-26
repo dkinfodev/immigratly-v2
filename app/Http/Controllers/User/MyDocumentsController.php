@@ -24,12 +24,14 @@ class MyDocumentsController extends Controller
     public function myFolders()
     {
        	$viewData['pageTitle'] = "My Documents";
+        $viewData['activeTab'] = "documents";
         $user_folders = UserFolders::where("user_id",\Auth::user()->unique_id)->get();
         $viewData['user_folders'] = $user_folders;
         return view(roleFolder().'.documents.folders',$viewData);
     }
     public function addFolder(Request $request){
         $viewData['pageTitle'] = "Add Folder";
+        $viewData['activeTab'] = "documents";
         $view = View::make(roleFolder().'.documents.modal.add-folder',$viewData);
         $contents = $view->render();
         $response['contents'] = $contents;
@@ -72,6 +74,7 @@ class MyDocumentsController extends Controller
     public function editFolder($id,Request $request){
         $id = base64_decode($id);
         $record = UserFolders::find($id);
+        $viewData['activeTab'] = "documents";
         $viewData['pageTitle'] = "Edit Folder";
         $viewData['record'] = $record;
         $view = View::make(roleFolder().'.documents.modal.edit-folder',$viewData);
@@ -340,7 +343,7 @@ class MyDocumentsController extends Controller
         $viewData['file_dir'] = $file_dir;
         $viewData['user_folders'] = $user_folders;
         $viewData['pageTitle'] = "Documents Exchanger";
-
+        $viewData['activeTab'] = "documents";
         return view(roleFolder().'.documents.documents-exchanger',$viewData);
     }
 

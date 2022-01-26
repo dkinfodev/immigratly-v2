@@ -33,6 +33,7 @@ class LeadsController extends Controller
         $viewData['new_leads'] =  Leads::where('mark_as_client','0')->count();
         $viewData['lead_as_client'] =  Leads::where('mark_as_client','1')->count();
        	$viewData['pageTitle'] = "New Leads";
+        $viewData['activeTab'] = "leads";
         return view(roleFolder().'.leads.lists',$viewData);
     }
 

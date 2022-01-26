@@ -1,29 +1,21 @@
 @extends('layouts.master')
 
-@section('pageheader')
+@section('breadcrumb')
 <!-- Content -->
-<div class="">
-    <div class="content container" style="height: 25rem;">
-        <!-- Page Header -->
-        <div class="page-header page-header-light page-header-reset">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h1 class="page-header-title">{{$pageTitle}}</h1>
-                </div>
-
-                <div class="col-auto">
-                  <a class="btn btn-primary" href="{{baseUrl('/cases')}}">
-                    <i class="tio mr-1"></i> Back 
-                  </a>
-                </div>
-            </div>
-            <!-- End Row -->
-        </div>
-        <!-- End Page Header -->
-    </div>
-</div>
+<ol class="breadcrumb breadcrumb-no-gutter">
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
+   <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/cases') }}">Cases</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
+</ol>
 <!-- End Content -->
 @endsection
+
+@section('header-right')
+<a class="btn btn-primary" href="{{baseUrl('/cases')}}">
+    <i class="tio mr-1"></i> Back 
+</a>
+@endsection
+
 @section('content')
 <!-- Content -->
 <div class="edit-case">

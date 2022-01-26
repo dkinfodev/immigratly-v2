@@ -1,33 +1,18 @@
 @extends('layouts.master')
 
-@section('pageheader')
+@section('breadcrumb')
 <!-- Content -->
-<div class="">
-    <div class="content container" style="height: 25rem;">
-        <!-- Page Header -->
-        <div class="page-header page-header-light page-header-reset">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h1 class="page-header-title">Dashboard</h1>
-                </div>
-
-                <div class="col-auto">
-                    <a class="btn btn-primary" href="#">My dashboard</a>
-                </div>
-            </div>
-            <!-- End Row -->
-        </div>
-        <!-- End Page Header -->
-    </div>
-</div>
+<ol class="breadcrumb breadcrumb-no-gutter">
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
+  <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
+</ol>
 <!-- End Content -->
 @endsection
+
+
 @section('content')
-
     <!-- Page Header -->
-
     <!-- End Page Header -->
-
     <!-- Stats -->
     <div class="row gx-2 gx-lg-3">
         <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">

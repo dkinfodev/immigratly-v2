@@ -21,6 +21,7 @@ class DependantsController extends Controller
     public function index()
     {
         $viewData['pageTitle'] = "Dependants";
+        $viewData['activeTab'] = "dependants";
         return view(roleFolder().'.dependants.lists',$viewData);
     } 
 
@@ -48,6 +49,7 @@ class DependantsController extends Controller
 
     public function add(){
         $viewData['pageTitle'] = "Add Dependant";
+        $viewData['activeTab'] = "dependants";
         $countries = DB::table(MAIN_DATABASE.".countries")->get();
         $viewData['countries'] = $countries;
         return view(roleFolder().'.dependants.add',$viewData);
@@ -124,6 +126,7 @@ class DependantsController extends Controller
  
     public function edit($id,Request $request){
         $viewData['pageTitle'] = "Edit Dependant";
+        $viewData['activeTab'] = "dependants";
         $record = UserDependants::where("unique_id",$id)->first();
         $viewData['record'] = $record;
         $countries = DB::table(MAIN_DATABASE.".countries")->get();
@@ -222,6 +225,7 @@ class DependantsController extends Controller
     public function changePassword($id)
     {
         $id = base64_decode($id);
+        $viewData['activeTab'] = "dependants";
         $record = User::where("id",$id)->first();
         $viewData['record'] = $record;
         $viewData['pageTitle'] = "Change Password";

@@ -84,6 +84,8 @@ class MessagesCenterController extends Controller
         $viewData['unread_doc_chat'] = $unread_doc_chat;
         $viewData['grouped_messages'] = $grouped_messages;
         $viewData['messages'] = $messages;
+
+        $viewData['activeTab'] = "messages";
         return view(roleFolder().'.messages.messages',$viewData);
     } 
 
@@ -130,6 +132,7 @@ class MessagesCenterController extends Controller
         $viewData['unread_doc_chat'] = $unread_doc_chat;
         $viewData['grouped_messages'] = $grouped_messages;
         $viewData['messages'] = $messages;
+        $viewData['activeTab'] = "messages";
         return view(roleFolder().'.messages.messages',$viewData);
     } 
 
@@ -175,6 +178,7 @@ class MessagesCenterController extends Controller
         $viewData['unread_doc_chat'] = $unread_doc_chat;
         $viewData['grouped_messages'] = $grouped_messages;
         $viewData['messages'] = $messages;
+        $viewData['activeTab'] = "messages";
         return view(roleFolder().'.messages.messages',$viewData);
     }
 
@@ -216,6 +220,7 @@ class MessagesCenterController extends Controller
         $viewData['messages'] = $messages;
         $viewData['pageTitle'] = "Messages Center";
         $viewData['message_type'] = "document_chats";
+        $viewData['activeTab'] = "messages";
         return view(roleFolder().'.messages.messages',$viewData);
     }
 
@@ -366,8 +371,6 @@ class MessagesCenterController extends Controller
             $response['message'] = "Message send successfully";
         }
 
-        
-        
         return response()->json($response);
     }
 

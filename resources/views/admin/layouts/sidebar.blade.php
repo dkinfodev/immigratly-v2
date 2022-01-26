@@ -1,76 +1,81 @@
-<!-- Navbar Vertical -->
-<div class="navbar-expand-lg">
-    <!-- Navbar Toggle -->
-    <button type="button" class="navbar-toggler btn btn-block btn-white mb-3" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navbarVerticalNavMenu" data-toggle="collapse" data-target="#navbarVerticalNavMenu">
-      <span class="d-flex justify-content-between align-items-center">
-        <span class="h5 mb-0">Nav menu</span>
+<!-- Navbar -->
+<div class="navbar-expand-lg navbar-light">
+    <div id="sidebarNav" class="collapse navbar-collapse navbar-vertical">
+        <!-- Card -->
+        <div class="card flex-grow-1 mb-5">
+            <div class="card-body">
+                <!-- Avatar -->
+                <div class="d-none d-lg-block text-center mb-5">
+                    <div class="avatar avatar-xxl avatar-circle mb-3">
 
-        <span class="navbar-toggle-default">
-          <i class="tio-menu-hamburger"></i>
-        </span>
+                        <img class="avatar-status avatar-lg-status" src="assets/svg/illustrations/top-vendor.svg"
+                        alt="Image Description" data-bs-toggle="tooltip" data-bs-placement="top"
+                        title="Verified user">
+                    </div>
 
-        <span class="navbar-toggle-toggled">
-          <i class="tio-clear"></i>
-        </span>
-      </span>
-    </button>
-    <!-- End Navbar Toggle -->
+                    <h4 class="card-title mb-0">{{ Auth::user()->first_name." ".Auth::user()->last_name }}</h4>
+                    <p class="card-text small mb-0">{{Auth::user()->email}}</p>
+                    <div class="sign-out">
+                        <a class="nav-link" href="{{ url('/logout') }}">
+                            <i class="tio-sign-out"></i> Log out
+                        </a>
+                    </div>
+                </div>
+                <!-- End Avatar -->
 
-    <aside id="navbarVerticalNavMenu" class="js-navbar-vertical-aside navbar navbar-vertical navbar-vertical-absolute navbar-vertical-detached navbar-shadow navbar-collapse collapse rounded-lg">
-      <div class="navbar-vertical-container">
-        <div class="navbar-vertical-footer-offset">
-          <!-- Content -->
-          <div class="navbar-vertical-content">
-          <ul class="navbar-nav navbar-nav-lg nav-tabs">
+                <!-- Nav -->
+          
+            <!-- Navbar Nav -->
+             
+          <ul class="nav nav-sm nav-tabs nav-vertical mb-4">
           <!-- Dashboards -->
-          <li class="navbar-vertical-aside-has-menu show">
+          
+          </ul>
+
+          
+          <ul class="nav nav-sm nav-tabs nav-vertical mb-4">
+            <li class="navbar-vertical-aside-has-menu show">
             <a class="js-navbar-vertical-aside-menu-link nav-link active" href="{{ baseUrl('/') }}">
               <i class="tio-home-vs-1-outlined nav-icon"></i>
               <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Dashboards</span>
             </a>
           </li>
-          <!-- End Dashboards -->
-          @if(profession_profile())
-          <li class="nav-item">
-            <small class="nav-subtitle" title="Pages">Pages</small>
-            <small class="tio-more-horizontal nav-subtitle-replacer"></small>
-          </li>
-          <li class="navbar-vertical-aside-has-menu">
-            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ baseUrl('/services') }}">
-              <i class="tio-pages-outlined nav-icon"></i>
-              <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Services</span>
-            </a>
-          </li>
-          <li class="navbar-vertical-aside-has-menu">
-            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ baseUrl('/assessments') }}">
-              <i class="tio-pages-outlined nav-icon"></i>
-              <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Assessments</span>
-              @if(unreadAssessment(\Session::get('subdomain')) > 0)
-              <span class="badge badge-danger">{{unreadAssessment(\Session::get('subdomain'))}}</span>
-              @endif
-            </a>
-          </li>
-          <li class="navbar-vertical-aside-has-menu ">
-            <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle " href="javascript:;">
-              <i class="tio-apps nav-icon"></i>
-              <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Leads</span>
-            </a>
 
-            <ul class="js-navbar-vertical-aside-submenu nav nav-sub">
-              <li class="nav-item">
+            @if(profession_profile())
+            <li class="navbar-vertical-aside-has-menu">
+              <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ baseUrl('/services') }}">
+                <i class="tio-pages-outlined nav-icon"></i>
+                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Services</span>
+              </a>
+            </li>
+            <li class="navbar-vertical-aside-has-menu">
+              <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ baseUrl('/assessments') }}">
+                <i class="tio-pages-outlined nav-icon"></i>
+                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Assessments</span>
+                @if(unreadAssessment(\Session::get('subdomain')) > 0)
+                <span class="badge badge-danger">{{unreadAssessment(\Session::get('subdomain'))}}</span>
+                @endif
+              </a>
+            </li>
+
+          </ul>
+
+
+         <ul class="nav nav-sm nav-tabs nav-vertical mb-4">
+         <span class="text-cap">Leads</span>   
+              <li class="navbar-vertical-aside-has-menu">
                 <a class="nav-link " href="{{ baseUrl('/leads') }}">
-                  <span class="tio-circle nav-indicator-icon"></span>
+                   <i class="tio-pages-outlined nav-icon"></i>
                   <span class="text-truncate">New Leads</span>
                 </a>
               </li>
-              <li class="nav-item">
+              <li class="navbar-vertical-aside-has-menu">
                 <a class="nav-link " href="{{ baseUrl('/leads/clients') }}">
-                  <span class="tio-circle nav-indicator-icon"></span>
+                   <i class="tio-pages-outlined nav-icon"></i>
                   <span class="text-truncate">Leads as client</span>
                 </a>
               </li>
-            </ul>
-          </li>
+          
           <li class="navbar-vertical-aside-has-menu">
             <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ baseUrl('/cases') }}">
               <i class="tio-book-opened nav-icon"></i>
@@ -97,10 +102,7 @@
             </a>
           </li>
 
-          <li class="nav-item">
-            <small class="nav-subtitle" title="Pages">Settings</small>
-            <small class="tio-more-horizontal nav-subtitle-replacer"></small>
-          </li>
+          
           
           <li class="navbar-vertical-aside-has-menu">
             <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ baseUrl('/working-schedules') }}">
@@ -141,10 +143,35 @@
 
           @endif
         </ul>
-          </div>
-          <!-- End Footer -->
+            <!-- End Navbar Nav -->
+
+             
+
+
+        <div class="d-lg-none">
+            <div class="dropdown-divider"></div>
+
+            <!-- List -->
+            <ul class="nav nav-sm nav-tabs nav-vertical">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/logout') }}">
+                        <i class="bi-box-arrow-right nav-icon"></i> Log out
+                    </a>
+                </li>
+            </ul>
+            <!-- End List -->
         </div>
-      </div>
-    </aside>
-  </div>
-  <!-- End Navbar Vertical -->
+        <!-- End Nav -->
+    </div>
+</div>
+<!-- End Card -->
+</div>
+</div>
+<!-- End Navbar -->
+
+
+
+
+
+
+

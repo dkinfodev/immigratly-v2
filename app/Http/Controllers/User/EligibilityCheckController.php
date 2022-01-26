@@ -44,6 +44,7 @@ class EligibilityCheckController extends Controller
     {
         $visa_services = VisaServices::get();
         $viewData['pageTitle'] ="Visa Groups";
+        $viewData['activeTab'] = "eligibility-check";
         $program_types = ProgramTypes::get();
         $viewData['program_types'] = $program_types;
         return view(roleFolder().'.eligibility-check.visa-groups',$viewData);
@@ -83,6 +84,7 @@ class EligibilityCheckController extends Controller
         $viewData['visa_services'] = $visa_services;
         $viewData['visa_group_id'] = $visa_group_id;
         $viewData['pageTitle'] ="Group Programs of ".$group->group_title;
+        $viewData['activeTab'] = "eligibility-check";
         return view(roleFolder().'.eligibility-check.lists',$viewData);
     } 
 
@@ -132,6 +134,7 @@ class EligibilityCheckController extends Controller
         $viewData['questions'] = EligibilityQuestions::where("visa_service_id",$visa_service->unique_id)->get();
         $viewData['pageTitle'] = "Eligibility Check of ".$visa_service->name;
         
+        $viewData['activeTab'] = "eligibility-check";
         return view(roleFolder().'.eligibility-check.eligibility-check',$viewData);
     }
     public function eligibilityReport($report_id){
@@ -205,6 +208,7 @@ class EligibilityCheckController extends Controller
                }
             }   
         }
+        $viewData['activeTab'] = "eligibility-check";
         $viewData['final_questions'] = $final_questions;
         return view(roleFolder().'.eligibility-check.score',$viewData);
     }
@@ -426,6 +430,7 @@ class EligibilityCheckController extends Controller
 
     public function allEligibility(){
         $viewData['pageTitle'] ="All Eligibility Check";
+        $viewData['activeTab'] = "eligibility-check";
         return view(roleFolder().'.eligibility-check.all-check',$viewData);        
     }
 
@@ -491,6 +496,7 @@ class EligibilityCheckController extends Controller
         
         $viewData['group_form'] = $group_form;
         $viewData['pageTitle'] = "Eligibility Check of ".$visa_service->name;
+        $viewData['activeTab'] = "eligibility-check";
         return view(roleFolder().'.eligibility-check.group-eligibility-check',$viewData);
     }
 

@@ -28,21 +28,23 @@
 
                 <ul class="nav nav-sm nav-tabs nav-vertical mb-4">
                     <li class="navbar-vertical-aside-has-menu show">
-                        <a class="js-navbar-vertical-aside-menu-link nav-link active" href="{{ baseUrl('/') }}">
+                        <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'dashboard'){ echo "active"; } } ?>" href="{{ baseUrl('/') }}">
                             <i class="tio-home-vs-1-outlined nav-icon"></i>
                             <span
                                 class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Dashboards</span>
                         </a>
                     </li>
+
+                    
                     <li class="navbar-vertical-aside-has-menu show">
-                        <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ baseUrl('/edit-profile') }}">
+                        <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'edit-profile'){ echo "active"; } } ?>" href="{{ baseUrl('/edit-profile') }}">
                             <i class="tio-user nav-icon"></i>
                             <span
                                 class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Edit Profile</span>
                         </a>
                     </li>
                     <li class="navbar-vertical-aside-has-menu show">
-                        <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ baseUrl('/change-password') }}">
+                        <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'change-password'){ echo "active"; } } ?>" href="{{ baseUrl('/change-password') }}">
                             <i class="tio-lock nav-icon"></i>
                             <span
                                 class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Change Password</span>
@@ -56,7 +58,7 @@
                   <span class="text-cap">Account</span>
                   <ul class="nav nav-sm nav-tabs nav-vertical mb-4">
                     <li class="nav-item ">
-                        <a class="js-nav-tooltip-link nav-link" href="{{ baseUrl('/dependants') }}"
+                        <a class="js-nav-tooltip-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'dependants'){ echo "active"; } } ?>" href="{{ baseUrl('/dependants') }}"
                             data-placement="left">
                             <i class="tio-user nav-icon"></i>
                             <span
@@ -64,7 +66,7 @@
                         </a>
                     </li>
                     <li class="nav-item ">
-                        <a class="js-nav-tooltip-link nav-link" href="{{ baseUrl('/documents') }}"
+                        <a class="js-nav-tooltip-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'documents'){ echo "active"; } } ?>" href="{{ baseUrl('/documents') }}"
                             data-placement="left">
                             <i class="tio-documents nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">My
@@ -72,14 +74,14 @@
                         </a>
                     </li>
                     <li class="nav-item ">
-                        <a class="js-nav-tooltip-link nav-link" href="{{ baseUrl('/cv') }}" data-placement="left">
+                        <a class="js-nav-tooltip-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'manage-cv'){ echo "active"; } } ?>" href="{{ baseUrl('/cv') }}" data-placement="left">
                             <i class="tio-documents nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Manage
                                 CV</span>
                         </a>
                     </li>
                     <li class="nav-item ">
-                        <a class="js-nav-tooltip-link nav-link" href="{{ baseUrl('/cases') }}" data-placement="left">
+                        <a class="js-nav-tooltip-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'cases'){ echo "active"; } } ?>" href="{{ baseUrl('/cases') }}" data-placement="left">
                             <i class="tio-documents nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Cases</span>
                         </a>
@@ -87,22 +89,22 @@
 
 
                     <li class="nav-item">
-                        <a class="js-nav-tooltip-link nav-link" href="{{ baseUrl('/notes') }}" data-placement="left">
+                        <a class="js-nav-tooltip-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'notes'){ echo "active"; } } ?>" href="{{ baseUrl('/notes') }}" data-placement="left">
                             <i class="tio-account-square nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">My
                                 Notes</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="js-nav-tooltip-link nav-link" href="{{ baseUrl('/chat-groups') }}"
+                        <a class="js-nav-tooltip-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'chat-groups'){ echo "active"; } } ?>" href="{{ baseUrl('/chat-groups')  }}"
                             data-placement="left">
                             <i class="tio-book-opened nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Chat
-                                Groups</span>
+                                Groups </span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="js-nav-tooltip-link nav-link" href="javascript:;" data-placement="left">
+                        <a class="js-nav-tooltip-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'activities'){ echo "active"; } } ?>" href="javascript:;" data-placement="left">
                             <i class="tio-account-square nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">All
                                 Activities</span>
@@ -121,7 +123,7 @@
                     <!--  </a>-->
                     <!--</li>-->
                     <li class="nav-item">
-                        <a class="js-nav-tooltip-link nav-link" href="{{ baseUrl('/assessments') }}"
+                        <a class="js-nav-tooltip-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'assessments'){ echo "active"; } } ?>" href="{{ baseUrl('/assessments') }}"
                             data-placement="left">
                             <i class="tio-comment-text-outlined nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Paid
@@ -129,7 +131,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="js-nav-tooltip-link nav-link" href="{{ baseUrl('/eligibility-check') }}"
+                        <a class="js-nav-tooltip-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'eligibility-check'){ echo "active"; } } ?>" href="{{ baseUrl('/eligibility-check') }}"
                             data-placement="left">
                             <i class="tio-verified-outlined nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Eligibility
@@ -140,7 +142,7 @@
                         <span class="text-cap">Notification and messages</span>
                     <ul class="nav nav-sm nav-tabs nav-vertical mb-4">
                       <li class="nav-item">
-                        <a class="js-nav-tooltip-link nav-link" href="{{baseUrl('notifications')}}"
+                        <a class="js-nav-tooltip-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'notifications'){ echo "active"; } } ?>" href="{{baseUrl('notifications')}}"
                             data-placement="left">
                             <i class="tio-account-square nav-icon"></i>
                             <span
@@ -148,14 +150,14 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="js-nav-tooltip-link nav-link" href="<?php echo baseUrl('/messages-center') ?>"
+                        <a class="js-nav-tooltip-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'messages'){ echo "active"; } } ?>" href="<?php echo baseUrl('/messages-center') ?>"
                             data-placement="left">
                             <i class="tio-comment-text-outlined nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Messages</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="js-nav-tooltip-link nav-link" href="{{ baseUrl('/tasks') }}" data-placement="left">
+                        <a class="js-nav-tooltip-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'tasks'){ echo "active"; } } ?>" href="{{ baseUrl('/tasks') }}" data-placement="left">
                             <i class="tio-comment-text-outlined nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Pending
                                 Tasks</span>
@@ -221,7 +223,7 @@
                         <span class="text-cap">Settings</span>
                         <ul class="nav nav-sm nav-tabs nav-vertical mb-4">
                     <li class="nav-item">
-                        <a class="js-nav-tooltip-link nav-link" href="{{ baseUrl('/connect-apps') }}"
+                        <a class="js-nav-tooltip-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'connect-apps'){ echo "active"; } } ?>" href="{{ baseUrl('/connect-apps') }}"
                             data-placement="left">
                             <i class="tio-account-square nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Connect

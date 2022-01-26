@@ -42,6 +42,7 @@ class CasesController extends Controller
             }
         }
         $viewData['pageTitle'] = "Cases";
+        $viewData['activeTab'] = "cases";
         return view(roleFolder().'.cases.lists',$viewData);
     }
 
@@ -94,6 +95,7 @@ class CasesController extends Controller
         $viewData['case_id'] = $record->unique_id;
         $viewData['active_nav'] = "overview";
         $viewData['visa_services'] = array();
+        $viewData['activeTab'] = "cases";
         return view(roleFolder().'.cases.view',$viewData);
     }
 
@@ -189,6 +191,7 @@ class CasesController extends Controller
         $viewData['staffs'] = User::where("role","!=","admin")->get();
         $viewData['clients'] = User::ProfessionalClients(\Session::get('subdomain'));
         $viewData['visa_services'] = ProfessionalServices::orderBy('id',"asc")->get();
+        $viewData['activeTab'] = "cases";
         return view(roleFolder().'.cases.add',$viewData);
     } 
     public function save(Request $request){
@@ -304,6 +307,7 @@ class CasesController extends Controller
         $viewData['clients'] = User::ProfessionalClients(\Session::get('subdomain'));
         $viewData['visa_services'] = ProfessionalServices::orderBy('id',"asc")->get();
         $viewData['pageTitle'] = "Edit Case";
+        $viewData['activeTab'] = "cases";
         return view(roleFolder().'.cases.edit',$viewData);
     }
 

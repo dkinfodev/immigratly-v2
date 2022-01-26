@@ -18,6 +18,7 @@ class ChatGroupsController extends Controller
     }
     public function index(Request $request){
         $viewData['pageTitle'] = "My Chat Groups";
+        
         $other_groups = ChatGroups::where('created_by','!=',\Auth::user()->unique_id)
                         ->where('status','open')
                         ->count();
@@ -27,6 +28,8 @@ class ChatGroupsController extends Controller
         $viewData['other_groups'] = $other_groups;
         $viewData['my_chats'] = $my_chats;
         $viewData['total_chats'] = $total_chats;
+
+        $viewData['activeTab'] = "chat-groups";
 
         return view(roleFolder().'.chat-groups.lists',$viewData);
     }
@@ -55,6 +58,7 @@ class ChatGroupsController extends Controller
 
     public function add(Request $request){
         $viewData['pageTitle'] = "Add Chat Group";
+        $viewData['activeTab'] = "chat-groups";
         return view(roleFolder().'.chat-groups.add',$viewData);
     }
 
@@ -92,6 +96,7 @@ class ChatGroupsController extends Controller
 
     public function edit($id,Request $request){
         $viewData['pageTitle'] = "Edit Chat Group";
+        $viewData['activeTab'] = "chat-groups";
         $record = ChatGroups::where("unique_id",$id)->first();
         
         $viewData['record'] = $record;
@@ -160,6 +165,7 @@ class ChatGroupsController extends Controller
         $record = ChatGroups::where("unique_id",$id)->first();
         $viewData['record'] = $record;
         $viewData['chat_id'] = $id;
+        $viewData['activeTab'] = "chat-groups";
         return view(roleFolder().'.chat-groups.group-comments',$viewData);
 
     }

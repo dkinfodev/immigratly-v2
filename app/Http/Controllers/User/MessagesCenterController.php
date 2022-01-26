@@ -28,6 +28,8 @@ class MessagesCenterController extends Controller
     public function professionals(){
         $viewData['pageTitle'] = "Messages Center";
 
+        $viewData['activeTab'] = "messages";
+
         $professionals = UserWithProfessional::where('user_id',\Auth::user()->unique_id)->get();
      
         $viewData['professionals'] = $professionals;
@@ -84,6 +86,7 @@ class MessagesCenterController extends Controller
         $viewData['unread_doc_chat'] = $unread_doc_chat;
         $viewData['grouped_messages'] = $grouped_messages;
         $viewData['messages'] = $messages;
+        $viewData['activeTab'] = "messages";
         return view(roleFolder().'.messages.messages',$viewData);
     } 
 
@@ -190,6 +193,7 @@ class MessagesCenterController extends Controller
         $viewData['grouped_messages'] = $grouped_messages;
         
         $viewData['messages'] = $messages;
+        $viewData['activeTab'] = "messages";
         return view(roleFolder().'.messages.messages',$viewData);
     }
 
@@ -252,6 +256,7 @@ class MessagesCenterController extends Controller
         $viewData['grouped_messages'] = $grouped_messages;
         // $messages = array();
         $viewData['messages'] = $messages;
+        $viewData['activeTab'] = "messages";
         return view(roleFolder().'.messages.messages',$viewData);
     }
 
@@ -402,8 +407,6 @@ class MessagesCenterController extends Controller
             $response['message'] = "Message send successfully";
         }
 
-        
-        
         return response()->json($response);
     }
 

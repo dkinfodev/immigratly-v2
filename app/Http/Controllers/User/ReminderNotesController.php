@@ -18,6 +18,7 @@ class ReminderNotesController extends Controller
     public function list()
     {
        	$viewData['pageTitle'] = "Reminder Notes";
+        $viewData['activeTab'] = "notes";
         $records = UserReminderNotes::where('user_id',\Auth::user()->unique_id)->get();
         
         $viewData['records'] = $records;
@@ -26,6 +27,7 @@ class ReminderNotesController extends Controller
 
     public function addReminderNote(Request $request){  
         $viewData['pageTitle'] = "Add reminder note";
+        $viewData['activeTab'] = "notes";
         $view = View::make(roleFolder().'.reminder-notes.add-reminder-notes',$viewData);
         $contents = $view->render();
         $response['contents'] = $contents;

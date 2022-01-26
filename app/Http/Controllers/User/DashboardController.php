@@ -33,6 +33,7 @@ class DashboardController extends Controller
     public function dashboard()
     {
         $viewData['pageTitle'] = "Dashboard";
+        $viewData['activeTab'] = 'dashboard';
         return view(roleFolder().'.dashboard',$viewData);
     }
 
@@ -137,6 +138,7 @@ class DashboardController extends Controller
         $id = \Auth::user()->id;
 
         $viewData['pageTitle'] = "Edit Profile";
+        $viewData['activeTab'] = "edit-profile";
         $record = User::where("id",$id)->first();
         $record2 = UserDetails::where("user_id",$record->unique_id)->first();
 
@@ -270,6 +272,9 @@ class DashboardController extends Controller
         $id = \Auth::user()->id;
         $record = User::where("id",$id)->first();
         $viewData['record'] = $record;
+
+        $viewData['activeTab'] = "change-password";
+
         $viewData['pageTitle'] = "Change Password";
         return view(roleFolder().'.change-password',$viewData);
     }
@@ -311,6 +316,7 @@ class DashboardController extends Controller
 
     public function notifications(){
         $viewData['pageTitle'] = "All Notifications";
+        $viewData['activeTab'] = "notifications";
 
         if(\Session::get("login_to") == 'professional_panel'){
             $chat_notifications = Notifications::with('Read')->where('type','chat')
@@ -381,6 +387,8 @@ class DashboardController extends Controller
         $viewData['pageTitle'] = "Manage CV";
         $viewData['user'] = $user;
         $viewData['user_detail'] = $user_detail;
+        $viewData['activeTab'] = "manage-cv";
+        
         return view(roleFolder().'.manage-cv',$viewData);        
     }
 
@@ -785,8 +793,11 @@ class DashboardController extends Controller
 
     public function connectApps(){
         $viewData = array();
+
         $user_detail = UserDetails::where("user_id",\Auth::user()->unique_id)->first();
         $viewData['user_detail'] = $user_detail;
+        $viewData['pageTitle'] = "Connect Apps";
+        $viewData['activeTab'] = "connect-apps";
         return view(roleFolder().'.connect-apps',$viewData);           
     }
 

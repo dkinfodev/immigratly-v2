@@ -7,24 +7,6 @@
 </ol><!-- End Content -->
 @endsection
 
-@section('pageheader')
-<!-- Content -->
-<div class="">
-    <div class="content container" style="height: 25rem;">
-        <!-- Page Header -->
-        <div class="page-header page-header-light page-header-reset">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h1 class="page-header-title">{{$pageTitle}}</h1>
-                </div>
-            </div>
-            <!-- End Row -->
-        </div>
-        <!-- End Page Header -->
-    </div>
-</div>
-<!-- End Content -->
-@endsection
 @section('content')
 <style>
 .all_services li {

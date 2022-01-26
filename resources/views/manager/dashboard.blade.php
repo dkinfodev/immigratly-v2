@@ -1,40 +1,9 @@
 @extends('layouts.master')
-@section('pageheader')
-<!-- Content -->
-<div class="">
-    <div class="content container" style="height: 25rem;">
-        <!-- Page Header -->
-        <div class="page-header page-header-light page-header-reset">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h1 class="page-header-title">{{$pageTitle}}</h1>
-                </div>
-            </div>
-            <!-- End Row -->
-        </div>
-        <!-- End Page Header -->
-    </div>
-</div> 
-<!-- End Content -->
-@endsection
+
+
 @section('content')
 <div class="dashboard">
-        <!-- Page Header -->
-        <div class="page-header">
-          <div class="row align-items-center">
-            <div class="col-sm mb-2 mb-sm-0">
-              <h1 class="page-header-title">Dashboard</h1>
-            </div>
-
-            <div class="col-sm-auto">
-              <a class="btn btn-primary" href="javascript:;" data-toggle="modal" data-target="#inviteUserModal">
-                <i class="tio-user-add mr-1"></i> Invite users
-              </a>
-            </div>
-          </div>
-        </div>
-        <!-- End Page Header -->
-
+        
         <!-- Stats -->
         <div class="row gx-2 gx-lg-3">
           <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">

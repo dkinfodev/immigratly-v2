@@ -30,6 +30,8 @@ class AssessmentsController extends Controller
     public function index(Request $request){
         $viewData['pageTitle'] = "Assessments";
         
+        $viewData['activeTab'] = "assessments";
+
         return view(roleFolder().'.assessments.lists',$viewData);
     }
 
@@ -177,6 +179,7 @@ class AssessmentsController extends Controller
         $viewData['record'] = $record;
         $visa_services = VisaServices::where('cv_type',\Auth::user()->UserDetail->cv_type)->get();
         $viewData['visa_services'] = $visa_services;
+        $viewData['activeTab'] = "assessments";
         return view(roleFolder().'.assessments.edit',$viewData);
     }
     public function update($id,Request $request){
@@ -358,6 +361,7 @@ class AssessmentsController extends Controller
                 ->where("created_by","!=",\Auth::user()->unique_id)
                 ->count();
         $viewData['unread_notes'] = $unread_notes;
+        $viewData['activeTab'] = "assessments";
         return view(roleFolder().'.assessments.view-assessment',$viewData);
     }
 
@@ -748,6 +752,7 @@ class AssessmentsController extends Controller
         $viewData['assessment_id'] = $assessment_id;
         $viewData['folder_id'] = $folder_id;
         $viewData['pageTitle'] = "View Documents";
+        $viewData['activeTab'] = "assessments";
         return view(roleFolder().'.assessments.view-documents',$viewData);
     }
     
@@ -956,7 +961,7 @@ class AssessmentsController extends Controller
         $viewData['record'] = $assessment;
         $viewData['user_id'] = $assessment->user_id;
         $viewData['assessment_id'] = $id;
-        
+        $viewData['activeTab'] = "assessments";
         return view(roleFolder().'.assessments.forms.lists',$viewData);
     }
 

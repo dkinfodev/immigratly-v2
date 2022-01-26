@@ -40,6 +40,7 @@ class InvoiceController extends Controller
 
         $viewData['case'] = $case;
         $viewData['pageTitle'] = "Case Invoices";
+        $viewData['activeTab'] = "cases";
         return view(roleFolder().'.cases.invoices',$viewData);
     } 
 
@@ -70,6 +71,7 @@ class InvoiceController extends Controller
         $viewData['case'] = $case;
         $viewData['client'] = $client;
         $viewData['pageTitle'] = "Add Invoice";
+        $viewData['activeTab'] = "cases";
         return view(roleFolder().'.cases.add-invoice',$viewData);
     }
 
@@ -181,6 +183,7 @@ class InvoiceController extends Controller
         $viewData['client'] = $client;
         $viewData['record'] = $invoice;
         $viewData['pageTitle'] = "Edit Invoice";
+        $viewData['activeTab'] = "cases";
         return view(roleFolder().'.cases.edit-invoice',$viewData);
     }
 
@@ -277,6 +280,7 @@ class InvoiceController extends Controller
         $viewData['client'] = $client;
         $viewData['record'] = $invoice;
         $viewData['pageTitle'] = "View Invoice";
+        $viewData['activeTab'] = "cases";
         return view(roleFolder().'.cases.view-invoice',$viewData);
     }
 

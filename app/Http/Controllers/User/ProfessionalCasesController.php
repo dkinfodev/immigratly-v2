@@ -28,6 +28,9 @@ class ProfessionalCasesController extends Controller
     public function cases()
     {
        	$viewData['pageTitle'] = "Cases";
+
+        $viewData['activeTab'] = "cases";
+
         $professionals = UserWithProfessional::where('user_id',\Auth::user()->unique_id)->get();
         $pendingApproval = 0;
         foreach($professionals as $professional){
@@ -50,6 +53,8 @@ class ProfessionalCasesController extends Controller
     public function pendingCases()
     {
         $viewData['pageTitle'] = "Cases";
+        $viewData['activeTab'] = "cases";
+
         $professionals = UserWithProfessional::where('user_id',\Auth::user()->unique_id)->get();
         $pendingApproval = 0;
         foreach($professionals as $professional){
@@ -107,6 +112,7 @@ class ProfessionalCasesController extends Controller
         $viewData['record'] = $record;
         $viewData['active_nav'] = "overview";
         $viewData['visa_services'] = array();
+        $viewData['activeTab'] = "cases";
         return view(roleFolder().'.cases.view',$viewData);
     } 
 
@@ -156,6 +162,7 @@ class ProfessionalCasesController extends Controller
         $viewData['case_folders'] = $case_folders;
         $viewData['record'] = $record;
         $viewData['active_nav'] = "files";
+        $viewData['activeTab'] = "cases";
         return view(roleFolder().'.cases.document-folders',$viewData);
     }
 
@@ -443,7 +450,7 @@ class ProfessionalCasesController extends Controller
         $viewData['record'] = $record;
         $viewData['case_id'] = $record['id'];
         $viewData['pageTitle'] = "Documents Exchanger";
-
+        $viewData['activeTab'] = "cases";
         return view(roleFolder().'.cases.documents-exchanger',$viewData);
     }
 
@@ -513,6 +520,7 @@ class ProfessionalCasesController extends Controller
         $viewData['user_file_dir'] = $user_file_dir;
         $viewData['user_folders'] = $user_folders;
 
+        $viewData['activeTab'] = "cases";
         return view(roleFolder().'.cases.my-documents-exchanger',$viewData);
     }
 
@@ -586,6 +594,8 @@ class ProfessionalCasesController extends Controller
         $viewData['folder_id'] = $folder_id;
         $viewData['case_id'] = $case_id;
         $viewData['document_id'] = $doc_id;
+
+        $viewData['activeTab'] = "cases";
         $viewData['pageTitle'] = "View Documents";
         return view(roleFolder().'.cases.view-documents',$viewData);
     }
@@ -1001,6 +1011,7 @@ class ProfessionalCasesController extends Controller
         $viewData['pageTitle'] = "Chats";
         $viewData['case_id'] = $case_id;
         $viewData['subdomain'] = $subdomain;
+        $viewData['activeTab'] = "cases";
         return view(roleFolder().'.cases.chats',$viewData);
     }
 
@@ -1135,6 +1146,7 @@ class ProfessionalCasesController extends Controller
 
     public function chatdemo(){
         $viewData['pageTitle'] = "Chats";
+        $viewData['activeTab'] = "cases";
         return view(roleFolder().'.cases.chat-demo',$viewData);
     }
 
@@ -1162,6 +1174,7 @@ class ProfessionalCasesController extends Controller
         }
         $viewData['records'] = $invoices;
         $viewData['pageTitle'] = "All Invoices";
+        $viewData['activeTab'] = "cases";
         return view(roleFolder().'.cases.all-invoices',$viewData);
     } 
 
@@ -1178,6 +1191,7 @@ class ProfessionalCasesController extends Controller
         $viewData['active_nav'] = "invoices";
         $viewData['pageTitle'] = "Case Invoices";
         $viewData['subdomain'] = $subdomain;
+        $viewData['activeTab'] = "cases";
         return view(roleFolder().'.cases.invoices',$viewData);
     } 
 
@@ -1253,6 +1267,7 @@ class ProfessionalCasesController extends Controller
         $viewData['services'] = $services;
         $viewData['company'] = $company;
         $viewData['admin'] = $admin;
+        $viewData['activeTab'] = "cases";
         return view(roleFolder().'.cases.professional-profile',$viewData);
     }
     public function fetchGoogleDrive($folder_id,Request $request){
@@ -1489,6 +1504,7 @@ class ProfessionalCasesController extends Controller
         }
         $viewData['records'] = $invoices;
         $viewData['pageTitle'] = "All Tasks";
+        $viewData['activeTab'] = "tasks";
         return view(roleFolder().'.cases.all-tasks',$viewData);
     } 
 
@@ -1510,6 +1526,7 @@ class ProfessionalCasesController extends Controller
         $viewData['subdomain'] = $subdomain;
         $viewData['pageTitle'] = "View Task";
         $viewData['task_id'] = $task_id;
+        $viewData['activeTab'] = "tasks";
         return view(roleFolder().'.cases.view-task',$viewData);
     }
 
@@ -1704,9 +1721,9 @@ class ProfessionalCasesController extends Controller
 
         $viewData['pageTitle'] = "Case Tasks";
         //$professionals = UserWithProfessional::where('user_id',\Auth::user()->unique_id)->get();
-       
+       $viewData['activeTab'] = "tasks";
         //$viewData['professionals'] = $professionals;
-        return view(roleFolder().'.cases.tasks.lists',$viewData);
+       return view(roleFolder().'.cases.tasks.lists',$viewData);
 
     }
 
@@ -1732,6 +1749,7 @@ class ProfessionalCasesController extends Controller
         $viewData['pageTitle'] = "View Case";
         $viewData['record'] = $record;
         $viewData['active_nav'] = "activity";
+        $viewData['activeTab'] = "cases";
         $viewData['activity_logs'] = $activity_logs;
         return view(roleFolder().'.cases.activity-logs',$viewData);
     }
@@ -1803,6 +1821,7 @@ class ProfessionalCasesController extends Controller
         $viewData['active_nav'] = 'dependants';
         $dependants = array();
         $viewData['dependants'] = $dependants;
+        $viewData['activeTab'] = "cases";
         return view(roleFolder().'.cases.dependants',$viewData);
     }
 }
