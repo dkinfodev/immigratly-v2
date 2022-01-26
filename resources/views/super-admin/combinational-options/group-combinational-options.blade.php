@@ -9,6 +9,7 @@
                 <th>#</th>
                 <th>Group Options</th>
                 <th>Question Option</th>
+                <th>Behaviour</th>
                 <th>Score</th>
             </tr>
         </thead>
@@ -17,21 +18,34 @@
            <?php
                $index = randomNumber(5); 
            ?>
-            <tr>
-                <th>{{$key+1}}</th>
+            <tr class="q-row">
+                <th scope="col text-center">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" data-key="{{$key}}" class="custom-control-input row-checkbox" id="row-{{$key}}" >
+                        <label class="custom-control-label" for="row-{{$key}}"></label>
+                    </div>
+                </th>
                 <td>
                     <b>Option One: </b>{{$option['comb_group']['option_one']['option_label']}} <Br>
                     <b>Option Two: </b>{{$option['comb_group']['option_two']['option_label']}}
-                    <input type="hidden" name="option[{{ $index }}][comb_option_id]" value="{{ $option['comb_group']['id'] }}" />
+                    <input type="hidden" class="inp-field" name="option[{{ $index }}][comb_option_id]" value="{{ $option['comb_group']['id'] }}" disabled />
                 </td>
                 <td>
                     {{$option['option']['option_label']}}
-                    <input type="hidden" name="option[{{ $index }}][question_id]" value="{{ $option['option']['question_id'] }}" />
-                    <input type="hidden" name="option[{{ $index }}][option_id]" value="{{ $option['option']['id'] }}" />
-                    <input type="hidden" name="option[{{ $index }}][option_value]" value="{{ $option['option']['option_value'] }}" />
+                    <input type="hidden" class="inp-field" name="option[{{ $index }}][question_id]" value="{{ $option['option']['question_id'] }}" disabled />
+                    <input type="hidden" class="inp-field" name="option[{{ $index }}][option_id]" value="{{ $option['option']['id'] }}" disabled />
+                    <input type="hidden" class="inp-field" name="option[{{ $index }}][option_value]" value="{{ $option['option']['option_value'] }}" disabled />
                 </td>
                 <td>
-                    <input type="text" class="form-control" placeholder="Enter Score" name="option[{{ $index }}][score]" value="{{ $option['score'] }}" />
+                    <select name="option[{{$index}}][behaviour]" class="behaviour_{{$key}} behaviour inp-field" value="{{ $option['option']['behaviour'] }}" required  disabled>
+                        <option value="">Select Behaviour</option>
+                        <option value="add">Add</option>
+                        <option value="substract">Substract</option>
+                        <option value="overwrite">Overwrite</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="text" class="form-control inp-field" placeholder="Enter Score" name="option[{{ $index }}][score]" value="{{ $option['option']['score'] }}" disabled />
                 </td>
                 
             </tr>
