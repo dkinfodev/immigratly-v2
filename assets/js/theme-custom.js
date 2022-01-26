@@ -83,11 +83,11 @@ function showLoader(){
 }
 function hideLoader(){
     $(".loader").hide();
-    setTimeout(function(){
-      $(".js-hs-unfold-invoker").click(function(){ 
-        $(this).next(".hs-unfold-content").fadeToggle();
-      });
-    },2000);
+    // setTimeout(function(){
+    //   $(".js-hs-unfold-invoker").click(function(){ 
+    //     $(this).next(".hs-unfold-content").fadeToggle();
+    //   });
+    // },2000);
     
 }
 function successMessage(message){
