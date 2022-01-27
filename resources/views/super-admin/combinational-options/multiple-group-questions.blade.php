@@ -64,6 +64,12 @@
                       @endforeach
                   </select>
               </div>
+              <div class="form-group">
+                  <label>Options</label>
+                  <select class="group_options" multiple name="group_options[]"> 
+                      <option value="">Select Options</option>
+                  </select>
+              </div>
             </div>
             <div class="col-md-5">
               <div class="form-group">
@@ -73,6 +79,12 @@
                       @foreach($questions as $question)
                         <option value="{{ $question->unique_id }}">{{$question->question}}</option>
                       @endforeach
+                  </select>
+              </div>
+              <div class="form-group">
+                  <label>Options</label>
+                  <select class="question_options" multiple name="question_options[]"> 
+                      <option value="">Select Options</option>
                   </select>
               </div>
             </div>
@@ -94,6 +106,7 @@
                   <tr>
                     <th>Group Option</th>
                     <th>Question Option</th>
+                    <th>Behaviour</th>
                     <th>Score</th>
                     <th>Action</th>
                   </tr>
@@ -102,12 +115,16 @@
                   @foreach($question_combinations as $record)
                     <tr>
                       <td>
-                        <b>Option One: </b>{{$record->CombinationalOption->OptionOne->option_label}}<br>
-                        <b>Option Two: </b>{{$record->CombinationalOption->OptionTwo->option_label}}
+                        <div><b>Question: </b> {{$record->GroupQuestion->question}}</div>
+                        <div><b>Option One: </b>{{$record->CombinationalOption->OptionOne->option_label}}</div>
+                        <div><b>Option Two: </b>{{$record->CombinationalOption->OptionTwo->option_label}}</div>
                       </td>
                       <td>
-                        <div><b>{{$record->Question->question}}</b></div>
-                        {{$record->QuestionOption->option_label}}
+                        <div><b>Question: </b>{{$record->Question->question}}</div>
+                        <div><b>Option:</b>{{$record->QuestionOption->option_label}}</div>
+                      </td>
+                      <td>
+                        {{$record->behaviour}}
                       </td>
                       <td>
                         {{$record->score}}
@@ -131,19 +148,78 @@
 @section('javascript')
 <script type="text/javascript">
 $(document).ready(function(){
-    
+    $(".group_question_id").change(function(){
+        if($(this).val() != ''){
+            $.ajax({
+              type: "GET",
+              url: BASEURL + '/visa-services/eligibility-questions/{{base64_encode($visa_service->id)}}/fetch-options',
+              data:{
+                  _token:csrf_token,
+                  question_id:$(this).val(),
+              },
+              dataType:'json',
+              beforeSend:function(){
+                  showLoader();
+              },
+              success: function (response) {
+                  hideLoader();
+                  if(response.status == true){
+                    $(".group_options").html(response.options);
+                  }else{
+                    $(".group_options").html('');
+                  }
+              },
+              error:function(){
+                internalError();
+              }
+          });
+        }
+    });
+
+    $(".selected_question").change(function(){
+        if($(this).val() != ''){
+            $.ajax({
+              type: "GET",
+              url: BASEURL + '/visa-services/eligibility-questions/{{base64_encode($visa_service->id)}}/fetch-options',
+              data:{
+                  _token:csrf_token,
+                  question_id:$(this).val(),
+              },
+              dataType:'json',
+              beforeSend:function(){
+                  showLoader();
+              },
+              success: function (response) {
+                  hideLoader();
+                  if(response.status == true){
+                    $(".question_options").html(response.options);
+                  }else{
+                    $(".question_options").html('');
+                  }
+              },
+              error:function(){
+                internalError();
+              }
+          });
+        }
+    });
 })
 function fetchCombination(){
   var selected_question = $(".selected_question").val();
   var group_question_id = $(".group_question_id").val();
-  if(selected_question != ''){
+  var group_options = $(".group_options").val();
+  var question_options = $(".question_options").val();
+  if(selected_question != '' && group_question_id != '' && group_options != '' && question_options != ''){
     $.ajax({
         type: "POST",
         url: BASEURL + '/visa-services/eligibility-questions/{{base64_encode($visa_service->id)}}/fetch-group-options',
         data:{
             _token:csrf_token,
+            component_id:"{{$component_id}}",
             selected_question:selected_question,
             group_question_id:group_question_id,
+            group_options:group_options,
+            question_options:question_options,
         },
         dataType:'json',
         beforeSend:function(){
