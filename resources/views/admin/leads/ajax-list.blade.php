@@ -64,38 +64,38 @@
    @endif
    <td>
       <div class="hs-unfold">
-      <a class="js-hs-action btn btn-sm btn-white" href="javascript:;"
-         data-hs-unfold-options='{
-           "target": "#action-{{$key}}",
-           "type": "css-animation"
-         }'>
-              More <i class="tio-chevron-down ml-1"></i>
-      </a>
+        <a class="js-hs-action btn btn-sm btn-white" href="javascript:;"
+          data-hs-unfold-options='{
+            "target": "#action-{{$key}}",
+            "type": "css-animation"
+          }'>
+                More <i class="tio-chevron-down ml-1"></i>
+        </a>
 
-      <div id="action-{{$key}}" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm dropdown-menu-right">
-        @if($lead_type == 0)
-        <a class="dropdown-item" href="{{baseUrl('leads/edit/'.base64_encode($record->id))}}">
-          <i class="tio-edit dropdown-item-icon"></i>
-          Edit
-        </a>
-        <div class="dropdown-divider"></div>
-        <a class="dropdown-item text-danger" href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('leads/delete/'.base64_encode($record->id))}}">
-          <i class="tio-delete-outlined dropdown-item-icon"></i>
-          Delete
-        </a> 
-        @endif
-        <a class="dropdown-item" href="{{ baseUrl('leads/dependants/'.$record->master_id) }}">
-          <i class="tio-user dropdown-item-icon"></i> Dependants
-        </a>
-        <a class="dropdown-item" onclick="showPopup('{{ baseUrl('leads/assign/'.base64_encode($record->unique_id)) }}')" href="javascript:;">
-          <i class="tio-edit dropdown-item-icon"></i> Assign Lead
-        </a>
-        @if(!empty($record->Assessments($record->unique_id)))
-        <a class="dropdown-item" href="<?php echo baseUrl('leads/assessments/'.base64_encode($record->unique_id)) ?>" href="javascript:;">
-          <i class="tio-pages-outlined dropdown-item-icon"></i> Assessments
-        </a>
-        @endif
-      </div>
+        <div id="action-{{$key}}" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm dropdown-menu-right">
+          @if($lead_type == 0)
+          <a class="dropdown-item" href="{{baseUrl('leads/edit/'.base64_encode($record->id))}}">
+            <i class="tio-edit dropdown-item-icon"></i>
+            Edit
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item text-danger" href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('leads/delete/'.base64_encode($record->id))}}">
+            <i class="tio-delete-outlined dropdown-item-icon"></i>
+            Delete
+          </a> 
+          @endif
+          <a class="dropdown-item" href="{{ baseUrl('leads/dependants/'.$record->master_id) }}">
+            <i class="tio-user dropdown-item-icon"></i> Dependants
+          </a>
+          <a class="dropdown-item" onclick="showPopup('{{ baseUrl('leads/assign/'.base64_encode($record->unique_id)) }}')" href="javascript:;">
+            <i class="tio-edit dropdown-item-icon"></i> Assign Lead
+          </a>
+          @if(!empty($record->Assessments($record->unique_id)))
+          <a class="dropdown-item" href="<?php echo baseUrl('leads/assessments/'.base64_encode($record->unique_id)) ?>" href="javascript:;">
+            <i class="tio-pages-outlined dropdown-item-icon"></i> Assessments
+          </a>
+          @endif
+        </div>
     </div>
    </td>
   

@@ -749,18 +749,23 @@ span#select2-bchg-container {
                                        <ul class="list-inline" style="margin-bottom:0">
                                           <li class="list-inline-item d-inline-flex align-items-center">
                                              <span class="legend-indicator bg-primary"></span><span
-                                             style="font-size:12px;font-weight:600;">Full-time</span>
+                                             style="font-size:12px;font-weight:600;">{{$expirence->job_type}}</span>
                                           </li>
                                        </ul>
                                        </div>
-                                       <div class="imm-credential-eca-subcomponent2"><span
-                                          style="font-size:12px;font-weight:600;">NOC 1241</span></div>
+                                       <div class="imm-credential-eca-subcomponent2">
+                                          <?php
+                                             $noc_codes = $expirence->nocCodes($expirence->noc_code);
+                                             foreach($noc_codes as $noc_code){
+                                          ?>
+                                          <span style="font-size:12px;font-weight:600;">{{$noc_code->name}}</span>
+                                          <?php } ?>
+                                       </div>
                                     </div>
                                  </div>
 
                                  <div class="col-xs-12 col-sm-5"> <span
-                                       style="/* font-size:12px; */display:block;margin-top:3px;float:right;/* font-weight: 600; */">September,
-                                       2020 - August, 2021</span></div>
+                                       style="/* font-size:12px; */display:block;margin-top:3px;float:right;/* font-weight: 600; */">{{$expirence->join_date}} - {{$expirence->leave_date}}</span></div>
 
                                  </div>
 
@@ -769,15 +774,39 @@ span#select2-bchg-container {
                            <div class="imm-add-workexp-body-list-component-body">
                               <div class="row">
                                  <div class="col-10">
-                                 <h4>Assisstant Manager</h4>
-                                 <h6>HCL Technologies Limited, Alberta, Canada </h6>
+                                 <h4>{{$expirence->position}}</h4>
+                                 <h6>{{$expirence->employment_agency}}
+                                    @if($expirence->Country($expirence->country_id)) 
+                                    , {{$expirence->Country($expirence->country_id)->name}}
+                                    @endif
+                                    @if($expirence->State($expirence->state_id)) 
+                                    , {{$expirence->State($expirence->state_id)->name}}
+                                    @endif
+                                 </h6>
 
                                  </div>
                                  <div class="col-2" style="text-align:right">
 
                                  <!-- Dropdown -->
                                  <div class="btn-group">
-                                    <button type="button"
+                                    <div class="hs-unfold">
+                                       <a class="btn btn-outline-secondary btn-icon btn-sm btn-eca-menu js-hs-action" href="javascript:;"
+                                          data-hs-unfold-options='{
+                                          "target": "#we-action-{{$key}}",
+                                          "type": "css-animation"
+                                          }'>
+                                          <i class="bi-three-dots"></i>
+                                       </a>
+                                       <div id="we-action-{{$key}}" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                                          <a class="dropdown-item" href="javascript:;" onclick="showPopup('<?php echo baseUrl('work-experiences/edit/'.base64_encode($expirence->id)) ?>')">
+                                          <i class="tio-edit"></i> Edit
+                                          </a>
+                                          <a class="dropdown-item text-danger" href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('work-experiences/delete/'.base64_encode($expirence->id))}}">
+                                          <i class="tio-delete"></i> Delete
+                                          </a> 
+                                       </div>
+                                    </div>
+                                    <!-- <button type="button"
                                        class="btn btn-outline-secondary btn-icon btn-sm btn-eca-menu js-hs-action" type="button"
                                        data-hs-unfold-options='{
                                        "target": "#we-action-{{$key}}",
@@ -794,7 +823,7 @@ span#select2-bchg-container {
                                           <i class="tio-delete"></i> Delete
                                           </a> 
 
-                                    </div>
+                                    </div> -->
                                  </div>
                                  <!-- End Dropdown -->
                                  </div>
@@ -803,12 +832,15 @@ span#select2-bchg-container {
                               <div class="imm-add-workexp-body-list-component-footer">
                                  <div class="row">
                                  <div class="col-12">
-                                    <ul>
+                                    <p>
+                                       <?php echo $expirence->exp_details ?>
+                                    </p>
+                                    <!-- <ul>
                                        <li>Tell job seekers the pay and receive up to two times more applications</li>
                                        <li>Do you have any of these top skills employers are looking for?</li>
                                        <li>This information will help us find the job that's right for you.</li>
                                        <li>Employers cannot find your CV, but you can attach it</li>
-                                    </ul>
+                                    </ul> -->
 
                                  </div>
                                  </div>
