@@ -24,6 +24,7 @@ class UserController extends Controller
     public function index()
     {
         $viewData['pageTitle'] = "Users";
+        $viewData['activeTab'] = "users";
         return view(roleFolder().'.user.lists',$viewData);
     } 
 
@@ -55,7 +56,7 @@ class UserController extends Controller
         $viewData['countries'] = $countries;
 
         $viewData['languages'] = Languages::get();
-
+        $viewData['activeTab'] = "users";
         return view(roleFolder().'.user.add',$viewData);
     }
 
@@ -302,6 +303,7 @@ class UserController extends Controller
         $record = User::where("id",$id)->first();
         $viewData['record'] = $record;
         $viewData['pageTitle'] = "Change Password";
+        $viewData['activeTab'] = "users";
         return view(roleFolder().'.user.change-password',$viewData);
     }
 

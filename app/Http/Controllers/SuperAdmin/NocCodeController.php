@@ -24,6 +24,7 @@ class NocCodeController extends Controller
     
     public function list()
     {
+        $viewData['activeTab'] = "noc-code";
         $viewData['pageTitle'] = "NOC Code";
         return view(roleFolder().'.noc-code.lists',$viewData);
     } 
@@ -53,6 +54,7 @@ class NocCodeController extends Controller
 
     public function add(){
         $viewData['pageTitle'] = "Add NOC Code";
+        $viewData['activeTab'] = "noc-code";
         $view = View::make(roleFolder().'.noc-code.modal.add',$viewData);
         $contents = $view->render();
         $response['contents'] = $contents;
@@ -99,6 +101,7 @@ class NocCodeController extends Controller
         $id = base64_decode($id);
         $viewData['record'] = NocCode::where('id',$id)->first();
         $viewData['pageTitle'] = "Edit NOC Code";
+        $viewData['activeTab'] = "noc-code";
         $view = View::make(roleFolder().'.noc-code.modal.edit',$viewData);
         $contents = $view->render();
         $response['contents'] = $contents;

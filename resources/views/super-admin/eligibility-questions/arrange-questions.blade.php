@@ -1,4 +1,4 @@
-@extends('layouts.master-old')
+@extends('layouts.master')
 @section('pageheader')
 <!-- Content -->
 <div class="">

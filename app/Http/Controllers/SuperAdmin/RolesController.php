@@ -20,6 +20,7 @@ class RolesController extends Controller
     public function index(Request $request){
 
         $viewData['pageTitle'] = "Roles";
+        
         return view(roleFolder().'.roles.lists',$viewData);
     }
 

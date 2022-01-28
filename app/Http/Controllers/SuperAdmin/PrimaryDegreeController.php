@@ -22,6 +22,7 @@ class PrimaryDegreeController extends Controller
     
     public function list()
     {
+        $viewData['activeTab'] = "primary-degree";
         $viewData['pageTitle'] = "Primary Degree";
         return view(roleFolder().'.primary-degree.lists',$viewData);
     } 

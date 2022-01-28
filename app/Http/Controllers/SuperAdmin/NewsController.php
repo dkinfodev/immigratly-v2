@@ -21,6 +21,7 @@ class NewsController extends Controller
 
     public function news()
     {
+        $viewData['activeTab'] = "news";
         $viewData['pageTitle'] = "News";
         return view(roleFolder().'.news.lists',$viewData);
     }
@@ -49,6 +50,7 @@ class NewsController extends Controller
 
     public function add(){
         $viewData['pageTitle'] = "Add News";
+        $viewData['activeTab'] = "news";
         $viewData['categories'] = VisaServices::get();
         return view(roleFolder().'.news.add',$viewData);
     }
@@ -96,6 +98,7 @@ class NewsController extends Controller
         $id = base64_decode($id);
         $viewData['record'] = News::where("id",$id)->first();
         $viewData['pageTitle'] = "Edit News";
+        $viewData['activeTab'] = "news";
         $viewData['categories'] = VisaServices::get();
         return view(roleFolder().'.news.edit',$viewData);
     }
@@ -162,6 +165,7 @@ class NewsController extends Controller
     public function newsCategory()
     {
         $viewData['pageTitle'] = "News Category";
+        $viewData['activeTab'] = "news";
         return view(roleFolder().'.news-category.lists',$viewData);
     } 
 

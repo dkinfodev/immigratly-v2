@@ -25,6 +25,7 @@ class StaffController extends Controller
     public function index()
     {
         $viewData['pageTitle'] = "Staff";
+        $viewData['activeTab'] = "staff";
         return view(roleFolder().'.staff.lists',$viewData);
     } 
 
@@ -57,6 +58,7 @@ class StaffController extends Controller
         //$viewData['languages'] = $languages;
         $viewData['countries'] = $countries;
         //$viewData['roles'] = $roles;
+        $viewData['activeTab'] = "staff";
         return view(roleFolder().'.staff.add',$viewData);
     }
 
@@ -133,7 +135,7 @@ class StaffController extends Controller
        
         $countries = Countries::get();
         $viewData['countries'] = $countries;
-    
+        $viewData['activeTab'] = "staff";
         return view(roleFolder().'.staff.edit',$viewData);
     }
 
@@ -223,6 +225,7 @@ class StaffController extends Controller
         $record = User::where("id",$id)->first();
         $viewData['record'] = $record;
         $viewData['pageTitle'] = "Change Password";
+        $viewData['activeTab'] = "staff";
         return view(roleFolder().'.staff.change-password',$viewData);
     }
 
@@ -277,6 +280,7 @@ class StaffController extends Controller
         $viewData['privileges'] = $privileges;
         $viewData['user_id'] = $id;
         $viewData['pageTitle'] = "Set Privileges for ".$user->first_name." ".$user->last_name;
+        $viewData['activeTab'] = "staff";
         return view(roleFolder().'.staff.privileges',$viewData);
     }
 

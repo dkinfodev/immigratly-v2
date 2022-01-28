@@ -21,6 +21,7 @@ class TagsController extends Controller
     public function tags()
     {
         $viewData['pageTitle'] = "Tags";
+        $viewData['activeTab'] = "tags";
         return view(roleFolder().'.tags.lists',$viewData);
     } 
 
