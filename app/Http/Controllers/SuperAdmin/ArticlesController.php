@@ -30,6 +30,7 @@ class ArticlesController extends Controller
         $viewData['publish'] = $publish;
         $viewData['draft'] = $draft;
         $viewData['status'] = 'publish';
+        $viewData['activeTab'] = 'articles';
         return view(roleFolder().'.articles.lists',$viewData);
     }
 
@@ -49,6 +50,7 @@ class ArticlesController extends Controller
         $viewData['publish'] = $publish;
         $viewData['draft'] = $draft;
         $viewData['status'] = 'draft';
+        $viewData['activeTab'] = 'articles';
         return view(roleFolder().'.articles.lists',$viewData);
     }
 
@@ -98,6 +100,7 @@ class ArticlesController extends Controller
         $viewData['tags'] = $tags;
         $timestamp = time();
         $viewData['timestamp'] = $timestamp;
+        $viewData['activeTab'] = 'articles';
         return view(roleFolder().'.articles.add',$viewData);
     }
 
@@ -199,6 +202,7 @@ class ArticlesController extends Controller
                             ->where("unique_id",$unique_id)
                             ->first();
         $viewData['record'] = $record;
+        $viewData['activeTab'] = 'articles';
         return view(roleFolder().'.articles.edit',$viewData);
     }
 

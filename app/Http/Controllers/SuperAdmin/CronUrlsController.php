@@ -20,6 +20,7 @@ class CronUrlsController extends Controller
     public function index()
     {
         $viewData['pageTitle'] = "Cron Urls";
+        $viewData['activeTab'] = 'cron-urls';
         return view(roleFolder().'.cron-urls.lists',$viewData);
     } 
 

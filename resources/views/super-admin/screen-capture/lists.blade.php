@@ -1,50 +1,27 @@
-@extends('layouts.master-old')
-@section('pageheader')
+@extends('layouts.master')
+
+
+@section('breadcrumb')
 <!-- Content -->
-<div class="">
-    <div class="content container" style="height: 25rem;">
-        <!-- Page Header -->
-        <div class="page-header page-header-light page-header-reset">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h1 class="page-header-title">{{$pageTitle}}</h1>
-                </div>
-            </div>
-            <!-- End Row -->
-        </div>
-        <!-- End Page Header -->
-    </div>
-</div> 
+<ol class="breadcrumb breadcrumb-no-gutter">
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
+  <li class="breadcrumb-item active">{{$pageTitle}} ({{$category->name}})</li>
+ 
+</ol>
 <!-- End Content -->
 @endsection
+
+@section('header-right')
+ <a class="btn btn-primary" href="{{ baseUrl('/screen-capture/'.base64_encode($category->id).'/add') }}">
+          <i class="tio-add mr-1"></i> Add 
+        </a>
+@endsection
+
 
 @section('content')
 <!-- Content -->
 <div class="screen_capture">
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="row align-items-end">
-      <div class="col-sm mb-2 mb-sm-0">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb breadcrumb-no-gutter">
-            <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
-          </ol>
-        </nav>
-
-        <h1 class="page-title">{{$pageTitle}}</h1>
-        <h5 class="text-danger">{{$category->name}}</h5>
-      </div>
-
-      <div class="col-sm-auto">
-        <a class="btn btn-primary" href="{{ baseUrl('/screen-capture/'.base64_encode($category->id).'/add') }}">
-          <i class="tio-add mr-1"></i> Add 
-        </a>
-      </div>
-    </div>
-    <!-- End Row -->
-  </div>
-  <!-- End Page Header -->
+ 
 
   <!-- Card -->
   <div class="card">

@@ -20,6 +20,7 @@ class EmployeePrivilegesController extends Controller
     {
         $viewData['total_bodies'] = EmployeePrivileges::count();
         $viewData['pageTitle'] = "Employee Privileges";
+        $viewData['activeTab'] = 'employee-privileges';
         return view(roleFolder().'.employee-privileges.lists',$viewData);
     } 
 
@@ -38,6 +39,7 @@ class EmployeePrivilegesController extends Controller
 
     public function add(){
         $viewData['pageTitle'] = "Add Modules";
+        $viewData['activeTab'] = 'employee-privileges';
         return view(roleFolder().'.employee-privileges.add',$viewData);
     }
 
@@ -77,6 +79,7 @@ class EmployeePrivilegesController extends Controller
         $id = base64_decode($id);
         $viewData['record'] = EmployeePrivileges::where("id",$id)->first();
         $viewData['pageTitle'] = "Edit Modules";
+        $viewData['activeTab'] = 'employee-privileges';
         return view(roleFolder().'.employee-privileges.edit',$viewData);
     }
 

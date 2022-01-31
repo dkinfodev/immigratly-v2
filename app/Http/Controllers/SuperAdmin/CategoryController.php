@@ -21,6 +21,7 @@ class CategoryController extends Controller
     public function category()
     {
         $viewData['pageTitle'] = "Categories";
+        $viewData['activeTab'] = 'category';
         return view(roleFolder().'.category.lists',$viewData);
     } 
 

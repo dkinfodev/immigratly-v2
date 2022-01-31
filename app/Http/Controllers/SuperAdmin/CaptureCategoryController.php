@@ -21,6 +21,7 @@ class CaptureCategoryController extends Controller
     public function category()
     {
         $viewData['pageTitle'] = "Categories";
+        $viewData['activeTab'] = 'capture-category';
         return view(roleFolder().'.capture-category.lists',$viewData);
     } 
 

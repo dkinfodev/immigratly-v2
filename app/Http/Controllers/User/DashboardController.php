@@ -15,11 +15,13 @@ use App\Models\Languages;
 use App\Models\Notifications;
 use App\Models\LanguageProficiency;
 use App\Models\ClientExperience;
+use App\Models\CanadianEquivalencyLevel;
 use App\Models\ClientEducations;
 use App\Models\PrimaryDegree;
 use App\Models\BackupSettings;
 use App\Models\UserReminderNotes;
 use App\Models\UserLanguageProficiency;
+
 use App\Models\OfficialLanguages;
 use App\Models\NocCode;
 use App\Models\CvTypes;
@@ -273,9 +275,7 @@ class DashboardController extends Controller
         $id = \Auth::user()->id;
         $record = User::where("id",$id)->first();
         $viewData['record'] = $record;
-
         $viewData['activeTab'] = "change-password";
-
         $viewData['pageTitle'] = "Change Password";
         return view(roleFolder().'.change-password',$viewData);
     }
@@ -437,6 +437,7 @@ class DashboardController extends Controller
         $viewData['pageTitle'] = "Manage CV";
         $viewData['user'] = $user;
         $viewData['user_detail'] = $user_detail;
+
         $viewData['activeTab'] = "manage-cv";
         
         return view(roleFolder().'.manage-cv',$viewData);        
@@ -600,6 +601,13 @@ class DashboardController extends Controller
         $viewData['pageTitle'] = "Add Education";
         $primary_degree = PrimaryDegree::get();
         $viewData['primary_degree'] = $primary_degree;
+
+        $countries = DB::table(MAIN_DATABASE.".countries")->get();
+        $viewData['countries'] = $countries;
+
+        $CanadianEqLevel = CanadianEquivalencyLevel::get();
+        $viewData['CanadianEqLevel'] = $CanadianEqLevel;
+
         $view = View::make(roleFolder().'.modal.add-education',$viewData);
         $contents = $view->render();
         $response['contents'] = $contents;
@@ -612,15 +620,30 @@ class DashboardController extends Controller
             $valid = array(
                 'degree_id' => 'required',
                 'qualification' => 'required',
-                'percentage' => 'required',
-                'year_passed' => 'required'
+                //'percentage' => 'required',
+                //'year_passed' => 'required',
+                'school_name' => 'required',
+
+                'from_month' => 'required',
+                'from_year' => 'required',
+                'to_month' => 'required',
+                'to_year' => 'required',
+                
+                'country_id' => 'required',
+                'state_id' => 'required',
+                
+                'canadian_equivalency_level' => 'required',
+                'evaluating_agency' => 'required',
+
             );
-            if($request->input("is_eca") == 1){
-                $valid['eca_equalency'] = 'required';
-                $valid['eca_doc_no'] = 'required';
-                $valid['eca_agency'] = 'required';
-                $valid['eca_year'] = 'required';
-            }
+
+            // if($request->input("is_eca") == 1){
+            //     $valid['eca_equalency'] = 'required';
+            //     $valid['eca_doc_no'] = 'required';
+            //     $valid['eca_agency'] = 'required';
+            //     $valid['eca_year'] = 'required';
+            // }
+
             $validator = Validator::make($request->all(),$valid);
 
             if ($validator->fails()) {
@@ -640,15 +663,40 @@ class DashboardController extends Controller
             $object->degree_id = $request->input("degree_id");
             $object->user_id = \Auth::user()->unique_id;
             $object->qualification = $request->input("qualification");
-            $object->percentage = $request->input("percentage");
-            $object->year_passed = $request->input("year_passed");
-            if($request->input("is_eca") == 1){
-                $object->is_eca = 1;
-                $object->eca_equalency = $request->input("eca_equalency");
-                $object->eca_doc_no = $request->input("eca_doc_no");
-                $object->eca_agency = $request->input("eca_agency");
-                $object->eca_year = $request->input("eca_year");
+            $object->school_name = $request->input("school_name");
+            $object->country_id = $request->input("country_id");
+            $object->state_id = $request->input("state_id");
+
+            //$object->percentage = $request->input("percentage");
+            //$object->year_passed = $request->input("year_passed");
+            
+            //NEW
+            if($request->input("is_highest_degree") == 1){
+                $object->is_highest_degree = 1;
             }
+            else{
+                $object->is_highest_degree = 0;   
+            }
+            if($request->input("is_ongoing_study") == 1){
+                 $object->is_ongoing_study = 1;
+            }
+            else{
+                 $object->is_ongoing_study = 0;   
+            }
+            //NEW
+
+
+            if($request->input("is_eca") == 1){
+                // $object->is_eca = 1;
+                // $object->eca_equalency = $request->input("eca_equalency");
+                // $object->eca_doc_no = $request->input("eca_doc_no");
+                // $object->eca_agency = $request->input("eca_agency");
+                // $object->eca_year = $request->input("eca_year");
+            }
+
+            
+            $object->canadian_equivalency_level = $request->input("canadian_equivalency_level");
+            $object->evaluating_agency = $request->input("evaluating_agency");
             $object->save();
 
             $response['status'] = true;

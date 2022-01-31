@@ -3,13 +3,11 @@
     <div class="navbar-top  w-100">
       <div class="container">
         <nav class="js-mega-menu navbar-nav-wrap">
-          <!-- Default Logo -->
+         
           <a class="navbar-brand" href="{{url('/')}}" aria-label="Front">
             <img class="navbar-brand-logo" src="assets/svg/logos/logo.svg" alt="Logo">
           </a>
-          <!-- End Default Logo -->
-
-          <!-- Toggler -->
+         
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
             aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-default">
@@ -19,22 +17,20 @@
               <i class="bi-x"></i>
             </span>
           </button>
-          <!-- End Toggler -->
-
-          <!-- Collapse -->
+         
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
-              <!-- Landings -->
+         
               <li class="hs-has-mega-menu nav-item">
                 <a id="landingsMegaMenu" class="hs-mega-menu-invoker nav-link dropdown-toggle " aria-current="page"
                   href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Landings</a>
 
-                <!-- Mega Menu -->
+         
                 <div class="hs-mega-menu dropdown-menu w-100" aria-labelledby="landingsMegaMenu"
                   style="min-width: 30rem;">
                   <div class="row">
                     <div class="col-lg-6 d-none d-lg-block">
-                      <!-- Banner Image -->
+         
                       <div class="navbar-dropdown-menu-banner"
                         style="background-image: url(assets/svg/components/shape-3.svg);">
                         <div class="navbar-dropdown-menu-banner-content">
@@ -46,9 +42,7 @@
                               class="bi-chevron-right small"></i></a>
                         </div>
                       </div>
-                      <!-- End Banner Image -->
-                    </div>
-                    <!-- End Col -->
+                    </div> 
 
                     <div class="col-lg-6">
                       <div class="navbar-dropdown-menu-inner">
@@ -66,7 +60,6 @@
                             <a class="dropdown-item " href="landing-classic-software.html">Software</a>
                             <a class="dropdown-item " href="landing-classic-business.html">Business</a>
                           </div>
-                          <!-- End Col -->
 
                           <div class="col-sm">
                             <div class="mb-3">
@@ -83,25 +76,23 @@
                             <a class="dropdown-item " href="landing-onepage-saas.html">SaaS <span
                                 class="badge bg-primary rounded-pill ms-1">Hot</span></a>
                           </div>
-                          <!-- End Col -->
+                         
                         </div>
-                        <!-- End Row -->
+                        
                       </div>
                     </div>
-                    <!-- End Col -->
+                    
                   </div>
-                  <!-- End Row -->
+                  
                 </div>
-                <!-- End Mega Menu -->
+                
               </li>
-              <!-- End Landings -->
-
-              <!-- Company -->
+              
               <li class="hs-has-sub-menu nav-item">
                 <a id="companyMegaMenu" class="hs-mega-menu-invoker nav-link dropdown-toggle " href="#" role="button"
                   data-bs-toggle="dropdown" aria-expanded="false">Company</a>
 
-                <!-- Mega Menu -->
+              
                 <div class="hs-sub-menu dropdown-menu" aria-labelledby="companyMegaMenu" style="min-width: 14rem;">
                   <a class="dropdown-item " href="page-about.html">About</a>
                   <a class="dropdown-item " href="page-services.html">Services</a>
@@ -114,18 +105,18 @@
                   <a class="dropdown-item " href="page-contacts-agency.html">Contacts: Agency</a>
                   <a class="dropdown-item " href="page-contacts-startup.html">Contacts: Startup</a>
                 </div>
-                <!-- End Mega Menu -->
+                
               </li>
-              <!-- End Company -->
+              
 
-              <!-- Account -->
+              
               <li class="hs-has-sub-menu nav-item">
                 <a id="accountMegaMenu" class="hs-mega-menu-invoker nav-link dropdown-toggle active" href="#"
                   role="button" data-bs-toggle="dropdown" aria-expanded="false">Account</a>
 
-                <!-- Mega Menu -->
+              
                 <div class="hs-sub-menu dropdown-menu" aria-labelledby="accountMegaMenu" style="min-width: 14rem;">
-                  <!-- Authentication -->
+              
                   <div class="hs-has-sub-menu nav-item">
                     <a id="authenticationMegaMenu" class="hs-mega-menu-invoker dropdown-item dropdown-toggle " href="#"
                       role="button" data-bs-toggle="dropdown" aria-expanded="false">Authentication</a>
@@ -144,7 +135,7 @@
                       <a class="dropdown-item " href="page-reset-password-simple.html">Reset Password Simple</a>
                     </div>
                   </div>
-                  <!-- End Authentication -->
+              
 
                   <a class="dropdown-item active" href="account-overview.html">Personal Info</a>
                   <a class="dropdown-item " href="account-security.html">Security</a>
@@ -156,16 +147,16 @@
                   <a class="dropdown-item " href="account-address.html">Address</a>
                   <a class="dropdown-item " href="account-teams.html">Teams</a>
                 </div>
-                <!-- End Mega Menu -->
+              
               </li>
-              <!-- End Account -->
+              
 
-              <!-- Pages -->
+              
               <li class="hs-has-sub-menu nav-item">
                 <a id="pagesMegaMenu" class="hs-mega-menu-invoker nav-link dropdown-toggle " href="#" role="button"
                   data-bs-toggle="dropdown" aria-expanded="false">Pages</a>
 
-                <!-- Mega Menu -->
+              
                 <div class="hs-sub-menu dropdown-menu" aria-labelledby="pagesMegaMenu" style="min-width: 14rem;">
                   <a class="dropdown-item " href="page-faq.html">FAQ</a>
                   <a class="dropdown-item " href="page-terms.html">Terms &amp; Conditions</a>
@@ -176,16 +167,15 @@
                   <a class="dropdown-item " href="page-invoice.html">Invoice</a>
                   <a class="dropdown-item " href="page-error-404.html">Error 404</a>
                 </div>
-                <!-- End Mega Menu -->
+              
               </li>
-              <!-- End Pages -->
+              
 
-              <!-- Blog -->
+              
               <li class="hs-has-sub-menu nav-item">
                 <a id="blogMegaMenu" class="hs-mega-menu-invoker nav-link dropdown-toggle " href="#" role="button"
                   data-bs-toggle="dropdown" aria-expanded="false">Blog</a>
 
-                <!-- Mega Menu -->
                 <div class="hs-sub-menu dropdown-menu" aria-labelledby="blogMegaMenu" style="min-width: 14rem;">
                   <a class="dropdown-item " href="blog-journal.html">Journal</a>
                   <a class="dropdown-item " href="blog-metro.html">Metro</a>
@@ -194,44 +184,41 @@
                   <a class="dropdown-item " href="blog-article.html">Article</a>
                   <a class="dropdown-item " href="blog-author-profile.html">Author Profile</a>
                 </div>
-                <!-- End Mega Menu -->
-              </li>
-              <!-- End Blog -->
 
-              <!-- Portfolio -->
+              </li>
+
+
               <li class="hs-has-sub-menu nav-item">
                 <a id="portfolioMegaMenu" class="hs-mega-menu-invoker nav-link dropdown-toggle " href="#" role="button"
                   data-bs-toggle="dropdown" aria-expanded="false">Portfolio</a>
 
-                <!-- Mega Menu -->
+                
                 <div class="hs-sub-menu dropdown-menu" aria-labelledby="portfolioMegaMenu" style="min-width: 14rem;">
                   <a class="dropdown-item " href="portfolio-grid.html">Grid</a>
                   <a class="dropdown-item " href="portfolio-product-article.html">Product Article</a>
                   <a class="dropdown-item " href="portfolio-case-studies-branding.html">Case Studies: Branding</a>
                   <a class="dropdown-item " href="portfolio-case-studies-product.html">Case Studies: Product</a>
                 </div>
-                <!-- End Mega Menu -->
+                
               </li>
-              <!-- End Portfolio -->
 
-              <!-- Button -->
               <li class="nav-item">
                 <a class="btn btn-primary btn-transition"
                   href="https://themes.getbootstrap.com/product/front-multipurpose-responsive-template/"
                   target="_blank">Buy now</a>
               </li>
-              <!-- End Button -->
+              
             </ul>
           </div>
-          <!-- End Collapse -->
+          
         </nav>
       </div>
     </div>
-    <!-- Bottombar -->
+    
     <div class="navbar-bottom  w-100">
       <div class="container navbar-topbar">
         <nav class="js-mega-menu navbar-nav-wrap">
-          <!-- Toggler -->
+    
           <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse"
             data-bs-target="#topbarNavDropdown" aria-controls="topbarNavDropdown" aria-expanded="false"
             aria-label="Toggle navigation">
@@ -246,36 +233,36 @@
               </span>
             </span>
           </button>
-          <!-- End Toggler -->
+    
 
           <div id="topbarNavDropdown" class="navbar-nav-wrap-collapse collapse navbar-collapse navbar-topbar-collapse">
             <div class="navbar-toggler-wrapper">
               <div class="navbar-topbar-toggler d-flex justify-content-between align-items-center">
                 <span class="navbar-toggler-text small">Topbar</span>
 
-                <!-- Toggler -->
+    
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                   data-bs-target="#topbarNavDropdown" aria-controls="topbarNavDropdown" aria-expanded="false"
                   aria-label="Toggle navigation">
                   <i class="bi-x"></i>
                 </button>
-                <!-- End Toggler -->
+    
               </div>
             </div>
 
             <ul class="navbar-nav">
-              <!-- Demos -->
+    
               <li class="hs-has-mega-menu nav-item">
                 <a id="demosMegaMenu" class="hs-mega-menu-invoker nav-link dropdown-toggle active" aria-current="page"
                   href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Demos</a>
 
-                <!-- Mega Menu -->
+  
                 <div class="hs-mega-menu dropdown-menu w-100" aria-labelledby="demosMegaMenu" style="min-width: 40rem;">
-                  <!-- Promo -->
+  
                   <div class="navbar-dropdown-menu-promo">
-                    <!-- Promo Item -->
+  
                     <div class="navbar-dropdown-menu-promo-item">
-                      <!-- Promo Link -->
+                      
                       <a class="navbar-dropdown-menu-promo-link active" href="index.html">
                         <div class="d-flex">
                           <div class="flex-shrink-0">
@@ -300,13 +287,11 @@
                           </div>
                         </div>
                       </a>
-                      <!-- End Promo Link -->
+                      
                     </div>
-                    <!-- End Promo Item -->
-
-                    <!-- Promo Item -->
+                    
                     <div class="navbar-dropdown-menu-promo-item">
-                      <!-- Promo Link -->
+                    
                       <a class="navbar-dropdown-menu-promo-link " href="demo-real-estate/index.html">
                         <div class="d-flex">
                           <div class="flex-shrink-0">
@@ -331,13 +316,11 @@
                           </div>
                         </div>
                       </a>
-                      <!-- End Promo Link -->
+                    
                     </div>
-                    <!-- End Promo Item -->
-
-                    <!-- Promo Item -->
+                    
                     <div class="navbar-dropdown-menu-promo-item">
-                      <!-- Promo Link -->
+                    
                       <a class="navbar-dropdown-menu-promo-link " href="demo-jobs/index.html">
                         <div class="d-flex">
                           <div class="flex-shrink-0">
@@ -363,17 +346,15 @@
                           </div>
                         </div>
                       </a>
-                      <!-- End Promo Link -->
+                    
                     </div>
-                    <!-- End Promo Item -->
+                    
                   </div>
-                  <!-- End Promo -->
-
-                  <!-- Promo -->
+                  
                   <div class="navbar-dropdown-menu-promo">
-                    <!-- Promo Item -->
+                  
                     <div class="navbar-dropdown-menu-promo-item">
-                      <!-- Promo Link -->
+                  
                       <a class="navbar-dropdown-menu-promo-link " href="demo-course/index.html">
                         <div class="d-flex">
                           <div class="flex-shrink-0">
@@ -407,13 +388,13 @@
                           </div>
                         </div>
                       </a>
-                      <!-- End Promo Link -->
+                  
                     </div>
-                    <!-- End Promo Item -->
+                  
 
-                    <!-- Promo Item -->
+                  
                     <div class="navbar-dropdown-menu-promo-item">
-                      <!-- Promo Link -->
+                  
                       <a class="navbar-dropdown-menu-promo-link " href="demo-shop/index.html">
                         <div class="d-flex">
                           <div class="flex-shrink-0">
@@ -437,13 +418,13 @@
                           </div>
                         </div>
                       </a>
-                      <!-- End Promo Link -->
+                  
                     </div>
-                    <!-- End Promo Item -->
+                  
 
-                    <!-- Promo Item -->
+                  
                     <div class="navbar-dropdown-menu-promo-item">
-                      <!-- Promo Link -->
+                  
                       <a class="navbar-dropdown-menu-promo-link " href="demo-app-marketplace/index.html">
                         <div class="d-flex">
                           <div class="flex-shrink-0">
@@ -477,17 +458,15 @@
                           </div>
                         </div>
                       </a>
-                      <!-- End Promo Link -->
+                  
                     </div>
-                    <!-- End Promo Item -->
+                  
                   </div>
-                  <!-- End Promo -->
-
-                  <!-- Promo -->
+                  
                   <div class="navbar-dropdown-menu-promo">
-                    <!-- Promo Item -->
+                  
                     <div class="navbar-dropdown-menu-promo-item">
-                      <!-- Promo Link -->
+                  
                       <a class="navbar-dropdown-menu-promo-link " href="demo-help-desk/index.html">
                         <div class="d-flex">
                           <div class="flex-shrink-0">
@@ -498,7 +477,7 @@
                                   d="M22.1671 18.1421C22.4827 18.4577 23.0222 18.2331 23.0206 17.7868L23.0039 13.1053V5.52632C23.0039 4.13107 21.8729 3 20.4776 3H8.68815C7.2929 3 6.16183 4.13107 6.16183 5.52632V9H13C14.6568 9 16 10.3431 16 12V15.6316H19.6565L22.1671 18.1421Z"
                                   fill="#035A4B" />
                                 <path opacity="0.3" fill-rule="evenodd" clip-rule="evenodd"
-                                  d="M1.98508 18V13C1.98508 11.8954 2.88051 11 3.98508 11H11.9851C13.0896 11 13.9851 11.8954 13.9851 13V18C13.9851 19.1046 13.0896 20 11.9851 20H4.10081L2.85695 21.1905C2.53895 21.4949 2.01123 21.2695 2.01123 20.8293V18.3243C1.99402 18.2187 1.98508 18.1104 1.98508 18ZM5.99999 14.5C5.99999 14.2239 6.22385 14 6.49999 14H11.5C11.7761 14 12 14.2239 12 14.5C12 14.7761 11.7761 15 11.5 15H6.49999C6.22385 15 5.99999 14.7761 5.99999 14.5ZM9.49999 16C9.22385 16 8.99999 16.2239 8.99999 16.5C8.99999 16.7761 9.22385 17 9.49999 17H11.5C11.7761 17 12 16.7761 12 16.5C12 16.2239 11.7761 16 11.5 16H9.49999Z"
+                                  d="M1.98508 18V13C1.98508 11.8954 2.88051 11 3.98508 11H11.9851C13.0896 11 13.9851 11.8954 13.9851 13V18C13.9851 19.1046 13.0896 20 11.9851 20H4.10081L2.85695 21.1905C2.53895 21.4949 2.01123 21.2695 2.01123 20.8293V18.3243C1.99402 18.2187 1.98508 18.1104 1.98508 18ZM5.99999 14.5C5.99999 14.2239 6.22385 14 6.49999 14H11.5C11.7761 14 12 14.2239 12 14.5C12 14.7761 11.7761 15 11.5 15H6.49999C6.22385 15 5.99999 14.7761 5.99999 14.5ZM9.49999 16C9.22385 16 8.99999 16.2239 `8.99999 16.5C8.99999 16.7761 9.22385 17 9.49999 17H11.5C11.7761 17 12 16.7761 12 16.5C12 16.2239 11.7761 16 11.5 16H9.49999Z"
                                   fill="#035A4B" />
                               </svg>
 
@@ -512,13 +491,11 @@
                           </div>
                         </div>
                       </a>
-                      <!-- End Promo Link -->
+                      
                     </div>
-                    <!-- End Promo Item -->
 
-                    <!-- Promo Item -->
                     <div class="navbar-dropdown-menu-promo-item">
-                      <!-- Promo Link -->
+                      
                       <a class="navbar-dropdown-menu-promo-link" href="https://htmlstream.com/contact-us"
                         target="_blank">
                         <div class="d-flex">
@@ -551,22 +528,18 @@
                           </div>
                         </div>
                       </a>
-                      <!-- End Promo Link -->
+                    
                     </div>
-                    <!-- End Promo Item -->
-
-                    <!-- Promo Item -->
+                    
                     <div class="navbar-dropdown-menu-promo-item">
                     </div>
-                    <!-- End Promo Item -->
+                    
                   </div>
-                  <!-- End Promo -->
+              
                 </div>
-                <!-- End Mega Menu -->
+              
               </li>
-              <!-- End Demos -->
 
-              <!-- Docs -->
               <li class="hs-has-mega-menu nav-item" data-hs-mega-menu-item-options='{
                   "desktop": {
                     "maxWidth": "20rem"
@@ -575,10 +548,10 @@
                 <a id="docsMegaMenu" class="hs-mega-menu-invoker nav-link dropdown-toggle" href="#" role="button"
                   data-bs-toggle="dropdown" aria-expanded="false">Docs</a>
 
-                <!-- Mega Menu -->
+              
                 <div class="hs-mega-menu hs-position-right dropdown-menu" aria-labelledby="docsMegaMenu"
                   style="min-width: 20rem;">
-                  <!-- Link -->
+              
                   <a class="navbar-dropdown-menu-media-link" href="documentation/index.html">
                     <div class="d-flex">
                       <div class="flex-shrink-0">
@@ -604,11 +577,10 @@
                       </div>
                     </div>
                   </a>
-                  <!-- End Link -->
+              
 
                   <div class="dropdown-divider"></div>
 
-                  <!-- Link -->
                   <a class="navbar-dropdown-menu-media-link" href="snippets/index.html">
                     <div class="d-flex">
                       <div class="flex-shrink-0">
@@ -632,27 +604,27 @@
                       </div>
                     </div>
                   </a>
-                  <!-- End Link -->
+
                 </div>
-                <!-- End Mega Menu -->
+
               </li>
-              <!-- End Docs -->
+
             </ul>
           </div>
         </nav>
       </div>
     </div>
-    <!-- End Topbar -->
+
 
 </header>
 
-    <!-- Content -->
+
     <section class="wrapper angled lower-start imm-dashboard-header" style="background:#e7eaf3">
       <div class="hero-shape position-absolute">
         <img src="assets/img/hero-shape-svg.svg" alt="">
       </div>
       <div class="content-top container">
-        <!-- Page Header -->
+
         <div class="page-header page-header-light page-header-reset">
           <div class="row align-items-center">
             <div class="col">
@@ -665,20 +637,20 @@
               <nav aria-label="breadcrumb">
                 @yield("breadcrumb")
               </nav>
-              <!-- End Breadcrumb -->
+
             </div>
 
             <div class="col-auto">
                @yield("header-right")
             </div>
           </div>
-          <!-- End Row -->
+          
         </div>
-        <!-- End Page Header -->
+        
       </div>
     </section>
-  <!-- End Content -->
-
+  
+ 
 
 <!-- 
 <header id="header" class="navbar navbar-expand-lg navbar-bordered flex-lg-column px-0">

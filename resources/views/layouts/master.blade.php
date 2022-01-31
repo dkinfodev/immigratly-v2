@@ -43,20 +43,19 @@
 </div>
 <h4 class="text-danger">Loading...</h4>
 </div>
+
   <!-- ========== HEADER ========== -->
-  @include(roleFolder().'.layouts.header')
-
-
+  @include(roleFolder().'.layouts.header')  
   <!-- ========== END HEADER ========== -->
 
 
   <!-- ========== MAIN CONTENT ========== -->
   <main id="content" role="main" class="bg-light mt-lg-n3">
 
-
     <!-- Content -->
     <div class="container content-space-1 content-space-t-lg-0 content-space-b-lg-2   imm-dashboard-content">
       <div class="row">
+
         <div class="col-lg-3">
             @include(roleFolder().'.layouts.sidebar')
         </div>

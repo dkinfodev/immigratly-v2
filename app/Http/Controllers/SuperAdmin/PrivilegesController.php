@@ -20,6 +20,7 @@ class PrivilegesController extends Controller
     {
         $viewData['total_bodies'] = ProfessionalPrivileges::count();
         $viewData['pageTitle'] = "Professional Privileges";
+        $viewData['activeTab'] = "privileges";
         return view(roleFolder().'.privileges.lists',$viewData);
     } 
 
@@ -38,6 +39,7 @@ class PrivilegesController extends Controller
 
     public function add(){
         $viewData['pageTitle'] = "Add Modules";
+        $viewData['activeTab'] = "privileges";
         return view(roleFolder().'.privileges.add',$viewData);
     }
 
@@ -77,6 +79,7 @@ class PrivilegesController extends Controller
         $id = base64_decode($id);
         $viewData['record'] = ProfessionalPrivileges::where("id",$id)->first();
         $viewData['pageTitle'] = "Edit Modules";
+        $viewData['activeTab'] = "privileges";
         return view(roleFolder().'.privileges.edit',$viewData);
     }
 

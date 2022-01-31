@@ -25,6 +25,7 @@ class ProfessionalController extends Controller
         $viewData['active_users'] = Professionals::where('panel_status','1')->count();
         $viewData['inactive_users'] = Professionals::where('panel_status','0')->count();
        	$viewData['pageTitle'] = "Active Professionals";
+        $viewData['activeTab'] = "professionals";
         return view(roleFolder().'.professionals.active-lists',$viewData);
     }
 
@@ -47,6 +48,7 @@ class ProfessionalController extends Controller
         $viewData['active_users'] = Professionals::where('panel_status','1')->count();
         $viewData['inactive_users'] = Professionals::where('panel_status','0')->count();
         $viewData['pageTitle'] = "Inactive Professionals";
+        $viewData['activeTab'] = "professionals";
         return view(roleFolder().'.professionals.inactive-lists',$viewData);
     }
 
@@ -229,6 +231,7 @@ class ProfessionalController extends Controller
                 ->where("support_read",0)
                 ->count();
         $viewData['unread_chats'] = $unread_chats;
+        $viewData['activeTab'] = "professionals";
         return view(roleFolder().'.professionals.view-details',$viewData);
     }
 

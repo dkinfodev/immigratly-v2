@@ -43,6 +43,9 @@ class EligibilityQuestionsController extends Controller
         $visa_service = VisaServices::where("id",$id)->first();
         $viewData['visa_service'] = $visa_service;
         $viewData['pageTitle'] = $visa_service->name." Eligibility Questions";
+
+        $viewData['activeTab'] = 'visa-services';
+
         return view(roleFolder().'.eligibility-questions.lists',$viewData);
     } 
 
@@ -85,6 +88,7 @@ class EligibilityQuestionsController extends Controller
         $viewData['components'] = $components;
         $language_proficiencies = LanguageProficiency::get();
         $viewData['language_proficiencies'] = $language_proficiencies; 
+        $viewData['activeTab'] = 'visa-services';
         return view(roleFolder().'.eligibility-questions.add',$viewData);
     }
 
@@ -96,8 +100,6 @@ class EligibilityQuestionsController extends Controller
             'linked_to_cv'=> 'required',
             'options'=> 'required',
         ]);
-        
-        
         
         if ($validator->fails()) {
             $response['status'] = false;
@@ -289,6 +291,7 @@ class EligibilityQuestionsController extends Controller
         
         $viewData['components'] = $components;
         $viewData['component_ids'] = $component_ids;
+        $viewData['activeTab'] = 'visa-services';
         return view(roleFolder().'.eligibility-questions.edit',$viewData);
     }
 
@@ -539,6 +542,7 @@ class EligibilityQuestionsController extends Controller
         $visa_service = VisaServices::where("id",$id)->first();
         $viewData['visa_services'] = $visa_service;
         $viewData['pageTitle'] = $visa_service->name." Component Questions";
+        $viewData['activeTab'] = 'visa-services';
         return view(roleFolder().'.component-questions.lists',$viewData);
     } 
 
@@ -575,6 +579,7 @@ class EligibilityQuestionsController extends Controller
         $viewData['pageTitle'] = "Add Component";
         $groups = QuestionsGroups::where("visa_service_id",$visa_service->unique_id)->where("is_default",0)->get();
         $viewData['groups'] = $groups;
+        $viewData['activeTab'] = 'visa-services';
         return view(roleFolder().'.component-questions.add',$viewData);
     }
 
@@ -683,6 +688,7 @@ class EligibilityQuestionsController extends Controller
         $viewData['pageTitle'] = "Edit Component";
         $groups = QuestionsGroups::where("visa_service_id",$visa_service->unique_id)->where("is_default",0)->get();
         $viewData['groups'] = $groups;
+        $viewData['activeTab'] = 'visa-services';
         return view(roleFolder().'.component-questions.edit',$viewData);
     }
 
@@ -834,7 +840,7 @@ class EligibilityQuestionsController extends Controller
         $viewData['visa_service'] = $visa_service;
         $viewData['record'] = $record;
         $viewData['pageTitle'] = "Set Condition";
-        
+        $viewData['activeTab'] = 'visa-services';
         return view(roleFolder().'.eligibility-questions.set-conditions',$viewData);
     }
 
@@ -924,7 +930,7 @@ class EligibilityQuestionsController extends Controller
         $viewData['visa_service_id'] = $visa_service_id;
         $viewData['questions'] = EligibilityQuestions::where("visa_service_id",$visa_service->unique_id)->get();
         $viewData['pageTitle'] = "Arrange Questions";
-        
+        $viewData['activeTab'] = 'visa-services';
         return view(roleFolder().'.eligibility-questions.arrange-questions',$viewData);
     }
 
@@ -989,7 +995,7 @@ class EligibilityQuestionsController extends Controller
         $viewData['visa_service_id'] = $visa_service_id;
         $viewData['questions'] = EligibilityQuestions::where("visa_service_id",$visa_service->unique_id)->get();
         $viewData['pageTitle'] = "Arrange Groups";
-        
+        $viewData['activeTab'] = 'visa-services';
         return view(roleFolder().'.eligibility-questions.arrange-groups',$viewData);
     }
 
@@ -1020,6 +1026,7 @@ class EligibilityQuestionsController extends Controller
         $visa_service = VisaServices::where("id",$id)->first();
         $viewData['visa_services'] = $visa_service;
         $viewData['pageTitle'] = $visa_service->name." Group Questions";
+        $viewData['activeTab'] = 'visa-services';
         return view(roleFolder().'.groups-questions.lists',$viewData);
     } 
 
@@ -1058,6 +1065,7 @@ class EligibilityQuestionsController extends Controller
                                                     
         $viewData['pageTitle'] = "Add Group Questions";
         $viewData['visa_service_id'] = $visa_service_id;
+        $viewData['activeTab'] = 'visa-services';
         return view(roleFolder().'.groups-questions.add',$viewData);
     }
 
@@ -1185,6 +1193,7 @@ class EligibilityQuestionsController extends Controller
                                             ->get();
         $viewData['pageTitle'] = "Edit Group Questions";
         $viewData['visa_service_id'] = $visa_service_id;
+        $viewData['activeTab'] = 'visa-services';
         return view(roleFolder().'.groups-questions.edit',$viewData);
     }
 
@@ -1300,6 +1309,7 @@ class EligibilityQuestionsController extends Controller
                                     ->where("component_id",$component_id)
                                     ->get();
         $viewData['records'] = $records;
+        $viewData['activeTab'] = 'visa-services';
         return view(roleFolder().'.combination-questions.lists',$viewData);
     } 
 
@@ -1512,7 +1522,7 @@ class EligibilityQuestionsController extends Controller
         $viewData['visa_service_id'] = $visa_service_id;
         
         $viewData['pageTitle'] = "Set Condition";
-        
+        $viewData['activeTab'] = 'visa-services';
         return view(roleFolder().'.groups-questions.group-components',$viewData);
     }
 
@@ -1560,7 +1570,7 @@ class EligibilityQuestionsController extends Controller
         $viewData['record'] = $record;
         
         $viewData['pageTitle'] = "Set Condition";
-        
+        $viewData['activeTab'] = 'visa-services';
         return view(roleFolder().'.groups-questions.set-condition',$viewData);
     }
 
@@ -1608,7 +1618,7 @@ class EligibilityQuestionsController extends Controller
         $viewData['records'] = $records;
         $viewData['visa_service'] = $visa_service;
         $viewData['pageTitle'] = "Group Eligibiliy Pattern of ".$visa_service->name;
-        
+        $viewData['activeTab'] = 'visa-services';
         return view(roleFolder().'.eligibility-questions.group-eligibility-patterns',$viewData);
     }
     
@@ -1636,7 +1646,7 @@ class EligibilityQuestionsController extends Controller
         $viewData['visa_service_id'] = $visa_service_id;
         $viewData['questions'] = EligibilityQuestions::where("visa_service_id",$visa_service->unique_id)->get();
         $viewData['pageTitle'] = "Eligibility Check of ".$visa_service->name;
-        
+        $viewData['activeTab'] = 'visa-services';
         return view(roleFolder().'.eligibility-questions.group-eligibility-check',$viewData);
     }
 
@@ -1738,7 +1748,7 @@ class EligibilityQuestionsController extends Controller
         $viewData['visa_service_id'] = $visa_service_id;
         $viewData['questions'] = $questions;
         $viewData['pageTitle'] = "Set Pattern for ".$visa_service->name;
-        
+        $viewData['activeTab'] = 'visa-services';
         return view(roleFolder().'.eligibility-questions.set-eligibility-pattern',$viewData);
     }
 
@@ -1762,7 +1772,7 @@ class EligibilityQuestionsController extends Controller
         $viewData['visa_service_id'] = $visa_service_id;
         $viewData['questions'] = $questions;
         $viewData['pageTitle'] = "Edit Pattern for ".$visa_service->name;
-
+        $viewData['activeTab'] = 'visa-services';
         return view(roleFolder().'.eligibility-questions.edit-eligibility-pattern',$viewData);
     }
 
@@ -1796,6 +1806,7 @@ class EligibilityQuestionsController extends Controller
         $viewData['component_id'] = $component_id;
         $viewData['question'] = $question;
         $viewData['records'] = $records;
+        $viewData['activeTab'] = 'visa-services';
         return view(roleFolder().'.combinational-options.add',$viewData);
     }
 
@@ -1922,7 +1933,7 @@ class EligibilityQuestionsController extends Controller
         $viewData['pageTitle'] = "Set Pre Condition";
         $viewData['record'] = $record;
         $viewData['visa_service'] = $visa_service;
-        
+        $viewData['activeTab'] = 'visa-services';
         return view(roleFolder().'.eligibility-questions.set-pre-condition',$viewData);        
     }
 
@@ -1980,6 +1991,7 @@ class EligibilityQuestionsController extends Controller
 
         $records = QuestionCombination::where("visa_service_id",$visa_service->unique_id)->get();
         $viewData['records'] = $records;
+        $viewData['activeTab'] = 'visa-services';
         return view(roleFolder().'.combinational-options.multiple-group-questions',$viewData);
     }
 

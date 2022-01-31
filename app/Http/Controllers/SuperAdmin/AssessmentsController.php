@@ -33,6 +33,8 @@ class AssessmentsController extends Controller
         $viewData['assigned_count'] = $assigned_count;
         $viewData['new_count'] = $new_count;
         $viewData['total_assessments'] = $total_assessments;
+
+        $viewData['activeTab'] = 'assessments';
         return view(roleFolder().'.assessments.lists',$viewData);
     }
 
@@ -45,6 +47,7 @@ class AssessmentsController extends Controller
         $viewData['assigned_count'] = $assigned_count;
         $viewData['new_count'] = $new_count;
         $viewData['total_assessments'] = $total_assessments;
+        $viewData['activeTab'] = 'assessments';
         return view(roleFolder().'.assessments.lists',$viewData);
     }
 
@@ -77,6 +80,7 @@ class AssessmentsController extends Controller
         $viewData['pageTitle'] = "Add Assessment";
         $visa_services = VisaServices::get();
         $viewData['visa_services'] = $visa_services;
+        $viewData['activeTab'] = 'assessments';
         return view(roleFolder().'.assessments.add',$viewData);
     }
 
@@ -160,6 +164,7 @@ class AssessmentsController extends Controller
         $viewData['record'] = $record;
         $visa_services = VisaServices::get();
         $viewData['visa_services'] = $visa_services;
+        $viewData['activeTab'] = 'assessments';
         return view(roleFolder().'.assessments.edit',$viewData);
     }
 
@@ -541,6 +546,7 @@ class AssessmentsController extends Controller
         $viewData['folder_id'] = $folder_id;
         $viewData['assessment_id'] = $assessment_id;
         $viewData['pageTitle'] = "View Documents";
+        $viewData['activeTab'] = 'assessments';
         return view(roleFolder().'.assessments.view-documents',$viewData);
     }
     

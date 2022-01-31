@@ -25,7 +25,7 @@ class DiscussionsController extends Controller
         $viewData['open_discussion'] = $open_discussion;
         $viewData['close_discussion'] = $close_discussion;
         $viewData['total'] = $total;
-
+        $viewData['activeTab'] = 'discussions';
         return view(roleFolder().'.discussions.lists',$viewData);
     }
 
@@ -52,6 +52,7 @@ class DiscussionsController extends Controller
 
     public function add(Request $request){
         $viewData['pageTitle'] = "Add Chat Group";
+        $viewData['activeTab'] = 'discussions';
         return view(roleFolder().'.discussions.add',$viewData);
     }
 
@@ -92,6 +93,7 @@ class DiscussionsController extends Controller
         $record = ChatGroups::where("unique_id",$id)->first();
         
         $viewData['record'] = $record;
+        $viewData['activeTab'] = 'discussions';
         return view(roleFolder().'.discussions.edit',$viewData);
     }
 
@@ -157,6 +159,7 @@ class DiscussionsController extends Controller
         $record = ChatGroups::where("unique_id",$id)->first();
         $viewData['record'] = $record;
         $viewData['chat_id'] = $id;
+        $viewData['activeTab'] = 'discussions';
         return view(roleFolder().'.discussions.group-comments',$viewData);
 
     }
