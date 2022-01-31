@@ -43,7 +43,7 @@ if(!empty($is_comp_conditional)){
             $block = 'none';
             $cv_section = $ques->EligibilityQuestion->cv_section;
             $elg_options = $ques->EligibilityQuestion->Options;
-            $option_selected = cvBasedOptions($cv_section,$elg_options,$ques->EligibilityQuestion);
+            $option_selected = cvBasedOptions($cv_section,$elg_options,$ques->EligibilityQuestion,$component->unique_id);
             
             if($option_selected['option_selected'] == ''){
                 $block = 'block';
@@ -188,7 +188,7 @@ if(!empty($is_comp_conditional)){
             conditionalQuestion(e, 'radio');
             @endif
 
-            @if($ques->EligibilityQuestion->option_type == 'select')
+            @if($ques->EligibilityQuestion->option_type == 'dropdown')
             var e = $(
                 ".qs-{{ $group->unique_id }}-{{ $component->unique_id }}-{{ $ques->EligibilityQuestion->unique_id }} select"
                 );
@@ -213,7 +213,7 @@ if(!empty($is_comp_conditional)){
                 $block = 'none';
                 $cv_section = $ques->EligibilityQuestion->cv_section;
                 $elg_options = $ques->EligibilityQuestion->Options;
-                $option_selected = cvBasedOptions($cv_section,$elg_options,$ques->EligibilityQuestion);
+                $option_selected = cvBasedOptions($cv_section,$elg_options,$ques->EligibilityQuestion,$component->unique_id);
                 
                 if($option_selected['option_selected'] == ''){
                     $block = 'block';

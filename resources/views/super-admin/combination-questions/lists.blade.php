@@ -214,6 +214,7 @@ function fetchCombination(){
         url: BASEURL + '/visa-services/eligibility-questions/{{$visa_service_id}}/combination-questions/fetch-combinations',
         data:{
             _token:csrf_token,
+            component_id:"{{$component_id}}",
             question_one:question_one,
             question_two:question_two,
         },

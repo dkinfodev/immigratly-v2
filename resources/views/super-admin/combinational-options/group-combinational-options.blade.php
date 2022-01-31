@@ -12,6 +12,7 @@
                 <th>Question Option</th>
                 <th>Behaviour</th>
                 <th>Score</th>
+                <th>Level</Th>
             </tr>
         </thead>
         <tbody>
@@ -48,7 +49,9 @@
                 <td>
                     <input type="text" class="form-control inp-field" placeholder="Enter Score" name="option[{{ $index }}][score]" value="{{ $option['score'] }}" {{ $option['comb_option_id'] == $option['comb_group']['id']?'':'disabled' }} />
                 </td>
-                
+                <td>
+                    <input type="number" class="form-control inp-field" placeholder="Enter Level" name="option[{{ $index }}][level]" value="{{ $option['level'] }}" {{ $option['comb_option_id'] == $option['comb_group']['id']?'':'disabled' }} />
+                </td>
             </tr>
            @endforeach
         <tbody>

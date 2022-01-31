@@ -3,6 +3,7 @@
     @csrf
     <input type="hidden" value="{{ $visa_service->unique_id }}" name="visa_service_id" />
     <input type="hidden" value="{{ $question->unique_id }}" name="question_id" />
+    <input type="hidden" value="{{ $component_id }}" name="component_id" />
     <table class="table table-bordered table-align-middle">
         <thead>
             <tr>
@@ -80,7 +81,8 @@ $(document).ready(function() {
                 hideLoader();
                 if(response.status == true){
                     successMessage(response.message);
-                    window.location.href = response.redirect_back;
+                    // window.location.href = response.redirect_back;
+                    location.reload();
                 }else{
                     $('.validation_response').html(response.message);
                 }

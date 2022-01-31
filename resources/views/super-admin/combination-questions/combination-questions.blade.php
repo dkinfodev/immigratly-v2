@@ -1,6 +1,7 @@
 <form action="{{ baseUrl('visa-services/eligibility-questions/'.$visa_service_id.'/combination-questions/save') }}" id="form"
     method="post">
     @csrf
+    <input type="hidden" name="component_id" value="{{$component_id}}" />
     <table class="table table-bordered table-align-middle">
         <thead>
             <tr>
@@ -88,7 +89,7 @@ $(document).ready(function() {
         e.preventDefault(); 
         
         var formData = $("#form").serialize();
-        formData += "&component_id="+$(".component_id").val();
+        // formData += "&component_id="+$(".component_id").val();
         $.ajax({
             url:$("#form").attr('action'),
             type:"post",
