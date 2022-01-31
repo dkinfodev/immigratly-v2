@@ -539,8 +539,8 @@ span#select2-bchg-container {
                   <div class="row">
                      <div class="col-4"></div>
                      <div class="col-8">
-                     <div class="imm-add-skillset-container"><a href="javascript:;" 
-                           class="imm-add-skillset-education form-link" onclick="showPopup('<?php echo baseUrl('educations/add') ?>')">
+                     <div class="imm-add-skillset-container">
+                        <a href="javascript:;"  class="imm-add-skillset-education form-link" onclick="showPopup('<?php echo baseUrl('educations/add') ?>')">
                            <i class="bi-plus-circle me-1"></i> Add Education
                         </a></div>
                      </div>
@@ -553,7 +553,7 @@ span#select2-bchg-container {
 
                      <div class="imm-add-skillset-body-list">
 
-                     @foreach($educations as $ed)
+                     @foreach($educations as $key=>$ed)
                      <div class="imm-add-skillset-body-list-component">
                         <div class="imm-add-skillset-body-list-component-header">
                         </div>
@@ -570,17 +570,37 @@ span#select2-bchg-container {
                               <div class="col-2" style="text-align:right">
                                  <!-- Dropdown -->
                                  <div class="btn-group">
-                                    <button type="button"
+                                    <!-- <button type="button"
                                        class="btn btn-outline-secondary btn-icon btn-sm btn-eca-menu" type="button"
                                        id="dropdownMenuButtonHoverAnimation" data-bs-toggle="dropdown"
                                        aria-expanded="false" data-bs-open-on-hover data-bs-dropdown-animation>
                                        <i class="bi-three-dots"></i>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonHoverAnimation">
+                                    </button> -->
+                                    <!-- <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonHoverAnimation">
                                        <a class="dropdown-item" href="{{baseUrl('educations/edit/'.base64_encode($ed->id))}}">Edit list</a>
                                        <a class="dropdown-item" href="{{baseUrl('educations/delete/'.base64_encode($ed->id))}}">Delete list</a>
 
                                     </div>
+ -->
+                                    <div class="hs-unfold">
+                                       <a class="js-hs-action btn btn-sm btn-white" href="javascript:;"
+                                          data-hs-unfold-options='{
+                                            "target": "#action-{{$key}}",
+                                            "type": "css-animation"
+                                          }'>
+                                               <i class="bi-three-dots"></i>
+                                       </a>
+
+                                       <div id="action-{{$key}}" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                                         <!-- <a class="dropdown-item" href="{{baseUrl('educations/edit/'.base64_encode($ed->id))}}">Edit </a> -->
+
+                                         <a href="javascript:;"  class="dropdown-item"  form-link" onclick="showPopup('<?php echo baseUrl('educations/edit/'.base64_encode($ed->id)) ?>')">
+                                           Edit
+                                         </a>
+
+                                         <a class="dropdown-item" href="{{baseUrl('educations/delete/'.base64_encode($ed->id))}}">Delete </a>
+                                         
+                                     </div>
                                  </div>
                                  <!-- End Dropdown -->
                               </div>
@@ -631,8 +651,6 @@ span#select2-bchg-container {
 
                   @endif
                
-
-
                </div>
                <!-- End Body -->
 
@@ -703,8 +721,8 @@ span#select2-bchg-container {
                            <div class="imm-add-workexp-body-list-component-body">
                               <div class="row">
                                  <div class="col-10">
-                                 <h4>Assisstant Manager</h4>
-                                 <h6>HCL Technologies Limited, Alberta, Canada </h6>
+                                 <h4>{{$expirence->position}}</h4>
+                                 <h6>{{$expirence->employment_agency}}, {{$expirence->stateName->name}}, {{$expirence->countryName->name}} </h6>
 
                                  </div>
                                  <div class="col-2" style="text-align:right">
@@ -738,10 +756,7 @@ span#select2-bchg-container {
                                  <div class="row">
                                  <div class="col-12">
                                     <ul>
-                                       <li>Tell job seekers the pay and receive up to two times more applications</li>
-                                       <li>Do you have any of these top skills employers are looking for?</li>
-                                       <li>This information will help us find the job that's right for you.</li>
-                                       <li>Employers cannot find your CV, but you can attach it</li>
+                                      {{$expirence->exp_details}}
                                     </ul>
 
                                  </div>
@@ -752,8 +767,12 @@ span#select2-bchg-container {
                      @endforeach
                   </div>
                   @else
-                  <div class="imm-add-workexp-body-list-empty"><span>Work history not found</span>
+                  
+                  <div class="imm-add-skillset-body-list-empty"><span>Work experience not found</span>
                   </div>
+
+                  </div>
+                  
                   @endif
                   <!-- End Body -->
 
@@ -766,14 +785,6 @@ span#select2-bchg-container {
                   <!-- End Footer -->
                </div>
 
-               <!-- Footer -->
-               <div class="card-footer pt-0">
-                  <div class="d-flex align-items-center">
-
-                  </div>
-               </div>
-               <!-- End Footer -->
-               </div>
 
                <div id="imm-language-section" class="card imm-cv-section">
                <!-- Header -->
@@ -792,50 +803,44 @@ span#select2-bchg-container {
                   <div class="imm-cv-language">
                      <h4 class="mb-3">First Official Language</h4>
 
+                     <form id="language_proficiency_form" class="js-validate" action="{{ baseUrl('/save-language-proficiency') }}" method="post">
+                     @csrf
                      <div class="col-12">
                      
 
                         <div class="row"> 
                            <div class="col-sm-4"> 
-                  <div class="mb-4">
-                  <label for="addressShopCheckout"
-                              class="form-label">Language</label>
-                           <!-- Select2 -->
-                           <!-- Select2 -->
-                           <select class="js-select2-custom custom-select" size="1" style="opacity: 0;">
-                              <option value="1">English</option>
-                              <option value="2">French</option>
+                           
+                           <div class="mb-4">
+                  
+                              <label for="addressShopCheckout" class="form-label">Language</label>
 
-                           </select>
+                              <select class="js-select2-custom custom-select" size="1" style="opacity: 0;" onchange="fetchOfficialLanguage(this.value),fetchProficiency(this.value,'first')"  name="first_official[language]" required>
+                              
+                              <option value="">Select Language</option>
+                              @foreach($official_languages as $off_language)
+                              <option <?php echo (isset($first_official) && $first_official->language_id == $off_language->unique_id)?'selected':'' ?> value="{{ $off_language->unique_id}}">{{$off_language->name}}
+                              </option>
+                              @endforeach
 
-                           <!-- End Select2 -->
-
-                           </div> </div>
-                           <div class="col-sm-8">
-<div class="mb-4">
-                  <label for="addressShopCheckout" class="form-label">Language
-                              Test</label>
-                           <!-- Select2 -->
-                           <!-- Select2 -->
-                           <select class="js-select2-custom custom-select" size="1" style="opacity: 0;">
-                              <option value="1">International English Language Testing System (IELTS) – General
-                                 Training</option>
-                              <option value="2">Canada (+1)</option>
-                              <option value="3">Lester Howard</option>
-                              <option value="4">George Marino</option>
-                              <option value="5">Tyler Johnson</option>
-                              <option value="6">Jennifer Craig</option>
-                              <option value="7">Martha Barnwell</option>
-                              <option value="8">Florencia Todd</option>
-                              <option value="9">Henry Sloan</option>
-                              <option value="10">Abigail Watson</option>
-                           </select>
+                              </select>
 
                            <!-- End Select2 -->
-
+                           </div> 
                            </div>
 
-                        </div>
+                           <div class="col-sm-8">
+                              <div class="mb-4">
+                                 <label for="addressShopCheckout" class="form-label">Language Test</label>
+                                 <select id="first_proficiency" name="first_official[proficiency]">
+                                 <option value="">Select Proficiency</option>
+                                 @foreach($first_proficencies as $proficiency)
+                                       <option <?php echo (isset($first_official) && $first_official->proficiency == $proficiency->unique_id)?'selected':'' ?> value="{{ $proficiency->unique_id }}">{{$proficiency->name}}</option>
+                                 @endforeach
+                                 </select>
+                              </div>
+
+                           </div>
 
                      </div>
                      </div>
@@ -844,30 +849,32 @@ span#select2-bchg-container {
                      <div class="col-12">
                      
                         <div class="row gx-2">
-                           <div class="col-sm-3"><div class="mb-4">
+                           <div class="col-sm-3">
+                              <div class="mb-4">
 
-                           <label for="addlisteningLabel" class="form-label">Listening</label>
-                           <input type="text" class="form-control" name="addlistening" id="addlistening"
-                              placeholder="Listening" aria-label="Listening">
-                           </div></div>
-                           <div class="col-sm-3"><div class="mb-4">
+                                 <label for="addlisteningLabel" class="form-label">Listening</label>
+                                 <input type="text" name="first_official[listening]" value="<?php echo (isset($first_official))?$first_official->listening:'' ?>"  required class="form-control" placeholder="Listening" />
 
-                           <label for="addreadingLabel" class="form-label">Reading</label>
-                           <input type="text" class="form-control" name="addreading" id="addreading"
-                              placeholder="Reading" aria-label="Reading">
-                           </div></div>
-                           <div class="col-sm-3"><div class="mb-4">
-
-                           <label for="addwritingLabel" class="form-label">Writing</label>
-                           <input type="text" class="form-control" name="addwriting" id="addwriting"
-                              placeholder="Writing" aria-label="Writing">
-                           </div></div>
-                           <div class="col-sm-3"><div class="mb-4">
-
-                           <label for="addspeakingLabel" class="form-label">Speaking</label>
-                           <input type="text" class="form-control" name="addspeaking" id="addspeaking"
-                              placeholder="Speaking" aria-label="Speaking">
+                              </div>
                            </div>
+                           <div class="col-sm-3">
+                              <div class="mb-4">
+                              <label for="addreadingLabel" class="form-label">Reading</label>
+                              <input type="text" name="first_official[reading]" value="<?php echo (isset($first_official))?$first_official->reading:'' ?>" required class="form-control" placeholder="Reading" />
+                              </div>
+                           </div>
+                           <div class="col-sm-3">
+                              <div class="mb-4">
+                              <label for="addwritingLabel" class="form-label">Writing</label>
+                             <input type="text" name="first_official[writing]" value="<?php echo (isset($first_official))?$first_official->writing:'' ?>"  required class="form-control" placeholder="Writing" />
+                              </div>
+                           </div>
+                           <div class="col-sm-3">
+                              <div class="mb-4">
+
+                              <label for="addspeakingLabel" class="form-label">Speaking</label>
+                              <input type="text" name="first_official[speaking]" value="<?php echo (isset($first_official))?$first_official->speaking:'' ?>"  required class="form-control" placeholder="Speaking" />
+                              </div>
                         </div>
                      </div>
                      </div>
@@ -880,44 +887,35 @@ span#select2-bchg-container {
                      <div class="mb-4">
 
                         <div class="row">
-                           <div class="col-sm-4"><div class="mb-4">
-                  <label for="addressShopCheckout"
-                              class="form-label">Language</label>
+                           <div class="col-sm-4">
+                            <div class="mb-4">
+                              <label for="addressShopCheckout" class="form-label">Language</label>
                            <!-- Select2 -->
                            <!-- Select2 -->
-                           <select class="js-select2-custom custom-select" size="1" style="opacity: 0;">
-                              <option value="1">English</option>
-                              <option value="2">French</option>
-
-                           </select>
-
+                              <select onchange="fetchProficiency(this.value,'second')" id="second_official" name="second_official[language]">
+                              <option value="">Select Language</option>
+                              @foreach($second_off_languages as $off_language)
+                                    <option <?php echo (isset($second_official) && $second_official->language_id == $off_language->unique_id)?'selected':'' ?> value="{{ $off_language->unique_id}}">{{$off_language->name}}</option>
+                              @endforeach
+                              </select>
+                              <!-- End Select2 -->
+                            </div>  
+                           </div>
+                           <div class="col-sm-8">
+                              <div class="mb-4">
+                                 <label for="addressShopCheckout" class="form-label">Language Test</label>
+                                 <!-- Select2 -->
+                                 <!-- Select2 -->
+                                 <select id="second_proficiency" name="second_official[proficiency]">
+                                    <option value="">Select Proficiency</option>
+                                    @foreach($second_proficencies as $proficiency)
+                                          <option <?php echo (isset($second_official) && $second_official->proficiency == $proficiency->unique_id)?'selected':'' ?> value="{{ $proficiency->unique_id}}">{{$proficiency->name}}</option>
+                                    @endforeach
+                                 </select>
                            <!-- End Select2 -->
-
-                           </div>  </div>
-                           <div class="col-sm-8"><div class="mb-4">
-                  <label for="addressShopCheckout" class="form-label">Language
-                              Test</label>
-                           <!-- Select2 -->
-                           <!-- Select2 -->
-                           <select class="js-select2-custom custom-select" size="1" style="opacity: 0;">
-                              <option value="1">International English Language Testing System (IELTS) – General
-                                 Training</option>
-                              <option value="2">Canada (+1)</option>
-                              <option value="3">Lester Howard</option>
-                              <option value="4">George Marino</option>
-                              <option value="5">Tyler Johnson</option>
-                              <option value="6">Jennifer Craig</option>
-                              <option value="7">Martha Barnwell</option>
-                              <option value="8">Florencia Todd</option>
-                              <option value="9">Henry Sloan</option>
-                              <option value="10">Abigail Watson</option>
-                           </select>
-
-                           <!-- End Select2 -->
+                              </div>
 
                            </div>
-
-                        </div>
 
                      </div>
                      </div>
@@ -927,34 +925,44 @@ span#select2-bchg-container {
                      
 
                         <div class="row gx-2">
-                           <div class="col-sm-3"> <div class="mb-4">
-                           <label for="addlisteningLabel" class="form-label">Listening</label>
-                           <input type="text" class="form-control" name="addlistening" id="addlistening"
-                              placeholder="Listening" aria-label="Listening">
-                           </div> </div>
-                           <div class="col-sm-3"> <div class="mb-4">
-                           <label for="addreadingLabel" class="form-label">Reading</label>
-                           <input type="text" class="form-control" name="addreading" id="addreading"
-                              placeholder="Reading" aria-label="Reading">
-                           </div> </div>
-                           <div class="col-sm-3"> <div class="mb-4">
-                           <label for="addwritingLabel" class="form-label">Writing</label>
-                           <input type="text" class="form-control" name="addwriting" id="addwriting"
-                              placeholder="Writing" aria-label="Writing">
-                           </div> </div>
-                           <div class="col-sm-3"> <div class="mb-4">
-                           <label for="addspeakingLabel" class="form-label">Speaking</label>
-                           <input type="text" class="form-control" name="addspeaking" id="addspeaking"
-                              placeholder="Speaking" aria-label="Speaking">
+                           <div class="col-sm-3"> 
+                              <div class="mb-4">
+                              <label for="addlisteningLabel" class="form-label">Listening</label>
+                              <input type="text" name="second_official[listening]" value="<?php echo (isset($second_official))?$second_official->listening:'' ?>" class="form-control" placeholder="Listening" />
+                              </div>
+                              </div>
+                           
+                           <div class="col-sm-3"> 
+                              <div class="mb-4">
+                              <label for="addreadingLabel" class="form-label">Reading</label>
+                              <input type="text" name="second_official[reading]" value="<?php echo (isset($second_official))?$second_official->reading:'' ?>" class="form-control" placeholder="Reading" />
+                              </div> 
                            </div>
-                        </div>
+
+
+                           <div class="col-sm-3"> 
+                              <div class="mb-4">
+                              <label for="addwritingLabel" class="form-label">Writing</label>
+                              <input type="text" name="second_official[writing]" value="<?php echo (isset($second_official))?$second_official->writing:'' ?>" class="form-control" placeholder="Writing" />
+                              </div> 
+                           </div>
+
+                           <div class="col-sm-3"> 
+                              <div class="mb-4">
+                              <label for="addspeakingLabel" class="form-label">Speaking</label>
+                              <input type="text" name="second_official[speaking]" value="<?php echo (isset($second_official))?$second_official->speaking:'' ?>" class="form-control" placeholder="Speaking" />
+                              </div>
+                           </div>
                      </div>
+
+                     <button type="submit" class="btn btn-primary">Submit</button>
+                     
                      </div>
                      <!-- End Form -->
                   </div>
                </div>
                <!-- End Body -->
-
+               </form>
                <!-- Footer -->
                <div class="card-footer pt-0">
                   <div class="d-flex align-items-center">

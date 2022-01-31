@@ -13,4 +13,14 @@ class ClientExperience extends Model
     static function deleteRecord($id){
         ClientExperience::where("id",$id)->delete();
     }
+
+    public function CountryName()
+    {
+        return $this->belongsTo('App\Models\Countries','country_id');
+    }
+
+    public function StateName()
+    {
+        return $this->belongsTo('App\Models\States','state_id');
+    }
 }

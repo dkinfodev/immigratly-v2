@@ -11,6 +11,8 @@
 @endsection
 
 @section('content')
+
+
 <!-- Content -->
 <div class="professional">
   <!-- Page Header -->

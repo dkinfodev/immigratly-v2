@@ -9,6 +9,12 @@
   background-color: #f8f8f8;
   overflow: hidden;
 }
+
+.datatable-custom{
+overflow-x: scroll;
+max-width: 100%;
+}
+
 .top_menu {
   background-color: #fff;
   width: 100%;

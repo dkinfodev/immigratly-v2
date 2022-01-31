@@ -224,8 +224,8 @@ $end_year = date("Y") - 20;
                       <!-- Select -->
                         <select id="evaluating_agency" class="form-select" name="evaluating_agency">
 
-                        @foreach($CanadianEqLevel as $CEL)
-                          <option value="{{$CEL->id}}">{{ $CEL->name }}</option>
+                        @foreach($EvaluatingAgency as $EA)
+                          <option value="{{$EA->id}}">{{ $EA->name }}</option>
                         @endforeach
                            
                         </select> <!-- End Select -->

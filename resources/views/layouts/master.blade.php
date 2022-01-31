@@ -34,7 +34,11 @@
     var SITEURL = "{{ url('/') }}";
     var csrf_token = "{{ csrf_token() }}";
     </script>
+
+
 </head>
+
+
 
 <body>
 <div class="loader">

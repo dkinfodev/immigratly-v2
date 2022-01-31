@@ -4,6 +4,168 @@
  * Copyright 2011-2021 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
+
+/*Badges*/
+
+.badge {
+  display: inline-block;
+  padding: 0.3125em 0.5em;
+  font-size: 75%;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.3125rem;
+  transition: all 0.2s ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .badge {
+    transition: none;
+  }
+}
+
+a.badge:hover, a.badge:focus {
+  text-decoration: none;
+}
+
+.badge:empty {
+  display: none;
+}
+
+.btn .badge {
+  position: relative;
+  top: -1px;
+}
+
+.badge-pill {
+  padding-right: 0.6em;
+  padding-left: 0.6em;
+  border-radius: 10rem;
+}
+
+.badge-primary {
+  color: #fff;
+  background-color: #377dff;
+}
+
+a.badge-primary:hover, a.badge-primary:focus {
+  color: #fff;
+  background-color: #045cff;
+}
+
+a.badge-primary:focus, a.badge-primary.focus {
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(55, 125, 255, 0.5);
+}
+
+.badge-secondary {
+  color: #fff;
+  background-color: #71869d;
+}
+
+a.badge-secondary:hover, a.badge-secondary:focus {
+  color: #fff;
+  background-color: #596d82;
+}
+
+a.badge-secondary:focus, a.badge-secondary.focus {
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(113, 134, 157, 0.5);
+}
+
+.badge-success {
+  color: #fff;
+  background-color: #00c9a7;
+}
+
+a.badge-success:hover, a.badge-success:focus {
+  color: #fff;
+  background-color: #00967d;
+}
+
+a.badge-success:focus, a.badge-success.focus {
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 201, 167, 0.5);
+}
+
+.badge-info {
+  color: #fff;
+  background-color: #00c9db;
+}
+
+a.badge-info:hover, a.badge-info:focus {
+  color: #fff;
+  background-color: #009aa8;
+}
+
+a.badge-info:focus, a.badge-info.focus {
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 201, 219, 0.5);
+}
+
+.badge-warning {
+  color: #1e2022;
+  background-color: #f5ca99;
+}
+
+a.badge-warning:hover, a.badge-warning:focus {
+  color: #1e2022;
+  background-color: #f0b26b;
+}
+
+a.badge-warning:focus, a.badge-warning.focus {
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(245, 202, 153, 0.5);
+}
+
+.badge-danger {
+  color: #fff;
+  background-color: #ed4c78;
+}
+
+a.badge-danger:hover, a.badge-danger:focus {
+  color: #fff;
+  background-color: #e81e55;
+}
+
+a.badge-danger:focus, a.badge-danger.focus {
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(237, 76, 120, 0.5);
+}
+
+.badge-light {
+  color: #1e2022;
+  background-color: #f9fafc;
+}
+
+a.badge-light:hover, a.badge-light:focus {
+  color: #1e2022;
+  background-color: #d7deeb;
+}
+
+a.badge-light:focus, a.badge-light.focus {
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(249, 250, 252, 0.5);
+}
+
+.badge-dark {
+  color: #fff;
+  background-color: #132144;
+}
+
+a.badge-dark:hover, a.badge-dark:focus {
+  color: #fff;
+  background-color: #080e1c;
+}
+
+a.badge-dark:focus, a.badge-dark.focus {
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(19, 33, 68, 0.5);
+}
+
+/*end badges*/ 
 @font-face {
     font-family: 'MuseoSans_500';
     src: url('../fonts/ms/MuseoSans_500-webfont.woff2') format('woff2'),

@@ -16,6 +16,7 @@ use App\Models\Notifications;
 use App\Models\LanguageProficiency;
 use App\Models\ClientExperience;
 use App\Models\CanadianEquivalencyLevel;
+use App\Models\EvaluatingAgency;
 use App\Models\ClientEducations;
 use App\Models\PrimaryDegree;
 use App\Models\BackupSettings;
@@ -542,6 +543,9 @@ class DashboardController extends Controller
         $countries = DB::table(MAIN_DATABASE.".countries")->get();
         $viewData['countries'] = $countries;
 
+        $EvaluatingAgency = EvaluatingAgency::get();
+        $viewData['EvaluatingAgency'] = $EvaluatingAgency;
+
         $CanadianEqLevel = CanadianEquivalencyLevel::get();
         $viewData['CanadianEqLevel'] = $CanadianEqLevel;
 
@@ -560,18 +564,14 @@ class DashboardController extends Controller
                 //'percentage' => 'required',
                 //'year_passed' => 'required',
                 'school_name' => 'required',
-
                 'from_month' => 'required',
                 'from_year' => 'required',
                 'to_month' => 'required',
                 'to_year' => 'required',
-                
                 'country_id' => 'required',
                 'state_id' => 'required',
-                
                 'canadian_equivalency_level' => 'required',
                 'evaluating_agency' => 'required',
-
             );
 
             // if($request->input("is_eca") == 1){
@@ -623,13 +623,13 @@ class DashboardController extends Controller
             //NEW
 
 
-            if($request->input("is_eca") == 1){
+            //if($request->input("is_eca") == 1){
                 // $object->is_eca = 1;
                 // $object->eca_equalency = $request->input("eca_equalency");
                 // $object->eca_doc_no = $request->input("eca_doc_no");
                 // $object->eca_agency = $request->input("eca_agency");
                 // $object->eca_year = $request->input("eca_year");
-            }
+            //}
 
             
             $object->canadian_equivalency_level = $request->input("canadian_equivalency_level");
@@ -652,6 +652,17 @@ class DashboardController extends Controller
         $record = ClientEducations::where("id",$id)->first();
         $viewData['record'] = $record;
         $primary_degree = PrimaryDegree::get();
+
+
+        $countries = DB::table(MAIN_DATABASE.".countries")->get();
+        $viewData['countries'] = $countries;
+
+        $EvaluatingAgency = EvaluatingAgency::get();
+        $viewData['EvaluatingAgency'] = $EvaluatingAgency;
+
+        $CanadianEqLevel = CanadianEquivalencyLevel::get();
+        $viewData['CanadianEqLevel'] = $CanadianEqLevel;
+
         $viewData['primary_degree'] = $primary_degree;
         $viewData['pageTitle'] = "Edit Education";
         $view = View::make(roleFolder().'.modal.edit-education',$viewData);
@@ -665,18 +676,27 @@ class DashboardController extends Controller
         try{
             $id = base64_decode($id);
             $valid = array(
-                'degree_id' => 'required',
+               'degree_id' => 'required',
                 'qualification' => 'required',
-                'percentage' => 'required',
-                'year_passed' => 'required'
+                //'percentage' => 'required',
+                //'year_passed' => 'required',
+                'school_name' => 'required',
+                'from_month' => 'required',
+                'from_year' => 'required',
+                'to_month' => 'required',
+                'to_year' => 'required',
+                'country_id' => 'required',
+                'state_id' => 'required',
+                'canadian_equivalency_level' => 'required',
+                'evaluating_agency' => 'required',
             );
-            if($request->input("is_eca") == 1){
-                $valid['eca_equalency'] = 'required';
-                $valid['eca_doc_no'] = 'required';
-                $valid['eca_agency'] = 'required';
-                $valid['eca_year'] = 'required';
-            }
-            $validator = Validator::make($request->all(),$valid);
+            // if($request->input("is_eca") == 1){
+            //     $valid['eca_equalency'] = 'required';
+            //     $valid['eca_doc_no'] = 'required';
+            //     $valid['eca_agency'] = 'required';
+            //     $valid['eca_year'] = 'required';
+            // }
+            //$validator = Validator::make($request->all(),$valid);
 
 
             if ($validator->fails()) {
@@ -695,9 +715,31 @@ class DashboardController extends Controller
             $object->degree_id = $request->input("degree_id");
             $object->user_id = \Auth::user()->unique_id;
             $object->qualification = $request->input("qualification");
-            $object->percentage = $request->input("percentage");
-            $object->year_passed = $request->input("year_passed");
-            if($request->input("is_eca") == 1){
+            $object->school_name = $request->input("school_name");
+            $object->country_id = $request->input("country_id");
+            $object->state_id = $request->input("state_id");
+
+            //$object->percentage = $request->input("percentage");
+            //$object->year_passed = $request->input("year_passed");
+            
+            //NEW
+            if($request->input("is_highest_degree") == 1){
+                $object->is_highest_degree = 1;
+            }
+            else{
+                $object->is_highest_degree = 0;   
+            }
+            if($request->input("is_ongoing_study") == 1){
+                 $object->is_ongoing_study = 1;
+            }
+            else{
+                 $object->is_ongoing_study = 0;   
+            }
+            $object->canadian_equivalency_level = $request->input("canadian_equivalency_level");
+            $object->evaluating_agency = $request->input("evaluating_agency");
+            $object->save();
+            
+            /*if($request->input("is_eca") == 1){
                 $object->is_eca = 1;
                 $object->eca_equalency = $request->input("eca_equalency");
                 $object->eca_doc_no = $request->input("eca_doc_no");
@@ -709,8 +751,7 @@ class DashboardController extends Controller
                 $object->eca_doc_no = '';
                 $object->eca_agency = '';
                 $object->eca_year = '';
-            }
-            $object->save();
+            }*/
 
             $response['status'] = true;
             $response['message'] = 'Record updated successfully';
