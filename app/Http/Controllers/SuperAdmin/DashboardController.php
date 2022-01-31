@@ -19,13 +19,14 @@ class DashboardController extends Controller
     public function dashboard()
     {
         $viewData['pageTitle'] = "Dashboard";
+        $viewData['activeTab'] = 'dashboard';
         return view(roleFolder().'.dashboard',$viewData);
     }
 
     public function editProfile()
     {
         $viewData['pageTitle'] = "Edit Profile";
-        
+        $viewData['activeTab'] = 'dashboard';
         $countries = Countries::get();
         $viewData['countries'] = $countries;
 
@@ -126,6 +127,7 @@ class DashboardController extends Controller
         $record = User::where("id",$id)->first();
         $viewData['record'] = $record;
         $viewData['pageTitle'] = "Change Password";
+        $viewData['activeTab'] = 'dashboard';
         return view(roleFolder().'.change-password',$viewData);
     }
 

@@ -54,7 +54,7 @@
                     <!-- End Dashboards -->
                     <!-- Personal -->
                     @if(Auth::user()->UserDetail->profile_complete == 1)
-                    
+                     
                   <span class="text-cap">Account</span>
                   <ul class="nav nav-sm nav-tabs nav-vertical mb-4">
                     <li class="nav-item ">

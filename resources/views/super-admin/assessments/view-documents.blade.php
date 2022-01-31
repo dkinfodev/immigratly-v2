@@ -1,22 +1,21 @@
-@extends('layouts.master-old')
+@extends('layouts.master')
 
-@section('pageheader')
+@section('breadcrumb')
 <!-- Content -->
-<div class="">
-    <div class="content container" style="height: 25rem;">
-        <!-- Page Header -->
-        <div class="page-header page-header-light page-header-reset">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h1 class="page-header-title">{{$pageTitle}}</h1>
-                </div>
-            </div>
-            <!-- End Row -->
-        </div>
-        <!-- End Page Header -->
-    </div>
-</div> 
+<ol class="breadcrumb breadcrumb-no-gutter">
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
+  
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/assessments') }}">Assessments</a></li>
+
+  <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
+</ol>
 <!-- End Content -->
+@endsection
+
+@section('header-right')
+<a class="btn btn-primary" href="{{baseUrl('assessments')}}">
+    <i class="tio mr-1"></i> Back
+</a>
 @endsection
 
 
@@ -36,30 +35,7 @@
 @endsection
 @section('content')
 <div class="assessments">
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="row align-items-end">
-      <div class="col-sm mb-2 mb-sm-0">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb breadcrumb-no-gutter">
-            <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/assessments') }}">Assessments</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
-          </ol>
-        </nav>
-        <h1 class="page-title">{{$pageTitle}}</h1>
-      </div>
-
-      <div class="col-sm-auto">
-        <a class="btn btn-primary" href="{{baseUrl('/assessments/view/'.$assessment_id)}}">
-          <i class="tio mr-1"></i> Back 
-        </a>
-      </div>
-    </div>
-    <!-- End Row -->
-  </div>
-  <!-- End Page Header -->
-
+  
   <!-- Card -->
    <div class="row">
       <div class="col-md-12">

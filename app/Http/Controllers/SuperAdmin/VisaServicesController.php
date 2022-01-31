@@ -33,6 +33,7 @@ class VisaServicesController extends Controller
     {
         
         $viewData['pageTitle'] = "Visa Services";
+        $viewData['activeTab'] = "visa-services";
         return view(roleFolder().'.visa-services.lists',$viewData);
     } 
 
@@ -63,6 +64,7 @@ class VisaServicesController extends Controller
         $viewData['main_services'] = VisaServices::where("parent_id",0)->get();
         $viewData['documents'] = DocumentFolder::get();
         $viewData['cv_types'] = CvTypes::get();
+        $viewData['activeTab'] = "visa-services";
         return view(roleFolder().'.visa-services.add',$viewData);
     }
 
@@ -116,6 +118,7 @@ class VisaServicesController extends Controller
         $viewData['documents'] = DocumentFolder::get();
         $viewData['main_services'] = VisaServices::where("parent_id",0)->get();        
         $viewData['cv_types'] = CvTypes::get();
+        $viewData['activeTab'] = "visa-services";
         return view(roleFolder().'.visa-services.edit',$viewData);
     }
 
@@ -199,6 +202,7 @@ class VisaServicesController extends Controller
         $visa_service = VisaServices::where("id",$id)->first();
         $viewData['visa_services'] = $visa_service;
         $viewData['pageTitle'] = $visa_service->name." Cutoff Points";
+        $viewData['activeTab'] = "visa-services";
         return view(roleFolder().'.visa-service-cutoff.lists',$viewData);
     } 
 
@@ -229,7 +233,7 @@ class VisaServicesController extends Controller
         $viewData['visa_service'] = $visa_service;
 
         $viewData['pageTitle'] = "Add Cutoff";
-        
+        $viewData['activeTab'] = "visa-services";
         return view(roleFolder().'.visa-service-cutoff.add',$viewData);
     }
 
@@ -284,7 +288,7 @@ class VisaServicesController extends Controller
         $viewData['visa_service'] = $visa_service;
         $viewData['record'] = $record;
         $viewData['pageTitle'] = "Edit Cutoff";
-        
+        $viewData['activeTab'] = "visa-services";
         return view(roleFolder().'.visa-service-cutoff.edit',$viewData);
     }
 
@@ -382,7 +386,7 @@ class VisaServicesController extends Controller
         $viewData['visa_service'] = $visa_service;
 
         $viewData['pageTitle'] = "Add Content";
-        
+        $viewData['activeTab'] = "visa-services";
         return view(roleFolder().'.visa-service-content.add',$viewData);
     }
      
@@ -427,7 +431,7 @@ class VisaServicesController extends Controller
         $viewData['visa_service'] = $visa_service;
         $viewData['record'] = $record;
         $viewData['pageTitle'] = "Edit Content";
-        
+        $viewData['activeTab'] = "visa-services";
         return view(roleFolder().'.visa-service-content.edit',$viewData);
     }
 
@@ -578,6 +582,7 @@ class VisaServicesController extends Controller
         $viewData['visa_service'] = $visa_service;
         $viewData['pageTitle'] = $visa_service->name.' Additional Info';
         $viewData['additional_data'] = VisaServicesBlocks::where("visa_service_id",$visa_service->unique_id)->orderBy('sort_order',"asc")->get();
+        $viewData['activeTab'] = "visa-services";
         return view(roleFolder().'.visa-services.additional-info.additional-info',$viewData);
     }
     public function changeBlockOrder(Request $request){

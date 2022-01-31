@@ -20,6 +20,7 @@ class DocumentFolderController extends Controller
     public function index()
     {
         $viewData['pageTitle'] = "Document Folder";
+        $viewData['activeTab'] = 'document-folder';
         return view(roleFolder().'.document-folder.lists',$viewData);
     } 
 
@@ -45,6 +46,7 @@ class DocumentFolderController extends Controller
 
     public function add(){
         $viewData['pageTitle'] = "Add Document Folder";
+        $viewData['activeTab'] = 'document-folder';
         return view(roleFolder().'.document-folder.add',$viewData);
     }
 
@@ -83,6 +85,7 @@ class DocumentFolderController extends Controller
         $id = base64_decode($id);
         $viewData['record'] = DocumentFolder::where("id",$id)->first();
         $viewData['pageTitle'] = "Edit Document Folder";
+        $viewData['activeTab'] = 'document-folder';
         return view(roleFolder().'.document-folder.edit',$viewData);
     }
 

@@ -24,6 +24,7 @@ class LicenceBodiesController extends Controller
         $viewData['total_bodies'] = LicenceBodies::count();
         //$viewData['records'] = LicenceBodies::count();
         $viewData['pageTitle'] = "Licence Bodies";
+        $viewData['activeTab'] = 'licence-bodies';
         return view(roleFolder().'.licence-bodies.lists',$viewData);
     } 
 
@@ -50,7 +51,7 @@ class LicenceBodiesController extends Controller
     public function add(){
         $countries = Countries::get();
         $viewData['countries'] = $countries;
-
+        $viewData['activeTab'] = 'licence-bodies';
         $viewData['pageTitle'] = "Add Licence Bodies";
         return view(roleFolder().'.licence-bodies.add',$viewData);
     }
@@ -95,6 +96,7 @@ class LicenceBodiesController extends Controller
         $countries = Countries::get();
         $viewData['countries'] = $countries;
         $viewData['pageTitle'] = "Edit Licence Body";
+        $viewData['activeTab'] = 'licence-bodies';
         return view(roleFolder().'.licence-bodies.edit',$viewData);
     }
 

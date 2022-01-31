@@ -1,33 +1,21 @@
-@extends('layouts.master-old')
-@section('pageheader')
+@extends('layouts.master')
+
+@section('breadcrumb')
 <!-- Content -->
-<div class="">
-    <div class="content container" style="height: 25rem;">
-        <!-- Page Header -->
-        <div class="page-header page-header-light page-header-reset">
-            <div class="row align-items-center">
-                <div class="col">
-                  <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb breadcrumb-no-gutter">
-                      <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
-                      <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/visa-services') }}">Services</a></li>
-                      <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
-                    </ol>
-                  </nav>
-                    <h1 class="page-header-title">{{$pageTitle}}</h1>
-              </div>
-              <div class="col-sm-auto">
-                <a class="btn btn-primary" href="{{baseUrl('visa-service-groups')}}">
-                  <i class="tio mr-1"></i> Back 
-                </a>
-            </div>
-            <!-- End Row -->
-        </div>
-        <!-- End Page Header -->
-    </div>
-</div> 
+<ol class="breadcrumb breadcrumb-no-gutter">
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/visa-services') }}">Services</a></li>
+  <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
+</ol>
 <!-- End Content -->
 @endsection
+
+@section('header-right')
+  <a class="btn btn-primary" href="{{baseUrl('visa-service-groups')}}">
+    <i class="tio mr-1"></i> Back 
+  </a>
+@endsection
+
 
 @section('content')
 <!-- Content -->

@@ -548,155 +548,89 @@ span#select2-bchg-container {
                </div>
                <!-- Body -->
                <div class="card-body imm-add-skillset-body">
-                  <div class="imm-add-skillset-body-list">
+                     
+                     @if(count($educations) > 0)
+
+                     <div class="imm-add-skillset-body-list">
+
+                     @foreach($educations as $ed)
                      <div class="imm-add-skillset-body-list-component">
-                     <div class="imm-add-skillset-body-list-component-header">
-
-
-                     </div>
-
-
-
-                     <div class="imm-add-skillset-body-list-component-body">
-
-
-                        <div class="row">
-                           <div class="col-10">
-                           <h3>Masters of technology</h3>
-                           <h5>University of Alberta</h5>
-
-                           </div>
-                           <div class="col-2" style="text-align:right">
-                           <!-- Dropdown -->
-                           <div class="btn-group">
-                              <button type="button"
-                                 class="btn btn-outline-secondary btn-icon btn-sm btn-eca-menu" type="button"
-                                 id="dropdownMenuButtonHoverAnimation" data-bs-toggle="dropdown"
-                                 aria-expanded="false" data-bs-open-on-hover data-bs-dropdown-animation>
-                                 <i class="bi-three-dots"></i>
-                              </button>
-                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonHoverAnimation">
-                                 <a class="dropdown-item" href="#">Edit list</a>
-                                 <a class="dropdown-item" href="#">Delete list</a>
-
-                              </div>
-                           </div>
-                           <!-- End Dropdown -->
-
-                           </div>
-
-                        </div>
-                        <div class="imm-add-skillset-body-list-component-footer">
-                           <div class="row">
-                           <div class="col-xs-12 col-sm-7">
-                              <p> <i class="bi-geo-alt me-1"></i> Alberta, Canada</p>
-
-                           </div>
-                           <div class="col-xs-12 col-sm-5"> <span
-                                 style="/* font-size:12px; */display:block;float:right;/* font-weight: 600; */">September,
-                                 2020 - August, 2021</span></div>
-                           </div>
-                           <div class="imm-credential-eca-component">
-                           <div class="row">
-                              <div class="col-12">
-                                 <div class="d-flex flex-row">
-                                 <div class="imm-credential-eca-subcomponent1">
-                                    <span style="font-size:12px;font-weight:600;">Masters</span>
-                                    <span class="imm-eca-small-span">(Original credential)</span>
-                                 </div>
-                                 <div class="imm-credential-eca-subcomponent2"> <img
-                                       src="./assets/img/badge-blank.svg" class="me-1"
-                                       style="width:20px;margin-top: -2px;" alt="Logo"><span
-                                       style="font-size:12px;font-weight:600;">Educational credential assessment
-                                       (ECA) </span><span class="imm-eca-small-span">(not done)</span></div>
-                                 </div>
-                              </div>
-                           </div>
-                           </div>
+                        <div class="imm-add-skillset-body-list-component-header">
                         </div>
 
-
-                     </div>
-
-                     </div>
-                     <div class="imm-add-skillset-body-list-component">
-                     <div class="imm-add-skillset-body-list-component-header">
+                        <div class="imm-add-skillset-body-list-component-body">
 
 
-                     </div>
-
-
-
-                     <div class="imm-add-skillset-body-list-component-body">
-
-
-                        <div class="row">
-                           <div class="col-10">
-                           <h3>Masters of technology</h3>
-                           <h5>University of Alberta</h5>
-
-                           </div>
-                           <div class="col-2" style="text-align:right">
-                           <!-- Dropdown -->
-                           <div class="btn-group">
-                              <button type="button"
-                                 class="btn btn-outline-secondary btn-icon btn-sm btn-eca-menu" type="button"
-                                 id="dropdownMenuButtonHoverAnimation" data-bs-toggle="dropdown"
-                                 aria-expanded="false" data-bs-open-on-hover data-bs-dropdown-animation>
-                                 <i class="bi-three-dots"></i>
-                              </button>
-                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonHoverAnimation">
-                                 <a class="dropdown-item" href="#">Edit list</a>
-                                 <a class="dropdown-item" href="#">Delete list</a>
+                           <div class="row">
+                              <div class="col-10">
+                              <h3>{{$ed->qualification}}</h3>
+                              <h5>{{$ed->school_name}}</h5>
 
                               </div>
-                           </div>
-                           <!-- End Dropdown -->
+                              <div class="col-2" style="text-align:right">
+                                 <!-- Dropdown -->
+                                 <div class="btn-group">
+                                    <button type="button"
+                                       class="btn btn-outline-secondary btn-icon btn-sm btn-eca-menu" type="button"
+                                       id="dropdownMenuButtonHoverAnimation" data-bs-toggle="dropdown"
+                                       aria-expanded="false" data-bs-open-on-hover data-bs-dropdown-animation>
+                                       <i class="bi-three-dots"></i>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonHoverAnimation">
+                                       <a class="dropdown-item" href="{{baseUrl('educations/edit/'.base64_encode($ed->id))}}">Edit list</a>
+                                       <a class="dropdown-item" href="{{baseUrl('educations/delete/'.base64_encode($ed->id))}}">Delete list</a>
 
-                           </div>
-
-                        </div>
-                        <div class="imm-add-skillset-body-list-component-footer">
-                           <div class="row">
-                           <div class="col-xs-12 col-sm-7">
-                              <p> <i class="bi-geo-alt me-1"></i> Alberta, Canada</p>
-
-                           </div>
-                           <div class="col-xs-12 col-sm-5"> 
-                  <span
-                                 style="/* font-size:12px; */display:block;float:right;/* font-weight: 600; */">September,
-                                 2020 - August, 2021</span>
-                  </div>
-                           </div>
-                           <div class="imm-credential-eca-component">
-                           <div class="row">
-                              <div class="col-12">
-                                 <div class="d-flex flex-row">
-                                 <div class="imm-credential-eca-subcomponent1">
-                                    <span style="font-size:12px;font-weight:600;">Post Graduate Diploma (4
-                                       Years)</span>
-                                    <span class="imm-eca-small-span">(Original)</span>
+                                    </div>
                                  </div>
-                                 <div class="imm-credential-eca-subcomponent2"> <img
-                                       src="./assets/img/badge.svg" class="me-1"
-                                       style="width:20px;margin-top: -2px;" alt="Logo"><span
-                                       style="font-size:12px;font-weight:600;">Post Graduate Diploma (4 Years)
-                                    </span><span class="imm-eca-small-span">(CA Equivalency)</span></div>
+                                 <!-- End Dropdown -->
+                              </div>
+
+                           </div>
+                           <div class="imm-add-skillset-body-list-component-footer">
+                              <div class="row">
+                                 <div class="col-xs-12 col-sm-7">
+                                    <p> <i class="bi-geo-alt me-1"></i> {{$ed->StateName->name}}, {{$ed->CountryName->name}}</p>
+
+                                 </div>
+                                 <div class="col-xs-12 col-sm-5"> 
+                                    <span style="/* font-size:12px; */display:block;float:right;/* font-weight: 600; */">September,
+                                       2020 - August, 2021</span>
+                                 </div>
+                              </div>
+                              <div class="imm-credential-eca-component">
+                                 <div class="row">
+                                    <div class="col-12">
+                                       <div class="d-flex flex-row">
+                                          <div class="imm-credential-eca-subcomponent1">
+                                             <span style="font-size:12px;font-weight:600;">{{$ed->Degree->name}}</span>
+                                             <span class="imm-eca-small-span">(Original)</span>
+                                          </div>
+                                          <div class="imm-credential-eca-subcomponent2"> <img
+                                             src="./assets/img/badge.svg" class="me-1"
+                                             style="width:20px;margin-top: -2px;" alt="Logo"><span
+                                             style="font-size:12px;font-weight:600;">Post Graduate Diploma (4 Years)
+                                          </span><span class="imm-eca-small-span">(CA Equivalency)</span>
+                                          </div>
+                                       </div>
+                                    </div>
                                  </div>
                               </div>
                            </div>
-                           </div>
+
+
                         </div>
 
+                     </div>
+                     @endforeach
+                   </div>  
 
+                  @else
+
+                     <div class="imm-add-skillset-body-list-empty"><span>Education history not found</span>
                      </div>
 
-                     </div>
-
-
-                  </div>
-                  <div class="imm-add-skillset-body-list-empty"><span>Education history not found</span>
-                  </div>
+                  @endif
+               
 
 
                </div>

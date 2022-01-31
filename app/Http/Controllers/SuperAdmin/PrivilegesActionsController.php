@@ -27,6 +27,7 @@ class PrivilegesActionsController extends Controller
         $viewData['moduleName'] = $moduleName->name;
 
         $viewData['pageTitle'] = "Privilege Actions";
+        $viewData['activeTab'] = "privileges";
         return view(roleFolder().'.privileges-actions.lists',$viewData);
     } 
 
@@ -65,6 +66,7 @@ class PrivilegesActionsController extends Controller
         $moduleName = ProfessionalPrivileges::where('id',$id)->first();
         $viewData['moduleName'] = $moduleName->name;
         $viewData['moduleId'] = $id;
+        $viewData['activeTab'] = "privileges";
         return view(roleFolder().'.privileges-actions.add',$viewData);
     }
 
@@ -115,6 +117,7 @@ class PrivilegesActionsController extends Controller
         $id = base64_decode($id);
         $viewData['record'] = PrivilegesActions::where("id",$id)->first();
         $viewData['pageTitle'] = "Edit Professional Modules";
+        $viewData['activeTab'] = "privileges";
         return view(roleFolder().'.privileges-actions.edit',$viewData);
     }
 

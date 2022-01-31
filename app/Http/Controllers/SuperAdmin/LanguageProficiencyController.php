@@ -23,6 +23,7 @@ class LanguageProficiencyController extends Controller
     {
         $viewData['total_bodies'] = LanguageProficiency::count();
         $viewData['pageTitle'] = "Language Proficiency";
+        $viewData['activeTab'] = 'language-proficiency';
         return view(roleFolder().'.language-proficiency.lists',$viewData);
     } 
 
@@ -50,6 +51,7 @@ class LanguageProficiencyController extends Controller
         $viewData['pageTitle'] = "Add Language Proficiency";
         $official_languages = OfficialLanguages::get();
         $viewData['official_languages'] = $official_languages;
+        $viewData['activeTab'] = 'language-proficiency';
         return view(roleFolder().'.language-proficiency.add',$viewData);
     }
 
@@ -116,6 +118,7 @@ class LanguageProficiencyController extends Controller
         $viewData['pageTitle'] = "Edit Language Proficiency";
         $official_languages = OfficialLanguages::get();
         $viewData['official_languages'] = $official_languages;
+        $viewData['activeTab'] = 'language-proficiency';
         return view(roleFolder().'.language-proficiency.edit',$viewData);
     }
 

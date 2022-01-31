@@ -26,6 +26,7 @@ class VisaServiceGroupsController extends Controller
     {
         
         $viewData['pageTitle'] = "Visa Services Groups";
+        $viewData['activeTab'] = "visa-service-groups";
         return view(roleFolder().'.visa-service-groups.lists',$viewData);
     } 
 
@@ -66,6 +67,7 @@ class VisaServiceGroupsController extends Controller
                                                     ->get();
         $viewData['program_types'] = ProgramTypes::get();
         
+        $viewData['activeTab'] = "visa-service-groups";
         return view(roleFolder().'.visa-service-groups.add',$viewData);
     }
 
@@ -146,6 +148,7 @@ class VisaServiceGroupsController extends Controller
                                                     ->get();
         $viewData['program_types'] = ProgramTypes::get();
         $viewData['pageTitle'] = "Edit Visa Group Service";
+        $viewData['activeTab'] = "visa-service-groups";
         return view(roleFolder().'.visa-service-groups.edit',$viewData);
     }
 

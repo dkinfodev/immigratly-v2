@@ -21,6 +21,7 @@ class LanguagesController extends Controller
     {
         $viewData['total_bodies'] = Languages::count();
         $viewData['pageTitle'] = "Languages";
+        $viewData['activeTab'] = 'languages';
         return view(roleFolder().'.languages.lists',$viewData);
     } 
 
@@ -46,6 +47,7 @@ class LanguagesController extends Controller
 
     public function add(){
         $viewData['pageTitle'] = "Add Language";
+        $viewData['activeTab'] = 'languages';
         return view(roleFolder().'.languages.add',$viewData);
     }
 
@@ -83,6 +85,7 @@ class LanguagesController extends Controller
         $id = base64_decode($id);
         $viewData['record'] = Languages::where("id",$id)->first();
         $viewData['pageTitle'] = "Edit Language";
+        $viewData['activeTab'] = 'languages';
         return view(roleFolder().'.languages.edit',$viewData);
     }
 

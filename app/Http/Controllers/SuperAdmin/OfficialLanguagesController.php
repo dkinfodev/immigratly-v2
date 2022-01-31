@@ -19,6 +19,7 @@ class OfficialLanguagesController extends Controller
 
     public function languages()
     {
+        $viewData['activeTab'] = "official-languages";
         $viewData['total_bodies'] = OfficialLanguages::count();
         $viewData['pageTitle'] = "Official Languages";
         return view(roleFolder().'.official-languages.lists',$viewData);
@@ -45,6 +46,7 @@ class OfficialLanguagesController extends Controller
     }
 
     public function add(){
+        $viewData['activeTab'] = "official-languages";
         $viewData['pageTitle'] = "Add Official Language";
         return view(roleFolder().'.official-languages.add',$viewData);
     }
@@ -81,6 +83,7 @@ class OfficialLanguagesController extends Controller
 
     public function edit($id){
         $id = base64_decode($id);
+        $viewData['activeTab'] = "official-languages";
         $viewData['record'] = OfficialLanguages::where("id",$id)->first();
         $viewData['pageTitle'] = "Edit Official Language";
         return view(roleFolder().'.official-languages.edit',$viewData);
