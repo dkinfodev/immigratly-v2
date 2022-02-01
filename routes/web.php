@@ -234,7 +234,8 @@ Route::group(array('prefix' => 'super-admin', 'middleware' => 'super_admin'), fu
 
         Route::group(array('prefix' => 'eligibility-questions/{visa_service_id}'), function () {
             Route::get('/', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'list']);
-            Route::get('/test', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'testQuestion']);
+            Route::get('/fetch-options', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'fetchOptions']);
+            Route::get('/fetch-question', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'fetchQuestion']);
             Route::post('/ajax-list', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'getAjaxList']); 
             Route::get('/add', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'add']);
             Route::post('/save', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'save']); 
@@ -744,6 +745,7 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
 
     });
     Route::get('/cv', [App\Http\Controllers\User\DashboardController::class, 'manageCv']);
+    Route::get('/cv-old', [App\Http\Controllers\User\DashboardController::class, 'manageCvOld']);
     Route::post('/save-language-proficiency', [App\Http\Controllers\User\DashboardController::class, 'saveLanguageProficiency']);
     Route::group(array('prefix' => 'messages-center'), function () {
         Route::get('/', [App\Http\Controllers\User\MessagesCenterController::class, 'allMessages']);

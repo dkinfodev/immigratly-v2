@@ -26,6 +26,7 @@ use App\Models\UserLanguageProficiency;
 use App\Models\OfficialLanguages;
 use App\Models\NocCode;
 use App\Models\CvTypes;
+use App\Models\States;
 
 class DashboardController extends Controller
 {
@@ -341,7 +342,56 @@ class DashboardController extends Controller
         $viewData['other_notifications'] = $other_notifications;
         return view(roleFolder().'.allnotification',$viewData);        
     }
+    public function manageCvOld(){
+        $user = User::where("id",\Auth::user()->id)->first();
+        $user_detail = UserDetails::where("user_id",$user->unique_id)->first();
+        
+        $countries = DB::table(MAIN_DATABASE.".countries")->get();
+        $viewData['countries'] = $countries;
+        $viewData['cv_types'] = CvTypes::get();
+        if(!empty($user_detail))
+        {
+            $states = DB::table(MAIN_DATABASE.".states")->where("country_id",$user_detail->country_id)->get();
+            $viewData['states'] = $states;
+            $cities = DB::table(MAIN_DATABASE.".cities")->where("state_id",$user_detail->state_id)->get();
+            $viewData['cities'] = $cities;
+        }
+        $languages = Languages::get();
+        $language_proficiency = array();
+        $official_languages = OfficialLanguages::get();
 
+        $first_official = UserLanguageProficiency::where("user_id",\Auth::user()->unique_id)->where('type','first_official')->first();
+        $second_official = UserLanguageProficiency::where("user_id",\Auth::user()->unique_id)->where('type','second_official')->first();
+        $second_off_languages = array();
+        $first_proficencies = array();
+        $second_proficencies = array();
+        if(!empty($first_official)){
+            $viewData['first_official'] = $first_official;
+            $second_off_languages = OfficialLanguages::where("unique_id","!=",$first_official->language_id)->get();
+            $first_proficencies = LanguageProficiency::where("official_language",$first_official->language_id)->get();
+        }
+        if(!empty($second_official)){
+            $viewData['second_official'] = $second_official;
+            $second_proficencies = LanguageProficiency::where("official_language",$second_official->language_id)->get();
+        }
+        $viewData['first_proficencies'] = $first_proficencies;
+        $viewData['second_proficencies'] = $second_proficencies;
+        $work_expirences = ClientExperience::where("user_id",\Auth::user()->unique_id)->orderBy('id','desc')->get();
+        $educations = ClientEducations::where("user_id",\Auth::user()->unique_id)->orderBy('id','desc')->get();
+        $viewData['languages'] = $languages;
+        $viewData['official_languages'] = $official_languages;
+        $viewData['second_off_languages'] = $second_off_languages;
+        $viewData['work_expirences'] = $work_expirences;
+        $viewData['educations'] = $educations;
+        $viewData['language_proficiency'] = $language_proficiency;
+        $viewData['countries'] = $countries;
+        $viewData['pageTitle'] = "Manage CV";
+        $viewData['user'] = $user;
+        $viewData['user_detail'] = $user_detail;
+        $viewData['activeTab'] = "manage-cv";
+        
+        return view(roleFolder().'.manage-cv-old',$viewData);        
+    }
     public function manageCv(){
         $user = User::where("id",\Auth::user()->id)->first();
         $user_detail = UserDetails::where("user_id",$user->unique_id)->first();
@@ -440,12 +490,13 @@ class DashboardController extends Controller
             $object->employment_agency = $request->input("company");
             $object->user_id = \Auth::user()->unique_id;
             $object->position = $request->input("job_title");
-            $object->join_date = $request->input("join_date");
-            $object->leave_date = $request->input("leave_date");
+            $object->join_date = $request->input("from_month")." ".$request->input("from_year");
+            $object->leave_date = $request->input("to_month")." ".$request->input("to_year");
             $object->country_id = $request->input("country_id");
             $object->state_id = $request->input("state_id");
             $object->job_type = $request->input("job_type");
             $object->noc_type = $request->input("noc_type");
+            $object->exp_details = $request->input("exp_details");
             $object->noc_code = implode(",",$request->input("noc_code"));
             $object->save();
 
@@ -465,7 +516,13 @@ class DashboardController extends Controller
         $record = ClientExperience::where("id",$id)->first();
         $viewData['record'] = $record;
         $viewData['pageTitle'] = "Edit Work Experience";
+        
         $viewData['noc_codes'] = NocCode::get();
+        $viewData['countries'] = Countries::get();
+
+        $states = States::where("country_id",$record->country_id)->get();
+        $viewData['states'] = $states;
+
         $view = View::make(roleFolder().'.modal.edit-work-experience',$viewData);
         $contents = $view->render();
         $response['contents'] = $contents;
@@ -477,11 +534,15 @@ class DashboardController extends Controller
         try{
             $id = base64_decode($id);
             $validator = Validator::make($request->all(), [
-                'employment_agency' => 'required',
-                'position' => 'required',
-                'join_date' => 'required',
-                'leave_date' => 'required',
+                'company' => 'required',
+                'job_title' => 'required',
                 'exp_details' => 'required',
+                'from_month' => 'required',
+                'from_year' => 'required',
+                'to_month' => 'required',
+                'to_year' => 'required',
+                'country_id' => 'required',
+                'state_id' => 'required',
                 'job_type' => 'required',
                 'noc_code' => 'required',
             ]);
@@ -500,14 +561,16 @@ class DashboardController extends Controller
             }
 
             $object = ClientExperience::find($id);
-            $object->employment_agency = $request->input("employment_agency");
+            $object->employment_agency = $request->input("company");
             $object->user_id = \Auth::user()->unique_id;
-            $object->position = $request->input("position");
-            $object->join_date = $request->input("join_date");
-            $object->leave_date = $request->input("leave_date");
-            $object->exp_details = $request->input("exp_details");
+            $object->position = $request->input("job_title");
+            $object->join_date = $request->input("from_month")." ".$request->input("from_year");
+            $object->leave_date = $request->input("to_month")." ".$request->input("to_year");
+            $object->country_id = $request->input("country_id");
+            $object->state_id = $request->input("state_id");
             $object->job_type = $request->input("job_type");
             $object->noc_type = $request->input("noc_type");
+            $object->exp_details = $request->input("exp_details");
             $object->noc_code = implode(",",$request->input("noc_code"));
             $object->save();
 

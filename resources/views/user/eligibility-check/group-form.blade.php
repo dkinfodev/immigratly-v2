@@ -108,7 +108,7 @@
                         $block = 'none';
                         $cv_section = $ques->EligibilityQuestion->cv_section;
                         $elg_options = $ques->EligibilityQuestion->Options;
-                        $option_selected = cvBasedOptions($cv_section,$elg_options,$ques->EligibilityQuestion);
+                        $option_selected = cvBasedOptions($cv_section,$elg_options,$ques->EligibilityQuestion,$component->Component->unique_id);
                         
                         if($option_selected['option_selected'] == ''){
                             $block = 'block';
@@ -333,7 +333,7 @@ action="{{ baseUrl('/eligibility-check/g/'.$visa_service_id) }}" class="mt-3">
                                             $block = 'none';
                                             $cv_section = $ques->EligibilityQuestion->cv_section;
                                             $elg_options = $ques->EligibilityQuestion->Options;
-                                            $option_selected = cvBasedOptions($cv_section,$elg_options,$ques->EligibilityQuestion);
+                                            $option_selected = cvBasedOptions($cv_section,$elg_options,$ques->EligibilityQuestion,$component->Component->unique_id);
                                             
                                             if($option_selected['option_selected'] == ''){
                                                 $block = 'block';

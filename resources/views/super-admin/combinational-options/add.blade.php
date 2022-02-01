@@ -54,36 +54,46 @@
   <!-- Card -->
   <div class="card">
     <!-- Header -->
+    @if(!empty($question))
     <div class="card-header">
       <h2>{{$question->question}}</h2>
     </div>
+    @endif
     <!-- End Header -->
     <div class="card-body">
         <div class="row">
             <div class="col-md-5">
+              <form id="compques">
+                <div class="form-group">
+                    <label>Select Questions</label>
+                    <select class="question" onchange="changeQuestion(this.value)" name="question_id"> 
+                        <option value="">Select Question</option>
+                        @foreach($questions as $ques)
+                          <option {{ ($ques->EligibilityQuestion->unique_id == $question_id)?'selected':'' }} value="{{ $ques->EligibilityQuestion->unique_id }}">{{$ques->EligibilityQuestion->question}}</option>
+                        @endforeach
+                    </select>
+                </div>
+              </form>
+            </div>
+            
+            @if(!empty($question))
+            <div class="col-md-5">
               <div class="form-group">
                   <label>Select Options</label>
                   <select class="option_one" multiple name="option_one[]"> 
-                      <option value="">Select Option One</option>
+                      <option value="" disabled>Select Option One</option>
                       @foreach($question->Options as $option)
                         <option value="{{ $option->id }}">{{$option->option_label}}</option>
                       @endforeach
                   </select>
               </div>
             </div>
-            <!-- <div class="col-md-5">
-              <div class="form-group">
-                  <label>Option Two</label>
-                  <select class="option_two" name="option_two[]"> 
-                      <option value="">Select Option Two</option>
-                  </select>
-              </div>
-            </div> -->
             <div class="col-md-2">
               <div class="form-group pt-4">
                   <button onclick="fetchCombination()" type="button" class="btn btn-primary"><i class="tio-refresh"></i></button>
               </div>
             </div>
+            @endif
         </div>
 
         <div class="mt-3" id="combination_questions">
@@ -149,12 +159,14 @@ $(document).ready(function(){
 function fetchCombination(){
   var option_one = $(".option_one").val();
   var question_two = $(".question_two").val();
+  @if(!empty($question))
   if(option_one != ''){
     $.ajax({
         type: "POST",
         url: BASEURL + '/visa-services/eligibility-questions/{{base64_encode($visa_service->id)}}/combinational-options/{{ base64_encode($question->id) }}/fetch-options',
         data:{
             _token:csrf_token,
+            component_id:"{{$component_id}}",
             option_one:option_one,
         },
         dataType:'json',
@@ -175,6 +187,10 @@ function fetchCombination(){
         }
     });
   }
+  @endif
+}
+function changeQuestion(value){
+  $("#compques").submit();
 }
 </script>
 @endsection

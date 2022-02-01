@@ -312,12 +312,12 @@
 
       // INITIALIZATION OF UNFOLD
       // =======================================================
-      $('.js-hs-action').each(function () {
-        var unfold = new HSUnfold($(this)).init();
-      });
-      $(".js-hs-unfold-invoker").click(function(){
-          $(this).next(".hs-unfold-content").fadeToggle();
-      });
+      // $('.js-hs-action').each(function () {
+      //   var unfold = new HSUnfold($(this)).init();
+      // });
+      // $(".js-hs-unfold-invoker").click(function(){
+      //     $(this).next(".hs-unfold-content").fadeToggle();
+      // });
       
       $('[data-toggle="tooltip"]').tooltip();
       $('.js-nav-tooltip-link').tooltip({ boundary: 'window' });

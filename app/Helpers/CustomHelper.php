@@ -35,6 +35,9 @@ use App\Models\PinCaseFolder;
 use App\Models\UserFiles;
 use App\Models\ComponentPreConditions;
 use App\Models\Tags;
+use App\Models\CombinationalOptions;
+use App\Models\MultipleOptionsGroups;
+use App\Models\QuestionOptions;
 
 if (! function_exists('getFileType')) {
     function getFileType($ext) {
@@ -1935,8 +1938,8 @@ if(!function_exists("criteria_options")){
 
 
 if(!function_exists("cvBasedOptions")){
-    function cvBasedOptions($cv_section,$options,$question=array()){
-
+    function cvBasedOptions($cv_section,$options,$question=array(),$component_id=''){
+        // echo "component_id: ".$component_id."<br>";
         $option_selected = '';
         $option_label = '';
         $option_score = '';
@@ -2207,18 +2210,22 @@ if(!function_exists("cvBasedOptions")){
         if($cv_section == 'education'){
             $educations = \Auth::user()->Educations;
             $degrees = array();
+            $degree_ids = array();
             foreach($educations as $education){
                 $temp['id'] = $education->Degree->id;
                 $temp['level'] = $education->Degree->level;
                 $temp['name'] = $education->Degree->name;
                 $degrees[] = $temp;
+                $degree_ids[] = $education->Degree->id;
             }
-
+            // pre($degrees);
+            // exit;
             uasort($degrees, function($a, $b){
                 $field = "level";
-                return $a[$field] < $b[$field];
+                return ($a[$field] < $b[$field])?-1:1;
             });
             $degrees = array_values($degrees);
+            $opt_id = '';
             if(!empty($degrees)){
                 $option_label = $degrees[0]['name'];
                 
@@ -2226,6 +2233,34 @@ if(!function_exists("cvBasedOptions")){
                     if($option->option_label == $option_label){
                         $option_selected = $option->option_value;
                         $option_score = $option->score;
+                        $opt_id = $option->id;
+                    }
+                }
+            }
+            if(!empty($degree_ids)){
+             
+                // $multipleOptions = MultipleOptionsGroups::whereIn("option_one_id",$degree_ids)
+                //                                     ->whereIn("option_two_id",$degree_ids)
+                //                                     ->get();
+                // echo "<h1>EDU</h1>";
+                $combinationOptions = CombinationalOptions::whereIn("option_one_value",$degree_ids)
+                                                    ->whereIn("option_two_value",$degree_ids)
+                                                    ->where("question_id",$question->unique_id)
+                                                    ->where("component_id",$component_id)
+                                                    ->get();
+                $user_education_id = \Auth::user()->Educations->pluck("degree_id");
+                if(!empty($user_education_id)){
+                    $user_education_id = $user_education_id->toArray();
+                    // pre($user_education_id);
+                    foreach($combinationOptions as $opt){
+                        // pre($opt->toArray());
+                        if(in_array($opt->option_one_value,$user_education_id) && in_array($opt->option_two_value,$user_education_id)){
+                            // echo "Match";
+                            $ques_opt = QuestionOptions::where("option_value",$option_selected)->first();
+                            // if($ques_opt->level < $opt->level){
+                                $option_score = $opt->score;
+                            // }
+                        }
                     }
                 }
             }

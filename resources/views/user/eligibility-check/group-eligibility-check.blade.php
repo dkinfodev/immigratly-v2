@@ -221,7 +221,8 @@ function conditionalQuestion(e, ele) {
         success: function(response) {
             hideLoader();
             if (response.status == true) {
-                $(".qs-"+group_id+"-"+component_id+"-"+question_id).next(response.contents);
+                
+                $(".qs-"+group_id+"-"+component_id+"-"+question_id).after(response.contents);
                 initSelect();
             }
         },

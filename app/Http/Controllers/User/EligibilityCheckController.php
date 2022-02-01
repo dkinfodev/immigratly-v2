@@ -33,6 +33,7 @@ use App\Models\VisaServiceGroups;
 use App\Models\ProgramTypes;
 use App\Models\GroupVisaIds;
 use App\Models\MultipleOptionsGroups;
+use App\Models\PrimaryDegree;
 
 class EligibilityCheckController extends Controller
 {
@@ -567,7 +568,9 @@ class EligibilityCheckController extends Controller
             }
         }
         $comp_ques_score = array();
+        // echo "Component Ques:";
         // pre($component_questions);
+        
         
         foreach($component_questions as $comp_id => $question_ids){
             
@@ -599,19 +602,23 @@ class EligibilityCheckController extends Controller
                     
                     $comp_ques_score[$comp_id][$option->question_id]['score'] = $option->score;
                     $comp_ques_score[$comp_id][$option->question_id]['option_id'] = $option->id;
-                    $ques_response[$option->question_id] = $option->option_value;
+                    // $ques_response[$option->question_id] = $option->option_value;
+                    $ques_response[] = array("question_id"=>$option->question_id,"option_value"=>$option->option_value,"component_id"=>$comp_id);
                 }
             }
         }
-       
+        // pre($comp_ques_score);
+        // exit;
         $comp_final_score = array();
         foreach($comp_ques_score as $comp_id => $question_ids){
             $component = ComponentQuestions::with('Questions')
                                 ->where("unique_id",$comp_id)
                                 ->first();
             $cqs_score = 0;
+            // pre($component->toArray());
             $component_max_score = $component->max_score;
             $component_min_score = $component->min_score;
+            
             $option_ids = array();
             foreach($question_ids as $qid => $opt_score){
                 $cqs_score += $opt_score['score'];
@@ -626,14 +633,18 @@ class EligibilityCheckController extends Controller
             
             $question_combinations = QuestionCombination::where("component_id",$component->unique_id)->get();
             // echo "Combination Exists: ".count($question_combinations)."<br>";
-            // pre($question_combinations->toArray());
+           
             if(count($question_combinations)>0){
+               
                 foreach($question_combinations as $combination){
+                    
                     if(in_array($combination->option_id_one,$option_ids) && in_array($combination->option_id_two,$option_ids)){
-                        
-                        
-                        if($combination->behaviour == 'add'){
-                            $cqs_score += $combination->score;
+                        // echo "Enter IF";
+                        // pre($combination->toArray());
+                        // echo "CQS Score: ".$cqs_score."<Br>";
+;                       if($combination->behaviour == 'add'){
+                            $cqs_score += $combination->score;  
+                            echo "added";
                         }
                         if($combination->behaviour == 'substract'){
                             $cqs_score -= $combination->score;
@@ -641,12 +652,35 @@ class EligibilityCheckController extends Controller
                         if($combination->behaviour == 'overwrite'){
                             $optids = array($combination->option_id_one,$combination->option_id_two);
                             $opt_sum = QuestionOptions::whereIn("id",$optids)->sum("score");
-                            $divide = $opt_sum/2;
-                            $question_score[$combination->question_id_one] = $divide;
-                            $question_score[$combination->question_id_two] = $divide;
-                            $cqs_score -= $opt_sum;
-                            $cqs_score += $combination->score;
+                            if($opt_sum < $component_max_score){
+                                $cqs_score -= $opt_sum;
+                                $cqs_score += $combination->score;    
+                            }else{
+                                $cqs_score -= $component_max_score;
+                                $cqs_score += $combination->score;    
+                            }
+                            // echo "sum: ".$opt_sum."<br>";
+                            // $divide = $opt_sum/2;
+                            // $question_score[$combination->question_id_one] = $divide;
+                            // $question_score[$combination->question_id_two] = $divide;
+                            
                         }
+                        // echo "CQS Score AFter: ".$cqs_score."<Br>";
+                        if($cqs_score > $component_max_score){
+                            // $diff = $cqs_score - $component_max_score;
+                            // $cqs_score = $cqs_score - $diff;
+                            $cqs_score = $component_max_score;
+                        }
+                        if($cqs_score < $component_min_score){
+                            $cqs_score = $component_min_score;
+                            $is_minimum_score = 1;
+                        }
+                        // echo "CQS Score Final: ".$cqs_score."<Br>";
+                        $comp_final_score[$component->unique_id] = $cqs_score;
+                        // echo "Component AFTER Score: ".$cqs_score."<br>";
+                       
+                    }else{
+                        // echo "BEFORE cqs_score: ".$cqs_score." comp max: ".$component_max_score."<br>";
                         if($cqs_score > $component_max_score){
                             $diff = $cqs_score - $component_max_score;
                             // $cqs_score = $cqs_score - $diff;
@@ -656,13 +690,11 @@ class EligibilityCheckController extends Controller
                             $cqs_score = $component_min_score;
                             $is_minimum_score = 1;
                         }
+                        // echo "AFTER cqs_score: ".$cqs_score." comp max: ".$component_max_score."<br><BR><BR><Hr>";
                         $comp_final_score[$component->unique_id] = $cqs_score;
-                        // echo "Component AFTER Score: ".$cqs_score."<br>";
-                       
                     }
                 }
             }else{
-                
                 // echo "BEFORE cqs_score: ".$cqs_score." comp max: ".$component_max_score."<br>";
                 if($cqs_score > $component_max_score){
                     $diff = $cqs_score - $component_max_score;
@@ -676,7 +708,79 @@ class EligibilityCheckController extends Controller
                 // echo "AFTER cqs_score: ".$cqs_score." comp max: ".$component_max_score."<br><BR><BR><Hr>";
                 $comp_final_score[$component->unique_id] = $cqs_score;
             }
-          
+         
+         
+            // Multiple Option Combination
+            $multiple_option_groups = MultipleOptionsGroups::with(['CombinationalOption','QuestionOption'])
+                                            ->where("component_id",$component->unique_id)
+                                            ->whereHas("GroupQuestion")
+                                            ->whereHas("Question")
+                                            ->get();
+            if(isset($comp_final_score[$component->unique_id])){
+                $mog_score = $comp_final_score[$component->unique_id];
+                // echo "<H1>MOG DATA: </H1>";
+                foreach($multiple_option_groups as $mog){
+                    if($mog->GroupQuestion->cv_section == 'education'){
+                         $user_education_id = \Auth::user()->Educations->pluck("degree_id");
+                        if(!empty($user_education_id)){
+                                $user_education_id = $user_education_id->toArray();
+                        }
+                        if(in_array($mog->CombinationalOption->option_one_value,$user_education_id) && in_array($mog->CombinationalOption->option_two_value,$user_education_id) && in_array($mog->QuestionOption->id,$option_ids)){
+                            // echo "<br>Match Found<br>";
+                            
+                            if(!empty($user_education_id)){
+                                $primary_degree = PrimaryDegree::whereIn("id",$user_education_id)->pluck("level");
+                                if(!empty($primary_degree)){
+                                    $primary_degree_level = $primary_degree->toArray();
+                                    $highest_level = max($primary_degree_level);
+                                    // echo "HiGHEST: ".$highest_level."<br>";
+                                    // echo "Mog LEvel: ".$mog->level."<br>";
+                                    if($highest_level < $mog->level){
+                                        if($mog->behaviour == 'add'){
+                                            $mog_score += $mog->score;  
+                                            // echo "added";
+                                        }
+                                        if($mog->behaviour == 'substract'){
+                                            $mog_score -= $mog->score;
+                                        }
+                                        if($mog->behaviour == 'overwrite'){
+                                            // $optids = array($combination->option_id_one,$combination->option_id_two);
+                                            // $opt_sum = QuestionOptions::whereIn("id",$optids)->sum("score");
+                                            $mques_ids = array($mog->group_question_id,$mog->question_id);
+                                            $combques = QuestionCombination::where('component_id',$component->unique_id)->whereIn("question_id_one",$mques_ids)->whereIn("question_id_two",$mques_ids)->first();
+                                            if(!empty($combques)){
+                                                // if($combques->score < $mog->score){
+                                                    $mog_score -= $combques->score;
+                                                    $mog_score += $mog->score;    
+                                                // }
+                                            }
+                                        }
+                                        // // echo "CQS Score AFter: ".$cqs_score."<Br>";
+                                        if($mog_score > $component_max_score){
+                                            // $diff = $cqs_score - $component_max_score;
+                                            // $cqs_score = $cqs_score - $diff;
+                                            $mog_score = $component_max_score;
+                                        }
+                                        if($mog_score < $component_min_score){
+                                            $mog_score = $component_min_score;
+                                            $is_minimum_score = 1;
+                                        }
+                                        $comp_final_score[$component->unique_id] = $mog_score;
+                                    }
+                                }
+                            }else{
+                                $user_education_id = array();
+                            }
+                            // echo "UEDU:<br>";
+                            // echo "COMP FINAL SCORE: ";
+                            // pre($comp_final_score);
+                            // pre($mog->toArray());
+                            //   pre($mog->behaviour);
+                            //   pre($mog->level);
+                        }
+                    }
+                }
+            }
             
         }
         //   pre($comp_final_score);
@@ -700,8 +804,9 @@ class EligibilityCheckController extends Controller
         foreach($checkPatterns as $pattern){
             $elg_pattern = json_decode($pattern->response,true);
             $flag = 1;
-            foreach($ques_response as $key => $value){
-                if(isset($elg_pattern[$key]) && !in_array($value,$elg_pattern[$key])){
+            foreach($ques_response as $value){
+                $key = $value['question_id'];
+                if(isset($elg_pattern[$key]) && !in_array($value['option_value'],$elg_pattern[$key])){
                     $flag = 0;
                 }
             }
@@ -709,203 +814,232 @@ class EligibilityCheckController extends Controller
                 $match_pattern[] = $pattern->sub_visa_service;
             }
         }
-        // pre($ques_response);
         
-        foreach($ques_response as $key => $ques){
-            // echo "Ques: ".$key."<br>";
+        // echo "<Br>Before Score: ".$scores."<br>";
+        foreach($ques_response as $value){
+            $key = $value['question_id'];
+            $ques = $value['option_value'];
+            $component_id = $value['component_id'];
+            // echo "options: ".$ques."<br>";
             $elg_question = EligibilityQuestions::where("unique_id",$key)->first();
             // pre($elg_question->toArray());
+            $current_option = QuestionOptions::where("question_id",$key)->where("option_value",$ques)->first();
+           
             if(!empty($elg_question) && $elg_question->linked_to_cv == 'yes' && $elg_question->cv_section == 'education'){
-                // echo "<h1>EDU</h1>";
-                $multipleOptions = CombinationalOptions::where("question_id",$key)->get();
+                // echo "<h1>EDU: $key</h1>";
+                $multipleOptions = CombinationalOptions::where('component_id',$component_id)->where("question_id",$key)->get();
+                $component_ques = ComponentQuestions::where('unique_id',$component_id)->first();
                 $user_education_id = \Auth::user()->Educations->pluck("degree_id");
                 if(!empty($user_education_id)){
                     $user_education_id = $user_education_id->toArray();
-                    // pre($user_education_id);
+                    // echo "<h1>Count MOP: ".count($multipleOptions)."</h1>";
                     foreach($multipleOptions as $opt){
                         // pre($opt->toArray());
                         if(in_array($opt->option_one_value,$user_education_id) && in_array($opt->option_two_value,$user_education_id)){
-                            // echo "Match";
+                            // echo "<br>Match";
+                            // pre($opt->toArray());
+                             
                             $ques_opt = QuestionOptions::where("question_id",$key)->where("option_value",$ques)->first();
                             if($ques_opt->level < $opt->level){
-                                $scores += $opt->score;
+                                // echo "SSSS: ".$scores."<br>";
+                                // echo "ccccSSSS: ".$current_option->score."<br>";
+                                // echo "oooSSSS: ".$opt->score."<br>";
+                                // pre($comp_ques_score);
+                                $cs = 0;
+                                foreach($comp_ques_score[$component_id] as $comid => $quesid){
+                                  
+                                   $cs+=$quesid['score'] ;
+                                }
+                                // echo "<H1>CS: ".$cs."<br>";
+                                // echo "<H1>CSMAX:".$component_ques->max_score."</H1>";
+                                // echo "<H1>scores: ".$scores."<br>";
+                                if($cs < $component_ques->max_score){
+                                    $scores -= $current_option->score;
+                                    $scores += $opt->score;
+                                }
+                                
+                                // echo "aaaaaSSSS: ".$scores."<br>";
                             }
                         }
                     }
                 }
             }
+            // echo "BEFORE LP: ".$scores."<br>";
             $first_official = \Auth::user()->FirstProficiency;
             if(!empty($elg_question) && $elg_question->linked_to_cv == 'yes' && $elg_question->cv_section == 'language_proficiency'){
                 if($elg_question->score_count_type == 'range_matching'){
-                    
-                    $option_selected = $ques_response[$elg_question->unique_id];
-                    // echo "Lang Type: ".$elg_question->language_type."<br>";
-                    if($elg_question->language_type == 'first_official'){
-                        
-                        if(!empty($first_official)){
-                            $language_proficiency = LanguageProficiency::where("unique_id",$first_official->proficiency)->first();
-                            // $clb_level = $language_proficiency->ClbLevels;
-                            if(!empty($first_official)){
-                                $language_proficiency = LanguageProficiency::where("unique_id",$first_official->proficiency)->first();
-                                // $clb_level = $language_proficiency->ClbLevels;
-                                $clb_level = LanguageScoreChart::where("language_proficiency_id",$first_official->proficiency)->orderBy("clb_level")->get();
-                               
-                                $lng_scores['reading'] = $first_official->reading;
-                                $lng_scores['writing'] = $first_official->writing;
-                                $lng_scores['listening'] = $first_official->listening;
-                                $lng_scores['speaking'] = $first_official->speaking;
-                                // pre($lng_scores);
-                                if($option_selected != ''){
-                                    if(!empty($clb_level)){
-                                        $final_match_count = 0;
-                                        $next_level_clb = array();
-                                        $current_level_clb = array();
-                                        $clb_level_arr = $clb_level->toArray();
-                                        //  pre($clb_level_arr);
-                                        // pre($clb_level->toArray());
-                                        // pre($clb_level_arr);
-                                        foreach($clb_level as $c_key => $level){
+                    foreach($ques_response as $value){
+                        if($value['question_id'] == $elg_question->unique_id){
+                            $option_selected = $value['option_value'];
+                            // echo "Lang Type: ".$elg_question->language_type."<br>";
+                            if($elg_question->language_type == 'first_official'){
+                                
+                                if(!empty($first_official)){
+                                    $language_proficiency = LanguageProficiency::where("unique_id",$first_official->proficiency)->first();
+                                    // $clb_level = $language_proficiency->ClbLevels;
+                                    if(!empty($first_official)){
+                                        $language_proficiency = LanguageProficiency::where("unique_id",$first_official->proficiency)->first();
+                                        // $clb_level = $language_proficiency->ClbLevels;
+                                        $clb_level = LanguageScoreChart::where("language_proficiency_id",$first_official->proficiency)->orderBy("clb_level")->get();
+                                       
+                                        $lng_scores['reading'] = $first_official->reading;
+                                        $lng_scores['writing'] = $first_official->writing;
+                                        $lng_scores['listening'] = $first_official->listening;
+                                        $lng_scores['speaking'] = $first_official->speaking;
+                                        // pre($lng_scores);
+                                        if($option_selected != ''){
+                                            if(!empty($clb_level)){
+                                                $final_match_count = 0;
+                                                $next_level_clb = array();
+                                                $current_level_clb = array();
+                                                $clb_level_arr = $clb_level->toArray();
+                                                //  pre($clb_level_arr);
+                                                // pre($clb_level->toArray());
+                                                // pre($clb_level_arr);
+                                                foreach($clb_level as $c_key => $level){
+                                                    
+                                                    $current_match_count = 0;
+                                                    foreach($lng_scores as $lkey => $score){
+                                                        // echo $score." >= ".$level->$lkey."<br>";
+                                                        if($score >= $level->$lkey){
+                                                            $current_match_count++;
+                                                        }
+                                                    }
+                                                    // echo "<br>clb_level: ".$level->clb_level." = ".$current_match_count;
+                                                    if($current_match_count >= $final_match_count){
+                                                        // echo "<br> > clb_level: ".$level->clb_level;
+                                                        $final_match_count = $current_match_count;
+                                                        // echo "KEY: ".$c_key."<br>";
+                                                        if(isset($clb_level_arr[$c_key+1])){
+                                                            $current_level_clb = $level;
+                                                            $next_level_clb = array();
+                                                            $next_level_clb[] = $clb_level_arr[$c_key+1];
+                                                        }else{
+                                                            $current_level_clb = array();
+                                                            $next_level_clb = array();
+                                                        }
+                                                    }
+                                                }
+                                                // echo "CURRENT LEVEL:";
+                                                // pre($current_level_clb->toArray());
+                                                // echo "NEXT LEVEL:";
+                                                // pre($next_level_clb);
+        
+                                                // echo "<br>final_match_count:".$final_match_count;
+                                                // echo "<Br>Next Level:";
+                                                $final_match_count = 0;
+                                            //   pre($next_level_clb->toArray());
+                                                foreach($next_level_clb as $c_key => $level){
+                                                    $current_match_count = 0;
+                                                    foreach($lng_scores as $lkey => $score){
+                                                        if($score >= $level[$lkey]){
+                                                            $current_match_count++;
+                                                        }
+                                                    }
+                                                    if($current_match_count >= $final_match_count){
+                                                        $final_match_count = $current_match_count;
+                                                    }
+                                                }
                                             
-                                            $current_match_count = 0;
-                                            foreach($lng_scores as $key => $score){
-                                                // echo $score." >= ".$level->$key."<br>";
-                                                if($score >= $level->$key){
-                                                    $current_match_count++;
+                                                if(!empty($next_level_clb) && !empty($match_scores)){
+                                                    if($final_match_count == 1){
+                                                        $scores += $match_scores->one_match;
+                                                    }
+                                                    if($final_match_count == 2){
+                                                        $scores += $match_scores->two_match;
+                                                    }
+                                                    if($final_match_count == 3){
+                                                        $scores += $match_scores->three_match;
+                                                    }
                                                 }
-                                            }
-                                            // echo "<br>clb_level: ".$level->clb_level." = ".$current_match_count;
-                                            if($current_match_count >= $final_match_count){
-                                                // echo "<br> > clb_level: ".$level->clb_level;
-                                                $final_match_count = $current_match_count;
-                                                // echo "KEY: ".$c_key."<br>";
-                                                if(isset($clb_level_arr[$c_key+1])){
-                                                    $current_level_clb = $level;
-                                                    $next_level_clb = array();
-                                                    $next_level_clb[] = $clb_level_arr[$c_key+1];
-                                                }else{
-                                                    $current_level_clb = array();
-                                                    $next_level_clb = array();
-                                                }
+                                                // echo "AFTER: ".$scores."<BR>";
                                             }
                                         }
-                                        // echo "CURRENT LEVEL:";
-                                        // pre($current_level_clb->toArray());
-                                        // echo "NEXT LEVEL:";
-                                        // pre($next_level_clb);
-
-                                        // echo "<br>final_match_count:".$final_match_count;
-                                        // echo "<Br>Next Level:";
-                                        $final_match_count = 0;
-                                    //   pre($next_level_clb->toArray());
-                                        foreach($next_level_clb as $c_key => $level){
-                                            $current_match_count = 0;
-                                            foreach($lng_scores as $key => $score){
-                                                if($score >= $level[$key]){
-                                                    $current_match_count++;
-                                                }
-                                            }
-                                            if($current_match_count >= $final_match_count){
-                                                $final_match_count = $current_match_count;
-                                            }
-                                        }
-                                    
-                                        if(!empty($next_level_clb) && !empty($match_scores)){
-                                            if($final_match_count == 1){
-                                                $scores += $match_scores->one_match;
-                                            }
-                                            if($final_match_count == 2){
-                                                $scores += $match_scores->two_match;
-                                            }
-                                            if($final_match_count == 3){
-                                                $scores += $match_scores->three_match;
-                                            }
-                                        }
-                                        // echo "AFTER: ".$scores."<BR>";
                                     }
                                 }
                             }
-                        }
-                    }
-                    $second_official = \Auth::user()->SecondProficiency;
-                    if($elg_question->language_type == 'second_official'){
-                        
-                        if(!empty($second_official)){
-                            $lng_scores['reading'] = $second_official->reading;
-                            $lng_scores['writing'] = $second_official->writing;
-                            $lng_scores['listening'] = $second_official->listening;
-                            $lng_scores['speaking'] = $second_official->speaking;
-                            $language_proficiency = LanguageProficiency::where("unique_id",$second_official->proficiency)->first();
-                            // $clb_level = $language_proficiency->ClbLevels;
-                            $clb_level = LanguageScoreChart::where("language_proficiency_id",$first_official->proficiency)->orderBy("clb_level")->get();
-                            $match_scores = LanguageScorePoints::where("language_proficiency_id",$first_official->proficiency)
-                                            ->where("question_id",$elg_question->unique_id)
-                                            ->first();
-                            
-                            if($option_selected != ''){
-                                if(!empty($clb_level)){
-                                    $final_match_count = 0;
-                                    $next_level_clb = array();
-                                    $current_level_clb = array();
-                                    $clb_level_arr = $clb_level->toArray();
-                                    //  pre($clb_level_arr);
-                                    // pre($clb_level->toArray());
-                                    // pre($clb_level_arr);
-                                    foreach($clb_level as $c_key => $level){
-                                        
-                                        $current_match_count = 0;
-                                        foreach($lng_scores as $key => $score){
-                                            // echo $score." >= ".$level->$key."<br>";
-                                            if($score >= $level->$key){
-                                                $current_match_count++;
+                            $second_official = \Auth::user()->SecondProficiency;
+                            if($elg_question->language_type == 'second_official'){
+                                
+                                if(!empty($second_official)){
+                                    $lng_scores['reading'] = $second_official->reading;
+                                    $lng_scores['writing'] = $second_official->writing;
+                                    $lng_scores['listening'] = $second_official->listening;
+                                    $lng_scores['speaking'] = $second_official->speaking;
+                                    $language_proficiency = LanguageProficiency::where("unique_id",$second_official->proficiency)->first();
+                                    // $clb_level = $language_proficiency->ClbLevels;
+                                    $clb_level = LanguageScoreChart::where("language_proficiency_id",$first_official->proficiency)->orderBy("clb_level")->get();
+                                    $match_scores = LanguageScorePoints::where("language_proficiency_id",$first_official->proficiency)
+                                                    ->where("question_id",$elg_question->unique_id)
+                                                    ->first();
+                                    
+                                    if($option_selected != ''){
+                                        if(!empty($clb_level)){
+                                            $final_match_count = 0;
+                                            $next_level_clb = array();
+                                            $current_level_clb = array();
+                                            $clb_level_arr = $clb_level->toArray();
+                                            //  pre($clb_level_arr);
+                                            // pre($clb_level->toArray());
+                                            // pre($clb_level_arr);
+                                            foreach($clb_level as $c_key => $level){
+                                                
+                                                $current_match_count = 0;
+                                                foreach($lng_scores as $key => $score){
+                                                    // echo $score." >= ".$level->$key."<br>";
+                                                    if($score >= $level->$key){
+                                                        $current_match_count++;
+                                                    }
+                                                }
+                                                // echo "<Br><br>";
+                                                // echo "<br>clb_level: ".$level->clb_level." = ".$current_match_count;
+                                                if($current_match_count >= $final_match_count){
+                                                    // echo "<br> > clb_level: ".$level->clb_level;
+                                                    $final_match_count = $current_match_count;
+                                                    // echo "KEY: ".$c_key."<br>";
+                                                    if(isset($clb_level_arr[$c_key+1])){
+                                                        $current_level_clb = $level;
+                                                        $next_level_clb = array();
+                                                        $next_level_clb[] = $clb_level_arr[$c_key+1];
+                                                    }else{
+                                                        $current_level_clb = array();
+                                                        $next_level_clb = array();
+                                                    }
+                                                }
                                             }
-                                        }
-                                        // echo "<Br><br>";
-                                        // echo "<br>clb_level: ".$level->clb_level." = ".$current_match_count;
-                                        if($current_match_count >= $final_match_count){
-                                            // echo "<br> > clb_level: ".$level->clb_level;
-                                            $final_match_count = $current_match_count;
-                                            // echo "KEY: ".$c_key."<br>";
-                                            if(isset($clb_level_arr[$c_key+1])){
-                                                $current_level_clb = $level;
-                                                $next_level_clb = array();
-                                                $next_level_clb[] = $clb_level_arr[$c_key+1];
-                                            }else{
-                                                $current_level_clb = array();
-                                                $next_level_clb = array();
+                                            // echo "CURRENT LEVEL:";
+                                            // pre($current_level_clb->toArray());
+                                            // echo "NEXT LEVEL:";
+                                            // pre($next_level_clb);
+        
+                                            // echo "<hr><Br><br>";
+                                            // echo "<br>final_match_count:".$final_match_count;
+                                            // echo "<Br>Next Level:";
+                                            $final_match_count = 0;
+                                            //   pre($next_level_clb->toArray());
+                                            foreach($next_level_clb as $c_key => $level){
+                                                $current_match_count = 0;
+                                                foreach($lng_scores as $lkey => $score){
+                                                    if($score >= $level[$lkey]){
+                                                        $current_match_count++;
+                                                    }
+                                                }
+                                                if($current_match_count >= $final_match_count){
+                                                    $final_match_count = $current_match_count;
+                                                }
                                             }
-                                        }
-                                    }
-                                    // echo "CURRENT LEVEL:";
-                                    // pre($current_level_clb->toArray());
-                                    // echo "NEXT LEVEL:";
-                                    // pre($next_level_clb);
-
-                                    // echo "<hr><Br><br>";
-                                    // echo "<br>final_match_count:".$final_match_count;
-                                    // echo "<Br>Next Level:";
-                                    $final_match_count = 0;
-                                    //   pre($next_level_clb->toArray());
-                                    foreach($next_level_clb as $c_key => $level){
-                                        $current_match_count = 0;
-                                        foreach($lng_scores as $key => $score){
-                                            if($score >= $level[$key]){
-                                                $current_match_count++;
+                                           
+                                            if(!empty($next_level_clb) && !empty($match_scores)){
+                                                if($final_match_count == 1){
+                                                    $scores += $match_scores->one_match;
+                                                }
+                                                if($final_match_count == 2){
+                                                    $scores += $match_scores->two_match;
+                                                }
+                                                if($final_match_count == 3){
+                                                    $scores += $match_scores->three_match;
+                                                }
                                             }
-                                        }
-                                        if($current_match_count >= $final_match_count){
-                                            $final_match_count = $current_match_count;
-                                        }
-                                    }
-                                   
-                                    if(!empty($next_level_clb) && !empty($match_scores)){
-                                        if($final_match_count == 1){
-                                            $scores += $match_scores->one_match;
-                                        }
-                                        if($final_match_count == 2){
-                                            $scores += $match_scores->two_match;
-                                        }
-                                        if($final_match_count == 3){
-                                            $scores += $match_scores->three_match;
                                         }
                                     }
                                 }

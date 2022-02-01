@@ -1,8 +1,9 @@
-<form action="{{ baseUrl('visa-services/eligibility-questions/'.base64_encode($visa_service->id).'/multi-option-groups/'.base64_encode($question->id).'/save') }}" id="form"
+<form action="{{ baseUrl('visa-services/eligibility-questions/'.base64_encode($visa_service->id).'/multi-option-groups/save') }}" id="form"
     method="post">
     @csrf
     <input type="hidden" value="{{ $visa_service->unique_id }}" name="visa_service_id" />
-    <input type="hidden" value="{{ $question->unique_id }}" name="current_question_id" />
+    <input type="hidden" value="{{ $question->unique_id }}" name="group_question_id" />
+    <input type="hidden" value="{{ $component_id }}" name="component_id" />
     <table class="table table-bordered table-align-middle">
         <thead>
             <tr>
@@ -11,6 +12,7 @@
                 <th>Question Option</th>
                 <th>Behaviour</th>
                 <th>Score</th>
+                <th>Level</Th>
             </tr>
         </thead>
         <tbody>
@@ -21,33 +23,35 @@
             <tr class="q-row">
                 <th scope="col text-center">
                     <div class="custom-control custom-checkbox">
-                        <input type="checkbox" data-key="{{$key}}" class="custom-control-input row-checkbox" id="row-{{$key}}" >
+                        <input type="checkbox" data-key="{{$key}}" {{ $option['comb_option_id'] == $option['comb_group']['id']?'checked':'' }} class="custom-control-input row-checkbox" id="row-{{$key}}" >
                         <label class="custom-control-label" for="row-{{$key}}"></label>
                     </div>
                 </th>
                 <td>
                     <b>Option One: </b>{{$option['comb_group']['option_one']['option_label']}} <Br>
                     <b>Option Two: </b>{{$option['comb_group']['option_two']['option_label']}}
-                    <input type="hidden" class="inp-field" name="option[{{ $index }}][comb_option_id]" value="{{ $option['comb_group']['id'] }}" disabled />
+                    <input type="hidden" class="inp-field" name="option[{{ $index }}][comb_option_id]" value="{{ $option['comb_group']['id'] }}" {{ $option['comb_option_id'] == $option['comb_group']['id']?'':'disabled' }} />
                 </td>
                 <td>
                     {{$option['option']['option_label']}}
-                    <input type="hidden" class="inp-field" name="option[{{ $index }}][question_id]" value="{{ $option['option']['question_id'] }}" disabled />
-                    <input type="hidden" class="inp-field" name="option[{{ $index }}][option_id]" value="{{ $option['option']['id'] }}" disabled />
-                    <input type="hidden" class="inp-field" name="option[{{ $index }}][option_value]" value="{{ $option['option']['option_value'] }}" disabled />
+                    <input type="hidden" class="inp-field" name="option[{{ $index }}][question_id]" value="{{ $option['option']['question_id'] }}"  {{ $option['option_id'] == $option['option']['id']?'':'disabled' }} />
+                    <input type="hidden" class="inp-field" name="option[{{ $index }}][option_id]" value="{{ $option['option']['id'] }}"  {{ $option['option_id'] == $option['option']['id']?'':'disabled' }} />
+                    <input type="hidden" class="inp-field" name="option[{{ $index }}][option_value]" value="{{ $option['option']['option_value'] }}"  {{ $option['option_id'] == $option['option']['id']?'':'disabled' }} />
                 </td>
                 <td>
-                    <select name="option[{{$index}}][behaviour]" class="behaviour_{{$key}} behaviour inp-field" value="{{ $option['option']['behaviour'] }}" required  disabled>
+                    <select name="option[{{$index}}][behaviour]" class="behaviour_{{$key}} behaviour inp-field" required  {{ $option['comb_option_id'] == $option['comb_group']['id']?'':'disabled' }}>
                         <option value="">Select Behaviour</option>
-                        <option value="add">Add</option>
-                        <option value="substract">Substract</option>
-                        <option value="overwrite">Overwrite</option>
+                        <option {{ $option['behaviour'] == 'add'?'selected':'' }} value="add">Add</option>
+                        <option {{ $option['behaviour'] == 'substract'?'selected':'' }} value="substract">Substract</option>
+                        <option {{ $option['behaviour'] == 'overwrite'?'selected':'' }} value="overwrite">Overwrite</option>
                     </select>
                 </td>
                 <td>
-                    <input type="text" class="form-control inp-field" placeholder="Enter Score" name="option[{{ $index }}][score]" value="{{ $option['option']['score'] }}" disabled />
+                    <input type="text" class="form-control inp-field" placeholder="Enter Score" name="option[{{ $index }}][score]" value="{{ $option['score'] }}" {{ $option['comb_option_id'] == $option['comb_group']['id']?'':'disabled' }} />
                 </td>
-                
+                <td>
+                    <input type="number" class="form-control inp-field" placeholder="Enter Level" name="option[{{ $index }}][level]" value="{{ $option['level'] }}" {{ $option['comb_option_id'] == $option['comb_group']['id']?'':'disabled' }} />
+                </td>
             </tr>
            @endforeach
         <tbody>

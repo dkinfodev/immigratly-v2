@@ -20,4 +20,9 @@ class QuestionOptions extends Model
     {
         return $this->belongsTo('App\Models\EligibilityQuestions','question_id','unique_id');
     }
+
+    public function LanguageProficiency()
+    {
+        return $this->belongsTo('App\Models\LanguageProficiency','language_proficiency_id','unique_id');
+    }
 }

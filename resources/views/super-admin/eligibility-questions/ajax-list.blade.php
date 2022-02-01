@@ -55,7 +55,7 @@
           @if($record->CombinationalOptions->count() > 0)
             <a class="dropdown-item" href="{{baseUrl('visa-services/eligibility-questions/'.$visa_service_id.'/multi-option-groups/'.base64_encode($record->id))}}">Set Multi Options Group</a>
           @endif
-          <a class="dropdown-item" href="{{baseUrl('visa-services/eligibility-questions/'.$visa_service_id.'/combinational-options/'.base64_encode($record->id))}}">Multiple Options</a>
+          <!--<a class="dropdown-item" href="{{baseUrl('visa-services/eligibility-questions/'.$visa_service_id.'/combinational-options/'.base64_encode($record->id))}}">Multiple Options</a>-->
           <div class="dropdown-divider"></div>
           <a class="dropdown-item text-danger" href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('visa-services/eligibility-questions/'.$visa_service_id.'/delete/'.base64_encode($record->id))}}">Delete</a> 
         </div>
