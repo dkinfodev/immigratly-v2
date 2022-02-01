@@ -13,32 +13,7 @@
 @section('content')
 <!-- Content -->
 <div class="tags">
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="row align-items-end">
-      <div class="col-sm mb-2 mb-sm-0">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb breadcrumb-no-gutter">
-            <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
-          </ol>
-        </nav>
-
-        <h1 class="page-title">{{$pageTitle}}</h1>
-      </div>
-
-      <div class="col-sm-auto">
-
-        <a onclick="showPopup('{{ baseUrl('tags/add') }}')" class="btn btn-primary" href="javascript:;">
-          <i class="tio-folder-add mr-1"></i> Add Tag
-        </a>
-
-      </div>
-    </div>
-    <!-- End Row -->
-  </div>
-  <!-- End Page Header -->
-
+  
   <!-- Card -->
   <div class="card">
     <!-- Header -->
@@ -59,7 +34,7 @@
           </form>
         </div>
 
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
             <!-- Datatable Info -->
             <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0" style="display: none;">
@@ -74,6 +49,15 @@
               </div>
             </div>
           </div>
+        </div>
+
+
+        <div class="col-sm-3">
+
+          <a onclick="showPopup('{{ baseUrl('tags/add') }}')" class="btn btn-primary" href="javascript:;">
+            <i class="tio-folder-add mr-1"></i> Add Tag
+          </a>
+
         </div>
       </div>
       <!-- End Row -->

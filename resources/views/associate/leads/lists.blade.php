@@ -14,25 +14,7 @@
 @section('content')
 <!-- Content -->
 <div class="leads">
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="row align-items-end">
-      <div class="col-sm mb-2 mb-sm-0">
-        
-      </div>
-      @if(role_permission('leads','quick-lead'))
-      <div class="col-sm-auto">
-        <a class="btn btn-primary" onclick="showPopup('<?php echo baseUrl('leads/quick-lead') ?>')" href="javascript:;">
-          <i class="tio-user-add mr-1"></i> Quick Lead
-        </a>
-      </div>
-      @endif
-    </div>
-    <!-- End Row -->
-  </div>
-  <!-- End Page Header -->
-
-
+  
   <!-- Card -->
   <div class="card">
     <!-- Header -->
@@ -53,7 +35,7 @@
           </form>
         </div>
 
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
             <!-- Datatable Info -->
             <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0" style="display: none;">
@@ -69,6 +51,15 @@
             </div>
           </div>
         </div>
+
+        @if(role_permission('leads','quick-lead'))
+        <div class="col-sm-3">
+          <a class="btn btn-primary" onclick="showPopup('<?php echo baseUrl('leads/quick-lead') ?>')" href="javascript:;">
+            <i class="tio-user-add mr-1"></i> Quick Lead
+          </a>
+        </div>
+        @endif
+
       </div>
       <!-- End Row -->
     </div>

@@ -4,7 +4,7 @@
 <!-- Content -->
 <ol class="breadcrumb breadcrumb-no-gutter">
   <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
- <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/languages') }}">Languages</a></li>
+ <li class="breadcrumb-item active">Languages</li>
             
 </ol>
 <!-- End Content -->
@@ -14,22 +14,6 @@
 @section('content')
 <!-- Content -->
 <div class="languages">
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="row align-items-end">
-      <div class="col-sm mb-2 mb-sm-0">
-        
-      </div>
-
-      <div class="col-sm-auto">
-        <a class="btn btn-primary" href="{{ baseUrl('/languages/add') }}">
-          <i class="tio-add mr-1"></i> Add 
-        </a>
-      </div>
-    </div>
-    <!-- End Row -->
-  </div>
-  <!-- End Page Header -->
 
   <!-- Card -->
   <div class="card">
@@ -49,7 +33,7 @@
             </div>
         </div>
 
-        <div class="col-sm-6">
+        <div class="col-sm-5">
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
             <!-- Datatable Info -->
             <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0" style="display: none;">
@@ -64,6 +48,13 @@
               </div>
             </div>
           </div>
+        </div>
+
+
+        <div class="col-sm-2">
+          <a class="btn btn-primary" href="{{ baseUrl('/languages/add') }}">
+            <i class="tio-add mr-1"></i> Add 
+          </a>
         </div>
       </div>
       <!-- End Row -->

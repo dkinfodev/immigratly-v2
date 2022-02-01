@@ -23,13 +23,7 @@
         
       </div>
 
-      <div class="col-sm-auto">
-
-        <a onclick="showPopup('{{ baseUrl('categories/add') }}')" class="btn btn-primary" href="javascript:;">
-          <i class="tio-folder-add mr-1"></i> Add Category
-        </a>
-
-      </div>
+      
     </div>
     <!-- End Row -->
   </div>
@@ -55,7 +49,7 @@
           </form>
         </div>
 
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
             <!-- Datatable Info -->
             <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0" style="display: none;">
@@ -70,6 +64,14 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <div class="col-sm-3">
+
+          <a onclick="showPopup('{{ baseUrl('categories/add') }}')" class="btn btn-primary" href="javascript:;">
+            <i class="tio-folder-add mr-1"></i> Add Category
+          </a>
+
         </div>
       </div>
       <!-- End Row -->

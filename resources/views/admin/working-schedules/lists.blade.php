@@ -10,29 +10,9 @@
 @endsection
 
 
-@section('header-right')
- <a class="btn btn-primary" onclick="showPopup('<?php echo baseUrl('working-schedules/add') ?>')" href="javascript:;">
-          Add Schedule
-        </a>
-@endsection
-
 @section('content')
 <!-- Content -->
 <div class="staff">
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="row align-items-end">
-     
-
-      <div class="col-sm-auto">
-        <a class="btn btn-primary" onclick="showPopup('<?php echo baseUrl('working-schedules/add') ?>')" href="javascript:;">
-          Add Schedule
-        </a>
-      </div>
-    </div>
-    <!-- End Row -->
-  </div>
-  <!-- End Page Header -->
 
   <!-- Card -->
   <div class="card">
@@ -54,7 +34,7 @@
           </form>
         </div>
 
-        <div class="col-sm-6">
+        <div class="col-sm-5">
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
             <!-- Datatable Info -->
             <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0" style="display: none;">
@@ -70,6 +50,14 @@
             </div>
           </div>
         </div>
+
+
+        <div class="col-sm-3">
+          <a class="btn btn-primary" onclick="showPopup('<?php echo baseUrl('working-schedules/add') ?>')" href="javascript:;">
+            Add Schedule
+          </a>
+        </div>
+
       </div>
       <!-- End Row -->
     </div>

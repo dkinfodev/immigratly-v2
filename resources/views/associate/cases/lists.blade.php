@@ -10,13 +10,6 @@
 <!-- End Content -->
 @endsection
 
-@section('header-right')
-@if(role_permission('cases','add-cases'))
-<a class="btn btn-primary" href="<?php echo baseUrl('cases/add') ?>">
-  <i class="tio-user-add mr-1"></i> Create Case
-</a>
-@endif
-@endsection
 
 
 @section('content')
@@ -43,7 +36,7 @@
           </form>
         </div>
 
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
             <!-- Datatable Info -->
             <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0" style="display: none;">
@@ -59,6 +52,16 @@
             </div>
           </div>
         </div>
+
+        @if(role_permission('cases','add-cases'))
+        <div class="col-sm-3">
+        <a class="btn btn-primary" href="<?php echo baseUrl('cases/add') ?>">
+          <i class="tio-user-add mr-1"></i> Create Case
+        </a>
+        </div>
+        @endif
+
+
       </div>
       <!-- End Row -->
     </div>
