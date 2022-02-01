@@ -12,25 +12,7 @@
 @section('content')
 <!-- Content -->
 <div class="news_category">
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="row align-items-end">
-      <div class="col-sm mb-2 mb-sm-0">
-        
-      </div>
-      @if(employee_permission('news-category','add-category'))
-      <div class="col-sm-auto">
-
-        <a onclick="showPopup('{{ baseUrl('news-category/add') }}')" class="btn btn-primary" href="javascript:;">
-          <i class="tio-folder-add mr-1"></i> Add Category
-        </a>
-      </div>
-      @endif
-    </div>
-    <!-- End Row -->
-  </div>
-  <!-- End Page Header -->
-
+  
   <!-- Card -->
   <div class="card">
     <!-- Header -->
@@ -51,7 +33,7 @@
           </form>
         </div>
 
-        <div class="col-sm-6">
+        <div class="col-sm-5">
           @if(employee_permission('news-category','delete-category'))
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
             <!-- Datatable Info -->
@@ -69,6 +51,17 @@
           </div>
           @endif
         </div>
+
+
+        @if(employee_permission('news-category','add-category'))
+        <div class="col-sm-2">
+
+          <a onclick="showPopup('{{ baseUrl('news-category/add') }}')" class="btn btn-primary" href="javascript:;">
+            <i class="tio-folder-add mr-1"></i> Add Category
+          </a>
+        </div>
+        @endif
+
       </div>
       <!-- End Row -->
     </div>

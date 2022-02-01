@@ -10,32 +10,6 @@
 @endsection
 
 
-@section('pageheader')
-<!-- Content -->
-<div class="">
-    <div class="content container" style="height: 25rem;">
-        <!-- Page Header -->
-        <div class="page-header page-header-light page-header-reset">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h1 class="page-header-title">{{$pageTitle}}</h1>
-                </div>
-
-                <div class="col-auto">
-                  @if(role_permission('cases','add-cases'))
-                  <a class="btn btn-primary" href="<?php echo baseUrl('cases/add') ?>">
-                    <i class="tio-user-add mr-1"></i> Create Case
-                  </a>
-                  @endif
-                </div>
-            </div>
-            <!-- End Row -->
-        </div>
-        <!-- End Page Header -->
-    </div>
-</div>
-<!-- End Content -->
-@endsection
 @section('content')
 <!-- Content -->
 <div class="cases">
@@ -60,7 +34,7 @@
           </form>
         </div>
 
-        <div class="col-sm-6">
+        <div class="col-sm-5">
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
             <!-- Datatable Info -->
             <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0" style="display: none;">
@@ -75,6 +49,14 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <div class="col-sm-2">
+          @if(role_permission('cases','add-cases'))
+          <a class="btn btn-primary" href="<?php echo baseUrl('cases/add') ?>">
+            <i class="tio-user-add mr-1"></i> Create Case
+          </a>
+          @endif
         </div>
       </div>
       <!-- End Row -->

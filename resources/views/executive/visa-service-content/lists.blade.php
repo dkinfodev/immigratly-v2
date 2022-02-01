@@ -15,24 +15,7 @@
 @section('content')
 <!-- Content -->
 <div class="visa_services">
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="row align-items-end">
-      <div class="col-sm mb-2 mb-sm-0">
-       
-      </div>
-      @if(employee_permission('visa-content','add-visa-content'))
-      <div class="col-sm-auto">
-        <a class="btn btn-primary" href="{{ baseUrl('/visa-services/content/'.$visa_service_id.'/add') }}">
-          <i class="tio-add mr-1"></i> Add 
-        </a>
-      </div>
-      @endif
-    </div>
-    <!-- End Row -->
-  </div>
-  <!-- End Page Header -->
-
+  
   <!-- Card -->
   <div class="card">
     <!-- Header -->
@@ -51,7 +34,7 @@
             </div> -->
         </div>
 
-        <div class="col-sm-6">
+        <div class="col-sm-5">
           @if(employee_permission('visa-content','delete-visa-content'))
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
             <!-- Datatable Info -->
@@ -69,6 +52,15 @@
           </div>
           @endif
         </div>
+
+
+        @if(employee_permission('visa-content','add-visa-content'))
+        <div class="col-sm-2">
+          <a class="btn btn-primary" href="{{ baseUrl('/visa-services/content/'.$visa_service_id.'/add') }}">
+            <i class="tio-add mr-1"></i> Add 
+          </a>
+        </div>
+
       </div>
       <!-- End Row -->
     </div>
