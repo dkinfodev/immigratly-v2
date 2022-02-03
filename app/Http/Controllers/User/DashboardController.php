@@ -669,7 +669,15 @@ class DashboardController extends Controller
 
             //$object->percentage = $request->input("percentage");
             //$object->year_passed = $request->input("year_passed");
-            
+            $from_month = $request->input("from_month");
+            $from_year = $request->input("from_year");
+
+            $object->from_date = $from_month." ".$from_year;
+
+            $to_month = $request->input("to_month");
+            $to_year = $request->input("to_year");
+
+            $object->to_date = $to_month." ".$to_year;            
             //NEW
             if($request->input("is_highest_degree") == 1){
                 $object->is_highest_degree = 1;
@@ -694,6 +702,15 @@ class DashboardController extends Controller
                 // $object->eca_year = $request->input("eca_year");
             //}
 
+            $from_month = $request->input("from_month");
+            $from_year = $request->input("from_year");
+
+            $object->from_date = $from_month." ".$from_year;
+
+            $to_month = $request->input("to_month");
+            $to_year = $request->input("to_year");
+
+            $object->to_date = $to_month." ".$to_year; 
             
             $object->canadian_equivalency_level = $request->input("canadian_equivalency_level");
             $object->evaluating_agency = $request->input("evaluating_agency");
@@ -716,10 +733,12 @@ class DashboardController extends Controller
         $viewData['record'] = $record;
         $primary_degree = PrimaryDegree::get();
 
-
         $countries = DB::table(MAIN_DATABASE.".countries")->get();
         $viewData['countries'] = $countries;
 
+        $states = DB::table(MAIN_DATABASE.".states")->where('country_id',$record->country_id)->get();
+
+        $viewData['states'] = $states;
         $EvaluatingAgency = EvaluatingAgency::get();
         $viewData['EvaluatingAgency'] = $EvaluatingAgency;
 
@@ -761,7 +780,7 @@ class DashboardController extends Controller
             // }
             //$validator = Validator::make($request->all(),$valid);
 
-
+            $validator = Validator::make($request->all(),$valid);
             if ($validator->fails()) {
                 $response['status'] = false;
                 $response['error_type'] = 'validation';

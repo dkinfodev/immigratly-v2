@@ -20,6 +20,10 @@ span#select2-bchg-container {
     padding: 14px 13px !important;
     border: 0.0625rem solid rgba(33, 50, 91, 0.1);
 }
+
+.custom-select{
+   height: auto !important;
+}
 </style>
 @endsection
 
@@ -563,25 +567,13 @@ span#select2-bchg-container {
 
                            <div class="row">
                               <div class="col-10">
-                              <h3>{{$ed->qualification}}</h3>
-                              <h5>{{$ed->school_name}}</h5>
-
+                                 <h3>{{$ed->qualification}}</h3>
+                                 <h5>{{$ed->school_name}}</h5>
                               </div>
                               <div class="col-2" style="text-align:right">
                                  <!-- Dropdown -->
                                  <div class="btn-group">
-                                    <!-- <button type="button"
-                                       class="btn btn-outline-secondary btn-icon btn-sm btn-eca-menu" type="button"
-                                       id="dropdownMenuButtonHoverAnimation" data-bs-toggle="dropdown"
-                                       aria-expanded="false" data-bs-open-on-hover data-bs-dropdown-animation>
-                                       <i class="bi-three-dots"></i>
-                                    </button> -->
-                                    <!-- <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonHoverAnimation">
-                                       <a class="dropdown-item" href="{{baseUrl('educations/edit/'.base64_encode($ed->id))}}">Edit list</a>
-                                       <a class="dropdown-item" href="{{baseUrl('educations/delete/'.base64_encode($ed->id))}}">Delete list</a>
-
-                                    </div>
- -->
+                                    
                                     <div class="hs-unfold">
                                        <a class="js-hs-action btn btn-sm btn-white" href="javascript:;"
                                           data-hs-unfold-options='{
@@ -594,18 +586,22 @@ span#select2-bchg-container {
                                        <div id="action-{{$key}}" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm dropdown-menu-right">
                                          <!-- <a class="dropdown-item" href="{{baseUrl('educations/edit/'.base64_encode($ed->id))}}">Edit </a> -->
 
-                                         <a href="javascript:;"  class="dropdown-item"  form-link" onclick="showPopup('<?php echo baseUrl('educations/edit/'.base64_encode($ed->id)) ?>')">
-                                           Edit
+                                         <a href="javascript:;"  class="dropdown-item" onclick="showPopup('<?php echo baseUrl('educations/edit/'.base64_encode($ed->id)) ?>')">
+                                            <i class="tio-edit"></i> Edit
                                          </a>
 
-                                         <a class="dropdown-item" href="{{baseUrl('educations/delete/'.base64_encode($ed->id))}}">Delete </a>
                                          
-                                     </div>
-                                 </div>
-                                 <!-- End Dropdown -->
-                              </div>
+                                         <a class="dropdown-item text-danger" href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('educations/delete/'.base64_encode($ed->id))}}">
+                                             <i class="tio-delete"></i> Delete
+                                          </a>
 
+                                       </div>
+                                    </div>
+                                 <!-- End Dropdown -->
+                                 </div>
+                              </div>
                            </div>
+
                            <div class="imm-add-skillset-body-list-component-footer">
                               <div class="row">
                                  <div class="col-xs-12 col-sm-7">
@@ -613,8 +609,7 @@ span#select2-bchg-container {
 
                                  </div>
                                  <div class="col-xs-12 col-sm-5"> 
-                                    <span style="/* font-size:12px; */display:block;float:right;/* font-weight: 600; */">September,
-                                       2020 - August, 2021</span>
+                                    <span style="/* font-size:12px; */display:block;float:right;/* font-weight: 600; */"> {{$ed->from_date}} - {{$ed->to_date}}</span>
                                  </div>
                               </div>
                               <div class="imm-credential-eca-component">
@@ -625,18 +620,24 @@ span#select2-bchg-container {
                                              <span style="font-size:12px;font-weight:600;">{{$ed->Degree->name}}</span>
                                              <span class="imm-eca-small-span">(Original)</span>
                                           </div>
-                                          <div class="imm-credential-eca-subcomponent2"> <img
-                                             src="./assets/img/badge.svg" class="me-1"
-                                             style="width:20px;margin-top: -2px;" alt="Logo"><span
-                                             style="font-size:12px;font-weight:600;">Post Graduate Diploma (4 Years)
-                                          </span><span class="imm-eca-small-span">(CA Equivalency)</span>
+                                          <div class="imm-credential-eca-subcomponent2"> 
+                                          
+                                          @if(!empty($ed->canadian_equivalency_level))
+                                          <img src="./assets/img/badge.svg" class="me-1" style="width:20px;margin-top: -2px;" alt="Logo">
+
+                                             <span style="font-size:12px;font-weight:600;">
+                                             {{$ed->CanadianEquivalency->name}}
+                                             </span>
+                                             <span class="imm-eca-small-span">
+                                             (CA Equivalency)
+                                             </span>
+                                          @endif
                                           </div>
                                        </div>
                                     </div>
                                  </div>
                               </div>
                            </div>
-
 
                         </div>
 
@@ -695,60 +696,67 @@ span#select2-bchg-container {
                            <div class="imm-add-workexp-body-list-component-header">
                               <div class="imm-credential-eca-component">
                                  <div class="row  align-items-center">
-                                 <div class="col-xs-12 col-sm-7">
-                                    <div class="d-flex flex-row">
-                                       <div class="imm-credential-eca-subcomponent1">
-                                       <ul class="list-inline" style="margin-bottom:0">
-                                          <li class="list-inline-item d-inline-flex align-items-center">
-                                             <span class="legend-indicator bg-primary"></span><span
-                                             style="font-size:12px;font-weight:600;">Full-time</span>
-                                          </li>
-                                       </ul>
+                                    <div class="col-xs-12 col-sm-7">
+                                       <div class="d-flex flex-row">
+                                          <div class="imm-credential-eca-subcomponent1">
+                                          <ul class="list-inline" style="margin-bottom:0">
+                                             <li class="list-inline-item d-inline-flex align-items-center">
+                                                <span class="legend-indicator bg-primary"></span><span
+                                                style="font-size:12px;font-weight:600;">{{$expirence->job_type}}</span>
+                                             </li>
+                                          </ul>
+                                          </div>
+                                          <div class="imm-credential-eca-subcomponent2"><span
+                                             style="font-size:12px;font-weight:600;">{{$expirence->noc_type}}</span></div>
                                        </div>
-                                       <div class="imm-credential-eca-subcomponent2"><span
-                                          style="font-size:12px;font-weight:600;">NOC 1241</span></div>
                                     </div>
-                                 </div>
 
-                                 <div class="col-xs-12 col-sm-5"> <span
-                                       style="/* font-size:12px; */display:block;margin-top:3px;float:right;/* font-weight: 600; */">September,
-                                       2020 - August, 2021</span></div>
-
+                                    <div class="col-xs-12 col-sm-5"> <span
+                                    style="/* font-size:12px; */display:block;margin-top:3px;float:right;/* font-weight: 600; */">{{$expirence->join_date}} - {{$expirence->leave_date}}</span>
+                                    </div>
                                  </div>
 
                               </div>
                            </div>
+
                            <div class="imm-add-workexp-body-list-component-body">
                               <div class="row">
                                  <div class="col-10">
-                                 <h4>{{$expirence->position}}</h4>
-                                 <h6>{{$expirence->employment_agency}}, {{$expirence->stateName->name}}, {{$expirence->countryName->name}} </h6>
+                                    <h4>{{$expirence->position}}</h4>
+                                    <h6>{{$expirence->employment_agency}}, {{$expirence->stateName->name}}, {{$expirence->countryName->name}} </h6>
 
                                  </div>
                                  <div class="col-2" style="text-align:right">
 
-                                 <!-- Dropdown -->
-                                 <div class="btn-group">
-                                    <button type="button"
-                                       class="btn btn-outline-secondary btn-icon btn-sm btn-eca-menu js-hs-action" type="button"
-                                       data-hs-unfold-options='{
-                                       "target": "#we-action-{{$key}}",
-                                       "type": "css-animation"
-                                       }'
-                                       >
-                                       <i class="bi-three-dots"></i>
-                                    </button>
-                                    <div id="we-action-{{$key}}" class="dropdown-menu" aria-labelledby="dropdownMenuButtonHoverAnimation">
-                                          <a class="dropdown-item" href="javascript:;" onclick="showPopup('<?php echo baseUrl('work-experiences/edit/'.base64_encode($expirence->id)) ?>')">
-                                          <i class="tio-edit"></i> Edit
-                                          </a>
-                                          <a class="dropdown-item text-danger" href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('work-experiences/delete/'.base64_encode($expirence->id))}}">
-                                          <i class="tio-delete"></i> Delete
-                                          </a> 
+                                    
 
+                                    <!-- Dropdown -->
+                                    <div class="btn-group">
+                                       
+                                       <div class="hs-unfold">
+                                          <a class="js-hs-action btn btn-sm btn-white" href="javascript:;"
+                                             data-hs-unfold-options='{
+                                               "target": "#action2-{{$key}}",
+                                               "type": "css-animation"
+                                             }'>
+                                                  <i class="bi-three-dots"></i>
+                                          </a>
+
+                                          <div id="action2-{{$key}}" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                                            
+                                            <a class="dropdown-item" href="javascript:;" onclick="showPopup('<?php echo baseUrl('work-experiences/edit/'.base64_encode($expirence->id)) ?>')">
+                                             <i class="tio-edit"></i> Edit
+                                             </a>
+
+                                            <a class="dropdown-item text-danger" href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('work-experiences/delete/'.base64_encode($expirence->id))}}">
+                                             <i class="tio-delete"></i> Delete
+                                             </a>
+                                            
+                                          </div>
+                                       </div>
+                                    <!-- End Dropdown -->
                                     </div>
-                                 </div>
-                                 <!-- End Dropdown -->
+                                    <!-- End Dropdown -->
                                  </div>
 
                               </div>
@@ -763,6 +771,7 @@ span#select2-bchg-container {
                                  </div>
 
                               </div>
+                           </div>
                         </div>
                      @endforeach
                   </div>
