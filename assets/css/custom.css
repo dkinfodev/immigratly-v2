@@ -5591,3 +5591,20 @@ border-bottom-left-radius: 0;
   height: 100%;
   content: "";
 }
+
+.badge-danger {
+  color: #fff;
+  background-color: #ed4c78;
+}
+.badge-warning {
+  color: #1e2022;
+  background-color: #f5ca99;
+}
+.badge-success {
+  color: #fff;
+  background-color: #00c9a7;
+}
+.badge-secondary {
+  color: #fff;
+  background-color: #71869d;
+}

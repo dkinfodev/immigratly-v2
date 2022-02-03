@@ -550,9 +550,13 @@ class EligibilityQuestionsController extends Controller
     {   
         $visa_service_id = base64_decode($visa_service_id);
         $visa_service = VisaServices::where("id",$visa_service_id)->first();
-        
-       
+        $search = $request->input("search");
         $records = ComponentQuestions::where("visa_service_id",$visa_service->unique_id)
+                            ->where(function($query) use($search){
+                                if($search != ''){
+                                    $query->where("component_title","LIKE","%".$search."%");
+                                }
+                            })
                             ->orderBy('id',"desc")
                             ->paginate();
         
@@ -579,6 +583,10 @@ class EligibilityQuestionsController extends Controller
         $viewData['pageTitle'] = "Add Component";
         $groups = QuestionsGroups::where("visa_service_id",$visa_service->unique_id)->where("is_default",0)->get();
         $viewData['groups'] = $groups;
+        $components = ComponentQuestions::with('Questions')
+                                    ->where("visa_service_id",$visa_service->unique_id)
+                                    ->get();
+        $viewData['components'] = $components;
         $viewData['activeTab'] = 'visa-services';
         return view(roleFolder().'.component-questions.add',$viewData);
     }
@@ -623,11 +631,32 @@ class EligibilityQuestionsController extends Controller
         $object->added_by = \Auth::user()->unique_id;
         $object->save();
         $questions = $request->questions;
+
+        $ques = $request->input("ques");
+
         foreach($questions as $question){
             $obj = new ComponentQuestionIds();
             $obj->component_id = $unique_id;
             $obj->visa_service_id = $visa_service->unique_id;
             $obj->question_id = $question;
+            
+            if(isset($ques[$question]) && $ques[$question]['dependent_question'] != ''){
+                if(isset($ques[$question]['is_dependent'])){
+                    $obj->is_dependent = 1;
+                }else{
+                    $obj->is_dependent = 0;
+                }
+                if(isset($ques[$question]['dependent_component'])){
+                    $obj->dependent_component = $ques[$question]['dependent_component'];
+                }else{
+                    $obj->dependent_component = NULL;
+                }
+                if(isset($ques[$question]['dependent_question'])){
+                    $obj->dependent_question = $ques[$question]['dependent_question'];
+                }else{
+                    $obj->dependent_question = NULL;
+                }
+            }
             $obj->save();
 
             ArrangeQuestions::where("visa_service_id",$visa_service->unique_id)
@@ -666,9 +695,20 @@ class EligibilityQuestionsController extends Controller
                                     ->first();
         $this->defaultGroup($visa_service->unique_id);
         $question_ids = $record->Questions->pluck("question_id")->toArray();
+        $ques = array();
+        foreach($record->Questions as $comques){
+            $ques[$comques->question_id] = $comques->toArray();
+            $ques[$comques->question_id]['component_questions'] = $record->componentQuestions($comques->dependent_component);
+        }
+ 
         $group_ids = $record->GroupComponents->pluck("group_id")->toArray();
-        
+        $components = ComponentQuestions::with('Questions')
+                                    ->where("id","!=",$id)
+                                    ->where("visa_service_id",$visa_service->unique_id)
+                                    ->get();
+        $viewData['components'] = $components;
         $viewData['question_ids'] = $question_ids;
+        $viewData['ques'] = $ques;
         $viewData['group_ids'] = $group_ids;
         $viewData['record'] = $record;
         $viewData['visa_service'] = $visa_service;
@@ -715,6 +755,8 @@ class EligibilityQuestionsController extends Controller
             $response['message'] = $errMsg;
             return response()->json($response);
         }
+
+        
         $options = $request->options;
        
         $visa_service = VisaServices::where("id",$visa_service_id)->first();
@@ -739,6 +781,8 @@ class EligibilityQuestionsController extends Controller
         $object->save();
         $questions = $request->questions;
         $ques_ids = array();
+
+        $ques = $request->input("ques");
         foreach($questions as $key => $question){
             $check = ComponentQuestionIds::where("component_id",$unique_id)->where("question_id",$question)->first();
             if(empty($check)){
@@ -753,6 +797,27 @@ class EligibilityQuestionsController extends Controller
             $obj->visa_service_id = $visa_service->unique_id;
             $obj->component_id = $unique_id;
             $obj->question_id = $question;
+            if(isset($ques[$question]) && isset($ques[$question]['dependent_question'])){
+                if(isset($ques[$question]['is_dependent'])){
+                    $obj->is_dependent = 1;
+                }else{
+                    $obj->is_dependent = 0;
+                }
+                if(isset($ques[$question]['dependent_component'])){
+                    $obj->dependent_component = $ques[$question]['dependent_component'];
+                }else{
+                    $obj->dependent_component = NULL;
+                }
+                if(isset($ques[$question]['dependent_question'])){
+                    $obj->dependent_question = $ques[$question]['dependent_question'];
+                }else{
+                    $obj->dependent_question = NULL;
+                }
+            }else{
+                $obj->is_dependent = 0;
+                $obj->dependent_component = NULL;
+                $obj->dependent_question = NULL;
+            }
             $obj->save();
             $ques_ids[] = $obj->id;
             
@@ -2093,5 +2158,9 @@ class EligibilityQuestionsController extends Controller
         MultipleOptionsGroups::where("id",$id)->delete();
         return redirect()->back()->with("success","Record deleted successfully");
     }
+
+    // public function fetchComponentQuestions($visa_service_id,Request $request){
+    //     $question_ids = ComponentQuestionIds::where("component_id",$request->input("compoent_id"))->get();
+    // }
 }
 

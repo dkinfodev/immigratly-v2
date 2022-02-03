@@ -38,6 +38,7 @@ use App\Models\Tags;
 use App\Models\CombinationalOptions;
 use App\Models\MultipleOptionsGroups;
 use App\Models\QuestionOptions;
+use App\Models\ComponentQuestionIds;
 
 if (! function_exists('getFileType')) {
     function getFileType($ext) {
@@ -2533,5 +2534,13 @@ if(!function_exists("monthsName")){
         $months = array("January","February","March","April","May","June","July","August","September","October","November","December");
         return $months;
    }
+}
+if(!function_exists("dependentQuestions")){
+    function dependentQuestions($component_id,$question_id){
+        $result = ComponentQuestionIds::where("dependent_component",$component_id)
+                                    ->where("question_id",$question_id)
+                                    ->get();
+        return $result;
+    }
 }
 

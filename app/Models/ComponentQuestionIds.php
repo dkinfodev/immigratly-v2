@@ -16,7 +16,7 @@ class ComponentQuestionIds extends Model
 
     public function EligibilityQuestion()
     {
-        return $this->belongsTo('App\Models\EligibilityQuestions','question_id','unique_id');
+        return $this->belongsTo('App\Models\EligibilityQuestions','question_id','unique_id')->with("QuestionDependentWith");
     }
 
     public function ComponentGroups()

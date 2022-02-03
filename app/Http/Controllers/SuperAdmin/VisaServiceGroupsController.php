@@ -179,8 +179,8 @@ class VisaServiceGroupsController extends Controller
         $object->description = $request->input("description");
         $object->program_type = $request->input("program_type");
         if ($file = $request->file('image')){
-            if($object->image != ''){
-                unlink(public_path("/uploads/visa-groups"));
+            if($object->image != '' && file_exists(public_path("/uploads/visa-groups/".$object->image))){
+                unlink(public_path("/uploads/visa-groups/".$object->image));
             }
             $fileName        = $file->getClientOriginalName();
             $extension       = $file->getClientOriginalExtension() ?: 'png';

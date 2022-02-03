@@ -8,7 +8,7 @@
                 <!-- Avatar -->
                 <div class="d-none d-lg-block text-center mb-5">
                     <div class="avatar avatar-xxl avatar-circle mb-3">
-
+                        <img class="avatar-img" src="{{ userProfile('','t') }}" alt="Image Description">
                         <img class="avatar-status avatar-lg-status" src="assets/svg/illustrations/top-vendor.svg"
                         alt="Image Description" data-bs-toggle="tooltip" data-bs-placement="top"
                         title="Verified user">

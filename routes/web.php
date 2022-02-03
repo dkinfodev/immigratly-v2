@@ -320,6 +320,8 @@ Route::group(array('prefix' => 'super-admin', 'middleware' => 'super_admin'), fu
         Route::group(array('prefix' => 'component-questions/{visa_service_id}'), function () {
             Route::get('/', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'componentQuestions']);
             Route::post('/ajax-list', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'getComponentAjaxList']); 
+            Route::post('/fetch-questions', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'fetchComponentQuestions']); 
+            
             Route::get('/add', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'addComponent']);
             Route::post('/save', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'saveComponent']); 
             Route::get('/delete/{id}', [App\Http\Controllers\SuperAdmin\EligibilityQuestionsController::class, 'deleteSingleComponent']); 

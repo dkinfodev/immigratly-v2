@@ -33,4 +33,13 @@ class ComponentQuestions extends Model
                     ->whereHas("Component")
                     ->with("Component");
     }
+
+    static function componentQuestions($component_id){
+        $questions = ComponentQuestionIds::with(['EligibilityQuestion'])
+            ->where("component_id",$component_id)
+            ->get()
+            ->toArray();
+        return $questions;
+
+    }
 }
