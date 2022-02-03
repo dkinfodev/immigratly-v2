@@ -19,7 +19,8 @@ class ArrangeGroups extends Model
         return $this->hasMany('App\Models\GroupComponentIds','group_id','group_id')
         // ->doesntHave("ConditionalQuestion")
         ->with("Component")
-        ->whereHas("Component");
+        ->whereHas("Component")
+        ->orderBy("sort_order","asc");
     }
 
     static function checkIfConditional($component_id,$conditional_type){

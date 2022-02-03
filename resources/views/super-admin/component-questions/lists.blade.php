@@ -16,44 +16,31 @@
 @section('content')
 <!-- Content -->
 <div class="component_questions">
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="row align-items-end">
-      <div class="col-sm mb-2 mb-sm-0">
-       
-      </div>
-
-      <div class="col-sm-auto">
-       <a class="btn btn-warning" href="{{ baseUrl('/visa-services/eligibility-questions/'.$visa_service_id) }}">
-          <i class="tio-add mr-1"></i> Eligibility Questions
-        </a>
-        <a class="btn btn-primary" href="{{ baseUrl('/visa-services/component-questions/'.$visa_service_id.'/add') }}">
-          <i class="tio-add mr-1"></i> Add 
-        </a>
-      </div>
-    </div>
-    <!-- End Row -->
-  </div>
-  <!-- End Page Header -->
-
   <!-- Card -->
   <div class="card">
     <!-- Header -->
     <div class="card-header">
       <div class="row justify-content-between align-items-center flex-grow-1">
-        <div class="col-sm-6 col-md-4 mb-3 mb-sm-0">
+        <div class="col-md-7">
          
             <!-- Search -->
-            <!-- <div class="input-group input-group-merge input-group-flush">
+            <div class="input-group input-group-merge input-group-flush">
               <div class="input-group-prepend">
                 <div class="input-group-text">
                   <i class="tio-search"></i>
                 </div>
               </div>
-              <input id="datatableSearch"  type="text" class="form-control" placeholder="Search Language" aria-label="Search Language">
-            </div> -->
+              <input id="datatableSearch"  type="text" class="form-control" placeholder="Search Components" aria-label="Search Components">
+            </div>
         </div>
-
+        <div class="col-sm-auto">
+            <a class="btn btn-warning" href="{{ baseUrl('/visa-services/eligibility-questions/'.$visa_service_id) }}">
+              <i class="tio-add mr-1"></i> Eligibility Questions
+            </a>
+            <a class="btn btn-primary" href="{{ baseUrl('/visa-services/component-questions/'.$visa_service_id.'/add') }}">
+              <i class="tio-add mr-1"></i> Add 
+            </a>
+         </div>
         <div class="col-sm-6">
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
             <!-- Datatable Info -->
@@ -155,11 +142,13 @@ $(document).ready(function(){
 })
 loadData();
 function loadData(page=1){
+    var search = $("#datatableSearch").val();
     $.ajax({
         type: "POST",
         url: BASEURL + '/visa-services/component-questions/{{$visa_service_id}}/ajax-list?page='+page,
         data:{
             _token:csrf_token,
+            search:search
         },
         dataType:'json',
         beforeSend:function(){

@@ -16,22 +16,7 @@
 @section('content')
 <!-- Content -->
 <div class="visa_services">
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="row align-items-end">
-      <div class="col-sm mb-2 mb-sm-0">
-        
-      </div>
-
-      <div class="col-sm-auto">
-        <a class="btn btn-primary" href="{{ baseUrl('/visa-services/add') }}">
-          <i class="tio-add mr-1"></i> Add 
-        </a>
-      </div>
-    </div>
-    <!-- End Row -->
-  </div>
-  <!-- End Page Header -->
+ 
 
   <!-- Card -->
   <div class="card">
@@ -52,7 +37,11 @@
             <!-- End Search -->
           </form>
         </div>
-
+        <div class="col-sm-auto">
+          <a class="btn btn-primary" href="{{ baseUrl('/visa-services/add') }}">
+            <i class="tio-add mr-1"></i> Add 
+          </a>
+        </div>
         <div class="col-sm-12">
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
             <!-- Datatable Info -->

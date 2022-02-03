@@ -294,6 +294,32 @@ function countTotal(e,component_id,question_id){
     var max_score = $(e).parents(".component-block").attr("data-max");
     var min_score = $(e).parents(".component-block").attr("data-min");
     var none_eligibile = $(e).attr("data-noneligible");
+    var quesid = $(e).attr("data-quesid");
+    var value = $(e).val();
+
+    // var index = $("*[data-quesid='"+quesid+"']").length;
+    // var current_index = $("form *[data-quesid='"+quesid+"']").index(e);
+    // $("*[data-quesid='"+quesid+"']").each(function(){
+    //     var index = $("form *[data-quesid='"+quesid+"']").index(this);
+    //     var element = $(this).attr("data-element");
+    //     if(index > current_index){
+    //         if(element == 'select'){
+    //             $(this).find("option[value='"+value+"']").attr("selected","selected");
+    //         }
+    //         if(element == 'radio'){
+    //             var cur_val = $(this).val();
+    //             if(value == cur_val){
+    //                 $(this).prop("checked",true);
+    //             }
+    //             // $("*[data-quesid='"+quesid+"'][value='"+value+"']").prop("checked",true);
+    //         }
+    //     }
+    // });
+    // $("*[data-quesid='"+quesid+"']").find("option[value='"+value+"']").attr("selected","selected");
+    // $("*[data-quesid='"+quesid+"'][value='"+value+"']").prop("checked",true);
+    
+    
+
     if(none_eligibile == 1){
         var none_eligible_reason = $(e).attr("data-none-eligible-reason");
         // errorMessage(none_eligible_reason);
@@ -325,6 +351,12 @@ function countTotal(e,component_id,question_id){
     //     errorMessage("Score exceed more then component max score");
     //     return false;
     // }
+}
+function dependentQuestion(e,question_id){
+    // alert(question_id);
+    var value = $(e).val();
+    $("*[data-dependent='"+question_id+"'][value='"+value+"']").prop("checked",true);
+    $("*[data-dependent='"+question_id+"']").find("option[value='"+value+"']").attr("selected","selected");
 }
 </script>
 @endsection

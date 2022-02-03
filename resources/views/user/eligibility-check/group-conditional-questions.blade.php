@@ -7,7 +7,7 @@ if(!empty($is_comp_conditional)){
     $comp_ques_id = "comp-ques-".$is_comp_conditional->question_id;
 }
 ?>
-<div class="h-100 imm-assessment-form-list-component-wrapper cond-{{ $group->unique_id }}-{{$component_id}}-{{$question_id}} {{$comp_ques_id}} component-{{$component->unique_id}}" data-max="{{ $component->max_score }}" data-min="{{ $component->min_score }}" style="display:{{ $comp_display }}">
+<div class="h-100 imm-assessment-form-list-component-wrapper cond-{{ $group->unique_id }}-{{$component_id}}-{{$question_id}} {{$comp_ques_id}} component-{{$component->unique_id}} conditional-question" data-max="{{ $component->max_score }}" data-min="{{ $component->min_score }}" style="display:{{ $comp_display }}">
     <div class=" h-100 imm-assessment-form-list-component">
         <div class="imm-assessment-form-list-component-header">
             <div class="d-flex" style="text-align:right">
@@ -28,8 +28,14 @@ if(!empty($is_comp_conditional)){
         </div>
     </div>
     <ul class="imm-assessment-form-list-sub-wrapper">
+    
     @foreach($component->Questions as $ques)
     <?php
+        $dependent_data = '';
+        if($ques->dependent_question != ''){
+            $dependent_data = 'data-dependent='.$ques->dependent_question;
+        }
+        $checkIfDependent = dependentQuestions($ques->component_id,$ques->question_id);
         $option_selected = array();
         $check_ques = checkGroupConditionalQues($group->unique_id,$component->unique_id,$ques->EligibilityQuestion->unique_id);
         $block = 'block';
@@ -38,6 +44,11 @@ if(!empty($is_comp_conditional)){
         
         if(count($is_pre_conditional)>0){
             $preConditionalFunc = ",preConditionalComp(this.value,".$ques->EligibilityQuestion->unique_id.")";
+        }
+        $depcomclass='';
+        if($checkIfDependent->count() > 0){
+            $preConditionalFunc .=",dependentQuestion(this,".$ques->EligibilityQuestion->unique_id.")";
+            $depcomclass='data-depcom='.$component->Component->unique_id."-".$ques->EligibilityQuestion->unique_id;
         }
         if($ques->EligibilityQuestion->linked_to_cv == 'yes'){
             $block = 'none';
@@ -64,12 +75,16 @@ if(!empty($is_comp_conditional)){
                             @if($ques->EligibilityQuestion->option_type == 'dropdown')
 
                             @if(!empty($check_ques))
-                            <select {{ ($comp_display == "none")?'disabled':'' }} class="select2"
+                            <select {{ ($comp_display == "none")?'disabled':'' }} class="select2" data-element="select" data-quesid="{{ $ques->EligibilityQuestion->unique_id }}"
                                 onchange="conditionalQuestion(this,'select'),countTotal(this,{{ $component->unique_id }},{{ $ques->EligibilityQuestion->unique_id }}){{$preConditionalFunc}}"
+                                {{$dependent_data}}
+                                {{$depcomclass}}
                                 name="question[{{ $group->unique_id }}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]">
                                 @else
-                                <select {{ ($comp_display == "none")?'disabled':'' }} class="select2"
+                                <select {{ ($comp_display == "none")?'disabled':'' }} class="select2" data-element="select" data-quesid="{{ $ques->EligibilityQuestion->unique_id }}"
                                     onchange="countTotal(this,{{ $component->unique_id }},{{ $ques->EligibilityQuestion->unique_id }}){{$preConditionalFunc}}"
+                                    {{$dependent_data}}
+                                    {{$depcomclass}}
                                     name="question[{{ $group->unique_id }}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]">
                                     @endif
                                     <option value="">Select Option</option>
@@ -120,6 +135,10 @@ if(!empty($is_comp_conditional)){
                                             data-score="{{ $option->score }}" data-noneligible="{{ $option->non_eligible }}"
                                             data-none-eligible-reason="{{ $option->non_eligible_reason }}"
                                             data-option-id="{{$option->id}}"
+                                            data-element="radio"
+                                            {{$dependent_data}}
+                                            {{$depcomclass}}
+                                            data-quesid="{{ $ques->EligibilityQuestion->unique_id }}"
                                             id="customInlineRadio-{{$component->component_id}}-{{$option->id}}"
                                             onchange="conditionalQuestion(this,'radio'),countTotal(this,{{ $component->unique_id }},{{ $ques->EligibilityQuestion->unique_id }}){{$preConditionalFunc}}"
                                             value="{{ $option->option_value }}" class="custom-control-input"
@@ -131,6 +150,10 @@ if(!empty($is_comp_conditional)){
                                             type="radio" data-noneligible="{{ $option->non_eligible }}"
                                             data-none-eligible-reason="{{ $option->non_eligible_reason }}"
                                             data-option-id="{{$option->id}}"
+                                            data-element="radio"
+                                            {{$dependent_data}}
+                                            {{$depcomclass}}
+                                            data-quesid="{{ $ques->EligibilityQuestion->unique_id }}"
                                             id="customInlineRadio-{{$component->component_id}}-{{$option->id}}"
                                             value="{{ $option->option_value }}" class="custom-control-input"
                                             name="question[{{ $group->unique_id }}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]">
@@ -174,14 +197,12 @@ if(!empty($is_comp_conditional)){
                     </div>
                 </div>
             </div>
-
-
         </li>
         @if($ques->EligibilityQuestion->linked_to_cv == 'yes' && !empty($check_ques))
         <script>
         setTimeout(function() {
-
-            @if($ques->EligibilityQuestion-> option_type == 'radio')
+           
+            @if($ques->EligibilityQuestion->option_type == 'radio')
             var e = $(
                 ".qs-{{ $group->unique_id }}-{{ $component->unique_id }}-{{ $ques->EligibilityQuestion->unique_id }} input[type=radio]:checked"
                 );
@@ -197,6 +218,15 @@ if(!empty($is_comp_conditional)){
         }, 1000);
         </script>
         @endif
+        <script>
+            var index = $(".cond-{{ $group->unique_id }}-{{$component_id}}-{{$question_id}}").find("*[data-quesid='{{ $question_id }}']").length;
+            // alert(index+" = {{ $question_id }}");
+            @if($ques->dependent_question != '')
+                var value = $("*[data-depcom='{{$ques->dependent_component}}-{{$ques->dependent_question}}']:checked").val();
+                $("*[data-dependent='{{$ques->dependent_question}}'][value='"+value+"']").prop("checked",true);
+                $("*[data-dependent='{{$ques->dependent_question}}']").find("option[value='"+value+"']").attr("selected","selected");
+            @endif
+        </script>
     @endforeach
     </ul>
 </div>
@@ -224,6 +254,13 @@ if(!empty($is_comp_conditional)){
             
             if(!empty($is_pre_conditional)){
                 $preConditionalFunc = "preConditionalComp(this.value,".$ques->EligibilityQuestion->unique_id.")";
+            }
+            if($ques->dependent_question != ''){
+                if($preConditionalFunc != ''){
+                    $preConditionalFunc .=",dependentQuestion(".$ques->dependent_component.",".$ques->dependent_question.")";
+                }else{
+                    $preConditionalFunc .="dependentQuestion(".$ques->dependent_component.",".$ques->dependent_question.")";
+                }
             }
         ?>
         <li class="ui-state-default quesli qs-{{ $group->unique_id }}-{{ $component->unique_id }}-{{ $ques->EligibilityQuestion->unique_id }}" data-group="{{ $group->unique_id }}" data-component="{{$component->unique_id}}" data-question="{{$ques->EligibilityQuestion->unique_id}}">

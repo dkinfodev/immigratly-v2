@@ -69,11 +69,62 @@
         <div class="js-form-message form-group row">
           <label class="col-sm-2 col-form-label">Questions</label>
           <div class="col-sm-10">
-            <select id="question_selected" multiple required>
+          <div class="datatable-custom">
+              <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                      <th class="text-center">
+                        <div class="custom-control custom-checkbox">
+                          <input type="checkbox" id="checkAll" class="custom-control-input">
+                          <label class="custom-control-label" for="checkAll">&nbsp;</label>
+                        </div>
+                      </th>
+                      <th>Question</th>
+                      <th>Dependent</th>
+                      <th width="20%">Component</th>
+                      <th width="20%">Question</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  @foreach($questions as $key => $question)
+                    <tr>
+                        <td class="text-center">
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" id="customCheck-{{$key}}" name="ques[{{$question->unique_id}}][questions]" class="custom-control-input quescheck" value="{{$question->unique_id}}">
+                            <label class="custom-control-label" for="customCheck-{{$key}}">&nbsp;</label>
+                          </div>
+                        </td>
+                        <td class="questext">{{$question->question}}</td>
+                        <td class="text-center">
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" name="ques[{{$question->unique_id}}][is_dependent]" id="dependent-{{$key}}" class="custom-control-input dependent-checkbox" value="1" >
+                            <label class="custom-control-label" for="dependent-{{$key}}">&nbsp;</label>
+                          </div>
+                        </td>
+                        <td>
+                          <select onchange="fetchComponentQues(this)" disabled class="dependent_component" disabled name="ques[{{$question->unique_id}}][dependent_component]">
+                            <option value="">Select Component</option>
+                            @foreach($components as $component)
+                            <option value="{{$component->unique_id}}">{{$component->component_title}}</option>
+                            @endforeach
+                          </select>
+                        </td>
+                        <td>
+                          <select class="dependent_question" disabled name="ques[{{$question->unique_id}}][dependent_question]">
+                            <option value="">Select Quesstion</option>
+                           
+                          </select>
+                        </td>
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
+            </div>
+            <!-- <select id="question_selected" multiple required>
               @foreach($questions as $question)
               <option value="{{$question->unique_id}}">{{$question->question}}</option>
               @endforeach
-            </select>
+            </select> -->
           </div>
         </div>
         <div class="js-form-message form-group row">
@@ -133,6 +184,47 @@
 $(document).ready(function(){
   $( function() {
     $('#sortable').sortable();
+  });
+  $("#checkAll").change(function(){
+    if($(this).is(":checked")){
+      $(".quescheck").prop("checked",true);
+    }else{
+      $(".quescheck").prop("checked",false);
+    }
+  });
+  $(".dependent-checkbox").change(function(){
+    if($(this).is(":checked")){
+      $(this).parents("tr").find(".dependent_component").removeAttr("disabled");
+      $(this).parents("tr").find(".dependent_question").removeAttr("disabled");
+    }else{
+      $(this).parents("tr").find(".dependent_component,.dependent_question").val('').trigger("change");
+      $(this).parents("tr").find(".dependent_component").attr("disabled","disabled");
+      $(this).parents("tr").find(".dependent_question").attr("disabled","disabled");
+    }
+  });
+  $(".quescheck").change(function(){
+      var ques_id = $(this).val();
+      if($(this).is(":checked")){
+         
+          var exists = 0;
+          // $(".question-sort li").each(function(){
+          //   if($(this).data("ques-id") == ques_id){
+          //     exists = 1;
+          //   }
+          // });
+          if(exists == 0){
+              var text = $(this).parents("tr").find(".questext").text();
+              var html ='<li data-ques-id="'+ques_id+'" class="ui-state-default">';
+              html +='<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>';
+              html +='<input type="hidden" name="questions[]" value="'+ques_id+'" />';
+              html += text;
+              html +='</li>';
+              $("#sortable").append(html);
+          }
+        
+      }else{
+        $("li[data-ques-id='"+ques_id+"']").remove();
+      }
   });
   $("#question_selected").change(function(){
       var ques_id = $(this).val();
@@ -208,7 +300,35 @@ function linkToDefault(e){
     $("#groups").removeAttr("disabled");
   }
 }
-
+function fetchComponentQues(e){
+  if($(e).val() != ''){
+    var component_id = $(e).val();
+    $.ajax({
+          url:"{{ baseUrl('visa-services/eligibility-questions/'.base64_encode($visa_service->id).'/fetch-component-questions') }}",
+          type:"post",
+          data:{
+            _token:csrf_token,
+            component_id:component_id
+          },
+          dataType:"json",
+          beforeSend:function(){
+            showLoader();
+          },
+          success:function(response){
+            hideLoader();
+            if(response.status == true){
+              $(e).parents("tr").find(".dependent_question").html(response.options);
+            }else{
+              $(e).parents("tr").find(".dependent_question").html('');
+            }
+        },
+        error:function(){
+          internalError();
+        }
+      });
+  }
+  
+}
 </script>
 
-  @endsection
+@endsection

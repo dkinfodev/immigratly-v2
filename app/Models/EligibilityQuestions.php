@@ -97,4 +97,10 @@ class EligibilityQuestions extends Model
     {
         return $this->hasMany('App\Models\LanguageScorePoints','question_id','unique_id');
     }
+
+    public function QuestionDependentWith()
+    {
+        return $this->hasMany('App\Models\ComponentQuestionIds','dependent_question','unique_id')
+                        ->where("dependent_question","!=","");
+    }
 }

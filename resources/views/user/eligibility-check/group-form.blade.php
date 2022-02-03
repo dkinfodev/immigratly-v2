@@ -95,14 +95,26 @@
                 <ul class="imm-assessment-form-list-sub-wrapper">
                 @foreach($component->Component->Questions as $ques)
                 <?php
+                    $dependent_data = '';
+                    if($ques->dependent_question != ''){
+                        $dependent_data = 'data-dependent='.$ques->dependent_question;
+                    }
+                    $checkIfDependent = dependentQuestions($component->Component->unique_id,$ques->question_id);
+                    
                     $option_selected = array();
                     $check_ques = checkGroupConditionalQues($record->Group->unique_id,$component->Component->unique_id,$ques->EligibilityQuestion->unique_id);
                     $block = 'block';
                     $is_pre_conditional = componentPreConditions('question',$ques->EligibilityQuestion->unique_id);
                     $preConditionalFunc = "";
-                    
+                    $depcomclass='';
                     if(count($is_pre_conditional)>0){
                         $preConditionalFunc = ",preConditionalComp(this.value,".$ques->EligibilityQuestion->unique_id.")";
+                        
+                    }
+                    
+                    if($checkIfDependent->count() > 0){
+                        $preConditionalFunc .=",dependentQuestion(this,".$ques->EligibilityQuestion->unique_id.")";
+                        $depcomclass='data-depcom='.$component->Component->unique_id."-".$ques->EligibilityQuestion->unique_id;
                     }
                     if($ques->EligibilityQuestion->linked_to_cv == 'yes'){
                         $block = 'none';
@@ -119,6 +131,7 @@
                         <div class="h-100 imm-assessment-form-list-question-wrapper">
                             <div class="h-100 imm-assessment-form-list-question">
                                 <div class="imm-assessment-form-list-question-header"> {{$ques->EligibilityQuestion->question}}</div>
+                                <span class="preselect"></span>
                                 <div class="imm-assessment-form-list-question-body"> 
                                     @if($ques->EligibilityQuestion->linked_to_cv == 'yes')
                                         @if(!empty($option_selected) && $option_selected['option_selected'] != '')
@@ -130,10 +143,18 @@
 
                                         @if(!empty($check_ques))
                                         <select {{ ($comp_display == "none")?'disabled':'' }} class="select2"
+                                            data-quesid="{{ $ques->EligibilityQuestion->unique_id }}"
+                                            {{$dependent_data}}
+                                            {{$depcomclass}}
+                                            data-element="select"
                                             onchange="conditionalQuestion(this,'select'),countTotal(this,{{ $component->Component->unique_id }},{{ $ques->EligibilityQuestion->unique_id }}){{$preConditionalFunc}}"
                                             name="question[{{ $record->Group->unique_id }}][{{ $component->Component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]">
                                             @else
                                             <select {{ ($comp_display == "none")?'disabled':'' }} class="select2"
+                                                data-quesid="{{ $ques->EligibilityQuestion->unique_id }}"
+                                                data-element="select"
+                                                {{$dependent_data}}
+                                                {{$depcomclass}}
                                                 onchange="countTotal(this,{{ $component->Component->unique_id }},{{ $ques->EligibilityQuestion->unique_id }}){{$preConditionalFunc}}"
                                                 name="question[{{ $record->Group->unique_id }}][{{ $component->Component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]">
                                                 @endif
@@ -185,7 +206,11 @@
                                                         data-score="{{ $option->score }}" data-noneligible="{{ $option->non_eligible }}"
                                                         data-none-eligible-reason="{{ $option->non_eligible_reason }}"
                                                         data-option-id="{{$option->id}}"
+                                                        data-element="radio"
+                                                        data-quesid="{{ $ques->EligibilityQuestion->unique_id }}"
                                                         id="customInlineRadio-{{$component->component_id}}-{{$option->id}}"
+                                                        {{$depcomclass}}
+                                                        {{$dependent_data}}
                                                         onchange="conditionalQuestion(this,'radio'),countTotal(this,{{ $component->Component->unique_id }},{{ $ques->EligibilityQuestion->unique_id }}){{$preConditionalFunc}}"
                                                         value="{{ $option->option_value }}" class="custom-control-input"
                                                         name="question[{{ $record->Group->unique_id }}][{{ $component->Component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]">
@@ -196,7 +221,11 @@
                                                         type="radio" data-noneligible="{{ $option->non_eligible }}"
                                                         data-none-eligible-reason="{{ $option->non_eligible_reason }}"
                                                         data-option-id="{{$option->id}}"
+                                                        data-element="radio"
+                                                        data-quesid="{{ $ques->EligibilityQuestion->unique_id }}"
                                                         id="customInlineRadio-{{$component->component_id}}-{{$option->id}}"
+                                                        {{$depcomclass}}
+                                                        {{$dependent_data}}
                                                         value="{{ $option->option_value }}" class="custom-control-input"
                                                         name="question[{{ $record->Group->unique_id }}][{{ $component->Component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]">
                                                     @endif
@@ -320,26 +349,26 @@ action="{{ baseUrl('/eligibility-check/g/'.$visa_service_id) }}" class="mt-3">
             <ul class="sortable-ul mt-2 mb-2">
                 @foreach($component->Component->Questions as $ques)
                 <?php
-                                        $option_selected = array();
-                                        $check_ques = checkGroupConditionalQues($record->Group->unique_id,$component->Component->unique_id,$ques->EligibilityQuestion->unique_id);
-                                        $block = 'block';
-                                        $is_pre_conditional = componentPreConditions('question',$ques->EligibilityQuestion->unique_id);
-                                        $preConditionalFunc = "";
-                                        
-                                        if(count($is_pre_conditional)>0){
-                                            $preConditionalFunc = ",preConditionalComp(this.value,".$ques->EligibilityQuestion->unique_id.")";
-                                        }
-                                        if($ques->EligibilityQuestion->linked_to_cv == 'yes'){
-                                            $block = 'none';
-                                            $cv_section = $ques->EligibilityQuestion->cv_section;
-                                            $elg_options = $ques->EligibilityQuestion->Options;
-                                            $option_selected = cvBasedOptions($cv_section,$elg_options,$ques->EligibilityQuestion,$component->Component->unique_id);
-                                            
-                                            if($option_selected['option_selected'] == ''){
-                                                $block = 'block';
-                                            }
-                                        }
-                                    ?>
+                    $option_selected = array();
+                    $check_ques = checkGroupConditionalQues($record->Group->unique_id,$component->Component->unique_id,$ques->EligibilityQuestion->unique_id);
+                    $block = 'block';
+                    $is_pre_conditional = componentPreConditions('question',$ques->EligibilityQuestion->unique_id);
+                    $preConditionalFunc = "";
+                    
+                    if(count($is_pre_conditional)>0){
+                        $preConditionalFunc = ",preConditionalComp(this.value,".$ques->EligibilityQuestion->unique_id.")";
+                    }
+                    if($ques->EligibilityQuestion->linked_to_cv == 'yes'){
+                        $block = 'none';
+                        $cv_section = $ques->EligibilityQuestion->cv_section;
+                        $elg_options = $ques->EligibilityQuestion->Options;
+                        $option_selected = cvBasedOptions($cv_section,$elg_options,$ques->EligibilityQuestion,$component->Component->unique_id);
+                        
+                        if($option_selected['option_selected'] == ''){
+                            $block = 'block';
+                        }
+                    }
+                ?>
                 <li class="ui-state-default quesli qs-{{ $record->Group->unique_id }}-{{ $component->Component->unique_id }}-{{ $ques->EligibilityQuestion->unique_id }}"
                     data-group="{{ $record->Group->unique_id }}" data-component="{{$component->Component->unique_id}}"
                     data-question="{{$ques->EligibilityQuestion->unique_id}}">
@@ -360,11 +389,11 @@ action="{{ baseUrl('/eligibility-check/g/'.$visa_service_id) }}" class="mt-3">
                         @if($ques->EligibilityQuestion->option_type == 'dropdown')
 
                         @if(!empty($check_ques))
-                        <select {{ ($comp_display == "none")?'disabled':'' }} class="select2"
+                        <select {{ ($comp_display == "none")?'disabled':'' }} class="select2 {{ $ques->EligibilityQuestion->unique_id }}" data-element="select" data-quesid="{{ $ques->EligibilityQuestion->unique_id }}"
                             onchange="conditionalQuestion(this,'select'),countTotal(this,{{ $component->Component->unique_id }},{{ $ques->EligibilityQuestion->unique_id }}){{$preConditionalFunc}}"
                             name="question[{{ $record->Group->unique_id }}][{{ $component->Component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]">
                             @else
-                            <select {{ ($comp_display == "none")?'disabled':'' }} class="select2"
+                            <select {{ ($comp_display == "none")?'disabled':'' }} class="select2" data-element="select" data-quesid="{{ $ques->EligibilityQuestion->unique_id }}"
                                 onchange="countTotal(this,{{ $component->Component->unique_id }},{{ $ques->EligibilityQuestion->unique_id }}){{$preConditionalFunc}}"
                                 name="question[{{ $record->Group->unique_id }}][{{ $component->Component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]">
                                 @endif
@@ -404,11 +433,11 @@ action="{{ baseUrl('/eligibility-check/g/'.$visa_service_id) }}" class="mt-3">
                             <div class="form-check form-check-inline pl-0">
                                 <div class="custom-control custom-radio">
                                     <?php 
-                                                    $checked = ''; 
-                                                    if(isset($option_selected['option_selected']) && $option_selected['option_selected'] == $option->option_value){
-                                                            $checked = 'checked';
-                                                    }
-                                                    ?>
+                                    $checked = ''; 
+                                    if(isset($option_selected['option_selected']) && $option_selected['option_selected'] == $option->option_value){
+                                            $checked = 'checked';
+                                    }
+                                    ?>
                                     @if(!empty($check_ques))
 
 
@@ -416,6 +445,8 @@ action="{{ baseUrl('/eligibility-check/g/'.$visa_service_id) }}" class="mt-3">
                                         data-score="{{ $option->score }}" data-noneligible="{{ $option->non_eligible }}"
                                         data-none-eligible-reason="{{ $option->non_eligible_reason }}"
                                         data-option-id="{{$option->id}}"
+                                        data-element="radio"
+                                        data-quesid="{{ $ques->EligibilityQuestion->unique_id }}"
                                         id="customInlineRadio-{{$component->component_id}}-{{$option->id}}"
                                         onchange="conditionalQuestion(this,'radio'),countTotal(this,{{ $component->Component->unique_id }},{{ $ques->EligibilityQuestion->unique_id }}){{$preConditionalFunc}}"
                                         value="{{ $option->option_value }}" class="custom-control-input"
@@ -426,6 +457,8 @@ action="{{ baseUrl('/eligibility-check/g/'.$visa_service_id) }}" class="mt-3">
                                         onchange="countTotal(this,{{ $component->Component->unique_id }},{{ $ques->EligibilityQuestion->unique_id }}){{$preConditionalFunc}}"
                                         type="radio" data-noneligible="{{ $option->non_eligible }}"
                                         data-none-eligible-reason="{{ $option->non_eligible_reason }}"
+                                        data-quesid="{{ $ques->EligibilityQuestion->unique_id }}"
+                                        data-element="radio"
                                         data-option-id="{{$option->id}}"
                                         id="customInlineRadio-{{$component->component_id}}-{{$option->id}}"
                                         value="{{ $option->option_value }}" class="custom-control-input"

@@ -148,3 +148,9 @@ ul.elg-list {
     position: relative;
     top: 42px;
 }
+span.select2-selection.select2-selection--multiple.custom-select {
+    height: auto !important;
+}
+.question-options .form-check-inline {
+    width: 30%;
+}

@@ -23,59 +23,12 @@
 @section('content')
 <!-- Content -->
 <div class="eligibility_questions">
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="row align-items-end">
-      <div class="col-sm mb-2 mb-sm-0">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb breadcrumb-no-gutter">
-            <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/visa-services') }}">Visa Services</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
-          </ol>
-        </nav>
-
-        <h1 class="page-title">{{$pageTitle}}</h1>
-      </div>
-
-      <div class="col-sm-auto">
-        <a class="btn btn-primary btn-sm set-eligible-pattern" style="display:none" data-toggle="tooltip" data-html="true" onclick="setEligibilityPattern()" title="Set Eligibility Pattern" data-href="{{ baseUrl('/visa-services/eligibility-questions/'.$visa_service_id.'/group-pattern') }}">
-         Set Eligibility Pattern 
-        </a>
-        <a class="btn btn-outline-primary btn-sm" data-toggle="tooltip" data-html="true" title="Eligibility Pattern" href="{{ baseUrl('/visa-services/eligibility-questions/'.$visa_service_id.'/eligibility-pattern') }}">
-          Eligibility Pattern 
-        </a>
-        <a class="btn btn-dark btn-sm" data-toggle="tooltip" data-html="true" title="Arrange Group" href="{{ baseUrl('/visa-services/eligibility-questions/'.$visa_service_id.'/arrange-groups') }}">
-          <i class="tio-table mr-1"></i> 
-        </a>
-        <a class="btn btn-secondary btn-sm" data-toggle="tooltip" data-html="true" title="Group Questions" href="{{ baseUrl('/visa-services/eligibility-questions/'.$visa_service_id.'/groups-questions') }}">
-          <i class="tio-table mr-1"></i> 
-        </a>
-        <!-- <a class="btn btn-danger btn-sm" data-toggle="tooltip" data-html="true" title="Combination Questions" href="{{ baseUrl('/visa-services/eligibility-questions/'.$visa_service_id.'/combination-questions') }}">
-          <i class="tio-refresh mr-1"></i> 
-        </a> -->
-        <a class="btn btn-info btn-sm" data-toggle="tooltip" data-html="true" title="Arrange Questions" href="{{ baseUrl('/visa-services/eligibility-questions/'.$visa_service_id.'/arrange-questions') }}">
-          <i class="tio-sort mr-1"></i> 
-        </a>
-        
-        <a class="btn btn-warning btn-sm" href="{{ baseUrl('/visa-services/component-questions/'.$visa_service_id) }}">
-          <i class="tio-add mr-1"></i> Component Questions
-        </a>
-        <a class="btn btn-primary btn-sm" href="{{ baseUrl('/visa-services/eligibility-questions/'.$visa_service_id.'/add') }}">
-          <i class="tio-add mr-1"></i> Add 
-        </a>
-      </div>
-    </div>
-    <!-- End Row -->
-  </div>
-  <!-- End Page Header -->
-
   <!-- Card -->
   <div class="card">
     <!-- Header -->
     <div class="card-header">
       <div class="row justify-content-between align-items-center flex-grow-1">
-        <div class="col-sm-6 col-md-4 mb-3 mb-sm-0">
+          <div class="col-sm">
          
             <!-- Search -->
             <div class="input-group input-group-merge input-group-flush">
@@ -87,7 +40,33 @@
               <input id="datatableSearch"  type="text" class="form-control" placeholder="Search Question" aria-label="Search Language">
             </div>
         </div>
-
+        <div class="col-sm-auto">
+          <a class="btn btn-primary btn-sm set-eligible-pattern" style="display:none" data-toggle="tooltip" data-html="true" onclick="setEligibilityPattern()" title="Set Eligibility Pattern" data-href="{{ baseUrl('/visa-services/eligibility-questions/'.$visa_service_id.'/group-pattern') }}">
+          Set Eligibility Pattern 
+          </a>
+          <a class="btn btn-outline-primary btn-sm" data-toggle="tooltip" data-html="true" title="Eligibility Pattern" href="{{ baseUrl('/visa-services/eligibility-questions/'.$visa_service_id.'/eligibility-pattern') }}">
+            Eligibility Pattern 
+          </a>
+          <a class="btn btn-dark btn-sm" data-toggle="tooltip" data-html="true" title="Arrange Group" href="{{ baseUrl('/visa-services/eligibility-questions/'.$visa_service_id.'/arrange-groups') }}">
+            <i class="tio-table mr-1"></i> 
+          </a>
+          <a class="btn btn-secondary btn-sm" data-toggle="tooltip" data-html="true" title="Group Questions" href="{{ baseUrl('/visa-services/eligibility-questions/'.$visa_service_id.'/groups-questions') }}">
+            <i class="tio-table mr-1"></i> 
+          </a>
+          <!-- <a class="btn btn-danger btn-sm" data-toggle="tooltip" data-html="true" title="Combination Questions" href="{{ baseUrl('/visa-services/eligibility-questions/'.$visa_service_id.'/combination-questions') }}">
+            <i class="tio-refresh mr-1"></i> 
+          </a> -->
+          <a class="btn btn-info btn-sm" data-toggle="tooltip" data-html="true" title="Arrange Questions" href="{{ baseUrl('/visa-services/eligibility-questions/'.$visa_service_id.'/arrange-questions') }}">
+            <i class="tio-sort mr-1"></i> 
+          </a>
+          
+          <a class="btn btn-warning btn-sm" href="{{ baseUrl('/visa-services/component-questions/'.$visa_service_id) }}">
+            <i class="tio-add mr-1"></i> Component Questions
+          </a>
+          <a class="btn btn-primary btn-sm" href="{{ baseUrl('/visa-services/eligibility-questions/'.$visa_service_id.'/add') }}">
+            <i class="tio-add mr-1"></i> Add 
+          </a>
+        </div>
         <div class="col-sm-6">
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
             <!-- Datatable Info -->
