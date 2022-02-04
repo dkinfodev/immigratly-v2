@@ -357,6 +357,8 @@ function dependentQuestion(e,question_id){
     var value = $(e).val();
     $("*[data-dependent='"+question_id+"'][value='"+value+"']").prop("checked",true);
     $("*[data-dependent='"+question_id+"']").find("option[value='"+value+"']").attr("selected","selected");
+    var text = $(e).parents(".form-check").text();
+    $("*[data-dependent='"+question_id+"'][value='"+value+"']").parents(".imm-assessment-form-list-question").find(".preselect").html(text);
 }
 </script>
 @endsection

@@ -643,8 +643,7 @@ class EligibilityCheckController extends Controller
                         // pre($combination->toArray());
                         // echo "CQS Score: ".$cqs_score."<Br>";
 ;                       if($combination->behaviour == 'add'){
-                            $cqs_score += $combination->score;  
-                            echo "added";
+                            $cqs_score += $combination->score; 
                         }
                         if($combination->behaviour == 'substract'){
                             $cqs_score -= $combination->score;
@@ -788,7 +787,9 @@ class EligibilityCheckController extends Controller
         $scores = 0;
       
         foreach($comp_final_score as $key => $value){
-            $group = GroupComponentIds::with('QuestionsGroups')->where("component_id",$key)->first();
+            $group = GroupComponentIds::with('QuestionsGroups')
+                                    ->where("component_id",$key)
+                                    ->first();
             if(!empty($group)  && $group->QuestionsGroups->is_default != 1){
                 $grp_max_score = $group->QuestionsGroups->max_score;
                 if($value > $grp_max_score){
@@ -1050,11 +1051,12 @@ class EligibilityCheckController extends Controller
             }
         }
         // echo "<br>final_match_count:".$final_match_count;
-        // echo "<br>scores after:".$scores;
+        // 
         // exit;
         // echo "Score After: ".$scores."<br>";
-        // pre($ques_response);
-        // exit;
+        pre($comp_final_score);
+        echo "<br>scores after:".$scores;
+        exit;
         $unique_id = randomNumber();
         $object = new UserEligibilityCheck();
         $object->user_id = \Auth::user()->unique_id;

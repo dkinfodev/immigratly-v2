@@ -65,7 +65,8 @@ if(!empty($is_comp_conditional)){
             <div class="h-100 imm-assessment-form-list-question-wrapper">
                 <div class="h-100 imm-assessment-form-list-question">
                     <div class="imm-assessment-form-list-question-header"> {{$ques->EligibilityQuestion->question}}</div>
-                    <div class="imm-assessment-form-list-question-body"> 
+                    <span class="preselect text-danger"></span> 
+                    <div class="imm-assessment-form-list-question-body" style="display:{{($ques->dependent_question != '')?'none':'block' }}">
                         @if($ques->EligibilityQuestion->linked_to_cv == 'yes')
                             @if(!empty($option_selected) && $option_selected['option_selected'] != '')
                             <p class='text-danger mt-2 mb-2'>Option Selected Based on CV: {{$option_selected['option_score']}}</p>
@@ -225,6 +226,8 @@ if(!empty($is_comp_conditional)){
                 var value = $("*[data-depcom='{{$ques->dependent_component}}-{{$ques->dependent_question}}']:checked").val();
                 $("*[data-dependent='{{$ques->dependent_question}}'][value='"+value+"']").prop("checked",true);
                 $("*[data-dependent='{{$ques->dependent_question}}']").find("option[value='"+value+"']").attr("selected","selected");
+                var text = $("*[data-depcom='{{$ques->dependent_component}}-{{$ques->dependent_question}}']:checked").parents(".form-check").text();
+                $("*[data-dependent='{{$ques->dependent_question}}'][value='"+value+"']").parents(".imm-assessment-form-list-question").find(".preselect").html(text);
             @endif
         </script>
     @endforeach

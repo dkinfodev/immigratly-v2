@@ -108,8 +108,7 @@
                     $preConditionalFunc = "";
                     $depcomclass='';
                     if(count($is_pre_conditional)>0){
-                        $preConditionalFunc = ",preConditionalComp(this.value,".$ques->EligibilityQuestion->unique_id.")";
-                        
+                        $preConditionalFunc = ",preConditionalComp(this.value,".$ques->EligibilityQuestion->unique_id.")";  
                     }
                     
                     if($checkIfDependent->count() > 0){
@@ -131,8 +130,8 @@
                         <div class="h-100 imm-assessment-form-list-question-wrapper">
                             <div class="h-100 imm-assessment-form-list-question">
                                 <div class="imm-assessment-form-list-question-header"> {{$ques->EligibilityQuestion->question}}</div>
-                                <span class="preselect"></span>
-                                <div class="imm-assessment-form-list-question-body"> 
+                                <span class="preselect text-danger"></span>
+                                <div class="imm-assessment-form-list-question-body" style="display:{{($ques->dependent_question != '')?'none':'block' }}"> 
                                     @if($ques->EligibilityQuestion->linked_to_cv == 'yes')
                                         @if(!empty($option_selected) && $option_selected['option_selected'] != '')
                                         <p class='text-danger mt-2 mb-2'>Option Selected Based on CV: {{$option_selected['option_score']}}</p>

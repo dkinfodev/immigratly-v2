@@ -10,10 +10,10 @@
   overflow: hidden;
 }
 
-.datatable-custom{
-overflow-x: scroll;
-max-width: 100%;
-}
+/* .datatable-custom{
+  overflow-x: scroll;
+  max-width: 100%;
+} */
 
 .top_menu {
   background-color: #fff;

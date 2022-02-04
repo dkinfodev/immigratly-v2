@@ -154,3 +154,6 @@ span.select2-selection.select2-selection--multiple.custom-select {
 .question-options .form-check-inline {
     width: 30%;
 }
+span.select2-selection.custom-select {
+    height: auto !important;
+}
