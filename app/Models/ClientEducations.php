@@ -29,4 +29,9 @@ class ClientEducations extends Model
         return $this->belongsTo('App\Models\States','state_id');
     }
 
+    public function CanadianEquivalency()
+    {
+        return $this->belongsTo('App\Models\CanadianEquivalencyLevel','canadian_equivalency_level');
+    }
+
 }

@@ -24,7 +24,7 @@ $end_year = date("Y") - 20;
         </div>
     </div>
     <div class="modal-body imm-education-modal-body">
-      <form method="post" id="popup-form"  action="{{ baseUrl('/educations/add') }}">
+      <form method="post" id="popup-form"  action="{{ baseUrl('/educations/edit/'.base64_encode($record->id)) }}"  >
           @csrf
           <div class="imm-education-add-inner">
             <div class="col-12">
@@ -98,6 +98,11 @@ $end_year = date("Y") - 20;
                     
                     <select id="we_state_id" class="form-select no_select2" name="state_id">
                       <option value="">Select State</option>
+
+                      @foreach($states as $state)
+                      <option {{($record->state_id == $state->id)?'selected':''}} value="{{$state->id}}">{{ $state->name }}</option>
+                      @endforeach
+
                     </select>
                     <!-- End Select -->
 
@@ -118,14 +123,20 @@ $end_year = date("Y") - 20;
               <div class="mb-4">
                 <div class="row">
                   <div class="col-6">
+
+                  @php
+                    $join_date = explode(" ",$record->from_date);
+                  @endphp
+
                     <label for="schoolFromMonthLabel" class="form-label">From</label>
 
                     <div class="row gx-2">
                       <div class="col-sm-8 mb-2 mb-sm-0">
                         <!-- Select -->
                         <select id="from_month" name="from_month" class="form-select no_select2">
-                           @foreach(monthsName() as $month)
-                            <option value="{{ $month }}">{{$month}}</option>
+                        
+                          @foreach(monthsName() as $month)
+                             <option {{$join_date[0] == $month?'selected':''}} value="{{ $month }}">{{$month}}</option>
                           @endforeach
                           
                         </select>
@@ -138,7 +149,7 @@ $end_year = date("Y") - 20;
                         <select class="form-select" id="from_year" name="from_year" class="form-select no_select2">
                           
                           @for($i=$start_year;$i >= $end_year;$i--)
-                            <option value="{{$i}}">{{$i}}</option>
+                            <option {{ $join_date[1] == $i?'selected':''}} value="{{$i}}">{{$i}}</option>
                           @endfor
                           
                         </select>
@@ -154,10 +165,15 @@ $end_year = date("Y") - 20;
 
                     <div class="row gx-2">
                       <div class="col-sm-8 mb-2 mb-sm-0">
+
+                      @php
+                      $leave_date = explode(" ",$record->to_date);
+                      @endphp
+
                         <!-- Select -->
                         <select class="form-select" name="to_month" id="to_month">
                            @foreach(monthsName() as $month)
-                            <option value="{{ $month }}">{{$month}}</option>
+                             <option {{$leave_date[0] == $month?'selected':''}} value="{{ $month }}">{{$month}}</option>
                           @endforeach                          
                         </select>
                         <!-- End Select -->
@@ -168,7 +184,7 @@ $end_year = date("Y") - 20;
                         <!-- Select -->
                         <select class="form-select no_select2 no_select2" id="to_year" name="to_year">
                           @for($i=$start_year;$i >= $end_year;$i--)
-                            <option value="{{$i}}">{{$i}}</option>
+                            <option {{$leave_date[1] == $i?'selected':''}} value="{{$i}}">{{$i}}</option>
                           @endfor
                         </select>
                         <!-- End Select -->
