@@ -35,7 +35,7 @@ if(!empty($is_comp_conditional)){
         if($ques->dependent_question != ''){
             $dependent_data = 'data-dependent='.$ques->dependent_question;
         }
-        $checkIfDependent = dependentQuestions($ques->component_id,$ques->question_id);
+        $checkIfDependent = dependentQuestions($component->Component->unique_id,$ques->question_id);
         $option_selected = array();
         $check_ques = checkGroupConditionalQues($group->unique_id,$component->unique_id,$ques->EligibilityQuestion->unique_id);
         $block = 'block';
@@ -48,7 +48,9 @@ if(!empty($is_comp_conditional)){
         $depcomclass='';
         if($checkIfDependent->count() > 0){
             $preConditionalFunc .=",dependentQuestion(this,".$ques->EligibilityQuestion->unique_id.")";
-            $depcomclass='data-depcom='.$component->Component->unique_id."-".$ques->EligibilityQuestion->unique_id;
+            if(isset($component->Component->unique_id)){
+                $depcomclass='data-depcom='.$component->Component->unique_id."-".$ques->EligibilityQuestion->unique_id;
+            }
         }
         if($ques->EligibilityQuestion->linked_to_cv == 'yes'){
             $block = 'none';
@@ -260,9 +262,9 @@ if(!empty($is_comp_conditional)){
             }
             if($ques->dependent_question != ''){
                 if($preConditionalFunc != ''){
-                    $preConditionalFunc .=",dependentQuestion(".$ques->dependent_component.",".$ques->dependent_question.")";
+                    $preConditionalFunc .=",dependentQuestion(this,".$ques->EligibilityQuestion->unique_id.")";
                 }else{
-                    $preConditionalFunc .="dependentQuestion(".$ques->dependent_component.",".$ques->dependent_question.")";
+                    $preConditionalFunc .="dependentQuestion(this,".$ques->EligibilityQuestion->unique_id.")";
                 }
             }
         ?>

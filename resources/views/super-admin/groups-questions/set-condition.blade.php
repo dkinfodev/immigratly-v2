@@ -84,6 +84,13 @@
                                             placeholder="Option Label" aria-label="Option Label">
                                     </div>
                                     <div class="col-md-3 js-form-message">
+                                        <?php 
+                                        $selected_option = '';
+                                        if(isset($componentSet[$option->id])){
+                                            // echo $option->id."<br>";
+                                            $selected_option =  $componentSet[$option->id]; 
+                                        }
+                                        ?>
                                         <div class="row opt-row">
                                             <!-- <div class="col-md-1 p-2">
                                                 <div class="custom-control custom-checkbox">
@@ -95,7 +102,7 @@
                                                 <select class="select2" name="component[{{ $option->id }}]">
                                                     <option value="">Select Component</option>
                                                     @foreach($components as $component)
-                                                    <option <?php echo (isset($componentSet[$option->id]) == $component->Component->unique_id)?'selected':'' ?> value="{{$component->Component->unique_id}}">{{$component->Component->component_title}}</option>
+                                                    <option <?php echo ($selected_option == $component->Component->unique_id)?'selected':'' ?> value="{{$component->Component->unique_id}}">{{$component->Component->component_title}}</option>
                                                     @endforeach
                                                 </select>             
                                             </div>      
