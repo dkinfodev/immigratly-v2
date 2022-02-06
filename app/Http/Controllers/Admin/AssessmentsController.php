@@ -21,7 +21,7 @@ class AssessmentsController extends Controller
 
     public function index(Request $request){
         $viewData['pageTitle'] = "Assessments";
-        
+        $viewData['activeTab'] = 'assessments';
         return view(roleFolder().'.assessments.lists',$viewData);
     }
 
@@ -81,7 +81,7 @@ class AssessmentsController extends Controller
         }
         $viewData['pageTitle'] = "Assessment Detail";
         $viewData['visa_services'] = DB::table(MAIN_DATABASE.".visa_services")->get();
-        
+        $viewData['activeTab'] = 'assessments';
         return view(roleFolder().'.assessments.view-assessment',$viewData);
     }
 
@@ -253,7 +253,7 @@ class AssessmentsController extends Controller
         }
         $viewData['pageTitle'] = "Assessment Report";
         $viewData['visa_services'] = DB::table(MAIN_DATABASE.".visa_services")->get();
-        
+        $viewData['activeTab'] = 'assessments';
         return view(roleFolder().'.assessments.report',$viewData);
     }
 
@@ -311,6 +311,7 @@ class AssessmentsController extends Controller
             return redirect()->back()->with("error","Invalid assessment");
         }
         $viewData['assessment_id'] = $id;
+        $viewData['activeTab'] = 'assessments';
         return view(roleFolder().'.assessments.forms.lists',$viewData);
     }
 
@@ -360,7 +361,7 @@ class AssessmentsController extends Controller
             return redirect()->back()->with("error","Invalid assessment");
         }
         $viewData['pageTitle'] = "Assessment Form";
-        
+        $viewData['activeTab'] = 'assessments';
         return view(roleFolder().'.assessments.forms.add',$viewData);
     }
 
@@ -430,7 +431,7 @@ class AssessmentsController extends Controller
             return redirect()->back()->with("error","Invalid assessment");
         }
         $viewData['pageTitle'] = "Edit Assessment Form";
-        
+        $viewData['activeTab'] = 'assessments';
         return view(roleFolder().'.assessments.forms.edit',$viewData);
     }
 
@@ -579,7 +580,7 @@ class AssessmentsController extends Controller
         }
         
         $viewData['pageTitle'] = "Assessment Reply";
-
+        $viewData['activeTab'] = 'assessments';
         return view(roleFolder().'.assessments.forms.view',$viewData);
     }
 
@@ -596,6 +597,7 @@ class AssessmentsController extends Controller
         $viewData['document_id'] = $doc_id;
         $viewData['folder_id'] = $folder_id;
         $viewData['pageTitle'] = "View Documents";
+        $viewData['activeTab'] = 'assessments';
         return view(roleFolder().'.assessments.view-documents',$viewData);
     }
 

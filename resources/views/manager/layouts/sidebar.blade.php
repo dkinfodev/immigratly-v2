@@ -30,22 +30,22 @@
 
                     @if(role_permission('leads','view-leads'))
                     <li class="navbar-vertical-aside-has-menu">
-                      <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ baseUrl('/leads') }}">
-                        <i class="tio-apps nav-icon"></i>
-                        <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Leads</span>
-                    </a>
-                </li>
+                        <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'leads'){ echo "active"; } } ?>" href="{{ baseUrl('/leads') }}">
+                            <i class="tio-apps nav-icon"></i>
+                            <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Leads</span>
+                        </a>
+                    </li>
                 @endif
                 @if(role_permission('cases','view-cases'))
                 <li class="navbar-vertical-aside-has-menu">
-                  <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ baseUrl('/cases') }}">
-                    <i class="tio-book-opened nav-icon"></i>
-                    <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Cases</span>
-                </a>
-            </li>
+                    <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'cases'){ echo "active"; } } ?>" href="{{ baseUrl('/cases') }}">
+                        <i class="tio-book-opened nav-icon"></i>
+                        <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Cases</span>
+                    </a>
+                </li>
             @endif
             <li class="nav-item">
-                <a class="js-nav-tooltip-link nav-link" href="<?php echo baseUrl('/messages-center') ?>" data-placement="left">
+                <a class="js-nav-tooltip-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'messages'){ echo "active"; } } ?>" href="<?php echo baseUrl('/messages-center') ?>" data-placement="left">
                     <i class="tio-comment-text-outlined nav-icon"></i>
                     <span
                     class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Messages</span>

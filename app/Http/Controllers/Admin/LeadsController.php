@@ -29,6 +29,8 @@ class LeadsController extends Controller
         $viewData['recommend_as_client'] =  Leads::where('mark_as_client','2')->count();
        	$viewData['pageTitle'] = "New Leads";
         $viewData['lead_type'] = 0;
+        
+        $viewData['activeTab'] = 'leads';
         return view(roleFolder().'.leads.lists',$viewData);
     }
 
@@ -39,6 +41,7 @@ class LeadsController extends Controller
         $viewData['recommend_as_client'] =  Leads::where('mark_as_client','2')->count();
         $viewData['pageTitle'] = "Leads as Client";
         $viewData['lead_type'] = 1;
+        $viewData['activeTab'] = 'leads-as-clients';
         return view(roleFolder().'.leads.lists',$viewData);
     }
     public function recommendLeads(Request $request){
@@ -49,6 +52,7 @@ class LeadsController extends Controller
         $viewData['recommend_as_client'] =  Leads::where('mark_as_client','2')->count();
         $viewData['pageTitle'] = "Leads recommended as client";
         $viewData['lead_type'] = 2;
+        $viewData['activeTab'] = 'leads';
         return view(roleFolder().'.leads.lists',$viewData);
     }
     public function getNewList(Request $request)
@@ -156,6 +160,7 @@ class LeadsController extends Controller
         $viewData['states'] = $states;
         $cities = DB::table(MAIN_DATABASE.".cities")->where("state_id",$record->state_id)->get();
         $viewData['cities'] = $cities;
+        $viewData['activeTab'] = 'leads';
         return view(roleFolder().'.leads.edit',$viewData);
     }
 
@@ -363,6 +368,7 @@ class LeadsController extends Controller
         $viewData['pageTitle'] = "Assessments";
         $lead_id = base64_decode($lead_id);
         $viewData['lead_id'] = $lead_id;
+        $viewData['activeTab'] = 'leads';
         return view(roleFolder().'.leads.assessments.lists',$viewData);
     }
 
@@ -458,7 +464,7 @@ class LeadsController extends Controller
         }
         
         $viewData['pageTitle'] = "Assessment Reply";
-
+        $viewData['activeTab'] = 'leads';
         return view(roleFolder().'.leads.assessments.view',$viewData);
         
     }

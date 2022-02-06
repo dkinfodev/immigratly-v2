@@ -42,6 +42,7 @@ class CasesController extends Controller
             }
         }
         $viewData['pageTitle'] = "Cases";
+        $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.lists',$viewData);
     }
 
@@ -94,6 +95,7 @@ class CasesController extends Controller
         $viewData['case_id'] = $record->unique_id;
         $viewData['active_nav'] = "overview";
         $viewData['visa_services'] = array();
+        $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.view',$viewData);
     }
     
@@ -305,6 +307,7 @@ class CasesController extends Controller
         $viewData['clients'] = User::ProfessionalClients(\Session::get('subdomain'));
         $viewData['visa_services'] = ProfessionalServices::orderBy('id',"asc")->get();
         $viewData['pageTitle'] = "Edit Case";
+        $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.edit',$viewData);
     }
 
@@ -484,7 +487,7 @@ class CasesController extends Controller
         $viewData['record'] = $record;
         $viewData['case_id'] = $record->id;
         $viewData['pageTitle'] = "Documents for ".$service->Service($service->service_id)->name;
-
+        $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.document-folders',$viewData);
     }
 
@@ -520,6 +523,7 @@ class CasesController extends Controller
         $viewData['case_id'] = $case_id;
         $viewData['subdomain'] = \Session::get("subdomain");
         $viewData['file_dir'] = $file_dir;
+        $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.document-files',$viewData);
     }
     public function otherDocuments($case_id,$doc_id,Request $request){
@@ -551,6 +555,7 @@ class CasesController extends Controller
         $file_dir = professionalDir()."/documents";
         $viewData['file_url'] = $file_url;
         $viewData['file_dir'] = $file_dir;
+        $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.document-files',$viewData);
     }
     public function extraDocuments($case_id,$doc_id,Request $request){
@@ -582,7 +587,7 @@ class CasesController extends Controller
         $file_dir = professionalDir()."/documents";
         $viewData['file_url'] = $file_url;
         $viewData['file_dir'] = $file_dir;
-
+        $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.document-files',$viewData);
     }
     
@@ -899,7 +904,7 @@ class CasesController extends Controller
         $viewData['record'] = $record;
         $viewData['case_id'] = $record->id;
         $viewData['pageTitle'] = "Documents Exchanger";
-
+        $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.documents-exchanger',$viewData);
     }
 
@@ -1180,6 +1185,7 @@ class CasesController extends Controller
         $viewData['case'] = $case;
         $viewData['pageTitle'] = "Chats";
         $viewData['case_id'] = $case_id;
+        $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.chats',$viewData);
     }
 
@@ -1434,6 +1440,7 @@ class CasesController extends Controller
         $viewData['record'] = $record;
         $viewData['active_nav'] = "activity";
         $viewData['activity_logs'] = $activity_logs;
+        $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.activity-logs',$viewData);
     }
 }

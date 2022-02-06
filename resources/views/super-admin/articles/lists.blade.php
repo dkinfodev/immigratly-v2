@@ -5,7 +5,7 @@
 <ol class="breadcrumb breadcrumb-no-gutter">
   <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
   
-  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/article') }}">Article</a></li>
+  
   <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}} {{--@if($status == 'publish')
         <span class="legend-indicator bg-success"></span> Publish @elseif($status == 'draft')
         <span class="legend-indicator bg-danger"></span> Draft @endif--}}</li>

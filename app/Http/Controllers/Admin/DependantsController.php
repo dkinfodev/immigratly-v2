@@ -23,6 +23,7 @@ class DependantsController extends Controller
         $client = DB::table(MAIN_DATABASE.".users")->where("unique_id",$client_id)->first();
         $viewData['pageTitle'] = "Dependants of ".$client->first_name." ".$client->last_name;
         $viewData['client_id'] = $client_id;
+        $viewData['activeTab'] = 'dependants';
         return view(roleFolder().'.dependants.lists',$viewData);
     } 
 
@@ -55,6 +56,7 @@ class DependantsController extends Controller
         $viewData['client_id'] = $client_id;
         $countries = DB::table(MAIN_DATABASE.".countries")->get();
         $viewData['countries'] = $countries;
+        $viewData['activeTab'] = 'dependants';
         return view(roleFolder().'.dependants.add',$viewData);
     }
 
@@ -135,7 +137,7 @@ class DependantsController extends Controller
         $countries = DB::table(MAIN_DATABASE.".countries")->get();
         
         $viewData['countries'] = $countries;
-    
+        $viewData['activeTab'] = 'dependants';
         return view(roleFolder().'.dependants.edit',$viewData);
     }
 
@@ -230,6 +232,7 @@ class DependantsController extends Controller
         $record = User::where("id",$id)->first();
         $viewData['record'] = $record;
         $viewData['pageTitle'] = "Change Password";
+        $viewData['activeTab'] = 'dependants';
         return view(roleFolder().'.dependants.change-password',$viewData);
     }
 

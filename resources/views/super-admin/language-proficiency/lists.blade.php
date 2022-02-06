@@ -62,7 +62,7 @@
     <!-- End Header -->
 
     <!-- Table -->
-    <div class="table-responsive datatable-custom">
+    <div class="table-responsive datatable-custom" style="overflow-x: auto;">
       <table id="tableList" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
         <thead class="thead-light">
           <tr>
@@ -72,8 +72,8 @@
                 <label class="custom-control-label" for="datatableCheckAll"></label>
               </div>
             </th>
-            <th class="table-column-pl-0">Name</th>
-            <th>Action</th>
+            <th scope="col" class="table-column-pl-0">Name</th>
+            <th scope="col" class="table-column-pl-0">Action</th>
           </tr>
         </thead>
         <tbody>

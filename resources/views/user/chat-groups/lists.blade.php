@@ -68,17 +68,17 @@
       <table id="tableList" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
         <thead class="thead-light">
           <tr>
-            <th scope="col" class="table-column-pr-0">
+            <th scope="col" class="table-column-pr-0 table-column-pl-0">
               <div class="custom-control custom-checkbox">
                 <input id="datatableCheckAll" type="checkbox" class="custom-control-input">
                 <label class="custom-control-label" for="datatableCheckAll"></label>
               </div>
             </th>
-            <th scope="col">Group Title</th>
-            <th scope="col">Created On</th>
-            <th scope="col">Status</th>
-            <th scope="col"><i class="tio-chat-outlined"></i></th>
-            <th scope="col">Action</th>
+            <th scope="col" class="table-column-pl-0">Group Title</th>
+            <!-- <th scope="col">Created On</th> -->
+            <th scope="col" class="table-column-pl-0">Status</th>
+            <th scope="col" class="table-column-pl-0"><i class="tio-chat-outlined"></i></th>
+            <th scope="col" class="table-column-pl-0">Action</th>
           </tr>
         </thead>
         <tbody>

@@ -78,8 +78,8 @@
               </div>
             </th>
             <th scope="col" class="table-column-pl-0" style="min-width: 15rem;">Leads</th>
-            <th>Email/Phone no</th>
-            <th scope="col">Visa Service</th>
+            <!-- <th>Email/Phone no</th>
+            <th scope="col">Visa Service</th> -->
             <th scope="col">Assigned</th>
             @if(role_permission('leads','mark-as-client') && $lead_type != 2)
             <th scope="col"></td>

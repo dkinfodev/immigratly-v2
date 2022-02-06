@@ -31,7 +31,7 @@
           </form>
         </div>
 
-        <div class="col-sm-6">
+        <div class="col-sm-5">
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
             <!-- Datatable Info -->
             <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0" style="display: none;">
@@ -47,6 +47,13 @@
             </div>
           </div>
         </div>
+
+        <div class="col-sm-2">
+          <a href="{{ baseUrl('dependants/add') }}" class="btn btn-primary" href="javascript:;">
+             Add
+          </a>
+        </div>
+
       </div>
       <!-- End Row -->
     </div>

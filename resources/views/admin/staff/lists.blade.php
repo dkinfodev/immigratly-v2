@@ -74,9 +74,9 @@
               </div>
             </th>
             <th scope="col" class="table-column-pl-0" style="min-width: 15rem;">Name</th>
-            <th scope="col">Email</th>
+            <!-- <th scope="col">Email</th>
             <th scope="col">Phone no</th>
-            <th scope="col">Role</th>
+             --><th scope="col">Role</th>
             <th scope="col">Status</th>
             <th scope="col">Action</th>
           </tr>

@@ -13,7 +13,7 @@
       </div>
       <div class="ml-3">
         <span class="d-block h5 text-hover-primary mb-0">
-          {{$record->first_name." ".$record->last_name}}
+          {{$record->first_name." ".$record->last_name}} 
 
         </span>
         <span class="d-block h5 mb-0 font-size-sm text-body">{{$record->email}}</span>
@@ -41,15 +41,24 @@
       }else{ ?>
         <span class="legend-indicator bg-warning"></span> Panel Not Exists
       <?php } ?>
+
+      @if($record->panel_status == 1)
+      <br>
+      <span class="legend-indicator bg-success"></span>Panel Active
+      @else
+      <br>
+      <span class="legend-indicator bg-danger"></span>Panel Inactive
+      @endif
+
   </td>
-  <td>{{$record->country_code}}{{$record->phone_no}}</td>
-  <td>
+  <!-- <td>{{$record->country_code}}{{$record->phone_no}}</td> -->
+  <!-- <td>
     @if($record->panel_status == 1)
     <span class="legend-indicator bg-success"></span>Active
     @else
     <span class="legend-indicator bg-danger"></span>Inactive
     @endif
-  </td>
+  </td> -->
   <!-- <td>
     <div class="d-flex justify-content-center align-items-center mt-5 mb-5">
       <label class="toggle-switch mx-2" for="customSwitch-{{$key}}">

@@ -19,10 +19,13 @@
       <div class="ml-3">
         <span class="d-block h5 text-hover-primary mb-0">{{$record->first_name." ".$record->last_name}}</span>
         <span class="d-block font-size-sm text-body">Created on {{ dateFormat($record->created_at) }}</span>
+        <span class="d-block  font-size-sm text-body">{{$record->email}}</span>
+        <span class="d-block  font-size-sm text-body"> {{$record->country_code}}{{$record->phone_no}}</span>
+       
       </div>
     </a>
   </td>
-  <td>
+  <!-- <td>
     <div class="d-flex">
       {{$record->email}}
     </div>
@@ -32,7 +35,7 @@
     <div class="d-flex">
       {{$record->country_code}}{{$record->phone_no}}
     </div>
-  </td>
+  </td> -->
 
 
   <td>

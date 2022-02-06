@@ -40,6 +40,7 @@ class CasesController extends Controller
 
     public function cases(Request $request){
         $viewData['pageTitle'] = "Cases";
+        $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.lists',$viewData);
     }
 
@@ -135,6 +136,7 @@ class CasesController extends Controller
         $viewData['clients'] = User::ProfessionalClients(\Session::get('subdomain'));
 
         $viewData['visa_services'] = ProfessionalServices::orderBy('id',"asc")->get();
+        $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.add',$viewData);
     } 
     
@@ -289,6 +291,7 @@ class CasesController extends Controller
         $viewData['clients'] = User::ProfessionalClients(\Session::get('subdomain'));
         $viewData['visa_services'] = ProfessionalServices::orderBy('id',"asc")->get();
         $viewData['pageTitle'] = "Edit Case";
+        $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.edit',$viewData);
     }
 
@@ -382,6 +385,7 @@ class CasesController extends Controller
                         ->get();
         $viewData['dependents'] = $dependents;
         $viewData['pageTitle'] = "Edit Group Case";
+        $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.edit-group-case',$viewData);
     }
 
@@ -602,7 +606,7 @@ class CasesController extends Controller
 
         $dependents = CaseDependents::where("case_id",$record->unique_id)->get();
 
-
+        $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.document-folders',$viewData);
 
     }
@@ -717,7 +721,7 @@ class CasesController extends Controller
         $viewData['query_string'] = $query_string;
         $dependents = CaseDependents::where("case_id",$record->unique_id)->get();
         $viewData['dependents'] = $dependents;
-        
+        $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.document-files',$viewData);
     }
     public function otherDocuments($case_id,$doc_id,Request $request){
@@ -765,6 +769,7 @@ class CasesController extends Controller
         $viewData['user_type'] = $user_type;
         $viewData['visa_service_id'] = $visa_service_id;
         $viewData['dependent_id'] = $dependent_id;
+        $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.document-files',$viewData);
     }
     public function extraDocuments($case_id,$doc_id,Request $request){
@@ -814,6 +819,7 @@ class CasesController extends Controller
         $viewData['user_type'] = $user_type;
         $viewData['visa_service_id'] = $visa_service_id;
         $viewData['dependent_id'] = $dependent_id;
+        $viewData['activeTab'] = 'cases';
 
         return view(roleFolder().'.cases.document-files',$viewData);
     }
@@ -1057,7 +1063,7 @@ class CasesController extends Controller
         $viewData['record'] = $record;
         $viewData['case_id'] = $record->id;
         $viewData['pageTitle'] = "Documents Exchanger";
-
+        $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.documents-exchanger',$viewData);
     }
 
@@ -1373,6 +1379,7 @@ class CasesController extends Controller
         $viewData['case'] = $case;
         $viewData['pageTitle'] = "Chats";
         $viewData['case_id'] = $case_id;
+        $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.chats',$viewData);
     }
 
@@ -1616,6 +1623,7 @@ class CasesController extends Controller
         $viewData['case_id'] = $case_id;
         $viewData['document_id'] = $doc_id;
         $viewData['pageTitle'] = "View Documents";
+        $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.view-documents',$viewData);
     }
 
@@ -1713,7 +1721,7 @@ class CasesController extends Controller
         $case = Cases::where("id",$case_id)->first();
         $viewData['case'] = $case;
         $viewData['pageTitle'] = "Tasks List";
-        
+        $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.tasks',$viewData);
     }
 
@@ -1749,6 +1757,7 @@ class CasesController extends Controller
         $viewData['ext_files'] = $ext_files;
         $viewData['timestamp'] = time();
         $viewData['record'] = $record;
+        $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.edit-task',$viewData);
         // $view = View::make(roleFolder().'.cases.modal.edit-task',$viewData);
         // $contents = $view->render();
@@ -1984,6 +1993,7 @@ class CasesController extends Controller
         $viewData['record'] = $record;
         $viewData['active_nav'] = "activity";
         $viewData['activity_logs'] = $activity_logs;
+        $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.activity-logs',$viewData);
     }
 
@@ -2082,6 +2092,7 @@ class CasesController extends Controller
         $viewData['case_id'] = $record->unique_id;
         $viewData['active_nav'] = "dependents";
         $viewData['visa_services'] = ProfessionalServices::orderBy('id',"asc")->get();
+        $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.case-dependents',$viewData);
     }
 }

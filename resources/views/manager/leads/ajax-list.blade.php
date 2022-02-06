@@ -24,21 +24,21 @@
          </div>
       </a>
    </td>
-   <td>
+  <!--  <td>
       <div>
         <i class="tio-email"></i> {{$record->email}}
       </div>
       <div>
         <i class="tio-android-phone"></i> {{$record->country_code.$record->phone_no}}
       </div>
-   </td>
-   <td>
+   </td> -->
+   <!-- <td>
     @if(!empty($record->Service($record->VisaService->service_id)))
     <a class="badge badge-soft-primary p-2" href="javascript:;">{{$record->Service($record->VisaService->service_id)->name}}</a>
     @else
     <a href="javascript:;" class="badge badge-soft-danger p-2">Service Removed</a>
     @endif
-   </td>
+   </td> -->
    <td>
       <div class="avatar-group avatar-group-xs avatar-circle">
          <?php 
@@ -51,7 +51,7 @@
             }else{
             ?>  
             <a class="avatar js-nav-tooltip-link" href="javascript:;" data-toggle="tooltip" data-placement="top" title="{{ $member->Member->first_name." ".$member->Member->last_name }}">
-              <img class="avatar-img" src="{{ professionalProfile($member->Member->unique_id,'t') }}" alt="Image Description">
+              <img class="avatar-img" src="{{ professionalProfile($member->Member->unique_id,'t') }}" alt="ID">
             </a>
             <?php } ?>
           @endforeach

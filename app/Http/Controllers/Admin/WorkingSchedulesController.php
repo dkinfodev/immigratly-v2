@@ -21,6 +21,7 @@ class WorkingSchedulesController extends Controller
     public function index()
     {
         $viewData['pageTitle'] = "Working Schedules";
+        $viewData['activeTab'] = 'working-schedules';
         return view(roleFolder().'.working-schedules.lists',$viewData);
     } 
 
@@ -91,7 +92,7 @@ class WorkingSchedulesController extends Controller
         $viewData['pageTitle'] = "Edit Schedule";
         $record = WorkingSchedules::where("id",$id)->first();
         $viewData['record'] = $record;
-        
+        $viewData['activeTab'] = 'working-schedules';
         return view(roleFolder().'.working-schedules.edit',$viewData);
     }
 
@@ -220,6 +221,7 @@ class WorkingSchedulesController extends Controller
         $record = WorkingSchedules::where("id",$id)->first();
         $viewData['record'] = $record;
         $viewData['pageTitle'] = "Change Password";
+        $viewData['activeTab'] = 'working-schedules';
         return view(roleFolder().'.working-schedules.change-password',$viewData);
     }
 

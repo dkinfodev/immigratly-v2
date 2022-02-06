@@ -24,21 +24,21 @@
          </div>
       </a>
    </td>
-   <td>
+  <!--  <td>
       <div>
         <i class="tio-email"></i> {{$record->email}}
       </div>
       <div>
         <i class="tio-android-phone"></i> {{$record->country_code.$record->phone_no}}
       </div>
-   </td>
-   <td>
+   </td> -->
+   <!-- <td>
     @if(!empty($record->Service($record->VisaService->service_id)))
     <a class="badge badge-soft-primary p-2" href="javascript:;">{{$record->Service($record->VisaService->service_id)->name}}</a>
     @else
     <a href="javascript:;" class="badge badge-soft-danger p-2">Service Removed</a>
     @endif
-   </td>
+   </td> -->
    <td>
       <div class="avatar-group avatar-group-xs avatar-circle">
          <span class="avatar" data-toggle="tooltip" data-placement="top" title="Ella Lauda">

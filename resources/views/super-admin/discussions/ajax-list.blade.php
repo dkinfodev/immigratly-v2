@@ -1,20 +1,26 @@
 @foreach($records as $key => $record)
 <tr>
-  <td class="table-column-pr-0">
+  <td class="table-column-pr-0 table-column-pl-0">
     <div class="custom-control custom-checkbox">
       <input type="checkbox" class="custom-control-input row-checkbox" value="{{ $record->unique_id }}" id="row-{{$key}}">
       <label class="custom-control-label" for="row-{{$key}}"></label>
     </div>
+    
   </td>
   
-  <td>
+  <td class="table-column-pl-0">
     <div class="d-flex">
       {{$record->group_title}}
     </div>
-  </td>
-  <td>{{$record->User->first_name." ".$record->User->last_name}}</td>
-  <td>{{dateFormat($record->created_at)}}</td>
-  <td>
+      <small class="text-secondary"><!-- Created by -  -->{{$record->User->first_name." ".$record->User->last_name}} 
+      <br>
+      <!-- Created at - --> {{dateFormat($record->created_at)}}
+      </small>
+    
+  </td><!-- 
+  <td class="table-column-pl-0">{{$record->User->first_name." ".$record->User->last_name}}</td>
+  <td class="table-column-pl-0">{{dateFormat($record->created_at)}}</td> -->
+  <td class="table-column-pl-0">
     @if($record->status=='open')
       <label class="toggle-switch toggle-switch-sm d-flex align-items-center mb-3" for="status-{{$record->id}}">
         <input type="checkbox" data-id="{{ $record->unique_id }}" onchange="changeStatus(this)" checked class="toggle-switch-input" id="status-{{$record->id}}" value="open">
@@ -37,13 +43,13 @@
       </label>
     @endif
   </td>
-  <td scope="col">
+  <td scope="col" class="table-column-pl-0">
     <a class="js-nav-tooltip-link" data-toggle="tooltip" data-placement="top" title="View Group Comments" data-original-title="View Group Comments" href="{{ baseUrl('discussions/comments/'.$record->unique_id) }}">
       <i class="tio-chat-outlined"></i>
       {{$record->comments_count}}
     </a>
   </td>
-  <td>
+  <td class="table-column-pl-0">
     <div class="row">
       <div class="col-auto">
         <div class="hs-unfold">

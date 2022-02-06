@@ -22,19 +22,7 @@
 @section('content')
 <!-- Content -->
 <div class="chats">
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="row align-items-end">
-      
-      <div class="col-sm-auto">
-        <a class="btn btn-primary" href="{{ baseUrl('/chat-groups') }}">
-          <i class="tio mr-1"></i> Back 
-        </a>
-      </div>
-    </div>
-    <!-- End Row -->
-  </div>
-  <!-- End Page Header -->
+  
 
   <!-- Card -->
   <div class="card">

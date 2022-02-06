@@ -55,6 +55,7 @@ class ServicesController extends Controller
         $my_services = ProfessionalServices::orderBy('id',"desc")->get();
 
         $viewData['my_services'] = $my_services;
+        $viewData['activeTab'] = 'services';
 
         return view(roleFolder().'.services.lists',$viewData);
     }
@@ -153,6 +154,7 @@ class ServicesController extends Controller
         $viewData['documents'] = $documents;
         $viewData['service'] = $service;
         $viewData['pageTitle'] = "Documents of ".$service->Service($service->service_id)->name;
+        $viewData['activeTab'] = 'services';
         return view(roleFolder().'.services.document-folders',$viewData);
     }
 

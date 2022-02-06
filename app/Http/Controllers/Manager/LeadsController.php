@@ -35,6 +35,7 @@ class LeadsController extends Controller
         $viewData['recommend_as_client'] =  Leads::where('mark_as_client','2')->count();
        	$viewData['pageTitle'] = "New Leads";
         $viewData['lead_type'] = 0;
+        $viewData['activeTab'] = 'leads';
         return view(roleFolder().'.leads.lists',$viewData);
     }
     public function assignedLeads(Request $request){
@@ -44,6 +45,7 @@ class LeadsController extends Controller
         $viewData['recommend_as_client'] =  Leads::where('mark_as_client','2')->count();
         $viewData['pageTitle'] = "Assigned Leads";
         $viewData['lead_type'] = 1;
+        $viewData['activeTab'] = 'leads';
         return view(roleFolder().'.leads.lists',$viewData);
     }
     public function recommendLeads(Request $request){
@@ -62,6 +64,7 @@ class LeadsController extends Controller
         $viewData['recommend_as_client'] =  Leads::where('mark_as_client','2')->count();
         $viewData['pageTitle'] = "Leads recommended as client";
         $viewData['lead_type'] = 2;
+        $viewData['activeTab'] = 'leads';
         return view(roleFolder().'.leads.lists',$viewData);
     }
 
@@ -222,6 +225,7 @@ class LeadsController extends Controller
         $viewData['states'] = $states;
         $cities = DB::table(MAIN_DATABASE.".cities")->where("state_id",$record->state_id)->get();
         $viewData['cities'] = $cities;
+        $viewData['activeTab'] = 'leads';
         return view(roleFolder().'.leads.edit',$viewData);
     }
 

@@ -76,12 +76,12 @@
                 <label class="custom-control-label" for="datatableCheckAll"></label>
               </div>
             </th>
-            <th scope="col">Group Title</th>
-            <th scope="col">Created By</th>
-            <th scope="col">Created On</th>
-            <th scope="col">Status</th>
-            <th scope="col"><i class="tio-chat-outlined"></i></th>
-            <th scope="col">Action</th>
+            <th scope="col" class="table-column-pl-0">Group Title</th>
+            <!-- <th scope="col" class="table-column-pl-0">Created By</th>
+            <th scope="col" class="table-column-pl-0">Created On</th> -->
+            <th scope="col" class="table-column-pl-0">Status</th>
+            <th scope="col" class="table-column-pl-0"><i class="tio-chat-outlined"></i></th>
+            <th scope="col" class="table-column-pl-0">Action</th>
           </tr>
         </thead>
         <tbody>

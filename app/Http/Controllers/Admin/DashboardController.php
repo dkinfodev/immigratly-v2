@@ -23,6 +23,7 @@ class DashboardController extends Controller
     public function dashboard()
     {
        	$viewData['pageTitle'] = "Dashboard";
+        $viewData['activeTab'] = 'dashboard';
         $subdomain = \Session::get("subdomain");
         $unread_chats = DB::table(MAIN_DATABASE.".support_chats")
             ->where("subdomain",$subdomain)
@@ -36,6 +37,7 @@ class DashboardController extends Controller
     public function profile()
     {
        	$viewData['pageTitle'] = "Profile";
+        $viewData['activeTab'] = 'dashboard';
        	$viewData['active_tab'] = "profile_tab";
        	$user = User::where("id",\Auth::user()->id)->first();
        	$viewData['user'] = $user;
@@ -45,6 +47,7 @@ class DashboardController extends Controller
     public function services()
     {
        	$viewData['pageTitle'] = "Services";
+        $viewData['activeTab'] = 'dashboard';
        	$viewData['active_tab'] = "service_tab";
        	$user = User::where("id",\Auth::user()->id)->first();
        	$viewData['user'] = $user;
@@ -55,6 +58,7 @@ class DashboardController extends Controller
     {
         $viewData['pageTitle'] = "Articles";
         $viewData['active_tab'] = "article_tab";
+        $viewData['activeTab'] = 'dashboard';
         $user = User::where("id",\Auth::user()->id)->first();
         $viewData['user'] = $user;
         return view(roleFolder().'.profile.articles',$viewData);
@@ -63,6 +67,7 @@ class DashboardController extends Controller
     public function events()
     {
         $viewData['pageTitle'] = "Events";
+        $viewData['activeTab'] = 'dashboard';
         $viewData['active_tab'] = "event_tab";
         $user = User::where("id",\Auth::user()->id)->first();
         $viewData['user'] = $user;
@@ -72,6 +77,7 @@ class DashboardController extends Controller
     public function editProfile()
     {
        	$viewData['pageTitle'] = "Edit Profile";
+        $viewData['activeTab'] = 'dashboard';
         $countries = Countries::get();
         $viewData['countries'] = $countries;
         return view(roleFolder().'.edit-profile',$viewData);
@@ -115,6 +121,7 @@ class DashboardController extends Controller
         
         $viewData['role_privileges'] = $temp;
         $viewData['privileges'] = $privileges;
+        $viewData['activeTab'] = 'role-privileges';
         return view(roleFolder().'.role-privileges',$viewData);
     }
 
@@ -297,6 +304,7 @@ class DashboardController extends Controller
         $viewData['notifications'] = $notifications;
         $viewData['chat_notifications'] = $chat_notifications;
         $viewData['other_notifications'] = $other_notifications;
+        $viewData['activeTab'] = 'notification';
         return view(roleFolder().'.allnotification',$viewData);        
     }
 

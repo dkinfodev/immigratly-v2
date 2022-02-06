@@ -20,6 +20,7 @@ class WebinarController extends Controller
        	$viewData['pageTitle'] = "Webinar";
       
         $viewData['status'] = 'publish';
+        $viewData['activeTab'] = 'webinar';
         return view(roleFolder().'.webinar.lists',$viewData);
     }
 
@@ -70,6 +71,7 @@ class WebinarController extends Controller
 
         $timestamp = time();
         $viewData['timestamp'] = $timestamp;
+        $viewData['activeTab'] = 'webinar';
         return view(roleFolder().'.webinar.add',$viewData);
     }
 
@@ -158,6 +160,7 @@ class WebinarController extends Controller
         }
         $timestamp = time();
         $viewData['timestamp'] = $timestamp;
+        $viewData['activeTab'] = 'webinar';
         return view(roleFolder().'.webinar.edit',$viewData);
     }
 

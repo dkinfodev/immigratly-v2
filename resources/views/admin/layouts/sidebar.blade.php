@@ -35,7 +35,7 @@
           
           <ul class="nav nav-sm nav-tabs nav-vertical mb-4">
             <li class="navbar-vertical-aside-has-menu show">
-            <a class="js-navbar-vertical-aside-menu-link nav-link active" href="{{ baseUrl('/') }}">
+            <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'dashboard'){ echo "active"; } } ?>" href="{{ baseUrl('/') }}">
               <i class="tio-home-vs-1-outlined nav-icon"></i>
               <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Dashboards</span>
             </a>
@@ -43,13 +43,13 @@
 
             @if(profession_profile())
             <li class="navbar-vertical-aside-has-menu">
-              <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ baseUrl('/services') }}">
+              <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'services'){ echo "active"; } } ?>" href="{{ baseUrl('/services') }}">
                 <i class="tio-pages-outlined nav-icon"></i>
                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Services</span>
               </a>
             </li>
             <li class="navbar-vertical-aside-has-menu">
-              <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ baseUrl('/assessments') }}">
+              <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'assessments'){ echo "active"; } } ?>" href="{{ baseUrl('/assessments') }}">
                 <i class="tio-pages-outlined nav-icon"></i>
                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Assessments</span>
                 @if(unreadAssessment(\Session::get('subdomain')) > 0)
@@ -64,20 +64,20 @@
          <ul class="nav nav-sm nav-tabs nav-vertical mb-4">
          <span class="text-cap">Leads</span>   
               <li class="navbar-vertical-aside-has-menu">
-                <a class="nav-link " href="{{ baseUrl('/leads') }}">
+                <a class="nav-link <?php if(isset($activeTab)){ if($activeTab == 'leads'){ echo "active"; } } ?>" href="{{ baseUrl('/leads') }}">
                    <i class="tio-pages-outlined nav-icon"></i>
                   <span class="text-truncate">New Leads</span>
                 </a>
               </li>
               <li class="navbar-vertical-aside-has-menu">
-                <a class="nav-link " href="{{ baseUrl('/leads/clients') }}">
+                <a class="nav-link <?php if(isset($activeTab)){ if($activeTab == 'leads-as-clients'){ echo "active"; } } ?>" href="{{ baseUrl('/leads/clients') }}">
                    <i class="tio-pages-outlined nav-icon"></i>
                   <span class="text-truncate">Leads as client</span>
                 </a>
               </li>
           
           <li class="navbar-vertical-aside-has-menu">
-            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ baseUrl('/cases') }}">
+            <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'cases'){ echo "active"; } } ?>" href="{{ baseUrl('/cases') }}">
               <i class="tio-book-opened nav-icon"></i>
               <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Cases</span>
             </a>
@@ -89,14 +89,14 @@
             </a>
           </li> -->
           <li class="nav-item">
-              <a class="js-nav-tooltip-link nav-link" href="<?php echo baseUrl('/messages-center') ?>" data-placement="left">
+              <a class="js-nav-tooltip-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'messages'){ echo "active"; } } ?>" href="<?php echo baseUrl('/messages-center') ?>" data-placement="left">
                   <i class="tio-comment-text-outlined nav-icon"></i>
                   <span
                       class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Messages</span>
               </a>
           </li>
           <li class="navbar-vertical-aside-has-menu">
-            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ baseUrl('/webinar') }}">
+            <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'webinar'){ echo "active"; } } ?>" href="{{ baseUrl('/webinar') }}">
               <i class="tio-globe nav-icon"></i>
               <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Webinar</span>
             </a>
@@ -105,20 +105,20 @@
           
           
           <li class="navbar-vertical-aside-has-menu">
-            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ baseUrl('/working-schedules') }}">
+            <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'working-schedules'){ echo "active"; } } ?>" href="{{ baseUrl('/working-schedules') }}">
               <i class="tio-book-opened nav-icon"></i>
               <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Working Schedules</span>
             </a>
           </li>
           <li class="navbar-vertical-aside-has-menu">
-            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ baseUrl('staff') }}">
+            <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'staff'){ echo "active"; } } ?>" href="{{ baseUrl('staff') }}">
               <i class="tio-user nav-icon"></i>
               <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Staff</span>
             </a>
           </li>
 
           <li class="navbar-vertical-aside-has-menu">
-            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ baseUrl('role-privileges') }}">
+            <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'role-privileges'){ echo "active"; } } ?>" href="{{ baseUrl('role-privileges') }}">
               <i class="tio-lock nav-icon"></i>
               <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Role Privileges</span>
             </a>
