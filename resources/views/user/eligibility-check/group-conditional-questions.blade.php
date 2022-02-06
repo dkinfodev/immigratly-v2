@@ -35,7 +35,7 @@ if(!empty($is_comp_conditional)){
         if($ques->dependent_question != ''){
             $dependent_data = 'data-dependent='.$ques->dependent_question;
         }
-        $checkIfDependent = dependentQuestions($component->Component->unique_id,$ques->question_id);
+        $checkIfDependent = dependentQuestions($component->unique_id,$ques->question_id);
         $option_selected = array();
         $check_ques = checkGroupConditionalQues($group->unique_id,$component->unique_id,$ques->EligibilityQuestion->unique_id);
         $block = 'block';
@@ -46,10 +46,12 @@ if(!empty($is_comp_conditional)){
             $preConditionalFunc = ",preConditionalComp(this.value,".$ques->EligibilityQuestion->unique_id.")";
         }
         $depcomclass='';
+        // pre($component->toArray());
         if($checkIfDependent->count() > 0){
             $preConditionalFunc .=",dependentQuestion(this,".$ques->EligibilityQuestion->unique_id.")";
-            if(isset($component->Component->unique_id)){
-                $depcomclass='data-depcom='.$component->Component->unique_id."-".$ques->EligibilityQuestion->unique_id;
+            
+            if(isset($component)){
+                $depcomclass='data-depcom='.$component->unique_id."-".$ques->EligibilityQuestion->unique_id;
             }
         }
         if($ques->EligibilityQuestion->linked_to_cv == 'yes'){
@@ -262,9 +264,9 @@ if(!empty($is_comp_conditional)){
             }
             if($ques->dependent_question != ''){
                 if($preConditionalFunc != ''){
-                    $preConditionalFunc .=",dependentQuestion(this,".$ques->EligibilityQuestion->unique_id.")";
+                    $preConditionalFunc .=",dependentQuestion(".$ques->dependent_component.",".$ques->dependent_question.")";
                 }else{
-                    $preConditionalFunc .="dependentQuestion(this,".$ques->EligibilityQuestion->unique_id.")";
+                    $preConditionalFunc .="dependentQuestion(".$ques->dependent_component.",".$ques->dependent_question.")";
                 }
             }
         ?>

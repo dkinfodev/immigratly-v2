@@ -691,16 +691,21 @@ class EligibilityQuestionsController extends Controller
         $id = base64_decode($id);
         $visa_service = VisaServices::where("id",$visa_service_id)->first();
         $record = ComponentQuestions::with('Questions')->where("id",$id)
-                                    ->whereHas('Questions')
+                                    // ->whereHas('Questions')
                                     ->first();
+        
         $this->defaultGroup($visa_service->unique_id);
-        $question_ids = $record->Questions->pluck("question_id")->toArray();
         $ques = array();
-        foreach($record->Questions as $comques){
-            $ques[$comques->question_id] = $comques->toArray();
-            $ques[$comques->question_id]['component_questions'] = $record->componentQuestions($comques->dependent_component);
+        if(!empty($record->Questions)){
+            $question_ids = $record->Questions->pluck("question_id")->toArray();
+       
+            foreach($record->Questions as $comques){
+                $ques[$comques->question_id] = $comques->toArray();
+                $ques[$comques->question_id]['component_questions'] = $record->componentQuestions($comques->dependent_component);
+            }
+        }else{
+            $question_ids = array();
         }
- 
         $group_ids = $record->GroupComponents->pluck("group_id")->toArray();
         $components = ComponentQuestions::with('Questions')
                                     ->where("id","!=",$id)
