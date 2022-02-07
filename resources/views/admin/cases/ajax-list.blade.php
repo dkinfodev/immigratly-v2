@@ -1,12 +1,12 @@
 @foreach($records as $key => $record)
 <tr>
-  <td class="table-column-pr-0">
+  <td scope="col" class="table-column-pl-0 table-column-pr-0">
     <div class="custom-control custom-checkbox">
       <input type="checkbox" class="custom-control-input row-checkbox" value="{{ base64_encode($record->id) }}" id="row-{{$key}}">
       <label class="custom-control-label" for="row-{{$key}}"></label>
     </div>
   </td>
-  <td class="table-column-pl-0">
+  <td scope="col" class="table-column-pl-0">
     <a class="d-flex align-items-center" href="{{baseUrl('cases/view/'.base64_encode($record->id))}}">
       @if(!empty($record->Client($record->client_id)))
       <?php
@@ -21,7 +21,7 @@
       </div>
       @endif
       <!-- <img class="avatar" src="assets/svg/brands/capsule.svg" alt="Image Description"> -->
-      <div class="ml-3">
+      <div class="ml-1">
         <span class="d-block h5 text-hover-primary mb-0">{{ $record->case_title }}</span>
         <span class="d-block font-size-sm text-body">Created on {{ dateFormat($record->created_at) }}</span>
         <ul class="list-inline list-separator small file-specs">
@@ -30,10 +30,17 @@
             </li>
             <li class="list-inline-item"> <i class="tio-comment-text-outlined"></i>  {{count($record->Chats)}}</li>
         </ul>
+
+        @if(!empty(!empty($record->VisaService) && $record->Service($record->VisaService->service_id)))
+        <span class="badge badge-soft-info p-2">{{$record->Service($record->VisaService->service_id)->name}}</span>
+        @else
+        <span class="badge badge-soft-danger p-2">Service not found</span>
+        @endif
+
       </div>
     </a>
   </td>
-  <td>
+  <td scope="col" class="table-column-pl-0">
     @if(!empty($record->Client($record->client_id)))
     <?php
     $client = $record->Client($record->client_id);
@@ -42,23 +49,30 @@
     @else
     <span class="text-danger h4">Client not found</span>
     @endif
+    <br>
+    @if($record->approve_status == "0")
+    <span class="badge badge-soft-warning">Awaiting Approve</span>
+    @endif
+    @if($record->approve_status == "1")
+    <span class="badge badge-soft-info">Approved</span>
+    @endif
   </td>
-  <td>
+  <!-- <td>
     @if(!empty(!empty($record->VisaService) && $record->Service($record->VisaService->service_id)))
     <span class="badge badge-soft-info p-2">{{$record->Service($record->VisaService->service_id)->name}}</span>
     @else
     <span class="badge badge-soft-danger p-2">Service not found</span>
     @endif
-  </td>
-  <td>
+  </td> -->
+  <!-- <td>
     @if($record->approve_status == "0")
     <span class="badge badge-soft-warning p-2">Awaiting Approve</span>
     @endif
     @if($record->approve_status == "1")
     <span class="badge badge-soft-info p-2">Approved</span>
     @endif
-  </td>
-   <td>
+  </td> -->
+   <td scope="col" class="table-column-pl-0 table-column-pr-0">
      {{$record->case_type}}
    {{--<div class="avatar-group avatar-group-xs avatar-circle">
       <?php 
@@ -82,7 +96,7 @@
       @endif
     </div> --}}
   </td>
-  <td width="10%">
+  <!-- <td width="10%">
    <div class="hs-unfold">
       <a href="{{ baseUrl('cases/chats/'.$record->unique_id) }}" class="js-hs-unfold-invoker text-body">
       <?php
@@ -96,8 +110,8 @@
       @endif
       </a>
    </div>
- </td>
-  <td>
+ </td> -->
+  <td scope="col" class="table-column-pl-0 table-column-pr-0">
     <div class="hs-unfold">
         <a class="js-hs-action btn btn-sm btn-white" href="javascript:;"
           data-hs-unfold-options='{
@@ -106,6 +120,7 @@
           }'>More  <i class="tio-chevron-down ml-1"></i>
         </a>
         <div id="action-{{$key}}" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right">
+
           @if($record->case_type == 'group')
           <a class="dropdown-item" href="{{baseUrl('cases/edit-group-case/'.base64_encode($record->id))}}">
           @else
@@ -135,6 +150,21 @@
           <i class="tio-delete-outlined dropdown-item-icon"></i>
           Delete
           </a>
+
+          <a href="{{ baseUrl('cases/chats/'.$record->unique_id) }}" class="dropdown-item">
+          <?php
+          $chat_read = $record->UnreadChat($record->unique_id,\Auth::user()->role,\Auth::user()->unique_id,'count');
+           
+          ?>
+          @if($chat_read['total_chat'] == 0 || $chat_read['unread_chat'] == $chat_read['total_chat'])
+              <i class="tio-chat-outlined"></i> {{$chat_read['unread_chat']}}
+          @else
+              <span class="text-danger"><i class="tio-chat-outlined"></i>  {{$chat_read['unread_chat']}}</span> 
+
+          @endif
+          Chats
+          </a>
+
         </div>
     </div>
    </td>

@@ -46,6 +46,13 @@
 <!-- End Content -->
 @endsection
 @section('content')
+
+<style>
+
+.dropdown-menu{
+  z-index: 999;
+}
+</style>
 <!-- Content -->
 <div class="case-list">
 
@@ -102,14 +109,14 @@
                 <label class="custom-control-label" for="datatableCheckAll"></label>
               </div>
             </th>
-            <th scope="col" class="table-column-pl-0" style="min-width: 15rem;">Case Title</th>
+            <th scope="col" class="table-column-pl-0 table-column-pr-0" style="min-width: 15rem;">Case Title</th>
             <th>Client</th>
-            <th scope="col">Visa Service</th>
+            <!-- <th scope="col">Visa Service</th> -->
             <!-- <th scope="col">Start Date</th> -->
-            <th scope="col">Approval Status</th>
-            <th scope="col">Case Type</th>
-            <th scope="col"><i class="tio-chat-outlined"></i></th>
-            <th scope="col"></th>
+            <!-- <th scope="col">Approval Status</th> -->
+            <th scope="col" class="table-column-pl-0 table-column-pr-0">Case Type</th>
+            <!-- <th scope="col"><i class="tio-chat-outlined"></i></th> -->
+            <th scope="col" class="table-column-pl-0 table-column-pr-0"></th>
           </tr>
         </thead>
         <tbody>
