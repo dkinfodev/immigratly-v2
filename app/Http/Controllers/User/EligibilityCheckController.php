@@ -158,6 +158,12 @@ class EligibilityCheckController extends Controller
         // Report 
         
         $questions = json_decode($record->response,true);
+        if($record->final_score != ''){
+            $final_score = json_decode($record->final_score,true);
+        }else{
+            $final_score = array();
+        }
+        
         $final_questions = array();
         
         if($record->eligible_type == 'group'){
@@ -173,6 +179,7 @@ class EligibilityCheckController extends Controller
                     $comp_temp = array();
                     $component = ComponentQuestions::where("unique_id",$component_id)->first();
                     $comp_temp['component_title'] = $component->component_title;
+                    $comp_temp['unique_id'] = $component->unique_id;
                     $comp_temp['max_score'] = $component->max_score;
                     $comp_temp['min_score'] = $component->min_score;
                     foreach($question_ids as $q_id => $opt_value){
@@ -211,6 +218,7 @@ class EligibilityCheckController extends Controller
             }   
         }
         $viewData['activeTab'] = "eligibility-check";
+        $viewData['final_score'] = $final_score;
         $viewData['final_questions'] = $final_questions;
         return view(roleFolder().'.eligibility-check.score',$viewData);
     }
@@ -643,8 +651,7 @@ class EligibilityCheckController extends Controller
                         // pre($combination->toArray());
                         // echo "CQS Score: ".$cqs_score."<Br>";
 ;                       if($combination->behaviour == 'add'){
-                            $cqs_score += $combination->score;  
-                            echo "added";
+                            $cqs_score += $combination->score; 
                         }
                         if($combination->behaviour == 'substract'){
                             $cqs_score -= $combination->score;
@@ -783,12 +790,15 @@ class EligibilityCheckController extends Controller
             }
             
         }
-        //   pre($comp_final_score);
+        // echo "<Br>Before Score: ";
+        // pre($comp_final_score);
          
         $scores = 0;
       
         foreach($comp_final_score as $key => $value){
-            $group = GroupComponentIds::with('QuestionsGroups')->where("component_id",$key)->first();
+            $group = GroupComponentIds::with('QuestionsGroups')
+                                    ->where("component_id",$key)
+                                    ->first();
             if(!empty($group)  && $group->QuestionsGroups->is_default != 1){
                 $grp_max_score = $group->QuestionsGroups->max_score;
                 if($value > $grp_max_score){
@@ -1050,10 +1060,11 @@ class EligibilityCheckController extends Controller
             }
         }
         // echo "<br>final_match_count:".$final_match_count;
-        // echo "<br>scores after:".$scores;
+        // 
         // exit;
-        // echo "Score After: ".$scores."<br>";
-        // pre($ques_response);
+        // echo "Final Score After: <br>";
+        // pre($comp_final_score);
+        // echo "<br>scores after:".$scores;
         // exit;
         $unique_id = randomNumber();
         $object = new UserEligibilityCheck();
@@ -1062,6 +1073,7 @@ class EligibilityCheckController extends Controller
         $object->visa_service_id = $visa_service_id;
         $object->response = json_encode($questions);
         $object->score = $scores;
+        $object->final_score = json_encode($comp_final_score);
         $object->eligible_type = "group";
         if(!empty($match_pattern)){
             $object->match_pattern = json_encode($match_pattern);
@@ -1407,6 +1419,34 @@ class EligibilityCheckController extends Controller
             $response['status'] = false;
         }
 
+        return response()->json($response);
+    }
+
+    public function userEligibilityHistory()
+    {
+        $visa_services = VisaServices::get();
+        $viewData['pageTitle'] ="Visa Groups";
+        $viewData['activeTab'] = "eligibility-check";
+        $program_types = ProgramTypes::get();
+        $viewData['program_types'] = $program_types;
+        return view(roleFolder().'.eligibility-check.eligibility-history',$viewData);
+    } 
+
+    public function eligibilityAjaxHistory(Request $request)
+    {   
+        $search = $request->input("search");
+        $records = UserEligibilityCheck::where("user_id",\Auth::user()->unique_id)
+                            ->whereHas("VisaService")
+                            ->orderBy('id',"desc")
+                            ->paginate();
+        
+        $viewData['records'] = $records;
+        $view = View::make(roleFolder().'.eligibility-check.history-ajax-lists',$viewData);
+        $contents = $view->render();
+        $response['contents'] = $contents;
+        $response['last_page'] = $records->lastPage();
+        $response['current_page'] = $records->currentPage();
+        $response['total_records'] = $records->total();
         return response()->json($response);
     }
 }

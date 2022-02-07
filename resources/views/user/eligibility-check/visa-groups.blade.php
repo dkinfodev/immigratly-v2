@@ -11,7 +11,12 @@
   <div class="sidebar-detached-content mt-3 mt-lg-0">
       <!-- Hero -->
       <div class="gradient-x-three-sm-primary">
-          <div class="container content-space-2">
+          <div class="container pt-5">
+              <div class="float-right mb-3">
+                  <a href="{{ baseUrl('eligibility-check/view-history') }}" class="text-danger"><i class="tio-import-export"></i> View History</a>
+                  <div class="clearfix"></div>
+              </div>
+              <div class="clearfix"></div>
               <form id="form-search">
                   {{csrf_field()}}
                   <!-- Input Card -->

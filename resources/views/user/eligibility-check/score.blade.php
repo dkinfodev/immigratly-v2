@@ -29,27 +29,8 @@
 @section('content')
 <!-- Content -->
 <div class="">
-    <!-- Page Header -->
-    <div class="page-header">
-        <div class="row align-items-end">
-            <div class="col-sm mb-2 mb-sm-0">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb breadcrumb-no-gutter">
-                        <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
-                    </ol>
-                </nav>
-
-                <h1 class="page-title">{{$pageTitle}}</h1>
-            </div>
-        </div>
-        <!-- End Row -->
-    </div>
-    <!-- End Page Header -->
-
     <!-- Card -->
-    <div class="card">
+    <div class="card p-6">
 
         <!-- Table -->
         <div class="col-sm-12">
@@ -167,8 +148,10 @@
     @else
         @foreach($final_questions as $groups)
         <div class="card mt-3">
-            <div class="card-header p-2">
-                <h2>{{ $groups['group_title'] }} <small>MAX SCORE: ({{$groups['max_score']}}) MIN SCORE: ({{$groups['min_score']}})</small></h2>
+            <div class="card-header p-4">
+                <h4>
+                    {{ $groups['group_title'] }} <small>MAX SCORE: ({{$groups['max_score']}}) MIN SCORE: ({{$groups['min_score']}})</small>
+                </h4>
             </div>
             <?php 
                 $components = $groups['components'];
@@ -182,8 +165,19 @@
                     $comp_score = 0;
                 ?>
                 @if(isset($component['questions']) && !empty($component['questions']))
-                <div class="component-block">
-                    <h3>{{$component['component_title']}} <small>MAX SCORE: ({{$component['max_score']}}) MIN SCORE: ({{$component['min_score']}})</small></h3>
+                <div class="component-block mb-3">
+                    <div>
+                        <span class="float-left">
+                           <b> {{$component['component_title']}} </b>
+                            <div><small>MAX SCORE: ({{$component['max_score']}}) MIN SCORE: ({{$component['min_score']}})</small></div>
+                        </span>
+                        <span class="float-right text-danger  pr-5">
+                            @if(isset($final_score[$component['unique_id']])) 
+                               <b>Component Wise Score: {{$final_score[$component['unique_id']]}}</b>
+                            @endif
+                        </span>
+                        <div class="clearfix"></div>
+                    </div>
                     <table class="table table-bordered">
                         <tr>
                             <th>Question</th>

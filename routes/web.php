@@ -726,9 +726,12 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
         Route::get('/', [App\Http\Controllers\User\EligibilityCheckController::class, 'groupList']);
         Route::post('/group-ajax-list', [App\Http\Controllers\User\EligibilityCheckController::class, 'groupAjaxList']);
         Route::get('/lists/{id}', [App\Http\Controllers\User\EligibilityCheckController::class, 'list']);
+        
         Route::post('/ajax-list', [App\Http\Controllers\User\EligibilityCheckController::class, 'getAjaxList']);
         Route::get('/check/{id}', [App\Http\Controllers\User\EligibilityCheckController::class, 'eligibilityCheck']);
         Route::post('/check/{id}', [App\Http\Controllers\User\EligibilityCheckController::class, 'saveEligibilityScore']);
+        Route::get('/view-history', [App\Http\Controllers\User\EligibilityCheckController::class, 'userEligibilityHistory']);
+        Route::post('/ajax-history', [App\Http\Controllers\User\EligibilityCheckController::class, 'eligibilityAjaxHistory']);
 
         Route::get('/g/{id}', [App\Http\Controllers\User\EligibilityCheckController::class, 'groupEligibilityCheck']);
         Route::post('/g/{id}', [App\Http\Controllers\User\EligibilityCheckController::class, 'saveGroupEligibilityScore']);

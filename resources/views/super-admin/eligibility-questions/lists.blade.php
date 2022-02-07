@@ -101,7 +101,7 @@
             </th>
             <th scope="col">Questions</th>
             <th scope="col">Linked to CV</th>
-            <th scope="col">Is Component/Conditional</th>
+            <th scope="col">Component/Conditional</th>
             <th scope="col">Action</th>
           </tr>
         </thead>

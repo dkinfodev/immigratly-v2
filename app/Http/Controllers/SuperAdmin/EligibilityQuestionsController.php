@@ -691,16 +691,21 @@ class EligibilityQuestionsController extends Controller
         $id = base64_decode($id);
         $visa_service = VisaServices::where("id",$visa_service_id)->first();
         $record = ComponentQuestions::with('Questions')->where("id",$id)
-                                    ->whereHas('Questions')
+                                    // ->whereHas('Questions')
                                     ->first();
+        
         $this->defaultGroup($visa_service->unique_id);
-        $question_ids = $record->Questions->pluck("question_id")->toArray();
         $ques = array();
-        foreach($record->Questions as $comques){
-            $ques[$comques->question_id] = $comques->toArray();
-            $ques[$comques->question_id]['component_questions'] = $record->componentQuestions($comques->dependent_component);
+        if(!empty($record->Questions)){
+            $question_ids = $record->Questions->pluck("question_id")->toArray();
+       
+            foreach($record->Questions as $comques){
+                $ques[$comques->question_id] = $comques->toArray();
+                $ques[$comques->question_id]['component_questions'] = $record->componentQuestions($comques->dependent_component);
+            }
+        }else{
+            $question_ids = array();
         }
- 
         $group_ids = $record->GroupComponents->pluck("group_id")->toArray();
         $components = ComponentQuestions::with('Questions')
                                     ->where("id","!=",$id)
@@ -1600,31 +1605,34 @@ class EligibilityQuestionsController extends Controller
         $component_detail = ComponentQuestions::where("unique_id",$component_id)->first();
         $component_ids = GroupConditionalQuestions::where('group_id',$group->unique_id)
                     ->where("question_id",$question_id)
+                    ->where("parent_component_id",$component_id)
                     ->get();
         
         $componentSet = array();
         foreach($component_ids as $comp_id){
             $componentSet[$comp_id->option_id] = $comp_id->component_id;
         }
-        
-        
-
-        $component_lists = GroupComponentIds::where("group_id",$group->unique_id)
+        $component_lists = GroupComponentIds::with('Component')->where("group_id",$group->unique_id)
                                     ->where("component_id","!=",$component_id)
                                     ->whereHas("Component")
                                     ->get();
-                                    
+               
         $components = array();
-        $exists_id = GroupConditionalQuestions::where('group_id',$group->unique_id)->get()->toArray();
-       
+        // $exists_id = GroupConditionalQuestions::where('group_id',$group->unique_id)->get()->toArray();
+    //   pre($component_lists->toArray());
         foreach($component_lists as $comp){
-            $exists_id = GroupConditionalQuestions::where("component_id",$component_id)
-                                ->where("parent_component_id",$comp->component_id)
+            $exists_id = GroupConditionalQuestions::where("group_id",$group->unique_id)
+                                ->where("parent_component_id",$component_id)
+                                ->where("component_id",$comp->component_id)
                                 ->count();
         
-            if($exists_id == 0){
+            // if($exists_id == 0){
+                $exists_id = GroupConditionalQuestions::where("component_id",$component_id)
+                                ->where("parent_component_id",$comp->component_id)
+                                ->get();
+               
                 $components[] = $comp;
-            }
+            // }
         }
         $viewData['componentSet'] = $componentSet;
         $viewData['components'] = $components;
@@ -1644,17 +1652,23 @@ class EligibilityQuestionsController extends Controller
         $visa_id = base64_decode($visa_service_id);
         $visa_service = VisaServices::where("id",$visa_id)->first();
         $group_id = base64_decode($group_id);
-        $group = QuestionsGroups::with('Components')->where("id",$group_id)->first();
+        $group = QuestionsGroups::with('Components')
+                            ->where("id",$group_id)
+                            ->first();
        
         $components = array();
         if($request->input("component")){
             $components = $request->component;
         }
-        
+        // $d = GroupConditionalQuestions::where('group_id',$group->unique_id)
+        //             ->where("parent_component_id",$component_id)
+        //             ->where("question_id",$question_id)
+        //             ->get();
         GroupConditionalQuestions::where('group_id',$group->unique_id)
+                    ->where("parent_component_id",$component_id)
                     ->where("question_id",$question_id)
                     ->delete();
-
+       
         foreach($components as $key => $value){
             if($value != ''){
                 $object = new GroupConditionalQuestions();
@@ -1667,7 +1681,12 @@ class EligibilityQuestionsController extends Controller
                 $object->save();
             }
         }
-
+        // echo "<Hr>";
+        // $d = GroupConditionalQuestions::where('group_id',$group->unique_id)
+        // ->where("parent_component_id",$component_id)
+        // ->where("question_id",$question_id)
+        // ->get();
+        // pre($d->toArray());
         $response['status'] = true;
         $response['redirect_back'] =  baseUrl('visa-services/eligibility-questions/'.$visa_service_id.'/groups-questions/components/'.base64_encode($group_id));
         $response['message'] = "Condition added successfully";
