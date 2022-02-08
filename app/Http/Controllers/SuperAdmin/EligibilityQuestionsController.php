@@ -640,7 +640,7 @@ class EligibilityQuestionsController extends Controller
             $obj->visa_service_id = $visa_service->unique_id;
             $obj->question_id = $question;
             
-            if(isset($ques[$question]) && $ques[$question]['dependent_question'] != ''){
+            if(isset($ques[$question]) && isset($ques[$question]['dependent_question'])){
                 if(isset($ques[$question]['is_dependent'])){
                     $obj->is_dependent = 1;
                 }else{
