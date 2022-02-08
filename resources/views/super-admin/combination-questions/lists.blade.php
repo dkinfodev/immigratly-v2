@@ -48,24 +48,32 @@
             <div class="col-md-5">
               <div class="form-group">
                   <label>Question One</label>
-                  <select class="question_one" name="question_one"> 
+                  <select class="question_one" onchange="fetchOptions(this.value,'question_one_options')" name="question_one"> 
                       <option value="">Select Question One</option>
                       @foreach($questions as $question)
                         <option value="{{$question->EligibilityQuestion->unique_id}}">{{$question->EligibilityQuestion->question}}</option>
                       @endforeach
                   </select>
               </div>
+              <div class="form-group">
+                  <label>Options</label>
+                  <select class="question_one_options" name="question_one_options[]" multiple></select>
+              </div>
             </div>
             <div class="col-md-5">
               <div class="form-group">
                   <label>Question Two</label>
-                  <select class="question_two" name="question_two"> 
+                  <select class="question_two" onchange="fetchOptions(this.value,'question_two_options')" name="question_two"> 
                       <option value="">Select Question Two</option>
                   </select>
               </div>
+              <div class="form-group">
+                  <label>Options</label>
+                  <select class="question_two_options" name="question_two_options[]" multiple></select>
+              </div>
             </div>
             <div class="col-md-2">
-              <div class="form-group pt-5">
+              <div class="form-group pt-3">
                   <button onclick="fetchCombination()" type="button" class="btn btn-primary"><i class="tio-refresh"></i></button>
               </div>
             </div>
@@ -182,6 +190,8 @@ $(document).ready(function(){
 function fetchCombination(){
   var question_one = $(".question_one").val();
   var question_two = $(".question_two").val();
+  var question_one_options = $(".question_one_options").val();
+  var question_two_options = $(".question_two_options").val();
   if(question_one != '' && question_two != ''){
     $.ajax({
         type: "POST",
@@ -190,7 +200,9 @@ function fetchCombination(){
             _token:csrf_token,
             component_id:"{{$component_id}}",
             question_one:question_one,
+            question_one_options:question_one_options,
             question_two:question_two,
+            question_two_options:question_two_options,
         },
         dataType:'json',
         beforeSend:function(){
@@ -210,6 +222,31 @@ function fetchCombination(){
         }
     });
   }
+}
+function fetchOptions(question_id,ele){
+  $.ajax({
+      type: "GET",
+      url: BASEURL + '/visa-services/eligibility-questions/{{$visa_service_id}}/fetch-options',
+      data:{
+          _token:csrf_token,
+          question_id:question_id,
+      },
+      dataType:'json',
+      beforeSend:function(){
+          showLoader();
+      },
+      success: function (response) {
+          hideLoader();
+          if(response.status == true){
+            $("."+ele).html(response.options);
+          }else{
+            $("."+ele).html('');
+          }
+      },
+      error:function(){
+        internalError();
+      }
+  });
 }
 </script>
 @endsection

@@ -222,7 +222,9 @@ function conditionalQuestion(e, ele) {
             hideLoader();
             if (response.status == true) {
                 
-                $(".qs-"+group_id+"-"+component_id+"-"+question_id).after(response.contents);
+                // $(".qs-"+group_id+"-"+component_id+"-"+question_id).after(response.contents);
+                 $(".component-"+component_id).after(response.contents);
+                
                 initSelect();
             }
         },
@@ -352,13 +354,24 @@ function countTotal(e,component_id,question_id){
     //     return false;
     // }
 }
-function dependentQuestion(e,question_id){
-    // alert(question_id);
+function dependentQuestion(e,question_id,element){
+    
     var value = $(e).val();
-    $("*[data-dependent='"+question_id+"'][value='"+value+"']").prop("checked",true);
-    $("*[data-dependent='"+question_id+"']").find("option[value='"+value+"']").attr("selected","selected");
-    var text = $(e).parents(".form-check").text();
-    $("*[data-dependent='"+question_id+"'][value='"+value+"']").parents(".imm-assessment-form-list-question").find(".preselect").html(text);
+    if(element == 'dropdown'){
+        $("*[data-dependent='"+question_id+"']").find("option[value='"+value+"']").attr("selected","selected");
+        $("*[data-dependent='"+question_id+"']").trigger("change");;
+        var text = $("*[data-dependent='"+question_id+"']").find("option[value='"+value+"']").text();
+        $("*[data-dependent='"+question_id+"'][value='"+value+"']").parents(".imm-assessment-form-list-question").find(".preselect").html(text);
+    }else{
+        $("*[data-dependent='"+question_id+"'][value='"+value+"']").prop("checked",true);
+        var text = $(e).parents(".form-check").text();
+        $("*[data-dependent='"+question_id+"'][value='"+value+"']").parents(".imm-assessment-form-list-question").find(".preselect").html(text);
+        setTimeout(function(){   
+            $("*[data-dependent='"+question_id+"'][value='"+value+"']").trigger("change");
+        },1000);
+        
+    }
+    
 }
 </script>
 @endsection

@@ -633,8 +633,8 @@ class DashboardController extends Controller
                 'to_year' => 'required',
                 'country_id' => 'required',
                 'state_id' => 'required',
-                'canadian_equivalency_level' => 'required',
-                'evaluating_agency' => 'required',
+                // 'canadian_equivalency_level' => 'required',
+                // 'evaluating_agency' => 'required',
             );
 
             // if($request->input("is_eca") == 1){
@@ -769,8 +769,8 @@ class DashboardController extends Controller
                 'to_year' => 'required',
                 'country_id' => 'required',
                 'state_id' => 'required',
-                'canadian_equivalency_level' => 'required',
-                'evaluating_agency' => 'required',
+                // 'canadian_equivalency_level' => 'required',
+                // 'evaluating_agency' => 'required',
             );
             // if($request->input("is_eca") == 1){
             //     $valid['eca_equalency'] = 'required';

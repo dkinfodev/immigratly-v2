@@ -605,7 +605,14 @@ span#select2-bchg-container {
                            <div class="imm-add-skillset-body-list-component-footer">
                               <div class="row">
                                  <div class="col-xs-12 col-sm-7">
-                                    <p> <i class="bi-geo-alt me-1"></i> {{$ed->StateName->name}}, {{$ed->CountryName->name}}</p>
+                                    <p> <i class="bi-geo-alt me-1"></i> 
+                                        @if(!empty($ed->StateName))
+                                        {{$ed->StateName->name}}
+                                        @endif
+                                        @if(!empty($ed->CountryName->name))
+                                        {{$ed->CountryName->name}}
+                                        @endif
+                                    </p>
 
                                  </div>
                                  <div class="col-xs-12 col-sm-5"> 

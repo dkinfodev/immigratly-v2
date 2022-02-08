@@ -1428,9 +1428,15 @@ class EligibilityQuestionsController extends Controller
 
         $question_one = $request->input("question_one");
         $question_two = $request->input("question_two");
+        $question_one_options = $request->input("question_one_options");
+        $question_two_options = $request->input("question_two_options");
         $component_id = $request->input("component_id");
-        $options_one = QuestionOptions::where("question_id",$question_one)->get();
-        $options_two = QuestionOptions::where("question_id",$question_two)->get();
+        $options_one = QuestionOptions::where("question_id",$question_one)
+                                    ->whereIn("id",$question_one_options)
+                                    ->get();
+        $options_two = QuestionOptions::where("question_id",$question_two)
+                                    ->whereIn("id",$question_two_options)
+                                    ->get();
         $groups = array();
         $combinations = array();
         $i = 0;
