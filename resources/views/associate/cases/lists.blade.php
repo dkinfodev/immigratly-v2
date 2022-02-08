@@ -80,12 +80,12 @@
             </th>
             <th scope="col" class="table-column-pl-0" style="min-width: 15rem;">Case Title</th>
             <th>Client</th>
-            <th scope="col">Visa Service</th>
+            <!-- <th scope="col">Visa Service</th>-->
             <!-- <th scope="col">Start Date</th> -->
-            <th scope="col">Approval Status</th>
-            <th scope="col">Assigned</th>
-            @if(role_permission('cases','case-chat'))
-            <th scope="col"><i class="tio-chat-outlined"></i></td>
+            <!-- <th scope="col">Approval Status</th>
+            <th scope="col">Assigned</th> -->
+             @if(role_permission('cases','case-chat'))
+            <!-- <th scope="col"><i class="tio-chat-outlined"></i></td> -->
             @endif
             <th scope="col"></th>
           </tr>

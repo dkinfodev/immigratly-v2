@@ -157,9 +157,9 @@
            
           ?>
           @if($chat_read['total_chat'] == 0 || $chat_read['unread_chat'] == $chat_read['total_chat'])
-              <i class="tio-chat-outlined"></i> {{$chat_read['unread_chat']}}
+              <i class="tio-chat-outlined dropdown-item-icon"></i> {{$chat_read['unread_chat']}}
           @else
-              <span class="text-danger"><i class="tio-chat-outlined"></i>  {{$chat_read['unread_chat']}}</span> 
+              <span class="text-danger"><i class="tio-chat-outlined dropdown-item-icon"></i>  {{$chat_read['unread_chat']}}</span> 
 
           @endif
           Chats

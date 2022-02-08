@@ -28,6 +28,13 @@
       <div class="ml-3">
         <span class="d-block h5 text-hover-primary mb-0">{{ $record->case_title }}</span>
         <span class="d-block font-size-sm text-body">Created on {{ dateFormat($record->created_at) }}</span>
+
+        @if(!empty($record->Service($record->VisaService->service_id)))
+        <span class="badge badge-soft-info p-2">{{$record->Service($record->VisaService->service_id)->name}}</span>
+        @else
+        <span class="badge badge-soft-danger p-2">Service not found</span>
+        @endif
+
       </div>
     </a>
   </td>
@@ -40,15 +47,7 @@
     @else
     <span class="text-danger h4">Client not found</span>
     @endif
-  </td>
-  <td>
-    @if(!empty($record->Service($record->VisaService->service_id)))
-    <span class="badge badge-soft-info p-2">{{$record->Service($record->VisaService->service_id)->name}}</span>
-    @else
-    <span class="badge badge-soft-danger p-2">Service not found</span>
-    @endif
-  </td>
-  <td>
+    <br>
     @if($record->approve_status == "0")
     <span class="badge badge-soft-warning p-2">Awaiting Approve</span>
     @endif
@@ -57,14 +56,29 @@
     @endif
   </td>
   <!-- <td>
+    @if(!empty($record->Service($record->VisaService->service_id)))
+    <span class="badge badge-soft-info p-2">{{$record->Service($record->VisaService->service_id)->name}}</span>
+    @else
+    <span class="badge badge-soft-danger p-2">Service not found</span>
+    @endif
+  </td> -->
+  <!-- <td>
+    @if($record->approve_status == "0")
+    <span class="badge badge-soft-warning p-2">Awaiting Approve</span>
+    @endif
+    @if($record->approve_status == "1")
+    <span class="badge badge-soft-info p-2">Approved</span>
+    @endif
+  </td> -->
+  <!-- <td>
     <span class="text-body">
       <i class="tio-calendar-month"></i> {{$record->start_date}}
     </span>
   </td> -->
   
-   <td>
+   <!-- <td> -->
     <!-- Avatar Group -->
-    <div class="avatar-group avatar-group-xs avatar-circle">
+    <!-- <div class="avatar-group avatar-group-xs avatar-circle"> -->
       <?php 
         $more_file = 0;
       ?>
@@ -74,18 +88,18 @@
           $more_file++;
         }else{
         ?>  
-        <a class="avatar js-nav-tooltip-link" href="javascript:;" data-toggle="tooltip" data-placement="top" title="{{ $member->Member->first_name." ".$member->Member->last_name }}">
-          <img class="avatar-img" src="{{ professionalProfile($member->Member->unique_id,'t') }}" alt="Image Description">
-        </a>
+       <!--  <a class="avatar js-nav-tooltip-link" href="javascript:;" data-toggle="tooltip" data-placement="top" title="{{ $member->Member->first_name." ".$member->Member->last_name }}">
+          <img class="avatar-img" src="{{ professionalProfile($member->Member->unique_id,'t') }}" alt="ID">
+        </a> -->
         <!-- <span class="avatar avatar-light js-nav-tooltip-link avatar-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="{{ $member->Member->first_name." ".$member->Member->last_name }}">
           <span class="avatar-initials">{{ userInitial($member->Member) }}</span>
         </span> -->
         <?php } ?>
       @endforeach
       @if($more_file > 0)
-        <span class="avatar avatar-light js-nav-tooltip-link avatar-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="{{ $member->first_name." ".$member->last_name }}">
+        <!-- <span class="avatar avatar-light js-nav-tooltip-link avatar-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="{{ $member->first_name." ".$member->last_name }}">
           <span class="avatar-initials">{{ $more_file }}+</span>
-        </span>
+        </span> -->
       @endif
       <!-- <a class="avatar" href="user-profile.html" data-toggle="tooltip" data-placement="top" title="Costa Quinn">
         <img class="avatar-img" src="./assets/img/160x160/img6.jpg" alt="Image Description">
@@ -96,17 +110,17 @@
       <a class="avatar avatar-soft-danger" href="user-profile.html" data-toggle="tooltip" data-placement="top" title="Adam Keep">
         <span class="avatar-initials">A</span>
       </a> -->
-    </div>
+    <!-- </div> -->
     <!-- End Avatar Group -->
-  </td>
+  <!-- </td> -->
   @if(role_permission('cases','case-chat'))
-  <td width="10%">
+  <!-- <td width="10%">
    <div class="hs-unfold">
       <a href="{{ baseUrl('cases/chats/'.$record->unique_id) }}" class="js-hs-unfold-invoker text-body">
       <i class="tio-chat-outlined"></i> {{$record->chats_count}}
       </a>
    </div>
- </td>
+ </td> -->
  @endif
   <td>
       <div class="hs-unfold">
@@ -134,6 +148,11 @@
         <a class="dropdown-item text-danger" href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('cases/delete/'.base64_encode($record->id))}}">
          <i class="tio-delete-outlined dropdown-item-icon"></i>
          Delete
+        </a>
+        @endif
+        @if(role_permission('cases','case-chat'))
+        <a class="dropdown-item " href="{{ baseUrl('cases/chats/'.$record->unique_id) }}">
+          <i class="tio-chat-outlined dropdown-item-icon"></i> {{$record->chats_count}} Chats
         </a>
         @endif
       </div>

@@ -51,7 +51,7 @@
           </div>
         </div>
 
-        <div class="col-sm-2">
+        <div class="col-sm-3">
           @if(role_permission('cases','add-cases'))
           <a class="btn btn-primary" href="<?php echo baseUrl('cases/add') ?>">
             <i class="tio-user-add mr-1"></i> Create Case
@@ -76,12 +76,12 @@
             </th>
             <th scope="col" class="table-column-pl-0" style="min-width: 15rem;">Case Title</th>
             <th>Client</th>
-            <th scope="col">Visa Service</th>
+            <!-- <th scope="col">Visa Service</th> -->
             <!-- <th scope="col">Start Date</th> -->
-            <th scope="col">Approval Status</th>
-            <th scope="col">Assigned</th>
+            <!-- <th scope="col">Approval Status</th> -->
+            <!-- <th scope="col">Assigned</th> -->
             @if(role_permission('cases','case-chat'))
-            <th scope="col"><i class="tio-chat-outlined"></i></td>
+            <!-- <th scope="col"><i class="tio-chat-outlined"></i></td> -->
             @endif
             <th scope="col"></th>
           </tr>
