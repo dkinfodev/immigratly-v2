@@ -48,7 +48,7 @@ if(!empty($is_comp_conditional)){
         $depcomclass='';
         // pre($component->toArray());
         if($checkIfDependent->count() > 0){
-            $preConditionalFunc .=",dependentQuestion(this,".$ques->EligibilityQuestion->unique_id.")";
+            $preConditionalFunc .=",dependentQuestion(this,".$ques->EligibilityQuestion->unique_id.",'".$ques->EligibilityQuestion->option_type."')";
             
             if(isset($component)){
                 $depcomclass='data-depcom='.$component->unique_id."-".$ques->EligibilityQuestion->unique_id;
@@ -228,10 +228,25 @@ if(!empty($is_comp_conditional)){
             // alert(index+" = {{ $question_id }}");
             @if($ques->dependent_question != '')
                 var value = $("*[data-depcom='{{$ques->dependent_component}}-{{$ques->dependent_question}}']:checked").val();
-                $("*[data-dependent='{{$ques->dependent_question}}'][value='"+value+"']").prop("checked",true);
-                $("*[data-dependent='{{$ques->dependent_question}}']").find("option[value='"+value+"']").attr("selected","selected");
-                var text = $("*[data-depcom='{{$ques->dependent_component}}-{{$ques->dependent_question}}']:checked").parents(".form-check").text();
-                $("*[data-dependent='{{$ques->dependent_question}}'][value='"+value+"']").parents(".imm-assessment-form-list-question").find(".preselect").html(text);
+                
+                @if($ques->EligibilityQuestion->option_type == 'dropdown')
+                    $("*[data-dependent='{{$ques->dependent_question}}']").find("option[value='"+value+"']").attr("selected","selected");
+                    setTimeout(function(){   
+                        $("*[data-dependent='{{$ques->dependent_question}}']").trigger("change");
+                    },1000);
+                    var text = $("*[data-dependent='{{$ques->dependent_question}}']").find("option[value='"+value+"']").text();
+                    $("*[data-dependent='{{$ques->dependent_question}}'][value='"+value+"']").parents(".imm-assessment-form-list-question").find(".preselect").html(text);
+                @else
+                    $("*[data-dependent='{{$ques->dependent_question}}'][value='"+value+"']").prop("checked",true);
+                    var text = $("*[data-depcom='{{$ques->dependent_component}}-{{$ques->dependent_question}}']:checked").parents(".form-check").text();
+                    $("*[data-dependent='{{$ques->dependent_question}}'][value='"+value+"']").parents(".imm-assessment-form-list-question").find(".preselect").html(text);
+                    setTimeout(function(){   
+                        $("*[data-dependent='{{ $question_id }}'][value='"+value+"']").trigger("change");
+                    },1000);
+                @endif
+                
+                
+                 
             @endif
         </script>
     @endforeach
@@ -264,9 +279,9 @@ if(!empty($is_comp_conditional)){
             }
             if($ques->dependent_question != ''){
                 if($preConditionalFunc != ''){
-                    $preConditionalFunc .=",dependentQuestion(".$ques->dependent_component.",".$ques->dependent_question.")";
+                    $preConditionalFunc .=",dependentQuestion(".$ques->dependent_component.",".$ques->dependent_question.",'".$ques->EligibilityQuestion->option_type."')";
                 }else{
-                    $preConditionalFunc .="dependentQuestion(".$ques->dependent_component.",".$ques->dependent_question.")";
+                    $preConditionalFunc .="dependentQuestion(".$ques->dependent_component.",".$ques->dependent_question.",'".$ques->EligibilityQuestion->option_type."')";
                 }
             }
         ?>

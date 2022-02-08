@@ -21,6 +21,8 @@ use App\Models\LanguageScoreChart;
 use App\Models\EligibilityScoreRanges;
 use App\Models\VisaServicesBlocks;
 use App\Models\Tags;
+use App\Models\EligibilityQuestions;
+use App\Models\QuestionOptions;
 
 class VisaServicesController extends Controller
 {
@@ -88,20 +90,26 @@ class VisaServicesController extends Controller
             $response['message'] = $errMsg;
             return response()->json($response);
         }
+        $unique_id = randomNumber();
         $object =  new VisaServices;
         if($request->input('parent_id')){
             $object->parent_id = $request->input("parent_id");
         }
         $object->name = $request->input("name");
         $object->slug = str_slug($request->input("name"));
-        $object->unique_id = randomNumber();
+        $object->unique_id = $unique_id;
         $object->assessment_price = $request->input("assessment_price");
+        if($request->input("is_depedent")){
+            $object->is_dependent = $request->input("is_depedent");
+            $object->dependent_visa_service = $request->input("dependent_visa_service");
+        }
         if($request->input("document_folders")){
             $object->document_folders = implode(",",$request->input("document_folders"));
         }
         $object->cv_type = $request->input("cv_type");
         $object->eligible_type = $request->input("eligible_type");
         $object->save();
+        
         
         $response['status'] = true;
         $response['redirect_back'] = baseUrl('visa-services');
@@ -152,6 +160,13 @@ class VisaServicesController extends Controller
         }
         if($request->input("document_folders")){
             $object->document_folders = implode(",",$request->input("document_folders"));
+        }
+        if($request->input("is_depedent")){
+            $object->is_dependent = $request->input("is_depedent");
+            $object->dependent_visa_service = $request->input("dependent_visa_service");
+        }else{
+            $object->is_dependent = 0;
+            $object->dependent_visa_service = 0;
         }
         $object->assessment_price = $request->input("assessment_price");
         $object->cv_type = $request->input("cv_type");
@@ -743,5 +758,19 @@ class VisaServicesController extends Controller
 
         echo $new_html;
 
+    }
+
+    public function fetchtQuestions(Request $request){
+        $visa_service_id = $request->inputy("visa_service_id");
+        $questions = EligibilityQuestions::where("visa_service_id",$visa_service_id)->get();
+        $options = "";
+        foreach($questions as $ques){
+            $options .= "<option value='".$ques->unique_id."'>".$ques->question."</option>";
+        }
+
+        $response['status'] = true;
+        $response['options'] = $options;
+
+        return response()->json($response);
     }
 }

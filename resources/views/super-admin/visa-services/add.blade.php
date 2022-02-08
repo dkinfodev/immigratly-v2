@@ -68,6 +68,30 @@
             </select>
           </div>
         </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Is Dependent</label>
+          <div class="col-sm-10">  
+            <div class="custom-control custom-checkbox mt-2">
+              <input type="checkbox" id="is_dependent" name="is_dependent" class="custom-control-input">
+              <label class="custom-control-label" for="is_dependent">&nbsp;</label>
+            </div>
+          </div>
+        </div>
+        <div class="js-form-message form-group row dependent_visa_service" style="display:none">
+          <label class="col-sm-2 col-form-label">Dependent Services</label>
+          <div class="col-sm-10">
+            <select class="form-control" name="dependent_visa_service"
+            data-hs-select2-options='{
+              "placeholder": "Select Visa Service"
+            }'
+            >
+              <option value="0">None</option>
+              @foreach($main_services as $service)
+              <option value="{{ $service->id }}">{{$service->name}}</option>
+              @endforeach
+            </select>
+          </div>
+        </div>
         <div class="js-form-message form-group row">
           <label class="col-sm-2 col-form-label">Assessment Price</label>
           <div class="col-sm-10">  
@@ -115,6 +139,13 @@
   @section('javascript')
   <script type="text/javascript">
     $(document).ready(function(){
+      $("#is_dependent").change(function(){
+        if($(this).is(":checked")){
+          $(".dependent_visa_service").show();
+        }else{
+          $(".dependent_visa_service").hide();
+        }
+      });
       $(".add-btn").click(function(e){
         e.preventDefault(); 
         $(".add-btn").attr("disabled","disabled");

@@ -112,7 +112,7 @@
                     }
                     
                     if($checkIfDependent->count() > 0){
-                        $preConditionalFunc .=",dependentQuestion(this,".$ques->EligibilityQuestion->unique_id.")";
+                        $preConditionalFunc .=",dependentQuestion(this,".$ques->EligibilityQuestion->unique_id.",'".$ques->EligibilityQuestion->option_type."')";
                         $depcomclass='data-depcom='.$component->Component->unique_id."-".$ques->EligibilityQuestion->unique_id;
                     }
                     if($ques->EligibilityQuestion->linked_to_cv == 'yes'){
