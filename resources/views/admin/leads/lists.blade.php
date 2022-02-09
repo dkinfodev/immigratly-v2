@@ -84,20 +84,20 @@
       <table id="tableList" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
         <thead class="thead-light">
           <tr>
-            <th scope="col" class="table-column-pr-0 table-column-pl-0">
+            <th scope="col" class="table-column-pr-0 table-column-pl-0 pr-0 ">            
               <div class="custom-control custom-checkbox">
                 <input id="datatableCheckAll" type="checkbox" class="custom-control-input">
                 <label class="custom-control-label" for="datatableCheckAll"></label>
               </div>
             </th>
-            <th scope="col" class="table-column-pl-0" style="min-width: 15rem;">Leads</th>
+            <th scope="col" class="table-column-pl-0 p-2" style="min-width: 15rem;">Leads</th>
             <!-- <th>Email/Phone no</th> -->
-            <th scope="col" class="table-column-pl-0">Visa Service</th>
-            <th scope="col" class="table-column-pl-0">Assigned</th>
+            <th scope="col" class="table-column-pl-0 p-2">Visa Service</th>
+            <th scope="col" class="table-column-pl-0 p-1">Assigned</th>
             @if($lead_type == 0 || $lead_type == 2)
-            <th scope="col" class="table-column-pl-0"></td>
+            <th scope="col" class="table-column-pl-0 p-1"></td>
             @endif
-            <th scope="col" class="table-column-pl-0"></th>
+            <th scope="col" class="table-column-pl-0 p-1"></th>
             
           </tr>
         </thead>

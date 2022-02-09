@@ -23,7 +23,7 @@
     <!-- Header -->
     <div class="card-header">
       <div class="row justify-content-between align-items-center flex-grow-1">
-        <div class="col-sm-6 col-md-4 mb-3 mb-sm-0">
+        <div class="col-sm-5 col-md-4 mb-3 mb-sm-0">
           <form>
             <!-- Search -->
             <div class="input-group input-group-merge input-group-flush">
@@ -37,12 +37,8 @@
             <!-- End Search -->
           </form>
         </div>
-        <div class="col-sm-auto">
-          <a class="btn btn-primary" href="{{ baseUrl('/visa-services/add') }}">
-            <i class="tio-add mr-1"></i> Add 
-          </a>
-        </div>
-        <div class="col-sm-12">
+       
+        <div class="col-sm-5">
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
             <!-- Datatable Info -->
             <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0" style="display: none;">
@@ -58,6 +54,14 @@
             </div>
           </div>
         </div>
+
+        <div class="col-sm-2">
+         <div class="col-sm-auto">
+          <a class="btn btn-primary float-right" href="{{ baseUrl('/visa-services/add') }}">
+            <i class="tio-add mr-1"></i> Add 
+          </a>
+        </div>
+        </div>
       </div>
       <!-- End Row -->
     </div>
@@ -69,7 +73,7 @@
         <table id="tableList" class="table table-borderless">
           <thead class="thead-light">
             <tr>
-              <th scope="col" class="table-column-pr-0">
+              <th scope="col" class="table-column-pr-0 table-column-pl-0 pr-0 ">
                 <div class="custom-control custom-checkbox">
                   <input id="datatableCheckAll" type="checkbox" class="custom-control-input">
                   <label class="custom-control-label" for="datatableCheckAll"></label>

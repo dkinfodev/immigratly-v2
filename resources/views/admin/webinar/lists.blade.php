@@ -76,7 +76,7 @@
         </div>
 
         <div class="col-sm-2">
-          <a class="btn btn-primary" href="{{(baseUrl('webinar/add'))}}">
+          <a class="btn btn-primary float-right" href="{{(baseUrl('webinar/add'))}}">
             <i class="tio-user-add mr-1"></i> Add
           </a>
         </div>

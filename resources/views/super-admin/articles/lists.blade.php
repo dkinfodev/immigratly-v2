@@ -60,7 +60,7 @@
         </div>
 
         <div class="col-sm-2">
-          <a class="btn btn-primary" href="{{(baseUrl('articles/add'))}}">
+          <a class="btn btn-primary float-right" href="{{(baseUrl('articles/add'))}}">
             <i class="tio-user-add mr-1"></i> Add
           </a>
         </div>

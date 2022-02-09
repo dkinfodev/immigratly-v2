@@ -66,16 +66,17 @@
       <table id="tableList" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
         <thead class="thead-light">
           <tr>
-            <th class="table-column-pr-0">
+            <th scope="col" class="table-column-pr-0 table-column-pl-0 pr-0 ">
               <div class="custom-control custom-checkbox">
                 <input id="datatableCheckAll" type="checkbox" class="custom-control-input">
                 <label class="custom-control-label" for="datatableCheckAll"></label>
               </div>
             </th>
             <th class="table-column-pl-0">Name</th>
-            <th>Email</th>
-            <th>Contact Number</th>
-            <th>Profile Status</th>
+             <th>Subdomain Handler</th>
+            <!-- <th>Email</th>
+            <th>Contact Number</th> -->
+            <!-- <th>Profile Status</th> -->
             <th></th>
           </tr>
         </thead>

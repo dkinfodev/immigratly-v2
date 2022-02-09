@@ -56,7 +56,7 @@
 
 
         <div class="col-sm-2">
-          <a class="btn btn-primary" href="{{(baseUrl('staff/add'))}}">
+          <a class="btn btn-primary float-right" href="{{(baseUrl('staff/add'))}}">
             <i class="tio-user-add mr-1"></i> Add
           </a>
         </div>
@@ -71,15 +71,15 @@
       <table id="tableList" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
         <thead class="thead-light">
           <tr>
-            <th scope="col" class="table-column-pr-0">
+            <th scope="col" class="table-column-pr-0 table-column-pl-0 pr-0 ">
               <div class="custom-control custom-checkbox">
                 <input id="datatableCheckAll" type="checkbox" class="custom-control-input">
                 <label class="custom-control-label" for="datatableCheckAll"></label>
               </div>
             </th>
             <th scope="col" class="table-column-pl-0" style="min-width: 15rem;">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Phone no</th>
+            <!-- <th scope="col">Email</th>
+            <th scope="col">Phone no</th> -->
             <th scope="col">Role</th>
             <th scope="col">Status</th>
             <th scope="col">Action</th>

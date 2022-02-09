@@ -1,6 +1,6 @@
 @foreach($records as $key => $record)
 <tr>
-  <td class="table-column-pr-0">
+  <td scope="col" class="table-column-pr-0 table-column-pl-0 pr-0 ">
     <div class="custom-control custom-checkbox">
       <input type="checkbox" class="custom-control-input row-checkbox" value="{{ base64_encode($record->id) }}" id="row-{{$key}}">
       <label class="custom-control-label" for="row-{{$key}}"></label>
@@ -19,20 +19,28 @@
       <div class="ml-3">
         <span class="d-block h5 text-hover-primary mb-0">{{$record->first_name." ".$record->last_name}}</span>
         <span class="d-block font-size-sm text-body">Created on {{ dateFormat($record->created_at) }}</span>
+        <div class="d-flex font-size-sm text-body">
+          {{$record->email}}
+        </div>
+        <div class="d-flex font-size-sm text-body">
+          {{$record->country_code}}{{$record->phone_no}}
+        </div>
       </div>
     </a>
+
+
   </td>
-  <td>
+  <!-- <td>
     <div class="d-flex">
       {{$record->email}}
     </div>
-  </td>
+  </td> -->
 
-  <td>
+  <!-- <td>
     <div class="d-flex">
       {{$record->country_code}}{{$record->phone_no}}
     </div>
-  </td>
+  </td> -->
 
 
   <td>
