@@ -1,11 +1,13 @@
 <style>
-.invalid-feedback {
-    position: absolute;
-    bottom: -20px;
-}
+
 
 span.select2-selection.select2-selection--multiple.custom-select {
     height: auto !important;
+    padding-bottom: 10px !important;
+}
+
+.custom-select {
+  background-color: #fff;
 }
 
 /*.form-label {
@@ -39,17 +41,18 @@ $end_year = date("Y") - 20;
           <div class="imm-education-add-inner">
             <div class="col-12">
               <!-- Form -->
-              <div class="mb-4">
+              <div class="mb-4 js-form-message">
                 <label for="fieldOfStudyNameLabel" class="form-label">Education Level</label>
-
-                <!-- Select -->
-                <select id="degree_id"  class="form-select" name="degree_id">
-                  <option value="">Select Education Level</option>
-                  @foreach($primary_degree as $degree)
-                  <option value="{{$degree->id}}">{{$degree->name}}</option>
-                  @endforeach
-                </select>
-                <!-- End Select -->
+                
+                  <!-- Select -->
+                  <select id="degree_id"  class="form-select" name="degree_id">
+                    <option value="">Select Education Level</option>
+                    @foreach($primary_degree as $degree)
+                    <option value="{{$degree->id}}">{{$degree->name}}</option>
+                    @endforeach
+                  </select>
+                  <!-- End Select -->
+                
                 <!-- Check -->
                 <div class="form-check mt-2">
                   <input type="checkbox" class="form-check-input" name="is_highest_degree" id="is_highest_degree" value="1" class="custom-control-input">
@@ -67,6 +70,8 @@ $end_year = date("Y") - 20;
             <div class="col-12">
               <!-- Form -->
               <div class="mb-4">
+
+                <div class="js-form-message">
                 <label for="fieldOfStudyNameLabel" class="form-label">Name of credential</label>
                 <input type="text" class="form-control @error('qualification') is-invalid @enderror" name="qualification" id="qualification" placeholder="Enter degree name" aria-label="Qualification" value="">
                @error('qualification')
@@ -74,6 +79,7 @@ $end_year = date("Y") - 20;
                   <strong>{{ $message }}</strong>
                 </span>
                @enderror
+               </div>
                 <!-- <span>Dev Note: this column will only show when PHD, Bachelors, masters, diploma, associate degree. PG
                   diploma option is showed. </span> -->
               </div>
@@ -82,9 +88,11 @@ $end_year = date("Y") - 20;
             <div class="col-12">
               <!-- Form -->
               <div class="mb-4">
-                <label for="schoolNameLabel" class="form-label">School</label>
-                <input type="text" class="form-control" name="school_name" id="school_name"
-                  placeholder="University of Oxford" aria-label="University of Oxford">
+                <div class="js-form-message">
+                  <label for="schoolNameLabel" class="form-label">School</label>
+                  <input type="text" class="form-control" name="school_name" id="school_name"
+                    placeholder="University of Oxford" aria-label="University of Oxford">
+                </div>
               </div>
               <!-- End Form -->
             </div>
@@ -96,20 +104,25 @@ $end_year = date("Y") - 20;
                     <label for="we_country_id" class="form-label">Country</label>
 
                     <!-- Select -->
+                    <div class="js-form-message">
                      <select id="we_country_id" onchange="stateList(this.value,'we_state_id')" class="form-select no_select2" name="country_id">
+                     <option value="">Select</option>
                       @foreach($countries as $country)
                       <option value="{{$country->id}}">{{ $country->name }}</option>
                       @endforeach
                     </select>
+                    </div>
                     <!-- End Select -->
                   </div>
                   <div class="col-6">
                     <!-- Select --> 
                     <label for="we_state_id" class="form-label">State/Province</label>
                     
-                    <select id="we_state_id" class="form-select no_select2" name="state_id">
-                      <option value="">Select State</option>
-                    </select>
+                    <div class="js-form-message">
+                      <select id="we_state_id" class="form-select no_select2" name="state_id">
+                        <option value="">Select State</option>
+                      </select>
+                    </div>
                     <!-- End Select -->
 
                   </div>
@@ -132,28 +145,31 @@ $end_year = date("Y") - 20;
                     <label for="schoolFromMonthLabel" class="form-label">From</label>
 
                     <div class="row gx-2">
-                      <div class="col-sm-8 mb-2 mb-sm-0">
+                      <div class="col-sm-8 mb-2 mb-sm-1">
                         <!-- Select -->
-                        <select id="from_month" name="from_month" class="form-select no_select2">
-                           @foreach(monthsName() as $month)
-                            <option value="{{ $month }}">{{$month}}</option>
-                          @endforeach
-                          
-                        </select>
+                        <div class="js-form-message">
+                          <select id="from_month" name="from_month" class="form-select ">
+                            <option value="">Select</option>
+                             @foreach(monthsName() as $month)
+                              <option value="{{ $month }}">{{$month}}</option>
+                            @endforeach
+                            
+                          </select>
+                        </div>
                         <!-- End Select -->
                       </div>
                       <!-- End Col -->
 
                       <div class="col-sm-4">
-                        <!-- Select -->
-                        <select class="form-select" id="from_year" name="from_year" class="form-select no_select2">
-                          
-                          @for($i=$start_year;$i >= $end_year;$i--)
-                            <option value="{{$i}}">{{$i}}</option>
-                          @endfor
-                          
-                        </select>
-                        <!-- End Select -->
+                        <div class="js-form-message">
+                          <select class="form-select" id="from_year" name="from_year" class="form-select">
+                            <option value="">Select</option>
+                            @for($i=$start_year;$i >= $end_year;$i--)
+                              <option value="{{$i}}">{{$i}}</option>
+                            @endfor
+                          </select>
+                        </div>
+                        
                       </div>
                       <!-- End Col -->
                     </div>
@@ -165,24 +181,28 @@ $end_year = date("Y") - 20;
 
                     <div class="row gx-2">
                       <div class="col-sm-8 mb-2 mb-sm-0">
-                        <!-- Select -->
-                        <select class="form-select" name="to_month" id="to_month">
-                           @foreach(monthsName() as $month)
-                            <option value="{{ $month }}">{{$month}}</option>
-                          @endforeach                          
-                        </select>
-                        <!-- End Select -->
+                        <div id="invalid-feedback" class="js-form-message">
+                          <select class="form-select" name="to_month" id="to_month">
+                              <option value="">Select</option>
+                             @foreach(monthsName() as $month)
+                              <option value="{{ $month }}">{{$month}}</option>
+                            @endforeach                          
+                          </select>
+                        </div>
                       </div>
                       <!-- End Col -->
 
-                      <div class="col-sm-4">
-                        <!-- Select -->
-                        <select class="form-select no_select2 no_select2" id="to_year" name="to_year">
-                          @for($i=$start_year;$i >= $end_year;$i--)
-                            <option value="{{$i}}">{{$i}}</option>
-                          @endfor
-                        </select>
-                        <!-- End Select -->
+                      <div class="col-sm-4 js-form-message">
+                        
+                        
+                          <select class="form-select" id="to_year" name="to_year">
+                            <option value="">Select</option>
+                            @for($i=$start_year;$i >= $end_year;$i--)
+                              <option value="{{$i}}">{{$i}}</option>
+                            @endfor
+                          </select>
+                        
+                        
                       </div>
                     </div>
                     <!-- End Col -->
@@ -203,32 +223,37 @@ $end_year = date("Y") - 20;
                 <!-- Form -->
                
                   <div class="row">
-                    <div class="col-xs-12 col-sm-6"> <div class="mb-4">
-                      <label for="educationLabel" class="form-label">Canadian equivalency Level</label>
+                    <div class="col-xs-12 col-sm-6"> <div class="mb-4 js-form-message">
 
-                      <!-- Select -->
-                      <select id="canadian_equivalency_level" class="form-select" name="canadian_equivalency_level">
+                      
+                        <label for="educationLabel" class="form-label">Canadian equivalency Level</label>
 
-                        
-                        @foreach($CanadianEqLevel as $CEL)
-                          <option value="{{$CEL->id}}">{{ $CEL->name }}</option>
-                        @endforeach
+                        <!-- Select -->
+                        <select id="canadian_equivalency_level" class="form-select" name="canadian_equivalency_level">
+                          <option value="">Select Job Type</option>
+                          @foreach($CanadianEqLevel as $CEL)
+                            <option value="{{$CEL->id}}">{{ $CEL->name }}</option>
+                          @endforeach
+                        </select> <!-- End Select -->
+                      
 
-                      </select> <!-- End Select -->
                     </div>
                     </div>
-                    <div class="col-xs-12  col-sm-6"><div class="mb-4">
+                    <div class="col-xs-12  col-sm-6">
 
-                      <label for="educationLabel" class="form-label">Evaluating agency</label>
+                      <div class="mb-4 js-form-message">
 
-                      <!-- Select -->
+                        <label for="educationLabel" class="form-label">Evaluating agency</label>
+                        <!-- Select -->
                         <select id="evaluating_agency" class="form-select" name="evaluating_agency">
 
+                        <option value="">Select Job Type</option>    
                         @foreach($EvaluatingAgency as $EA)
-                          <option value="{{$EA->id}}">{{ $EA->name }}</option>
+                        <option value="{{$EA->id}}">{{ $EA->name }}</option>
                         @endforeach
                            
                         </select> <!-- End Select -->
+                        
                       </div>
                     </div>
                   </div>

@@ -54,7 +54,7 @@
         </div>
 
         <div class="col-sm-2">
-          <a class="btn btn-primary" href="{{ baseUrl('/licence-bodies/add') }}">
+          <a class="btn float-right btn-primary" href="{{ baseUrl('/licence-bodies/add') }}">
             <i class="tio-add mr-1"></i> Add 
           </a>
         </div>
@@ -68,7 +68,7 @@
       <table id="tableList" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
         <thead class="thead-light">
           <tr>
-            <th class="table-column-pr-0">
+            <th scope="col" class="table-column-pr-0 table-column-pl-0 pr-0 ">
               <div class="custom-control custom-checkbox">
                 <input id="datatableCheckAll" type="checkbox" class="custom-control-input">
                 <label class="custom-control-label" for="datatableCheckAll"></label>

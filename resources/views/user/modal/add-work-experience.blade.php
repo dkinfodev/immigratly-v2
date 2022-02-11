@@ -33,7 +33,7 @@ $end_year = date("Y") - 20;
 
                 <div class="row">
                   <div class="col-12 js-form-message">
-                    <div class="input-group">
+                    <div class="input-group"> 
                       <input type="text" class="js-input-mask form-control" name="job_title" id="job_title">
 
                       <!-- Select -->
@@ -236,6 +236,7 @@ $end_year = date("Y") - 20;
             <label class="col-sm-3 col-form-label input-label">Company Name</label>
 
             <div class="col-sm-9 js-form-message">
+                                
               <input type="text" class="form-control @error('employment_agency') is-invalid @enderror" name="employment_agency" id="employment_agency" placeholder="Company Name" aria-label="Company Name" value="">
               @error('employment_agency')
               <span class="invalid-feedback" role="alert">
@@ -258,6 +259,7 @@ $end_year = date("Y") - 20;
               </span>
               @enderror
             </div>
+
           </div>
           <!-- End Form Group -->
 

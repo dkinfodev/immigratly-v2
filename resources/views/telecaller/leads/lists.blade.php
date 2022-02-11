@@ -4,7 +4,7 @@
 <!-- Content -->
 <ol class="breadcrumb breadcrumb-no-gutter">
   <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
-  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/leads') }}">Leads</a></li>
+  
   <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
 </ol>
 <!-- End Content -->
@@ -37,7 +37,7 @@
           </form>
         </div>
 
-        <div class="col-sm-5">
+        <div class="col-sm-4">
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
             <!-- Datatable Info -->
             <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0" style="display: none;">
@@ -55,8 +55,8 @@
         </div>
 
         @if(role_permission('leads','quick-lead'))
-        <div class="col-sm-2">
-          <a class="btn btn-primary" onclick="showPopup('<?php echo baseUrl('leads/quick-lead') ?>')" href="javascript:;">
+        <div class="col-sm-3">
+          <a class="btn btn-primary float-right" onclick="showPopup('<?php echo baseUrl('leads/quick-lead') ?>')" href="javascript:;">
             <i class="tio-user-add mr-1"></i> Quick Lead
           </a>
         </div>
@@ -71,7 +71,7 @@
       <table id="tableList" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
         <thead class="thead-light">
           <tr>
-            <th scope="col" class="table-column-pr-0">
+            <th scope="col" class="table-column-pr-0 table-column-pl-0 pr-0 ">
               <div class="custom-control custom-checkbox">
                 <input id="datatableCheckAll" type="checkbox" class="custom-control-input">
                 <label class="custom-control-label" for="datatableCheckAll"></label>

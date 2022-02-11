@@ -1,6 +1,6 @@
 @foreach($records as $record)
 <tr>
-  <td class="table-column-pr-0">
+  <td scope="col" class="table-column-pr-0 table-column-pl-0 pr-0 ">
     <div class="custom-control custom-checkbox">
       <input type="checkbox" class="row-checkbox custom-control-input" id="usersDataCheck1">
       <label class="custom-control-label" for="usersDataCheck1"></label>

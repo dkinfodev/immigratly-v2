@@ -54,8 +54,8 @@
         </div>
 
         @if(role_permission('cases','add-cases'))
-        <div class="col-sm-3">
-        <a class="btn btn-primary" href="<?php echo baseUrl('cases/add') ?>">
+        <div class="col-sm-3 ">
+        <a class="btn btn-primary float-right" href="<?php echo baseUrl('cases/add') ?>">
           <i class="tio-user-add mr-1"></i> Create Case
         </a>
         </div>
@@ -72,7 +72,7 @@
       <table id="tableList" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
         <thead class="thead-light">
           <tr>
-            <th scope="col" class="table-column-pr-0">
+            <th scope="col" class="table-column-pr-0 table-column-pl-0 pr-0 ">
               <div class="custom-control custom-checkbox">
                 <input id="datatableCheckAll" type="checkbox" class="custom-control-input">
                 <label class="custom-control-label" for="datatableCheckAll"></label>
