@@ -5,20 +5,7 @@
 <ol class="breadcrumb breadcrumb-no-gutter">
   <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
   <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/visa-services') }}">Visa Services</a></li>
-
   <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
-
-  <label class="toggle-switch mx-2" for="customSwitch">
-    <input {{$visa_service->question_as_sequence == 1?'checked':'' }} type="checkbox" class="js-toggle-switch toggle-switch-input" id="customSwitch" 
-          data-hs-toggle-switch-options='{
-            "targetSelector": "#pricingCount1, #pricingCount2, #pricingCount3"
-          }'>
-    <span class="toggle-switch-label">
-      <span class="toggle-switch-indicator"></span>
-    </span>
-  </label>
-   <span>Show Sequentially</span>
-
 </ol>
 <!-- End Content -->
 @endsection
@@ -49,8 +36,24 @@
 </style>
 <!-- Content -->
 <div class="eligibility_questions">
-  
-  <p class="text-danger">*Drag the groups to rearrage</p>
+  <div class="row">
+    <div class="col-md-8">
+      <p class="text-danger">*Drag the groups to rearrage</p>
+    </div>
+    <div class="col-md-4">
+        <div class="checkbox-sequence float-right">
+          <label class="toggle-switch mx-2" for="customSwitch">
+          <input {{$visa_service->question_as_sequence == 1?'checked':'' }} type="checkbox" class="js-toggle-switch toggle-switch-input" id="customSwitch" 
+                data-hs-toggle-switch-options='{
+                  "targetSelector": "#pricingCount1, #pricingCount2, #pricingCount3"
+                }'>
+          <span class="toggle-switch-label">
+            <span class="toggle-switch-indicator"></span>
+          </span>
+          </label>
+          <span>Show Sequentially</span>
+      </div>
+    </div>
   <!-- Card -->
   <div class="card">
     <!-- Table -->

@@ -165,58 +165,93 @@ class EligibilityCheckController extends Controller
         }
         
         $final_questions = array();
-        
+       
         if($record->eligible_type == 'group'){
-            foreach($questions as $group_id => $component_ids){
-                $temp = array();
-                $group = QuestionsGroups::where("unique_id",$group_id)->first();
-                // echo "Group ID: ".$group->group_title."<BR>";
-                $temp['group_title'] = $group->group_title;
-                $temp['max_score'] = $group->max_score;
-                $temp['min_score'] = $group->min_score;
-                $components = array();
-                foreach($component_ids as $component_id => $question_ids){
-                    $comp_temp = array();
-                    $component = ComponentQuestions::where("unique_id",$component_id)->first();
-                    $comp_temp['component_title'] = $component->component_title;
-                    $comp_temp['unique_id'] = $component->unique_id;
-                    $comp_temp['max_score'] = $component->max_score;
-                    $comp_temp['min_score'] = $component->min_score;
-                    foreach($question_ids as $q_id => $opt_value){
-                        if($opt_value != ''){
-                            $question = EligibilityQuestions::where("unique_id",$q_id)->first();
-                            $comp_ques['question'] = $question->question;
-                            $ques_option = QuestionOptions::where("question_id",$q_id)
-                                                        ->where("option_value",$opt_value)->first();
-                            $comp_ques['option_value'] = $ques_option->option_label;
-                            $comp_ques['score'] = $ques_option->score;
-                            $comp_ques['non_eligible'] = $ques_option->non_eligible;
-                            $comp_ques['non_eligible_reason'] = $ques_option->non_eligible_reason;
-                            $comp_temp['questions'][] = $comp_ques;
+            if($record->calculate_scores != ''){
+                $final_questions = json_decode($record->calculate_scores,true);
+            }else{
+                foreach($questions as $group_id => $component_ids){
+                    $temp = array();
+                    $group = QuestionsGroups::where("unique_id",$group_id)->first();
+                    // echo "Group ID: ".$group->group_title."<BR>";
+                    $temp['group_title'] = $group->group_title;
+                    $temp['max_score'] = $group->max_score;
+                    $temp['min_score'] = $group->min_score;
+                    $components = array();
+                    foreach($component_ids as $component_id => $question_ids){
+                        $comp_temp = array();
+                        $component = ComponentQuestions::where("unique_id",$component_id)->first();
+                        $comp_temp['component_title'] = $component->component_title;
+                        $comp_temp['unique_id'] = $component->unique_id;
+                        $comp_temp['max_score'] = $component->max_score;
+                        $comp_temp['min_score'] = $component->min_score;
+                        foreach($question_ids as $q_id => $opt_value){
+                            if($opt_value != ''){
+                                $question = EligibilityQuestions::where("unique_id",$q_id)->first();
+                                $comp_ques['question'] = $question->question;
+                                $ques_option = QuestionOptions::where("question_id",$q_id)
+                                                            ->where("option_value",$opt_value)->first();
+                                $comp_ques['option_value'] = $ques_option->option_label;
+                                if($question->linked_to_cv == 'yes'){
+                                    $cv_section = $question->cv_section;
+                                    $elg_options = $question->Options;
+                                    $option_score = cvBasedOptions($cv_section,$elg_options,$question,$component->unique_id);
+                                    if(isset($option_score['option_score'])){
+                                        $comp_ques['score'] = $option_score['option_score'];
+                                    }else{
+                                        $comp_ques['score'] = $ques_option->score;
+                                    }
+                                }else{
+                                    $comp_ques['score'] = $ques_option->score;
+                                }
+                                
+                                
+                                $comp_ques['non_eligible'] = $ques_option->non_eligible;
+                                $comp_ques['non_eligible_reason'] = $ques_option->non_eligible_reason;
+                                $comp_temp['questions'][] = $comp_ques;
+                            }
                         }
+                        $components[] = $comp_temp;
                     }
-                    $components[] = $comp_temp;
+                    $temp['components'] = $components;
+                    $final_questions[] = $temp;
                 }
-                $temp['components'] = $components;
-                $final_questions[] = $temp;
+                $record->calculate_scores = json_encode($final_questions);
+                $record->save();
             }
         }else{
-            foreach($questions as $question_id => $ques_value){
-                $temp = array();
-                if($ques_value != ''){
-                    $question = EligibilityQuestions::where("unique_id",$question_id)->first();
-                    $temp['question'] = $question->question;
-                    $ques_option = QuestionOptions::where("question_id",$question_id)
-                                                ->where("option_value",$ques_value)->first();
-                    $temp['option_value'] = $ques_option->option_label;
-                    $temp['score'] = $ques_option->score;
-                    $temp['non_eligible'] = $ques_option->non_eligible;
-                    $temp['non_eligible_reason'] = $ques_option->non_eligible_reason;
-                
-                    $final_questions[] = $temp;
-               }
-            }   
+            if($record->calculate_scores != ''){
+                $final_questions = json_decode($record->calculate_scores,true);
+            }else{
+                foreach($questions as $question_id => $ques_value){
+                    $temp = array();
+                    if($ques_value != ''){
+                        $question = EligibilityQuestions::where("unique_id",$question_id)->first();
+                        $temp['question'] = $question->question;
+                        $ques_option = QuestionOptions::where("question_id",$question_id)
+                                                    ->where("option_value",$ques_value)
+                                                    ->first();
+                        $cv_section = $question->cv_section;
+                        $elg_options = $question->Options;
+                        $option_score = cvBasedOptions($cv_section,$elg_options,$question);
+                        $temp['option_value'] = $ques_option->option_label;
+                        if(isset($option_score['option_score'])){
+                            $temp['score'] = $option_score['option_score'];
+                        }else{
+                            $temp['score'] = $option_score->score;
+                        }
+                        $temp['non_eligible'] = $ques_option->non_eligible;
+                        $temp['non_eligible_reason'] = $ques_option->non_eligible_reason;
+                    
+                        $final_questions[] = $temp;
+                    }
+                }  
+               
+                $record->calculate_scores = json_encode($final_questions);
+                $record->save();
+            } 
         }
+
         $viewData['activeTab'] = "eligibility-check";
         $viewData['final_score'] = $final_score;
         $viewData['final_questions'] = $final_questions;
@@ -268,10 +303,12 @@ class EligibilityCheckController extends Controller
     public function fetchGroupConditional(Request $request){
         
         $question_id = $request->input("question_id");
+        $visa_service_id = $request->input("visa_service_id");
         $group_id = $request->input("group_id");
         $component_id = $request->input("component_id");
         $option_value = $request->input("option_value");
         $component = array();
+        $visa_service = VisaServices::where("unique_id",$visa_service_id)->first();
         $group = QuestionsGroups::where("unique_id",$group_id)->first();
         $record = GroupConditionalQuestions::where("parent_component_id",$component_id)
                                             ->where("group_id",$group_id)
@@ -285,6 +322,7 @@ class EligibilityCheckController extends Controller
                                         ->first();
         
             $viewData['group'] = $group;
+            $viewData['visa_service'] = $visa_service;
             $viewData['question_id'] = $question_id;
             $viewData['component_id'] = $component_id;
             $viewData['component'] = $component;

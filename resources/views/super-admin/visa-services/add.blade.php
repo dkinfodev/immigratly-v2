@@ -33,7 +33,7 @@
         <div class="js-form-message form-group row">
           <label class="col-sm-2 col-form-label">Service Under</label>
           <div class="col-sm-10">
-            <select class="form-control" name="parent_id"
+            <select class="form-control" id="parent_id" name="parent_id"
             data-hs-select2-options='{
               "placeholder": "Select Service"
             }'
@@ -68,11 +68,11 @@
             </select>
           </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row dependent_checkbox">
           <label class="col-sm-2 col-form-label">Is Dependent</label>
           <div class="col-sm-10">  
             <div class="custom-control custom-checkbox mt-2">
-              <input type="checkbox" id="is_dependent" name="is_dependent" class="custom-control-input">
+              <input type="checkbox" id="is_dependent" value="1" name="is_dependent" class="custom-control-input">
               <label class="custom-control-label" for="is_dependent">&nbsp;</label>
             </div>
           </div>
@@ -80,15 +80,26 @@
         <div class="js-form-message form-group row dependent_visa_service" style="display:none">
           <label class="col-sm-2 col-form-label">Dependent Services</label>
           <div class="col-sm-10">
-            <select class="form-control" name="dependent_visa_service"
+            <select class="form-control dependent_service" name="dependent_visa_service"
             data-hs-select2-options='{
               "placeholder": "Select Visa Service"
             }'
             >
               <option value="0">None</option>
               @foreach($main_services as $service)
-              <option value="{{ $service->id }}">{{$service->name}}</option>
+              <option value="{{ $service->unique_id }}">{{$service->name}}</option>
               @endforeach
+            </select>
+          </div>
+        </div>
+        <div class="js-form-message form-group row dependent_visa_service" style="display:none">
+          <label class="col-sm-2 col-form-label">Select Questions</label>
+          <div class="col-sm-10">
+            <select class="form-control dependent_questions" name="dependent_questions[]" multiple
+            data-hs-select2-options='{
+              "placeholder": "Select Questions"
+            }'
+            >
             </select>
           </div>
         </div>
@@ -139,6 +150,45 @@
   @section('javascript')
   <script type="text/javascript">
     $(document).ready(function(){
+      $("#parent_id").change(function(){
+        if($(this).val() != 0){
+          $(".dependent_checkbox").hide();
+          $("#is_dependent").prop("checked",false);
+          $(".dependent_visa_service").hide();
+        }else{
+          $(".dependent_checkbox").show();
+        }
+      })
+      $(".dependent_service").change(function(){
+        if($(this).val() != ''){
+          $.ajax({
+              type: "POST",
+              url: BASEURL + '/visa-services/fetch-questions',
+              data:{
+                  _token:csrf_token,
+                  visa_service_id:$(this).val(),
+              },
+              dataType:'json',
+              beforeSend:function(){
+                  showLoader();
+                  $(".dependent_questions").html('');
+              },
+              success: function (response) {
+                  hideLoader();
+                  if(response.status == true){
+                    $(".dependent_questions").html(response.options);
+                  }else{
+                    $(".dependent_questions").html('');
+                  }
+              },
+              error:function(){
+                internalError();
+              }
+          });
+        }else{
+          $(".dependent_questions").html('');
+        }
+      });
       $("#is_dependent").change(function(){
         if($(this).is(":checked")){
           $(".dependent_visa_service").show();
@@ -147,42 +197,44 @@
         }
       });
       $(".add-btn").click(function(e){
-        e.preventDefault(); 
-        $(".add-btn").attr("disabled","disabled");
-        $(".add-btn").find('.fa-spin').remove();
-        $(".add-btn").prepend("<i class='fa fa-spin fa-spinner'></i>");
+            e.preventDefault(); 
+            $(".add-btn").attr("disabled","disabled");
+            $(".add-btn").find('.fa-spin').remove();
+            $(".add-btn").prepend("<i class='fa fa-spin fa-spinner'></i>");
         
-        var name = $("#name").val();
-        var formData = $("#visaServices-form").serialize();
-        $.ajax({
-          url:"{{ baseUrl('visa-services/save') }}",
-          type:"post",
-          data:formData,
-          dataType:"json",
-          beforeSend:function(){
-          },
-          success:function(response){
-           $(".add-btn").find(".fa-spin").remove();
-           $(".add-btn").removeAttr("disabled");
-           if(response.status == true){
-            successMessage(response.message);
-            window.location.href = response.redirect_back;
-          }else{
-            $.each(response.message, function (index, value) {
-              $("input[name="+index+"]").parents(".js-form-message").find("#"+index+"-error").remove();
-              $("input[name="+index+"]").parents(".js-form-message").find(".form-control").removeClass('is-invalid');
+            var name = $("#name").val();
+            var formData = $("#visaServices-form").serialize();
+            $.ajax({
+              url:"{{ baseUrl('visa-services/save') }}",
+              type:"post",
+              data:formData,
+              dataType:"json",
+              beforeSend:function(){
+                showLoader();
+              },
+              success:function(response){
+                hideLoader();
+              $(".add-btn").find(".fa-spin").remove();
+              $(".add-btn").removeAttr("disabled");
+              if(response.status == true){
+                successMessage(response.message);
+                window.location.href = response.redirect_back;
+              }else{
+                $.each(response.message, function (index, value) {
+                  $("input[name="+index+"]").parents(".js-form-message").find("#"+index+"-error").remove();
+                  $("input[name="+index+"]").parents(".js-form-message").find(".form-control").removeClass('is-invalid');
 
-              var html = '<div id="'+index+'-error" class="invalid-feedback">'+value+'</div>';
-              $(html).insertAfter("*[name="+index+"]");
-              $("input[name="+index+"]").parents(".js-form-message").find(".form-control").addClass('is-invalid');
-            });
+                  var html = '<div id="'+index+'-error" class="invalid-feedback">'+value+'</div>';
+                  $(html).insertAfter("*[name="+index+"]");
+                  $("input[name="+index+"]").parents(".js-form-message").find(".form-control").addClass('is-invalid');
+                });
+              }
+            },
+            error:function(){
+            $(".add-btn").find(".fa-spin").remove();
+            $(".add-btn").removeAttr("disabled");
           }
-        },
-        error:function(){
-         $(".add-btn").find(".fa-spin").remove();
-         $(".add-btn").removeAttr("disabled");
-       }
-     });
+        });
       });
     });
   </script>

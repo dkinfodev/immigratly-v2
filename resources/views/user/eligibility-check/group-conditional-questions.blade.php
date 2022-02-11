@@ -6,6 +6,10 @@ if(!empty($is_comp_conditional)){
     $comp_display = "none";
     $comp_ques_id = "comp-ques-".$is_comp_conditional->question_id;
 }
+$init_change = '';
+if($visa_service->question_as_sequence == 1){
+    $init_change = 'initChange(this),';
+}
 ?>
 <div class="h-100 imm-assessment-form-list-component-wrapper cond-{{ $group->unique_id }}-{{$component_id}}-{{$question_id}} {{$comp_ques_id}} component-{{$component->unique_id}} conditional-question" data-max="{{ $component->max_score }}" data-min="{{ $component->min_score }}" style="display:{{ $comp_display }}">
     <div class=" h-100 imm-assessment-form-list-component">
@@ -65,7 +69,11 @@ if(!empty($is_comp_conditional)){
             }
         }
     ?>
-        <li class="quesli qs-{{ $group->unique_id }}-{{ $component->unique_id }}-{{ $ques->EligibilityQuestion->unique_id }}" data-group="{{ $group->unique_id }}" data-component="{{$component->unique_id}}" data-question="{{$ques->EligibilityQuestion->unique_id}}">
+        <li class="quesli qs-{{ $group->unique_id }}-{{ $component->unique_id }}-{{ $ques->EligibilityQuestion->unique_id }}" 
+        data-group="{{ $group->unique_id }}" 
+        data-component="{{$component->unique_id}}" 
+        data-question="{{$ques->EligibilityQuestion->unique_id}}"
+        style="display:{{($ques->dependent_question != '')?'none':'block' }}">
             <div class="h-100 imm-assessment-form-list-question-wrapper">
                 <div class="h-100 imm-assessment-form-list-question">
                     <div class="imm-assessment-form-list-question-header"> {{$ques->EligibilityQuestion->question}}</div>
@@ -80,18 +88,24 @@ if(!empty($is_comp_conditional)){
                             @if($ques->EligibilityQuestion->option_type == 'dropdown')
 
                             @if(!empty($check_ques))
-                            <select {{ ($comp_display == "none")?'disabled':'' }} class="select2" data-element="select" data-quesid="{{ $ques->EligibilityQuestion->unique_id }}"
+                            <select {{ ($comp_display == "none")?'disabled':'' }} 
+                                class="select2 dropdown-field" 
+                                data-element="select" 
+                                data-quesid="{{ $ques->EligibilityQuestion->unique_id }}"
                                 onchange="conditionalQuestion(this,'select'),countTotal(this,{{ $component->unique_id }},{{ $ques->EligibilityQuestion->unique_id }}){{$preConditionalFunc}}"
                                 {{$dependent_data}}
                                 {{$depcomclass}}
                                 name="question[{{ $group->unique_id }}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]">
-                                @else
-                                <select {{ ($comp_display == "none")?'disabled':'' }} class="select2" data-element="select" data-quesid="{{ $ques->EligibilityQuestion->unique_id }}"
-                                    onchange="countTotal(this,{{ $component->unique_id }},{{ $ques->EligibilityQuestion->unique_id }}){{$preConditionalFunc}}"
-                                    {{$dependent_data}}
-                                    {{$depcomclass}}
-                                    name="question[{{ $group->unique_id }}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]">
-                                    @endif
+                            @else
+                            <select {{ ($comp_display == "none")?'disabled':'' }} 
+                                class="select2 dropdown-field" 
+                                data-element="select" 
+                                data-quesid="{{ $ques->EligibilityQuestion->unique_id }}"
+                                onchange="{{$init_change}}countTotal(this,{{ $component->unique_id }},{{ $ques->EligibilityQuestion->unique_id }}){{$preConditionalFunc}}"
+                                {{$dependent_data}}
+                                {{$depcomclass}}
+                                name="question[{{ $group->unique_id }}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]">
+                            @endif
                                     <option value="">Select Option</option>
                                     @foreach($ques->EligibilityQuestion->Options as $option)
                                     @if($ques->EligibilityQuestion->linked_to_cv == 'yes' &&
@@ -146,12 +160,13 @@ if(!empty($is_comp_conditional)){
                                             data-quesid="{{ $ques->EligibilityQuestion->unique_id }}"
                                             id="customInlineRadio-{{$component->component_id}}-{{$option->id}}"
                                             onchange="conditionalQuestion(this,'radio'),countTotal(this,{{ $component->unique_id }},{{ $ques->EligibilityQuestion->unique_id }}){{$preConditionalFunc}}"
-                                            value="{{ $option->option_value }}" class="custom-control-input"
+                                            value="{{ $option->option_value }}" 
+                                            class="custom-control-input radio-field"
                                             name="question[{{ $group->unique_id }}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]">
                                         @else
                                         <input {{$checked}} {{ ($comp_display == "none")?'disabled':'' }}
                                             data-score="{{ $option->score }}"
-                                            onchange="countTotal(this,{{ $component->unique_id }},{{ $ques->EligibilityQuestion->unique_id }}){{$preConditionalFunc}}"
+                                            onchange="{{$init_change}}countTotal(this,{{ $component->unique_id }},{{ $ques->EligibilityQuestion->unique_id }}){{$preConditionalFunc}}"
                                             type="radio" data-noneligible="{{ $option->non_eligible }}"
                                             data-none-eligible-reason="{{ $option->non_eligible_reason }}"
                                             data-option-id="{{$option->id}}"
@@ -160,7 +175,8 @@ if(!empty($is_comp_conditional)){
                                             {{$depcomclass}}
                                             data-quesid="{{ $ques->EligibilityQuestion->unique_id }}"
                                             id="customInlineRadio-{{$component->component_id}}-{{$option->id}}"
-                                            value="{{ $option->option_value }}" class="custom-control-input"
+                                            value="{{ $option->option_value }}" 
+                                            class="custom-control-input radio-field"
                                             name="question[{{ $group->unique_id }}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]">
                                         @endif
 
@@ -235,16 +251,19 @@ if(!empty($is_comp_conditional)){
                         $("*[data-dependent='{{$ques->dependent_question}}']").trigger("change");
                     },1000);
                     var text = $("*[data-dependent='{{$ques->dependent_question}}']").find("option[value='"+value+"']").text();
+                    $("*[data-dependent='{{$ques->dependent_question}}']").parents(".quesli").show();
                     $("*[data-dependent='{{$ques->dependent_question}}'][value='"+value+"']").parents(".imm-assessment-form-list-question").find(".preselect").html(text);
+
                 @else
                     $("*[data-dependent='{{$ques->dependent_question}}'][value='"+value+"']").prop("checked",true);
+                    $("*[data-dependent='{{$ques->dependent_question}}']").parents(".quesli").show();
                     var text = $("*[data-depcom='{{$ques->dependent_component}}-{{$ques->dependent_question}}']:checked").parents(".form-check").text();
                     $("*[data-dependent='{{$ques->dependent_question}}'][value='"+value+"']").parents(".imm-assessment-form-list-question").find(".preselect").html(text);
                     setTimeout(function(){   
                         $("*[data-dependent='{{ $question_id }}'][value='"+value+"']").trigger("change");
                     },1000);
                 @endif
-                
+              
                 
                  
             @endif
@@ -252,6 +271,14 @@ if(!empty($is_comp_conditional)){
     @endforeach
     </ul>
 </div>
+<script>
+    // initChange();
+</script>
+
+
+
+
+
 {{-- <div class="component-blocks mt-3 bg-light cond-{{ $group->unique_id }}-{{$component_id}}-{{$question_id}}" style="display:{{$comp_display}}">
     <div class="font-weight-bold text-warning">
         <i class="tio-chevron-right"></i> {{$component->component_title}}
@@ -365,3 +392,4 @@ if(!empty($is_comp_conditional)){
         @endforeach
     </ul>
 </div> --}}
+

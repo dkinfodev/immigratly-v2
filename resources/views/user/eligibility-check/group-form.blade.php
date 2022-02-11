@@ -1,11 +1,18 @@
 <form data-id="{{$visa_service_id}}" id="form-{{$visa_service_id}}" action="{{ baseUrl('/eligibility-check/g/'.$visa_service_id) }}" class="mt-3">
-@if($action == 'multiple')
-    <div class="card-header mb-3 h3 pl-3">{{$visa_service->name}}</div>
-@endif
+    @if($action == 'multiple')
+        <div class="card-header mb-3 h3 pl-3">{{$visa_service->name}}</div>
+    @endif
     @csrf
+    <?php
+        $init_change = '';
+
+        if($visa_service->question_as_sequence == 1){
+            $init_change = 'initChange(this),';
+        }
+    ?>
     <ul class="imm-assessment-form-list-main-wrapper">
         @foreach($question_sequence as $key => $record)
-        <li class="group-block" data-question="{{$record->Group->unique_id}}">
+        <li class="group-block" data-question="{{$record->Group->unique_id}}" style="display:{{ ($visa_service->question_as_sequence == 1 && $key > 0)?'none':'block' }}">
             <!-- Card -->
             <div class=" h-100 imm-assessment-form-list-main">
                 <!-- Card Body -->
@@ -126,7 +133,11 @@
                         }
                     }
                 ?>
-                    <li class="quesli qs-{{ $record->Group->unique_id }}-{{ $component->Component->unique_id }}-{{ $ques->EligibilityQuestion->unique_id }}" data-group="{{ $record->Group->unique_id }}" data-component="{{$component->Component->unique_id}}" data-question="{{$ques->EligibilityQuestion->unique_id}}">
+                    <li class="quesli qs-{{ $record->Group->unique_id }}-{{ $component->Component->unique_id }}-{{ $ques->EligibilityQuestion->unique_id }}" 
+                        data-group="{{ $record->Group->unique_id }}" 
+                        data-component="{{$component->Component->unique_id}}" 
+                        data-question="{{$ques->EligibilityQuestion->unique_id}}"
+                        style="display:{{($ques->dependent_question != '')?'none':'block' }}">
                         <div class="h-100 imm-assessment-form-list-question-wrapper">
                             <div class="h-100 imm-assessment-form-list-question">
                                 <div class="imm-assessment-form-list-question-header"> {{$ques->EligibilityQuestion->question}}</div>
@@ -141,22 +152,24 @@
                                         @if($ques->EligibilityQuestion->option_type == 'dropdown')
 
                                         @if(!empty($check_ques))
-                                        <select {{ ($comp_display == "none")?'disabled':'' }} class="select2"
+                                        <select {{ ($comp_display == "none")?'disabled':'' }} 
+                                            class="select2 dropdown-field"
                                             data-quesid="{{ $ques->EligibilityQuestion->unique_id }}"
                                             {{$dependent_data}}
                                             {{$depcomclass}}
                                             data-element="select"
                                             onchange="conditionalQuestion(this,'select'),countTotal(this,{{ $component->Component->unique_id }},{{ $ques->EligibilityQuestion->unique_id }}){{$preConditionalFunc}}"
                                             name="question[{{ $record->Group->unique_id }}][{{ $component->Component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]">
-                                            @else
-                                            <select {{ ($comp_display == "none")?'disabled':'' }} class="select2"
-                                                data-quesid="{{ $ques->EligibilityQuestion->unique_id }}"
-                                                data-element="select"
-                                                {{$dependent_data}}
-                                                {{$depcomclass}}
-                                                onchange="countTotal(this,{{ $component->Component->unique_id }},{{ $ques->EligibilityQuestion->unique_id }}){{$preConditionalFunc}}"
-                                                name="question[{{ $record->Group->unique_id }}][{{ $component->Component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]">
-                                                @endif
+                                        @else
+                                        <select {{ ($comp_display == "none")?'disabled':'' }} 
+                                            class="select2 dropdown-field"
+                                            data-quesid="{{ $ques->EligibilityQuestion->unique_id }}"
+                                            data-element="select"
+                                            {{$dependent_data}}
+                                            {{$depcomclass}}
+                                            onchange="{{$init_change}}countTotal(this,{{ $component->Component->unique_id }},{{ $ques->EligibilityQuestion->unique_id }}){{$preConditionalFunc}}"
+                                            name="question[{{ $record->Group->unique_id }}][{{ $component->Component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]">
+                                        @endif
                                                 <option value="">Select Option</option>
                                                 @foreach($ques->EligibilityQuestion->Options as $option)
                                                 @if($ques->EligibilityQuestion->linked_to_cv == 'yes' &&
@@ -202,7 +215,8 @@
 
 
                                                     <input {{$checked}} {{ ($comp_display == "none")?'disabled':'' }} type="radio"
-                                                        data-score="{{ $option->score }}" data-noneligible="{{ $option->non_eligible }}"
+                                                        data-score="{{ $option->score }}" 
+                                                        data-noneligible="{{ $option->non_eligible }}"
                                                         data-none-eligible-reason="{{ $option->non_eligible_reason }}"
                                                         data-option-id="{{$option->id}}"
                                                         data-element="radio"
@@ -211,13 +225,15 @@
                                                         {{$depcomclass}}
                                                         {{$dependent_data}}
                                                         onchange="conditionalQuestion(this,'radio'),countTotal(this,{{ $component->Component->unique_id }},{{ $ques->EligibilityQuestion->unique_id }}){{$preConditionalFunc}}"
-                                                        value="{{ $option->option_value }}" class="custom-control-input"
+                                                        value="{{ $option->option_value }}" 
+                                                        class="custom-control-input radio-field"
                                                         name="question[{{ $record->Group->unique_id }}][{{ $component->Component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]">
                                                     @else
                                                     <input {{$checked}} {{ ($comp_display == "none")?'disabled':'' }}
                                                         data-score="{{ $option->score }}"
-                                                        onchange="countTotal(this,{{ $component->Component->unique_id }},{{ $ques->EligibilityQuestion->unique_id }}){{$preConditionalFunc}}"
-                                                        type="radio" data-noneligible="{{ $option->non_eligible }}"
+                                                        onchange="{{$init_change}}countTotal(this,{{ $component->Component->unique_id }},{{ $ques->EligibilityQuestion->unique_id }}){{$preConditionalFunc}}"
+                                                        type="radio" 
+                                                        data-noneligible="{{ $option->non_eligible }}"
                                                         data-none-eligible-reason="{{ $option->non_eligible_reason }}"
                                                         data-option-id="{{$option->id}}"
                                                         data-element="radio"
@@ -225,7 +241,8 @@
                                                         id="customInlineRadio-{{$component->component_id}}-{{$option->id}}"
                                                         {{$depcomclass}}
                                                         {{$dependent_data}}
-                                                        value="{{ $option->option_value }}" class="custom-control-input"
+                                                        value="{{ $option->option_value }}" 
+                                                        class="custom-control-input radio-field"
                                                         name="question[{{ $record->Group->unique_id }}][{{ $component->Component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]">
                                                     @endif
 

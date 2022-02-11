@@ -23,6 +23,9 @@ use App\Models\VisaServicesBlocks;
 use App\Models\Tags;
 use App\Models\EligibilityQuestions;
 use App\Models\QuestionOptions;
+use App\Models\ArrangeQuestions;
+use App\Models\ComponentQuestionIds;
+use App\Models\ComponentQuestions;
 
 class VisaServicesController extends Controller
 {
@@ -90,6 +93,7 @@ class VisaServicesController extends Controller
             $response['message'] = $errMsg;
             return response()->json($response);
         }
+       
         $unique_id = randomNumber();
         $object =  new VisaServices;
         if($request->input('parent_id')){
@@ -99,8 +103,8 @@ class VisaServicesController extends Controller
         $object->slug = str_slug($request->input("name"));
         $object->unique_id = $unique_id;
         $object->assessment_price = $request->input("assessment_price");
-        if($request->input("is_depedent")){
-            $object->is_dependent = $request->input("is_depedent");
+        if($request->input("is_dependent")){
+            $object->is_dependent = 1;
             $object->dependent_visa_service = $request->input("dependent_visa_service");
         }
         if($request->input("document_folders")){
@@ -109,8 +113,63 @@ class VisaServicesController extends Controller
         $object->cv_type = $request->input("cv_type");
         $object->eligible_type = $request->input("eligible_type");
         $object->save();
-        
-        
+
+        if($request->input("is_dependent") && $request->input("dependent_questions")){
+            $dependent_questions = $request->input("dependent_questions");
+            $eligibility_questions = EligibilityQuestions::whereIn("id",$request->input("dependent_questions"))->get();
+            $avoid_columns = array("id","unique_id","created_at","updated_at",'visa_service_id');
+            foreach($eligibility_questions as $question){
+                $object2 = new EligibilityQuestions();
+                $columns = $object2->getTableColumns();
+                foreach($columns as $column){
+                    if(!in_array($column,$avoid_columns)){
+                        $object2->$column = $question->$column;
+                    }
+                }
+                $elg_unique_id = randomNumber();
+                $object2->unique_id = $elg_unique_id;
+                $object2->visa_service_id = $unique_id;
+                $object2->save();
+
+                $options = $question->Options;
+                $avoid_opt_columns = array("id","question_id","created_at","updated_at");
+                foreach($options as $option){
+                   
+                    $object3 = new QuestionOptions();
+                    $columns = $object3->getTableColumns();
+                   
+                    foreach($columns as $column){
+                        if(!in_array($column,$avoid_opt_columns)){
+                            $object3->$column = $option->$column;
+                        }
+                    }
+                    $object3->question_id = $elg_unique_id;
+                    $object3->save();
+                }
+                $this->defaultComponent($unique_id);
+                $default_component =  ComponentQuestions::where("visa_service_id",$unique_id)
+                                                    ->where("is_default",1)
+                                                    ->first();
+                $obj = new ComponentQuestionIds();
+                $obj->question_id = $elg_unique_id;
+                $obj->component_id = $default_component->unique_id;
+                $obj->sort_order = 1;
+                $obj->save();
+                $lastCount = ArrangeQuestions::where("visa_service_id",$unique_id)
+                                    ->orderBy("sort_order","desc")
+                                    ->first();
+                if(!empty($lastCount)){
+                    $new_count = $lastCount->sort_order+1;
+                }else{
+                    $new_count = 1;
+                }
+                $object = new ArrangeQuestions();
+                $object->visa_service_id = $unique_id;
+                $object->question_id = $elg_unique_id;
+                $object->sort_order = $new_count;
+                $object->save();
+            }
+        }
         $response['status'] = true;
         $response['redirect_back'] = baseUrl('visa-services');
         $response['message'] = "Record added successfully";
@@ -124,7 +183,9 @@ class VisaServicesController extends Controller
         $viewData['record'] = VisaServices::where("id",$id)->first();
         $viewData['pageTitle'] = "Edit Visa Services";
         $viewData['documents'] = DocumentFolder::get();
-        $viewData['main_services'] = VisaServices::where("parent_id",0)->get();        
+        $viewData['main_services'] = VisaServices::where("parent_id",0)
+                                                ->where("id","!=",$id)
+                                                ->get();        
         $viewData['cv_types'] = CvTypes::get();
         $viewData['activeTab'] = "visa-services";
         return view(roleFolder().'.visa-services.edit',$viewData);
@@ -133,6 +194,7 @@ class VisaServicesController extends Controller
     public function update($id,Request $request){
         $id = base64_decode($id);
         $object =  VisaServices::find($id);
+        $unique_id = $object->unique_id;
         $validator = Validator::make($request->all(), [
             'name' => 'required|unique:visa_services,name,'.$object->id,
             'assessment_price' => "required|numeric"
@@ -173,6 +235,62 @@ class VisaServicesController extends Controller
         $object->eligible_type = $request->input("eligible_type");
         $object->save();
 
+        if($request->input("is_dependent") && $request->input("dependent_questions")){
+            $dependent_questions = $request->input("dependent_questions");
+            $eligibility_questions = EligibilityQuestions::whereIn("id",$request->input("dependent_questions"))->get();
+            $avoid_columns = array("id","unique_id","created_at","updated_at",'visa_service_id');
+            foreach($eligibility_questions as $question){
+                $object2 = new EligibilityQuestions();
+                $columns = $object2->getTableColumns();
+                foreach($columns as $column){
+                    if(!in_array($column,$avoid_columns)){
+                        $object2->$column = $question->$column;
+                    }
+                }
+                $elg_unique_id = randomNumber();
+                $object2->unique_id = $elg_unique_id;
+                $object2->visa_service_id = $unique_id;
+                $object2->save();
+
+                $options = $question->Options;
+                $avoid_opt_columns = array("id","question_id","created_at","updated_at");
+                foreach($options as $option){
+                   
+                    $object3 = new QuestionOptions();
+                    $columns = $object3->getTableColumns();
+                   
+                    foreach($columns as $column){
+                        if(!in_array($column,$avoid_opt_columns)){
+                            $object3->$column = $option->$column;
+                        }
+                    }
+                    $object3->question_id = $elg_unique_id;
+                    $object3->save();
+                }
+                $this->defaultComponent($unique_id);
+                $default_component =  ComponentQuestions::where("visa_service_id",$unique_id)
+                                                    ->where("is_default",1)
+                                                    ->first();
+                $obj = new ComponentQuestionIds();
+                $obj->question_id = $elg_unique_id;
+                $obj->component_id = $default_component->unique_id;
+                $obj->sort_order = 1;
+                $obj->save();
+                $lastCount = ArrangeQuestions::where("visa_service_id",$unique_id)
+                                    ->orderBy("sort_order","desc")
+                                    ->first();
+                if(!empty($lastCount)){
+                    $new_count = $lastCount->sort_order+1;
+                }else{
+                    $new_count = 1;
+                }
+                $object = new ArrangeQuestions();
+                $object->visa_service_id = $unique_id;
+                $object->question_id = $elg_unique_id;
+                $object->sort_order = $new_count;
+                $object->save();
+            }
+        }
         $response['status'] = true;
         $response['redirect_back'] = baseUrl('visa-services');
         $response['message'] = "Record updated successfully";
@@ -760,17 +878,29 @@ class VisaServicesController extends Controller
 
     }
 
-    public function fetchtQuestions(Request $request){
-        $visa_service_id = $request->inputy("visa_service_id");
+    public function fetchQuestions(Request $request){
+        $visa_service_id = $request->input("visa_service_id");
         $questions = EligibilityQuestions::where("visa_service_id",$visa_service_id)->get();
         $options = "";
         foreach($questions as $ques){
-            $options .= "<option value='".$ques->unique_id."'>".$ques->question."</option>";
+            $options .= "<option value='".$ques->id."'>".$ques->question."</option>";
         }
 
         $response['status'] = true;
         $response['options'] = $options;
 
         return response()->json($response);
+    }
+
+    public function defaultComponent($visa_service_id){
+        $count = ComponentQuestions::where("visa_service_id",$visa_service_id)->where("is_default",1)->count();
+        if($count == 0){
+            $object = new ComponentQuestions();
+            $object->unique_id = randomNumber();
+            $object->visa_service_id = $visa_service_id;
+            $object->component_title = "Default Component";
+            $object->is_default = 1;
+            $object->save();
+        }
     }
 }

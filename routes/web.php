@@ -196,6 +196,7 @@ Route::group(array('prefix' => 'super-admin', 'middleware' => 'super_admin'), fu
         Route::get('/edit/{id}', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'edit']); 
         Route::post('/update/{id}', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'update']);
         Route::post('/search/{key}', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'search']); 
+        Route::post('/fetch-questions', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'fetchQuestions']); 
         
         Route::get('/fetch-educations', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'fetchEducations']); 
         Route::get('/fetch-proficiency', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'fetchProficiency']); 

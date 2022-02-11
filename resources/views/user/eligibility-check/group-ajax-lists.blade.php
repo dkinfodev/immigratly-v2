@@ -49,13 +49,13 @@
 
                               </div>
                               <div class="col-4">
-                                  <button type="button" class="btn btn-info btn-sm w-100  mt-1">Auto
-                                      self-assessment</button>
+                                  <!-- <button type="button" class="btn btn-info btn-sm w-100  mt-1">Auto
+                                      self-assessment</button> -->
                               </div>
                               <div class="col-3">
-                                  <button type="button"
+                                  <a href="{{ baseUrl('eligibility-check/lists/'.$record->unique_id) }}"
                                       class="btn btn-outline-secondary btn-sm w-100">Learn
-                                      more</button>
+                                      more</a>
                               </div>
                           </div>
                       </div>

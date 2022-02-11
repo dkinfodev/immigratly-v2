@@ -143,27 +143,27 @@ class EligibilityQuestionsController extends Controller
             $object->score_count_type = '';
         }
         if($request->input("score_count_type") == 'range_matching'){
-            if($request->input("one_match")){
-                $object->one_match = $request->input("one_match");
-            }else{
-                $object->one_match = '';
-            }
+            // if($request->input("one_match")){
+            //     $object->one_match = $request->input("one_match");
+            // }else{
+            //     $object->one_match = '';
+            // }
 
-            if($request->input("two_match")){
-                $object->two_match = $request->input("two_match");
-            }else{
-                $object->two_match = '';
-            }
+            // if($request->input("two_match")){
+            //     $object->two_match = $request->input("two_match");
+            // }else{
+            //     $object->two_match = '';
+            // }
 
-            if($request->input("three_match")){
-                $object->three_match = $request->input("three_match");
-            }else{
-                $object->three_match = '';
-            }
+            // if($request->input("three_match")){
+            //     $object->three_match = $request->input("three_match");
+            // }else{
+            //     $object->three_match = '';
+            // }
         }else{
-            $object->one_match = '';
-            $object->two_match = '';
-            $object->three_match = '';
+            // $object->one_match = '';
+            // $object->two_match = '';
+            // $object->three_match = '';
         }
 
         $object->added_by = \Auth::user()->unique_id;
@@ -349,27 +349,27 @@ class EligibilityQuestionsController extends Controller
             $object->score_count_type = '';
         }
         if($request->input("score_count_type") == 'range_matching'){
-            if($request->input("one_match")){
-                $object->one_match = $request->input("one_match");
-            }else{
-                $object->one_match = '';
-            }
+            // if($request->input("one_match")){
+            //     $object->one_match = $request->input("one_match");
+            // }else{
+            //     $object->one_match = '';
+            // }
 
-            if($request->input("two_match")){
-                $object->two_match = $request->input("two_match");
-            }else{
-                $object->two_match = '';
-            }
+            // if($request->input("two_match")){
+            //     $object->two_match = $request->input("two_match");
+            // }else{
+            //     $object->two_match = '';
+            // }
 
-            if($request->input("three_match")){
-                $object->three_match = $request->input("three_match");
-            }else{
-                $object->three_match = '';
-            }
+            // if($request->input("three_match")){
+            //     $object->three_match = $request->input("three_match");
+            // }else{
+            //     $object->three_match = '';
+            // }
         }else{
-            $object->one_match = '';
-            $object->two_match = '';
-            $object->three_match = '';
+            // $object->one_match = '';
+            // $object->two_match = '';
+            // $object->three_match = '';
         }
 
         $object->save();
@@ -1105,8 +1105,13 @@ class EligibilityQuestionsController extends Controller
         $visa_service_id = base64_decode($visa_service_id);
         $visa_service = VisaServices::where("id",$visa_service_id)->first();
         
-       
+        $search = $request->input("search");
         $records = QuestionsGroups::where("visa_service_id",$visa_service->unique_id)
+                            ->where(function($query) use($search){
+                                if($search != ''){
+                                    $query->where("group_title","LIKE","%".$search."%");
+                                }
+                            })
                             ->orderBy('id',"desc")
                             ->paginate();
         
@@ -1828,7 +1833,7 @@ class EligibilityQuestionsController extends Controller
         for($i=0;$i < count($question_ids);$i++){
             $question_ids[$i] = base64_decode($question_ids[$i]);
         }
-       
+        
         $visa_service = VisaServices::where("id",$id)->first();
         $sub_visa_services = VisaServices::where("parent_id",$visa_service->id)->get();
         $visa_service_id = $visa_service->unique_id;

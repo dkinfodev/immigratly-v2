@@ -24,7 +24,9 @@ class EligibilityQuestions extends Model
         EligibilityQuestions::where("id",$id)->delete();
         GroupQuestionIds::where("question_id",$ques->unique_id)->delete();
     }
-
+    public function getTableColumns() {
+        return $this->getConnection()->getSchemaBuilder()->getColumnListing($this->getTable());
+    }
     public function Options()
     {
         return $this->hasMany('App\Models\QuestionOptions','question_id','unique_id');
@@ -97,7 +99,7 @@ class EligibilityQuestions extends Model
     {
         return $this->hasMany('App\Models\LanguageScorePoints','question_id','unique_id');
     }
-
+    
     public function QuestionDependentWith()
     {
         return $this->hasMany('App\Models\ComponentQuestionIds','dependent_question','unique_id')

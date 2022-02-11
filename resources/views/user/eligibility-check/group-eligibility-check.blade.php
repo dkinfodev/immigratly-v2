@@ -208,6 +208,7 @@ function conditionalQuestion(e, ele) {
         url: BASEURL + '/eligibility-check/fetch-group-conditional',
         data: {
             _token: csrf_token,
+            visa_service_id:"{{$visa_service->unique_id}}",
             question_id: question_id,
             group_id:group_id,
             component_id:component_id,
@@ -358,11 +359,13 @@ function dependentQuestion(e,question_id,element){
     
     var value = $(e).val();
     if(element == 'dropdown'){
+        $("*[data-dependent='"+question_id+"']").parents(".quesli").show();
         $("*[data-dependent='"+question_id+"']").find("option[value='"+value+"']").attr("selected","selected");
         $("*[data-dependent='"+question_id+"']").trigger("change");;
         var text = $("*[data-dependent='"+question_id+"']").find("option[value='"+value+"']").text();
         $("*[data-dependent='"+question_id+"'][value='"+value+"']").parents(".imm-assessment-form-list-question").find(".preselect").html(text);
     }else{
+        $("*[data-dependent='"+question_id+"']").parents(".quesli").show();
         $("*[data-dependent='"+question_id+"'][value='"+value+"']").prop("checked",true);
         var text = $(e).parents(".form-check").text();
         $("*[data-dependent='"+question_id+"'][value='"+value+"']").parents(".imm-assessment-form-list-question").find(".preselect").html(text);
@@ -371,7 +374,80 @@ function dependentQuestion(e,question_id,element){
         },1000);
         
     }
+}
+initChange();
+function initChange(e){
+    var radio_field = $(e).parents(".group-block").find(".radio-field").length;
+    var question_length = $(e).parents(".group-block").find(".imm-assessment-form-list-question").length;
+    var checked_length = 0;
+    if(radio_field > 0){
+        var length = $(e).parents(".group-block").find(".radio-field:checked").length;
+        checked_length += length;
+    }
     
+    var dropdown_field = $(e).parents(".group-block").find(".dropdown-field").length;
+    
+    if(dropdown_field > 0){
+        var length = 0;
+        $(e).parents(".group-block").find(".dropdown-field").each(function(){
+            if($(this).val() != ''){
+                length++;
+            }
+        });
+        checked_length += length;
+    }
+    if(question_length == checked_length){
+        $(e).parents(".group-block").next(".group-block").show();
+    }
+    // $(".dropdown-field,.radio-field").change(function(){    
+    //     var e = $(this);
+    //     var radio_field = $(this).parents(".group-block").find(".radio-field").length;
+    //     var question_length = $(this).parents(".group-block").find(".imm-assessment-form-list-question").length;
+    //     var checked_length = 0;
+    //     if(radio_field > 0){
+    //         var length = $(this).parents(".group-block").find(".radio-field:checked").length;
+    //         checked_length += length;
+    //     }
+        
+    //     var dropdown_field = $(this).parents(".group-block").find(".dropdown-field").length;
+        
+    //     if(dropdown_field > 0){
+    //         var length = 0;
+    //         $(this).parents(".group-block").find(".dropdown-field").each(function(){
+    //             if($(this).val() != ''){
+    //                 length++;
+    //             }
+    //         });
+    //         checked_length += length;
+    //     }
+
+    //     // alert("question_length: "+question_length+" checked_length: "+checked_length);
+    //     setTimeout(function(){
+    //         var radio_field = $(e).parents(".group-block").find(".radio-field").length;
+    //         var question_length = $(e).parents(".group-block").find(".imm-assessment-form-list-question").length;
+    //         var checked_length = 0;
+    //         if(radio_field > 0){
+    //             var length = $(e).parents(".group-block").find(".radio-field:checked").length;
+    //             checked_length += length;
+    //         }
+            
+    //         var dropdown_field = $(e).parents(".group-block").find(".dropdown-field").length;
+            
+    //         if(dropdown_field > 0){
+    //             var length = 0;
+    //             $(e).parents(".group-block").find(".dropdown-field").each(function(){
+    //                 if($(this).val() != ''){
+    //                     length++;
+    //                 }
+    //             });
+    //             checked_length += length;
+    //         }
+    //         // alert("Final question_length: "+question_length+" checked_length: "+checked_length);
+    //         if(question_length == checked_length){
+    //             $(e).parents(".group-block").next(".group-block").show();
+    //         }
+    //     },5000);
+    // });
 }
 </script>
 @endsection
