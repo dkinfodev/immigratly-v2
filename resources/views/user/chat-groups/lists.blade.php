@@ -54,7 +54,7 @@
 
 
         <div class="col-sm-2">
-          <a class="btn btn-primary" href="{{(baseUrl('chat-groups/add'))}}">
+          <a class="btn btn-primary float-right" href="{{(baseUrl('chat-groups/add'))}}">
             <i class="tio-user-add mr-1"></i> Add
           </a>
         </div>

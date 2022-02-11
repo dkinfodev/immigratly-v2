@@ -53,7 +53,7 @@
         </div>
 
         <div class="col-sm-2">
-          <a class="btn btn-primary" onclick="showPopup('<?php echo baseUrl('/notes/add-reminder-note') ?>')">
+          <a class="btn btn-primary float-right" onclick="showPopup('<?php echo baseUrl('/notes/add-reminder-note') ?>')">
           Add Note
           </a>
         </div>
@@ -73,7 +73,7 @@
       <table id="tableList" class="table table-borderless">
         <thead class="thead-light">
           <tr>
-            <th scope="col" class="table-column-pr-0">
+            <th scope="col" class="table-column-pr-0 table-column-pl-0 pr-0 ">
               <div class="custom-control custom-checkbox">
                 <input id="datatableCheckAll" type="checkbox" class="custom-control-input">
                 <label class="custom-control-label" for="datatableCheckAll"></label>
@@ -90,7 +90,7 @@
           foreach($records as $key  => $record){
           ?>
             <tr>
-            <td class="table-column-pr-0">
+            <td scope="col" class="table-column-pr-0 table-column-pl-0 pr-0 ">
               <div class="custom-control custom-checkbox">
                 <input type="checkbox" class="custom-control-input row-checkbox" value="{{ base64_encode($record->id) }}" id="row-{{$key}}">
                 <label class="custom-control-label" for="row-{{$key}}"></label>
