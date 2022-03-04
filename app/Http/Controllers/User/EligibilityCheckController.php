@@ -34,6 +34,7 @@ use App\Models\ProgramTypes;
 use App\Models\GroupVisaIds;
 use App\Models\MultipleOptionsGroups;
 use App\Models\PrimaryDegree;
+use App\Models\DependentQuestionComponent;
 
 class EligibilityCheckController extends Controller
 {
@@ -165,7 +166,11 @@ class EligibilityCheckController extends Controller
         }
         
         $final_questions = array();
-       
+        $dependent_response  = array();
+        if($record->dependent_response != ''){
+            $dependent_response = json_decode($record->dependent_response,true);
+           
+        }
         if($record->eligible_type == 'group'){
             if($record->calculate_scores != ''){
                 $final_questions = json_decode($record->calculate_scores,true);
@@ -219,6 +224,7 @@ class EligibilityCheckController extends Controller
                 $record->calculate_scores = json_encode($final_questions);
                 $record->save();
             }
+           
         }else{
             if($record->calculate_scores != ''){
                 $final_questions = json_decode($record->calculate_scores,true);
@@ -254,6 +260,7 @@ class EligibilityCheckController extends Controller
 
         $viewData['activeTab'] = "eligibility-check";
         $viewData['final_score'] = $final_score;
+        $viewData['dependent_response'] = $dependent_response;
         $viewData['final_questions'] = $final_questions;
         return view(roleFolder().'.eligibility-check.score',$viewData);
     }
@@ -526,7 +533,8 @@ class EligibilityCheckController extends Controller
 
     public function groupEligibilityCheck($visa_service_id){
         $visa_service = VisaServices::where("unique_id",$visa_service_id)->first();
-    
+       
+
         $question_sequence = ArrangeGroups::where("visa_service_id",$visa_service->unique_id)
                                         ->orderBy("sort_order","asc")
                                         ->whereHas("Group")
@@ -585,7 +593,7 @@ class EligibilityCheckController extends Controller
         return response()->json($response);
         
     }
-    public function saveGroupEligibilityScore($visa_service_id,Request $request){
+    public function saveGroupEligibilityScore($visa_service_id,$loop=false,Request $request){
         $validator = Validator::make($request->all(), [
             'question'=> 'required',
         ]);
@@ -602,8 +610,8 @@ class EligibilityCheckController extends Controller
             $response['message'] = $errMsg;
             return response()->json($response);
         }
-        
-        
+        pre($request->all());
+        exit;
         $questions = $request->input("question");
         $is_minimum_score = 0;
         $component_questions = array();
@@ -639,7 +647,11 @@ class EligibilityCheckController extends Controller
                     // echo "lang_prof_id: ".$lang_prof_id."<br>";
                     $option = $question->optionScore($value,"value",$key,$lang_prof_id);
                 }else{
-                    $option = $question->optionScore($value,"value",$key);
+                    if($question->wage_type == 1){
+                        matchWageOptions($selected_wage,$type,$options);
+                    }else{
+                        $option = $question->optionScore($value,"value",$key);
+                    }
                 }
                 // echo "OPTION SCORE:";
                 // pre($option);
@@ -648,6 +660,7 @@ class EligibilityCheckController extends Controller
                     
                     $comp_ques_score[$comp_id][$option->question_id]['score'] = $option->score;
                     $comp_ques_score[$comp_id][$option->question_id]['option_id'] = $option->id;
+                    $comp_ques_score[$comp_id][$option->question_id]['option_value'] = $option->option_value;
                     // $ques_response[$option->question_id] = $option->option_value;
                     $ques_response[] = array("question_id"=>$option->question_id,"option_value"=>$option->option_value,"component_id"=>$comp_id);
                 }
@@ -670,12 +683,6 @@ class EligibilityCheckController extends Controller
                 $cqs_score += $opt_score['score'];
                 $option_ids[] = $opt_score['option_id'];
             }
-            
-            // pre($component->toArray());
-            // echo "Component ID: ".$component->unique_id."<br>";
-            // echo "Component: ".$component->component_title."<br>";
-            // echo "Component Max Score: ".$component->max_score."<br>";
-            // echo "Component Current Score: ".$cqs_score."<br>";
             
             $question_combinations = QuestionCombination::where("component_id",$component->unique_id)->get();
             // echo "Combination Exists: ".count($question_combinations)."<br>";
@@ -1101,9 +1108,52 @@ class EligibilityCheckController extends Controller
         // 
         // exit;
         // echo "Final Score After: <br>";
-        // pre($comp_final_score);
+        // pre($comp_ques_score);
         // echo "<br>scores after:".$scores;
         // exit;
+   
+           
+        // pre($comp_ques_score);
+        $dependent_visa_service = VisaServices::where('dependent_visa_service',$visa_service_id)->get();
+        $dependent_response = array();
+        foreach($dependent_visa_service as $visa_service){
+            $dependent_elg_questions = EligibilityQuestions::where("visa_service_id",$visa_service->unique_id)->get();
+            $dependent_service = array();
+            if(!empty($dependent_elg_questions)){
+                // pre($dependent_elg_questions->toArray());
+                
+                $dep_ques_score = array();
+                foreach($dependent_elg_questions as $elg_question){
+                    $elgoptions = $elg_question->Options;
+                    $dependent_component = DependentQuestionComponent::where("question_id",$elg_question->unique_id)->first();
+                    if(!empty($dependent_component)){
+                        // echo "COMP: ";
+                        if(isset($comp_ques_score[$dependent_component->component_id][$dependent_component->linked_question_id])){
+                            // echo "EEE<br>";
+                            foreach($elgoptions as $opt){
+                                $dep_score = $comp_ques_score[$dependent_component->component_id][$dependent_component->linked_question_id];
+                                if($opt->option_value == $dep_score['option_value']){
+                                    $temp['question'] = $elg_question->question; 
+                                    $temp['option_value'] = $opt->option_label;
+                                    $temp['option_score'] = $opt->score;
+                                    $dep_ques_score[] = $temp;
+                                }
+                            }
+                        }
+                    }
+                }
+                if(!empty($dep_ques_score)){
+                    $dependent_service['service_name'] = $visa_service->name;
+                    $dependent_service['questions_score'] = $dep_ques_score;
+                }
+                if(!empty($dependent_service)){
+                    $dependent_response[] = $dependent_service;
+                }
+            }
+            
+        }
+        
+            
         $unique_id = randomNumber();
         $object = new UserEligibilityCheck();
         $object->user_id = \Auth::user()->unique_id;
@@ -1112,6 +1162,9 @@ class EligibilityCheckController extends Controller
         $object->response = json_encode($questions);
         $object->score = $scores;
         $object->final_score = json_encode($comp_final_score);
+        if(!empty($dependent_response)){
+            $object->dependent_response = json_encode($dependent_response);
+        }
         $object->eligible_type = "group";
         if(!empty($match_pattern)){
             $object->match_pattern = json_encode($match_pattern);
@@ -1367,8 +1420,8 @@ class EligibilityCheckController extends Controller
                         $group_score_count++;
                     }
                 }
-                echo  "<Br>group_score ::".$group_score;
-                echo  "<Br>group_max_score ::".$group->max_score;
+                // echo  "<Br>group_score ::".$group_score;
+                // echo  "<Br>group_max_score ::".$group->max_score;
                 $score_difference = 0;
                 if(!empty($group->Components)){
                     if(count($group->Components) == $group_score_count){
@@ -1485,6 +1538,96 @@ class EligibilityCheckController extends Controller
         $response['last_page'] = $records->lastPage();
         $response['current_page'] = $records->currentPage();
         $response['total_records'] = $records->total();
+        return response()->json($response);
+    }
+
+    public function checkLanguageProficiency(Request $request){
+        $question = EligibilityQuestions::where("unique_id",$request->input("question_id"))->first();
+       
+        $options = $question->Options;
+        $listening = $request->input("listening");
+        $reading = $request->input("reading");
+        $writing = $request->input("writing");
+        $speaking = $request->input("speaking");
+        $language_test = $request->input("language_test");
+
+        $language_proficiency = LanguageProficiency::where("unique_id",$language_test)->first();
+        // pre($language_proficiency);
+        // exit;
+        $clb_level = $language_proficiency->ClbLevels;
+        $lng_scores['reading'] = $reading;
+        $lng_scores['writing'] = $writing;
+        $lng_scores['listening'] = $listening;
+        $lng_scores['speaking'] = $speaking;
+        $min_score = min($lng_scores);
+        $lowest_index = '';
+        foreach($lng_scores as $key => $value){
+            if($min_score == $value){
+                $lowest_index = $key;
+            }
+        }
+        
+        if($question->score_count_type == 'lowest_matching'){
+            foreach($clb_level as $level){
+                if($first_official->$lowest_index == $level->$lowest_index){
+                    $clb_score = $level->clb_level;    
+                }
+            }
+        }
+
+        if($question->score_count_type == 'range_matching'){
+            $clb_level_arr = $clb_level->toArray();
+            $final_match_count = 0;
+            $next_level_clb = array();
+            $current_level_clb = array();
+            // pre($clb_level->toArray());
+            foreach($clb_level as $c_key => $level){
+                $current_match_count = 0;
+                foreach($lng_scores as $key => $score){
+                    if($score >= $level->$key){
+                        $current_match_count++;
+                    }
+                }
+                // echo "current_match_count: ".$current_match_count."<br>";
+                // echo "final_match_count: ".$final_match_count."<br>";
+                if($current_match_count >= $final_match_count){
+                    $final_match_count = $current_match_count;
+                    if(isset($clb_level_arr[$c_key+1])){
+                        $current_level_clb = $level;
+                        $clb_score = $level->clb_level;
+                    }else{
+                        $current_level_clb = array();
+                        $clb_score = $level->clb_level;
+                    }
+                }
+            }
+        }
+        $option_selected = '';
+        $option_label = '';
+        $option_score = '';
+        foreach($options as $option){
+            if($option->option_value == $clb_score){
+                if($question->language_type == 'first_official'){
+                    if($option->language_proficiency_id == $language_test){
+                        $option_label = $option->option_label;
+                        $option_selected = $option->option_value;
+                        $option_score = $option->score;
+                    }
+                }
+                if($question->language_type == 'second_official'){
+                    if($option->language_proficiency_id == $language_test){
+                        $option_label = $option->option_label;
+                        $option_selected = $option->option_value;
+                        $option_score = $option->score;
+                    }
+                }
+            }
+        }
+        $response['status'] = true;
+        $response['option_selected'] = $option_selected;
+        $response['option_label'] = $option_label;
+        $response['option_score'] = $option_score;
+        $response['option_type'] = $question->option_type;
         return response()->json($response);
     }
 }

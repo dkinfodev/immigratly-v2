@@ -21,7 +21,7 @@
     
     
     <!-- CSS Front Template -->
-    <link rel="stylesheet" href="assets/front/css/theme.min.css">
+    <link rel="stylesheet" href="assets/css/theme.min.css">
 
     <link rel="stylesheet" href="assets/vendor/toastr/toastr.css">
     <link rel="stylesheet" type="text/css" href="assets/vendor/sweetalert2/sweetalert2.min.css">
@@ -91,7 +91,9 @@
                         <li>
                             <a class="nav-link" href="{{ url('/login') }}">Login</a>
                         </li>
-                        
+                        <li>
+                            <a href="{{ url('/quick-eligibility') }}" class="nav-link text-primary">Click for Quick Eligibility</a>
+                        </li>
                         <!-- End Docs -->
                     </ul>
                 </div>
@@ -102,7 +104,7 @@
         <div class="container">
             <nav class="js-mega-menu navbar-nav-wrap">
                 <!-- Default Logo -->
-                <a class="navbar-brand" href="./index.html" aria-label="Front">
+                <a class="navbar-brand" href="{{ url('/') }}" aria-label="Front">
                     <img class="navbar-brand-logo" src="assets/front/svg/logos/logo.svg" alt="Logo">
                 </a>
                 <!-- End Default Logo -->
@@ -363,8 +365,10 @@
 
     <!-- ========== MAIN CONTENT ========== -->
     <main id="content" role="main">
-        <div class="container-fluid content-space-t-3 content-space-t-lg-5 position-relative zi-2">
-          @yield('content')
+        <div class="container-fluid position-relative zi-2">
+            <div class="container">
+                @yield('content')
+             </div>
         </div>
     </main>
     <!-- ========== FOOTER ========== -->
@@ -374,7 +378,7 @@
                 <div class="col-lg-3 mb-7 mb-lg-0">
                     <!-- Logo -->
                     <div class="mb-5">
-                        <a class="navbar-brand" href="./index.html" aria-label="Space">
+                        <a class="navbar-brand" href="{{ url('/') }}" aria-label="Space">
                             <img class="navbar-brand-logo" src="assets/front/svg/logos/logo-white.svg"
                                 alt="Image Description">
                         </a>
@@ -853,62 +857,122 @@
     </a>
     <!-- ========== END SECONDARY CONTENTS ========== -->
     
-    <script src="assets/vendor/jquery/dist/jquery.min.js"></script>
-    <script src="assets/vendor/select2/dist/js/select2.full.min.js"></script>
-    
-    <!-- JS Global Compulsory  -->
-    <script src="assets/front/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- JS Implementing Plugins -->
-    <script src="assets/front/vendor/hs-header/dist/hs-header.min.js"></script>
-    <script src="assets/front/vendor/hs-mega-menu/dist/hs-mega-menu.min.js"></script>
-    <script src="assets/front/vendor/hs-show-animation/dist/hs-show-animation.min.js"></script>
-    <script src="assets/front/vendor/hs-go-to/dist/hs-go-to.min.js"></script>
-    <script src="assets/front/vendor/hs-video-player/dist/hs-video-player.min.js"></script>
-    <!-- JS Implementing Plugins -->
-    
 
-    <script src="assets/vendor/toastr/toastr.min.js"></script>
-    <script src="assets/vendor/sweetalert2/sweetalert2.all.min.js"></script>
-    <!-- <script src="assets/front/vendor/tom-select/dist/js/tom-select.complete.min.js"></script> -->
-    <!-- JS Front -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-    <script src="assets/front/js/theme.min.js"></script>
-    <script src="assets/js/theme-custom.js"></script>
+  <!-- JS Global Compulsory  -->
+  <script src="assets/vendor/jquery/dist/jquery.min.js"></script>
+  <script src="assets/vendor/jquery-migrate/dist/jquery-migrate.min.js"></script>
+  <script src="assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- JS Implementing Plugins -->
+  <script src="assets/vendor/hs-navbar-vertical-aside/hs-navbar-vertical-aside.min.js"></script>
+  <script src="assets/vendor/hs-unfold/dist/hs-unfold.min.js"></script>
+  <script src="assets/vendor/hs-form-search/dist/hs-form-search.min.js"></script>
+  <script src="assets/vendor/hs-mega-menu/dist/hs-mega-menu.min.js"></script>
+  <script src="assets/vendor/hs-file-attach/dist/hs-file-attach.min.js"></script>
+  <script src="assets/vendor/select2/dist/js/select2.full.min.js"></script>
+  <script src="assets/vendor/flatpickr/dist/flatpickr.min.js"></script>
+  <script src="assets/vendor/hs-quantity-counter/dist/hs-quantity-counter.min.js"></script>
+  <!-- <script src="assets/vendor/hs-add-field/dist/hs-add-field.min.js"></script> -->
+  <script src="assets/vendor/hs-sticky-block/dist/hs-sticky-block.min.js"></script>
+  <script src="assets/vendor/quill/dist/quill.min.js"></script>
+  <script src="assets/vendor/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
+  <script src="assets/vendor/@yaireo/tagify/dist/tagify.min.js"></script>
+  <script src="assets/vendor/dropzone/dist/min/dropzone.min.js"></script>
+  <script src="assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
+  <script src="assets/vendor/datatables.net.extensions/select/select.min.js"></script>
+  <script src="assets/vendor/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+  <script src="assets/vendor/datatables.net-buttons/js/buttons.flash.min.js"></script>
+  <script src="assets/vendor/jszip/dist/jszip.min.js"></script>
+  <script src="assets/vendor/pdfmake/build/pdfmake.min.js"></script>
+  <script src="assets/vendor/pdfmake/build/vfs_fonts.js"></script>
+  <script src="assets/vendor/datatables.net-buttons/js/buttons.html5.min.js"></script>
+  <script src="assets/vendor/datatables.net-buttons/js/buttons.print.min.js"></script>
+  <script src="assets/vendor/datatables.net-buttons/js/buttons.colVis.min.js"></script>
+  <!-- <script src="assets/vendor/toastr/toastr.min.js"></script> -->
+  <script src="assets/vendor/ckeditor/ckeditor.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+  <script src="assets/vendor/sweetalert2/sweetalert2.all.min.js"></script>
+  <!-- JS Front -->
+  <script src="assets/js/theme.min.js"></script>
+  <script src="assets/js/theme-custom.js"></script>
     
-    
-    <script>
-      (function() {
-        // INITIALIZATION OF HEADER
+  <script>
+    $(document).on('ready', function () {
+
+      initSelect();
+
+      // INITIALIZATION OF UNFOLD
+      // =======================================================
+      // $('.js-hs-action').each(function () {
+      //   var unfold = new HSUnfold($(this)).init();
+      // });
+      // $(".js-hs-unfold-invoker").click(function(){
+      //     $(this).next(".hs-unfold-content").fadeToggle();
+      // });
+      
+      $('[data-toggle="tooltip"]').tooltip();
+      $('.js-nav-tooltip-link').tooltip({ boundary: 'window' });
+      // INITIALIZATION OF NAVBAR VERTICAL NAVIGATION
+      // =======================================================
+      var sidebar = $('.js-navbar-vertical-aside').hsSideNav();
+
+              // INITIALIZATION OF FILE ATTACH
         // =======================================================
-        new HSHeader('#header').init()
 
 
-        // INITIALIZATION OF MEGA MENU
+        
+        // INITIALIZATION OF SELECT2
         // =======================================================
-        new HSMegaMenu('.js-mega-menu', {
-            desktop: {
-              position: 'left'
+        // $('.js-select2-custom').each(function () {
+        //   var select2 = $.HSCore.components.HSSelect2.init($(this));
+        // });
+
+
+      // INITIALIZATION OF MEGA MENU
+      // =======================================================
+      var megaMenu = new HSMegaMenu($('.js-mega-menu'), {
+        // eventType: 'click',
+        desktop: {
+          position: 'left'
+        }
+      }).init();
+    });
+
+    function showPopup(url,method='get',paramters = {}){
+        $.ajax({
+            url: url+"?_token="+csrf_token,
+            dataType:'json',
+            type:method,
+            data:paramters,
+            beforeSend:function(){
+                showLoader();
+                $("#popupModal").html('');
+            },
+            success: function (result) {
+                hideLoader();
+                if(result.status == true){
+                    $("#popupModal").html(result.contents);
+                    $("#popupModal").modal("show");
+                }else{
+                    if(result.message != undefined){
+                        errorMessage(result.message);
+                    }else{
+                        errorMessage("No Modal Data found");    
+                    }
+                }
+            },
+            error:function(){
+                hideLoader();
+                internalError();
             }
-          })
-
-
-        // INITIALIZATION OF SHOW ANIMATIONS
-        // =======================================================
-        new HSShowAnimation('.js-animation-link')
-
-        // INITIALIZATION OF BOOTSTRAP DROPDOWN
-        // =======================================================
-        HSBsDropdown.init()
-
-
-        // INITIALIZATION OF GO TO
-        // =======================================================
-        new HSGoTo('.js-go-to')
-
-      })()
-
-    </script>
+        });
+      }
+    
+    function closeModal(){
+        $("#popupModal").html('');
+        $("#popupModal").modal("hide");
+    }
+  </script>
 
     @yield("javascript")
 </body>

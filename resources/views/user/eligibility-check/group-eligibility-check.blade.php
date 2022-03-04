@@ -375,6 +375,58 @@ function dependentQuestion(e,question_id,element){
         
     }
 }
+function checkProficiency(e){
+    var question_id = $(e).parents(".language_prof_type").attr("data-question-id");
+    var listening = $(e).parents(".language_prof_type").find(".listening").val();
+    var reading = $(e).parents(".language_prof_type").find(".reading").val();
+    var writing = $(e).parents(".language_prof_type").find(".writing").val();
+    var speaking = $(e).parents(".language_prof_type").find(".speaking").val();
+    var language_test = $(e).parents(".language_prof_type").find(".language_test").val();
+    if(language_test != '' && listening != '' && reading != '' &&  writing != '' && speaking != ''){
+        $.ajax({
+        url:"{{ baseUrl('/eligibility-check/check-language-proficiency') }}",
+        type:"post",
+        data:{
+            _token:csrf_token,
+            question_id:question_id,
+            listening:listening,
+            writing:writing,
+            speaking:speaking,
+            reading:reading,
+            language_test:language_test,
+        },
+        dataType:"json",
+        beforeSend:function(){
+          showLoader();  
+        },
+        success:function(response){
+          hideLoader();
+          if(response.status == true){
+              if(response.option_type == 'radio'){
+                  if(response.option_selected != ''){
+                      setTimeout(function(){
+                        $(e).parents(".imm-assessment-form-list-question").find("input[data-quesid='"+question_id+"'][value='"+response.option_selected+"']").prop("checked",true);
+                      },1500);
+                    
+                  }
+              }
+              if(response.option_type == 'dropdown'){
+                  if(response.option_selected != ''){
+                    $(e).parents(".imm-assessment-form-list-question").find("select[data-quesid='"+question_id+"']").val(response.option_selected);
+                    $(e).parents(".imm-assessment-form-list-question").find("select[data-quesid='"+question_id+"']").trigger("change");
+                  }
+              }
+          }else{
+            $(".response").html(response.message);
+          }
+        },
+        error:function(){
+            internalError();
+        }
+      });
+    }
+
+}
 initChange();
 function initChange(e){
     var radio_field = $(e).parents(".group-block").find(".radio-field").length;

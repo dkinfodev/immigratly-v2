@@ -160,3 +160,7 @@ span.select2-selection.custom-select {
 .clearfix{
     clear:both;
 }
+.dependent_questions th {
+    vertical-align: middle;
+    text-align: center;
+}

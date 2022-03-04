@@ -59,6 +59,24 @@
                             </select>
                         </div>
                     </div>
+                    <div class="js-form-message form-group row">
+                    <label class="col-sm-2 col-form-label">Is Language Proficiency</label>
+                        <div class="col-sm-10 pt-2">
+                            <div class="custom-control custom-checkbox">
+                                <input {{$record->language_prof_type == '1'?'checked':''}} value="1" type="checkbox" name="language_prof_type" id="language_prof_type" class="custom-control-input row-checkbox non-eligible" value="1" >
+                                <label class="custom-control-label non-eligible-label" for="language_prof_type">&nbsp;</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="js-form-message form-group row">
+                        <label class="col-sm-2 col-form-label">Is Wage Type</label>
+                        <div class="col-sm-10 pt-2">
+                            <div class="custom-control custom-checkbox">
+                                <input {{$record->wage_type == '1'?'checked':''}} type="checkbox" name="wage_type" id="wage_type" class="custom-control-input row-checkbox non-eligible" value="1" >
+                                <label class="custom-control-label non-eligible-label" for="wage_type">&nbsp;</label>
+                            </div>
+                        </div>
+                    </div>
                     <div style="display:{{$record->linked_to_cv == 'no'?'none':'block'}}" id="cv_section">
                       <div class="js-form-message form-group row">
                           <label class="col-sm-2 col-form-label">CV Section</label>
@@ -139,6 +157,9 @@
                             <div class="col-md-2 d-none d-sm-inline-block">
                                 <h6 class="card-title text-cap">Option Label</h6>
                             </div>
+                            <!-- <div class="col-sm-2 wage_type_block" style="display:{{($record->wage_type == '1')?'block':'none'}}">
+                                <h6 class="card-title text-cap">Wage Type</h6>
+                            </div> -->
                             <div class="col-md-2 d-none d-sm-inline-block">
                                 <h6 class="card-title text-cap">Score</h6>
                             </div>
@@ -208,6 +229,14 @@
                                             value="{{ $option->option_label }}" class="form-control mb-3 option_label"
                                             placeholder="Option Label" aria-label="Option Label">
                                     </div>
+                                    <!-- <div class="col-md-2 js-form-message wage_type_block" style="display:{{($record->wage_type == '1')?'block':'none'}}" >
+                                        <select name="options[{{$index}}][wage_type]" class="wage_type" {{($record->wage_type == '0')?'disabled':''}}>
+                                            <option value="">Select Option</div>
+                                            @foreach(wagesTypes() as $wagetype)
+                                            <option {{($wagetype == $option->wage_type)?'selected':''}} value="{{ $wagetype }}">{{ucfirst($wagetype)}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div> -->
                                     <div class="col-md-2 js-form-message">
                                         <input name="options[{{$index}}][score]" type="number"
                                             value="{{ $option->score }}" class="form-control mb-3 score"
@@ -260,14 +289,16 @@
                                     <div class="col-md-12">
                                         <div class="option-heading h3"></div>
                                     </div>
+                                    
                                     <div class="col-md-2 js-form-message criteria_block" style="display:none">
-                                        <select class="criteria no-select2" disabled>
+                                        <select class="criteria no_select2" disabled>
                                             <option value="">Select Option</div>
                                             @foreach(criteria_options() as $criteria)
                                             <option value="{{ $criteria['value'] }}">{{$criteria['label']}}</option>
                                             @endforeach
                                         </select>
                                     </div>
+                                    
                                     <div class="col-md-2 js-form-message">
                                         <input type="text" class="form-control mb-3 option_value"
                                             placeholder="Option Value" aria-label="Option Value">
@@ -276,6 +307,14 @@
                                         <input type="text" class="form-control mb-3 option_label"
                                             placeholder="Option Label" aria-label="Option Label">
                                     </div>
+                                    <!-- <div class="col-md-2 js-form-message wage_type_block" style="display:none">
+                                        <select class="wage_type no_select2" disabled>
+                                            <option value="">Select Option</div>
+                                            @foreach(wagesTypes() as $wagetype)
+                                            <option value="{{ $wagetype }}">{{ucfirst($wagetype)}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div> -->
                                     <div class="col-md-2 js-form-message">
                                         <input type="number" class="form-control mb-3 score" placeholder="Score"
                                             aria-label="Score">
@@ -401,7 +440,15 @@ $(document).ready(function() {
             $("#cv_section").hide();
         }
     });
-    
+    // $("#wage_type").change(function() {
+    //     if ($(this).val() == '1') {
+    //         $(".wage_type_block").show();
+    //         $(".wage_type_block").find(".wage_type").removeAttr("disabled");
+    //     } else {
+    //         $(".wage_type_block").hide();
+    //         $(".wage_type_block").find(".wage_type").attr("disabled","disabled");
+    //     }
+    // });
     $('.js-add-field').each(function() {
         var addField =  new HSAddField($(this), {
             addedField: function() {
@@ -439,6 +486,20 @@ $(document).ready(function() {
                     $("#addOptionsContainer > .item-row:last").find(".criteria_block").hide();
                     $("#addOptionsContainer > .item-row:last").find(".criteria_block").html('');
                 }
+
+                // if($("#wage_type").val() == '1'){
+                //     $("#addOptionsContainer > .item-row:last").find(".wage_type").attr("required","true");
+                //     $("#addOptionsContainer > .item-row:last").find(".wage_type_block").show();
+                //     $("#addOptionsContainer > .item-row:last").find(".wage_type_block").find('.wage_type').removeAttr('disabled');
+                //     $("#addOptionsContainer > .item-row:last").find(".wage_type_block").find('.wage_type').removeClass("no_select2");
+                // }else{
+                //     $("#addOptionsContainer > .item-row:last").find(".wage_type_block").hide();
+                //     $("#addOptionsContainer > .item-row:last").find(".wage_type_block").find('.wage_type').attr('disabled','disabled');
+                    
+
+                //     initSelect("#addOptionsContainer");
+                // }
+
                 $('[data-toggle="tooltip"]').tooltip();
                 initSelect("#addOptionsContainer > .item-row:last");
 

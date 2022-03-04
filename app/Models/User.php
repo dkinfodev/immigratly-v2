@@ -61,7 +61,9 @@ class User extends Authenticatable
 
     public function Educations()
     {
-        return $this->hasMany('App\Models\ClientEducations','user_id','unique_id')->with("Degree");
+        return $this->hasMany('App\Models\ClientEducations','user_id','unique_id')
+                ->with("Degree")
+                ->whereHas("Degree");
     }
 
     public function FirstProficiency()

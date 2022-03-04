@@ -32,6 +32,36 @@ Route::group(array('prefix' => 'cron'), function () {
 
 
 Route::get('/assessment/u/{id}', [App\Http\Controllers\Frontend\FrontendController::class, 'externalAssessment'])->name("external-assessment");
+
+
+Route::group(array('prefix' => 'quick-eligibility'), function () {
+    Route::get('/', [App\Http\Controllers\Frontend\QuickEligibilityConroller::class, 'groupList']);
+    Route::post('/group-ajax-list', [App\Http\Controllers\Frontend\QuickEligibilityConroller::class, 'groupAjaxList']);
+    Route::get('/lists/{id}', [App\Http\Controllers\Frontend\QuickEligibilityConroller::class, 'list']);
+    
+    Route::post('/ajax-list', [App\Http\Controllers\Frontend\QuickEligibilityConroller::class, 'getAjaxList']);
+    Route::get('/check/{id}', [App\Http\Controllers\Frontend\QuickEligibilityConroller::class, 'eligibilityCheck']);
+    Route::post('/check/{id}', [App\Http\Controllers\Frontend\QuickEligibilityConroller::class, 'saveEligibilityScore']);
+    Route::get('/view-history', [App\Http\Controllers\Frontend\QuickEligibilityConroller::class, 'userEligibilityHistory']);
+    Route::post('/ajax-history', [App\Http\Controllers\Frontend\QuickEligibilityConroller::class, 'eligibilityAjaxHistory']);
+
+    Route::get('/g/{id}', [App\Http\Controllers\Frontend\QuickEligibilityConroller::class, 'groupEligibilityCheck']);
+    Route::post('/g/{id}', [App\Http\Controllers\Frontend\QuickEligibilityConroller::class, 'saveGroupEligibilityScore']);
+    Route::get('/all-group-eligibility', [App\Http\Controllers\Frontend\QuickEligibilityConroller::class, 'allGroupEligibilityCheck']);
+    Route::get('/group-eligibility-form', [App\Http\Controllers\Frontend\QuickEligibilityConroller::class, 'getGroupEligibilityForm']);
+    Route::post('/fetch-conditional', [App\Http\Controllers\Frontend\QuickEligibilityConroller::class, 'fetchConditional']);
+    Route::post('/fetch-group-conditional', [App\Http\Controllers\Frontend\QuickEligibilityConroller::class, 'fetchGroupConditional']);
+    Route::get('/report/{id}', [App\Http\Controllers\Frontend\QuickEligibilityConroller::class, 'eligibilityReport']);
+    Route::get('/all-eligibility', [App\Http\Controllers\Frontend\QuickEligibilityConroller::class, 'allEligibility']);
+    Route::get('/eligibility-form', [App\Http\Controllers\Frontend\QuickEligibilityConroller::class, 'eligibilityForm']);
+    Route::post('/check-pre-condition', [App\Http\Controllers\Frontend\QuickEligibilityConroller::class, 'checkPreCondition']);
+    Route::post('/check-language-proficiency', [App\Http\Controllers\Frontend\QuickEligibilityConroller::class, 'checkLanguageProficiency']);
+        
+
+    
+    Route::get('/download-report/{id}', [App\Http\Controllers\Frontend\QuickEligibilityConroller::class, 'downloadReport']);
+
+});
 Route::post('/assessment/u/{id}', [App\Http\Controllers\Frontend\FrontendController::class, 'saveExternalAssessment'])->name("save-external-assessment");
 Route::group(array('middleware' => 'frontend'), function () {
     Route::get('/', [App\Http\Controllers\Frontend\FrontendController::class, 'index']);
@@ -197,6 +227,7 @@ Route::group(array('prefix' => 'super-admin', 'middleware' => 'super_admin'), fu
         Route::post('/update/{id}', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'update']);
         Route::post('/search/{key}', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'search']); 
         Route::post('/fetch-questions', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'fetchQuestions']); 
+        Route::post('/fetch-questions-with-components', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'fetchQuestionsWithComponents']); 
         
         Route::get('/fetch-educations', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'fetchEducations']); 
         Route::get('/fetch-proficiency', [App\Http\Controllers\SuperAdmin\VisaServicesController::class, 'fetchProficiency']); 
@@ -745,7 +776,7 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
         Route::get('/eligibility-form', [App\Http\Controllers\User\EligibilityCheckController::class, 'eligibilityForm']);
         Route::post('/check-pre-condition', [App\Http\Controllers\User\EligibilityCheckController::class, 'checkPreCondition']);
         
-
+        Route::post('/check-language-proficiency', [App\Http\Controllers\User\EligibilityCheckController::class, 'checkLanguageProficiency']);
         
         Route::get('/download-report/{id}', [App\Http\Controllers\User\EligibilityCheckController::class, 'downloadReport']);
 

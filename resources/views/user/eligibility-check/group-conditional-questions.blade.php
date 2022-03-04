@@ -58,15 +58,19 @@ if($visa_service->question_as_sequence == 1){
                 $depcomclass='data-depcom='.$component->unique_id."-".$ques->EligibilityQuestion->unique_id;
             }
         }
-        if($ques->EligibilityQuestion->linked_to_cv == 'yes'){
-            $block = 'none';
-            $cv_section = $ques->EligibilityQuestion->cv_section;
-            $elg_options = $ques->EligibilityQuestion->Options;
-            $option_selected = cvBasedOptions($cv_section,$elg_options,$ques->EligibilityQuestion,$component->unique_id);
-            
-            if($option_selected['option_selected'] == ''){
-                $block = 'block';
+        if($ques->EligibilityQuestion->language_prof_type == 0){
+            if($ques->EligibilityQuestion->linked_to_cv == 'yes'){
+                $block = 'none';
+                $cv_section = $ques->EligibilityQuestion->cv_section;
+                $elg_options = $ques->EligibilityQuestion->Options;
+                $option_selected = cvBasedOptions($cv_section,$elg_options,$ques->EligibilityQuestion,$component->unique_id);
+                
+                if($option_selected['option_selected'] == ''){
+                    $block = 'block';
+                }
             }
+        }else{
+            $block="none";
         }
     ?>
         <li class="quesli qs-{{ $group->unique_id }}-{{ $component->unique_id }}-{{ $ques->EligibilityQuestion->unique_id }}" 
@@ -77,14 +81,88 @@ if($visa_service->question_as_sequence == 1){
             <div class="h-100 imm-assessment-form-list-question-wrapper">
                 <div class="h-100 imm-assessment-form-list-question">
                     <div class="imm-assessment-form-list-question-header"> {{$ques->EligibilityQuestion->question}}</div>
-                    <span class="preselect text-danger"></span> 
+                    
                     <div class="imm-assessment-form-list-question-body" style="display:{{($ques->dependent_question != '')?'none':'block' }}">
+                    @if($ques->EligibilityQuestion->language_prof_type == 0)
                         @if($ques->EligibilityQuestion->linked_to_cv == 'yes')
                             @if(!empty($option_selected) && $option_selected['option_selected'] != '')
                             <p class='text-danger mt-2 mb-2'>Option Selected Based on CV: {{$option_selected['option_score']}}</p>
                             @endif
                         @endif
+                    @endif
+                        @if($ques->EligibilityQuestion->language_prof_type == 1)
+                        <div class="question-options mt-2">
+                            <div class="row gx-2 language_prof_type" data-question-id="{{$ques->EligibilityQuestion->unique_id}}">
+                                <div class="col-md-9">
+                                    <div class="row gx-3">
+                                        <div class="col-sm-3">
+                                            <div class="mb-4">
+                                                <label for="addlisteningLabel" class="form-label">Listening</label>
+                                                <input type="text" class="form-control bg-white p-2 listening" onblur="checkProficiency(this)" placeholder="Listening">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-3">
+                                            <div class="mb-4">
+                                                <label for="addreadingLabel" class="form-label">Reading</label>
+                                                <input type="text" class="form-control bg-white p-2 reading" onblur="checkProficiency(this)" placeholder="Reading" />
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-sm-3">
+                                            <div class="mb-4">
+                                                <label for="addwritingLabel" class="form-label">Writing</label>
+                                                <input type="text" class="form-control bg-white p-2 writing" onblur="checkProficiency(this)" placeholder="Writing">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="mb-4">
+                                                <label for="addwritingLabel" class="form-label">Speaking</label>
+                                                <input type="text" class="form-control bg-white p-2 speaking" onblur="checkProficiency(this)" placeholder="Speaking">
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <?php
+                                        $proficiencies = languageProficiencies($ques->EligibilityQuestion->language_type);
+                                    ?>
+                                    
+                                        <div class="mb-4">
+                                            <label for="addspeakingLabel" class="form-label">Language Test</label>
+                                            <Select class="language_test" onchange="checkProficiency(this)">
+                                                <option value="">Select Language</option>
+                                                @foreach($proficiencies as $prof)
+                                                <option value="{{ $prof->unique_id }}">{{$prof->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="lngpreselect text-danger"></span>
+                        @endif
+                        <span class="preselect text-danger"></span> 
                         <div class="question-options mt-2" style="display:{{ $block }}">
+                        @if($ques->EligibilityQuestion->wage_type == '1')
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <input type="number" placeholder="Enter your wage" class="form-control bg-white p-2" name="question[{{$group->unique_id}}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}][wage_value]"  required />
+                                </div>
+                                <div class="col-md-4">
+                                    <select name="question[{{$group->unique_id}}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}][wage_type]" class="wage_type">
+                                        <option value="">Select Wage Type</div>
+                                        @foreach(wagesTypes() as $wagetype)
+                                        <option value="{{ $wagetype }}">{{ucfirst($wagetype)}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        @else
                             @if($ques->EligibilityQuestion->option_type == 'dropdown')
 
                             @if(!empty($check_ques))
@@ -120,7 +198,11 @@ if($visa_service->question_as_sequence == 1){
                                         data-score="{{ $option->score }}"
                                         {{ (!empty($option_selected) && $option->option_value == $option_selected['option_selected'])?'selected':'' }}
                                         data-option-id="{{$option->id}}" value="{{ $option->option_value }}">
-                                        {{$option->option_label}} ({{$option->score}})
+                                        {{$option->option_label}} 
+                                        @if($ques->EligibilityQuestion->wage_type == 1)
+                                            ({{$option->wage_type}})
+                                        @endif
+                                        ({{$option->score}})
                                     </option>
                                     @endif
                                     @endif
@@ -130,7 +212,11 @@ if($visa_service->question_as_sequence == 1){
                                         data-score="{{ $option->score }}"
                                         {{ (!empty($option_selected) && $option->option_value == $option_selected['option_selected'])?'selected':'' }}
                                         data-option-id="{{$option->id}}" value="{{ $option->option_value }}">
-                                        {{$option->option_label}} ({{$option->score}})
+                                        {{$option->option_label}}
+                                        @if($ques->EligibilityQuestion->wage_type == 1)
+                                            ({{$option->wage_type}})
+                                        @endif
+                                        ({{$option->score}})
                                     </option>
                                     @endif
                                     @endforeach
@@ -182,6 +268,9 @@ if($visa_service->question_as_sequence == 1){
 
                                         <label class="custom-control-label"
                                             for="customInlineRadio-{{$component->component_id}}-{{$option->id}}">{{$option->option_label}}
+                                            @if($ques->EligibilityQuestion->wage_type == 1)
+                                                ({{$option->wage_type}})
+                                            @endif
                                             ({{$option->score}})</label>
                                     </div>
                                 </div>
@@ -209,6 +298,7 @@ if($visa_service->question_as_sequence == 1){
                                 </div>
                                 @endif
                                 <!-- End Form Check -->
+                            @endif
                         </div>
                     </div>
                     <div class="imm-assessment-form-list-question-footer">

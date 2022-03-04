@@ -15,19 +15,7 @@
 @section('content')
 <!-- Content -->
 <div class="category">
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="row align-items-end">
-      <div class="col-sm mb-2 mb-sm-0">
-        
-        
-      </div>
 
-      
-    </div>
-    <!-- End Row -->
-  </div>
-  <!-- End Page Header -->
 
   <!-- Card -->
   <div class="card">

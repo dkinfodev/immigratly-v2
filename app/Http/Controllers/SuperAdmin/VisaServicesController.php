@@ -26,6 +26,7 @@ use App\Models\QuestionOptions;
 use App\Models\ArrangeQuestions;
 use App\Models\ComponentQuestionIds;
 use App\Models\ComponentQuestions;
+use App\Models\DependentQuestionComponent;
 
 class VisaServicesController extends Controller
 {
@@ -66,7 +67,7 @@ class VisaServicesController extends Controller
 
     public function add(){
         $viewData['pageTitle'] = "Add Visa Service";
-        $viewData['main_services'] = VisaServices::where("parent_id",0)->get();
+        $viewData['main_services'] = VisaServices::where("parent_id",0)->where('is_dependent',0)->get();
         $viewData['documents'] = DocumentFolder::get();
         $viewData['cv_types'] = CvTypes::get();
         $viewData['activeTab'] = "visa-services";
@@ -93,7 +94,7 @@ class VisaServicesController extends Controller
             $response['message'] = $errMsg;
             return response()->json($response);
         }
-       
+        
         $unique_id = randomNumber();
         $object =  new VisaServices;
         if($request->input('parent_id')){
@@ -114,9 +115,13 @@ class VisaServicesController extends Controller
         $object->eligible_type = $request->input("eligible_type");
         $object->save();
 
-        if($request->input("is_dependent") && $request->input("dependent_questions")){
-            $dependent_questions = $request->input("dependent_questions");
-            $eligibility_questions = EligibilityQuestions::whereIn("id",$request->input("dependent_questions"))->get();
+        if($request->input("is_dependent") && $request->input("question")){
+            $dependent_questions = $request->input("question");
+            $ques_ids = array();
+            foreach($dependent_questions as $quid => $que_value){
+                $ques_ids[] = $que_value['question_id'];
+            }
+            $eligibility_questions = EligibilityQuestions::whereIn("unique_id",$ques_ids)->get();
             $avoid_columns = array("id","unique_id","created_at","updated_at",'visa_service_id');
             foreach($eligibility_questions as $question){
                 $object2 = new EligibilityQuestions();
@@ -146,6 +151,7 @@ class VisaServicesController extends Controller
                     $object3->question_id = $elg_unique_id;
                     $object3->save();
                 }
+                
                 $this->defaultComponent($unique_id);
                 $default_component =  ComponentQuestions::where("visa_service_id",$unique_id)
                                                     ->where("is_default",1)
@@ -168,6 +174,13 @@ class VisaServicesController extends Controller
                 $object->question_id = $elg_unique_id;
                 $object->sort_order = $new_count;
                 $object->save();
+
+                $obj = new DependentQuestionComponent();
+                $obj->visa_service_id = $unique_id;
+                $obj->question_id = $elg_unique_id;
+                $obj->linked_question_id = $question->unique_id;
+                $obj->component_id = $dependent_questions[$question->unique_id]['component_id'];
+                $obj->save();
             }
         }
         $response['status'] = true;
@@ -183,8 +196,10 @@ class VisaServicesController extends Controller
         $viewData['record'] = VisaServices::where("id",$id)->first();
         $viewData['pageTitle'] = "Edit Visa Services";
         $viewData['documents'] = DocumentFolder::get();
+        
         $viewData['main_services'] = VisaServices::where("parent_id",0)
                                                 ->where("id","!=",$id)
+                                                ->where("is_dependent",0)
                                                 ->get();        
         $viewData['cv_types'] = CvTypes::get();
         $viewData['activeTab'] = "visa-services";
@@ -235,9 +250,13 @@ class VisaServicesController extends Controller
         $object->eligible_type = $request->input("eligible_type");
         $object->save();
 
-        if($request->input("is_dependent") && $request->input("dependent_questions")){
-            $dependent_questions = $request->input("dependent_questions");
-            $eligibility_questions = EligibilityQuestions::whereIn("id",$request->input("dependent_questions"))->get();
+        if($request->input("is_dependent") && $request->input("question")){
+            $dependent_questions = $request->input("question");
+            $ques_ids = array();
+            foreach($dependent_questions as $quid => $que_value){
+                $ques_ids[] = $que_value['question_id'];
+            }
+            $eligibility_questions = EligibilityQuestions::whereIn("unique_id",$ques_ids)->get();
             $avoid_columns = array("id","unique_id","created_at","updated_at",'visa_service_id');
             foreach($eligibility_questions as $question){
                 $object2 = new EligibilityQuestions();
@@ -289,6 +308,13 @@ class VisaServicesController extends Controller
                 $object->question_id = $elg_unique_id;
                 $object->sort_order = $new_count;
                 $object->save();
+
+                $obj = new DependentQuestionComponent();
+                $obj->visa_service_id = $unique_id;
+                $obj->question_id = $elg_unique_id;
+                $obj->linked_question_id = $question->unique_id;
+                $obj->component_id = $dependent_questions[$question->unique_id]['component_id'];
+                $obj->save();
             }
         }
         $response['status'] = true;
@@ -902,5 +928,41 @@ class VisaServicesController extends Controller
             $object->is_default = 1;
             $object->save();
         }
+    }
+
+    public function fetchQuestionsWithComponents(Request $request){
+        $visa_service_id = $request->input("visa_service_id");
+        $questions = EligibilityQuestions::whereHas('ComponentQuestions')->where("visa_service_id",$visa_service_id)->get();
+        $html = "<table class='table table-bordered table-striped'>";
+        $html .="<thead><tr>";
+        $html .= '<th class="text-center">
+        &nbsp;
+                    </th>';
+        $html .= "<th>Quuestion</th>";
+        $html .= "<th>Component</th>";
+        $html .= "</tr></thead><tbody>";
+        foreach($questions as $key => $ques){
+            // $options .= "<option value='".$ques->id."'>".$ques->question."</option>";
+            $html .="<tr>";
+            $html .='<th class="text-center">
+                        <div class="custom-control custom-checkbox">
+                            <input onchange="selectQues(this)" type="checkbox" id="custom-lable-'.$key.'" class="custom-control-input ques_check">
+                            <label class="custom-control-label" for="custom-lable-'.$key.'">&nbsp;</label>
+                        </div>
+                    </th>';
+            $html .='<td><input disabled type="hidden" value="'.$ques->unique_id.'" class="dependent_ques" name="question['.$ques->unique_id.'][question_id]" />'.$ques->question.'</td>';
+            $html .='<td><select disabled required class="select2 dependent_ques" name="question['.$ques->unique_id.'][component_id]"><option value="">Select Component</option>';
+            foreach($ques->ComponentQuestions as $component){
+                $html .='<option value="'.$component->Component->unique_id.'">'.$component->Component->component_title.'</option>';
+            }
+            $html .='</select>';
+            $html .='</tr>';
+        }
+        $html .= "</tbody></table>";
+
+        $response['status'] = true;
+        $response['options'] = $html;
+
+        return response()->json($response);
     }
 }

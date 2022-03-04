@@ -131,6 +131,16 @@ class EligibilityQuestionsController extends Controller
         if($request->input("linked_to_cv") == 'yes'){
             $object->cv_section = $request->input("cv_section");
         }
+        if($request->input("language_prof_type") == '1'){
+            $object->language_prof_type = 1;
+        }else{
+            $object->language_prof_type = 0;
+        }
+        if($request->input("wage_type") == '1'){
+            $object->wage_type = 1;
+        }else{
+            $object->wage_type = 0;
+        }
         if($request->input("language_proficiency")){
             $object->language_proficiency = $request->input("language_proficiency");
         }
@@ -177,6 +187,9 @@ class EligibilityQuestionsController extends Controller
             if(isset($option['criteria'])){
                 $obj->criteria = $option['criteria'];
             }
+            // if(isset($option['wage_type'])){
+            //     $obj->wage_type = $option['wage_type'];
+            // }
             $obj->score = $option['score'];
             if(isset($option['non_eligible'])){
                 $obj->non_eligible = 1;
@@ -331,6 +344,16 @@ class EligibilityQuestionsController extends Controller
         }else{
             $object->cv_section = '';
         }
+        if($request->input("language_prof_type") == '1'){
+            $object->language_prof_type = 1;
+        }else{
+            $object->language_prof_type = 0;
+        }
+        if($request->input("wage_type") == '1'){
+            $object->wage_type = 1;
+        }else{
+            $object->wage_type = 0;
+        }
         if($request->input("language_proficiency")){
             $object->language_proficiency = $request->input("language_proficiency");
         }else{
@@ -391,7 +414,14 @@ class EligibilityQuestionsController extends Controller
             }
             if(isset($option['criteria'])){
                 $obj->criteria = $option['criteria'];
+            }else{
+                $obj->criteria = '';
             }
+            // if(isset($option['wage_type'])){
+            //     $obj->wage_type = $option['wage_type'];
+            // }else{
+            //     $obj->wage_type = '';
+            // }
             $obj->score = $option['score'];
             if(isset($option['non_eligible'])){
                 $obj->non_eligible = 1;
@@ -1173,7 +1203,7 @@ class EligibilityQuestionsController extends Controller
         }
         $visa_service = VisaServices::where("id",$id)->first();
         $unique_id = randomNumber();
-        $last_group = QuestionsGroups::where("visa_service_id",$visa_service->unique_id)->orderBy('sort_order','desc')->first();
+        // $last_group = QuestionsGroups::where("visa_service_id",$visa_service->unique_id)->orderBy('sort_order','desc')->first();
         $object =  new QuestionsGroups();
         $object->unique_id = $unique_id;
         $object->visa_service_id = $visa_service->unique_id;
@@ -1183,11 +1213,11 @@ class EligibilityQuestionsController extends Controller
         }else{
             $object->description = '';
         }
-        if(!empty($last_group)){
-            $object->sort_order = $last_group->sort_order + 1;
-        }else{
-            $object->sort_order = 1;
-        }
+        // if(!empty($last_group)){
+        //     $object->sort_order = $last_group->sort_order + 1;
+        // }else{
+        //     $object->sort_order = 1;
+        // }
         $object->min_score = $request->input("min_score");
         $object->max_score = $request->input("max_score");
         $object->added_by = \Auth::user()->unique_id;
@@ -2192,5 +2222,7 @@ class EligibilityQuestionsController extends Controller
     // public function fetchComponentQuestions($visa_service_id,Request $request){
     //     $question_ids = ComponentQuestionIds::where("component_id",$request->input("compoent_id"))->get();
     // }
+
+   
 }
 

@@ -92,12 +92,13 @@
         <div class="js-form-message form-group row dependent_visa_service" style="display:none">
           <label class="col-sm-2 col-form-label">Select Questions</label>
           <div class="col-sm-10">
-            <select class="form-control dependent_questions" name="dependent_questions[]" multiple
+            <div class="dependent_questions"></div>
+            <!-- <select class="form-control dependent_questions" name="dependent_questions[]" multiple
             data-hs-select2-options='{
               "placeholder": "Select Questions"
             }'
             >
-            </select>
+            </select> -->
           </div>
         </div>
         <div class="js-form-message form-group row">
@@ -167,7 +168,7 @@
           }
           $.ajax({
               type: "POST",
-              url: BASEURL + '/visa-services/fetch-questions',
+              url: BASEURL + '/visa-services/fetch-questions-with-components',
               data:{
                   _token:csrf_token,
                   visa_service_id:$(this).val(),
@@ -185,6 +186,7 @@
                     $(".dependent_visa_service").show();
                     
                     $(".dependent_questions").html(response.options);
+                    initSelect(".dependent_questions");
                   }else{
                     $(".dependent_questions").html('');
                   }
@@ -247,6 +249,20 @@
      });
       });
     });
+    function checkAll(e){
+      if($(e).is(":checked")){
+        $(".ques_check").prop("checked",true);
+      }else{
+        $(".ques_check").prop("checked",false);
+      }
+    }
+    function selectQues(e){
+      if($(e).is(":checked")){
+        $(e).parents("tr").find('.dependent_ques').removeAttr("disabled");
+      }else{
+        $(e).parents("tr").find('.dependent_ques').attr("disabled","disabled");
+      }
+    }
   </script>
 
   @endsection
