@@ -1,4 +1,3 @@
-@if(count($records) > 0)
 @foreach($records as $key => $record)
 <tr>
   <td scope="col" class="table-column-pr-0 table-column-pl-0 pr-0 ">
@@ -129,11 +128,7 @@
 </tr>
 @endforeach
 @endforeach
-@else
-<tr>
-  <td colspan="3" class="text-center text-danger">No records available</td>
-</tr>
-@endif
+
 
 <script>
 $(document).ready(function(){

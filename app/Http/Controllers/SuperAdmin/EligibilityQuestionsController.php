@@ -27,6 +27,7 @@ use App\Models\CombinationalOptions;
 use App\Models\LanguageScorePoints;
 use App\Models\ComponentPreConditions;
 use App\Models\MultipleOptionsGroups;
+use App\Models\FunFacts;
 
 class EligibilityQuestionsController extends Controller
 {
@@ -228,6 +229,20 @@ class EligibilityQuestionsController extends Controller
                 $object_lang_prof->save();
             }
         }
+
+        if($request->input("fun_facts")){
+            $fun_facts = $request->input("fun_facts");
+            foreach($fun_facts as $fun_fact){
+                
+                $ff_object = new FunFacts();
+                $ff_object->visa_service_id = $visa_service->unique_id;
+                $ff_object->question_id = $unique_id;
+                $ff_object->fun_facts = $fun_fact['fun_facts'];
+                $ff_object->added_by = \Auth::user()->unique_id;
+                $ff_object->save();
+            }
+        }
+
         if($request->input("components")){
             $components[] = $request->input("components");
             foreach($components as $component){
@@ -478,6 +493,19 @@ class EligibilityQuestionsController extends Controller
             }
         }
         
+        if($request->input("fun_facts")){
+            FunFacts::where("question_id",$unique_id)->delete();
+            $fun_facts = $request->input("fun_facts");
+            foreach($fun_facts as $fun_fact){
+                
+                $ff_object = new FunFacts();
+                $ff_object->visa_service_id = $visa_service->unique_id;
+                $ff_object->question_id = $unique_id;
+                $ff_object->fun_facts = $fun_fact['fun_facts'];
+                $ff_object->added_by = \Auth::user()->unique_id;
+                $ff_object->save();
+            }
+        }
                     
         if($request->input("components")){
             $components[] = $request->input("components");

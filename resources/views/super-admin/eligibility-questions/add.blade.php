@@ -163,7 +163,7 @@
             </select>
           </div>
         </div>
-        <div class="js-add-field"
+        <div class="option-blocks js-add-field"
                data-hs-add-field-options='{
                   "template": "#addOptionsTemplate",
                   "container": "#addOptionsContainer",
@@ -262,6 +262,9 @@
                 </div>
             <!-- End Add Phone Input Field -->
           </div>
+
+
+          
           <div class="js-form-message form-group row score_points" style="display:none">
               <div class="col-md-12">
                   <table class="table table-bordered">
@@ -305,6 +308,50 @@
                 <textarea name="response_comment" data-msg="Please enter description." id="response_comment" class="form-control editor"></textarea>
             </div>
         </div>
+        <div class="form-group fun-facts-block">
+            <div class="ff-add-field">
+
+                <div class="form-group">
+                    <!-- Container For Input Field -->
+                    <div class="row">
+                        <div class="col-md-3 pt-4">
+                            <label>Enter Fun Facts</label>
+                        </div>
+                        <div class="col-md-9">
+                            <div id="addFunFactsContainer">
+                               
+                            </div>
+                            <a id="add-fun-facts" href="javascript:;"
+                                class="form-link btn btn-sm btn-no-focus btn-ghost-primary">
+                                <i class="tio-add"></i> Add More
+                            </a>
+                        </div>
+                    </div>
+
+
+
+                    <!-- Add Phone Input Field -->
+                    <div id="addFunFactsTemplate" class="item-row" style="display: none;">
+                        <!-- Content -->
+                        <div class="item-row">
+                            <div class="row">
+                                <div class="col-md-10 js-form-message">
+                                    <input type="text" class="form-control mb-3 fun_facts" placeholder="Enter Fun Facts" aria-label="Fun Facts">
+                                </div>
+                                <div class="col-md-2">
+                                    <a class="input-group-add-field-delete" href="javascript:;" onclick="deleteFunFacts(this)" data-toggle="tooltip" data-placement="top" title="Remove item">
+                                        <i class="tio-clear"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Add Phone Input Field -->
+                    </div>
+                </div>
+            </div>
+            <!-- End Input Group -->
+            </form>
+        </div>
         <div class="form-group text-center">
           <button type="submit" class="btn add-btn btn-primary">Save</button>
         </div>
@@ -342,7 +389,7 @@ $(document).ready(function(){
     //         $(".wage_type_block").find(".wage_type").attr("disabled","disabled");
     //     }
     // });
-  $('.js-add-field').each(function () {
+  $('.js-add-field.option-blocks').each(function () {
     new HSAddField($(this), {
       addedField: function() {
         var index = randomNumber();
@@ -410,6 +457,27 @@ $(document).ready(function(){
       }
     }).init();
   });
+  // $('.fun-facts-block .ff-add-field').each(function() {
+  //     var addField = new HSAddField($(this), {
+  //         addedField: function() {
+  //             var index = randomNumber();
+  //             $("#addFunFactsContainer > .item-row:last").find(".fun_facts").attr("name",
+  //                 "fun_facts[" + index + "][fun_facts]");
+  //             // $("#addFunFactsContainer > .item-row:last").find(".fun_fact_id").attr(
+  //             //     "name", "fun_facts[" + index + "][id]");
+
+  //         },
+  //         deletedField: function() {
+  //             $('.tooltip').hide();
+  //         }
+  //     }).init();
+  // });
+  $("#add-fun-facts").click(function(){
+      var html = $("#addFunFactsTemplate").html();
+      $("#addFunFactsContainer").append(html);
+      var index = randomNumber();
+      $("#addFunFactsContainer > .item-row:last").find(".fun_facts").attr("name","fun_facts[" + index + "][fun_facts]");
+  })
   $("#form").submit(function(e){
         e.preventDefault(); 
         if($("#addOptionsContainer .item-row").length <= 0){
@@ -443,6 +511,9 @@ $(document).ready(function(){
      });
   });
 });
+function deleteFunFacts(e){
+    $(e).parents(".item-row").remove();
+}
 function checkEligible(e){
   if($(e).is(":checked")){
     $(e).parents(".non-elg-area").find(".non-eligible-reason").show();

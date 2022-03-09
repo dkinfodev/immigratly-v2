@@ -31,7 +31,17 @@ class EligibilityQuestions extends Model
     {
         return $this->hasMany('App\Models\QuestionOptions','question_id','unique_id');
     }
+    public function FunFacts()
+    {
+        return $this->hasMany('App\Models\FunFacts','question_id','unique_id');
+    }
+    static function RandomFunFacts($question_id)
+    {
+        $facts = FunFacts::where('question_id',$question_id)->inRandomOrder(1)->first();
+        
 
+        return $facts;
+    }
     public function ComponentQuestions()
     {
         return $this->hasMany('App\Models\ComponentQuestionIds','question_id','unique_id')

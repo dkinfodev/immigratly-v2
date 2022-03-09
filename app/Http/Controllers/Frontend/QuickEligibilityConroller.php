@@ -191,8 +191,18 @@ class QuickEligibilityConroller extends Controller
                         $comp_temp['max_score'] = $component->max_score;
                         $comp_temp['min_score'] = $component->min_score;
                         foreach($question_ids as $q_id => $opt_value){
+                            $question = EligibilityQuestions::where("unique_id",$q_id)->first();
+                            if($question->wage_type == 1){
+                                $wage_option = matchWageOptions($opt_value['wage_value'],$opt_value['wage_type'],$question->Options);
+                         
+                                if(!empty($wage_option)){
+                                    $opt_value = $wage_option->option_value;
+                                }else{
+                                    $opt_value = '';
+                                }
+                            }
                             if($opt_value != ''){
-                                $question = EligibilityQuestions::where("unique_id",$q_id)->first();
+                                
                                 $comp_ques['question'] = $question->question;
                                 $ques_option = QuestionOptions::where("question_id",$q_id)
                                                             ->where("option_value",$opt_value)->first();
@@ -637,7 +647,19 @@ class QuickEligibilityConroller extends Controller
                     // echo "lang_prof_id: ".$lang_prof_id."<br>";
                     $option = $question->optionScore($value,"value",$key,$lang_prof_id);
                 }else{
-                    $option = $question->optionScore($value,"value",$key);
+                    // $option = $question->optionScore($value,"value",$key);
+                    if($question->wage_type == 1){
+                        $wage_option = matchWageOptions($value['wage_value'],$value['wage_type'],$question->Options);
+                 
+                        if(!empty($wage_option)){
+                            $component_questions[$comp_id][$key] = $wage_option['option_value'];
+                            $option = $question->optionScore($wage_option['option_value'],"value",$key);
+                        }else{
+                            $option = '';
+                        }
+                    }else{
+                        $option = $question->optionScore($value,"value",$key);
+                    }
                 }
                 // echo "OPTION SCORE:";
                 // pre($option);
@@ -1187,7 +1209,14 @@ class QuickEligibilityConroller extends Controller
             foreach($components as $component_id => $ques){
                 foreach($ques as $question_id => $value){
                     $qs = EligibilityQuestions::where("unique_id",$question_id)->first();
-                    $temp_questions[] = array("question"=>$qs->question,"selected_value"=>$value,'additional_notes'=>$qs->additional_notes);    
+                    if($qs->wage_type == 1){
+                        $option_info = matchWageOptions($value['wage_value'],$value['wage_type'],$qs->Options);
+                        if(!empty($option_info)){
+                            $temp_questions[] = array("question"=>$qs->question,"selected_value"=>$option_info->option_value,'additional_notes'=>$qs->additional_notes);
+                        }
+                    }else{
+                        $temp_questions[] = array("question"=>$qs->question,"selected_value"=>$value,'additional_notes'=>$qs->additional_notes);
+                    }    
                 }
             }
             $temp['questions'] = $temp_questions;

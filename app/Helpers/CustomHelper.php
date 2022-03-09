@@ -2584,6 +2584,8 @@ if(!function_exists("wagesTypes")){
 
 if(!function_exists("matchWageOptions")){
     function matchWageOptions($selected_wage,$type,$options){
+        // echo "ALL----------------<br>";
+        // pre($options->toArray());
         if($type == 'monthly'){
             $annual_wage = $selected_wage * 12;
         }elseif($type == 'week'){
@@ -2593,15 +2595,25 @@ if(!function_exists("matchWageOptions")){
         }else{
             $annual_wage = $selected_wage;
         }
+        // echo "<h2>".$annual_wage."</h2>";
         $selected_option = array();
         foreach($options as $option){
+            
             $wage_range = explode("-",$option->option_value);
             if(count($wage_range) == 2){
-                if($wage_range[0] >= $annual_wage && $wage_range[1]){
+                if($annual_wage >= $wage_range[0]  && $annual_wage <= $wage_range[1]){
+                    $selected_option = $option;                   
+                }
+            }
+            if(count($wage_range) == 1){
+                if($annual_wage >= $wage_range[0]){
                     $selected_option = $option;
                 }
             }
         }
+        // echo "---------------------------------- <Br>selected option: ";
+        // pre($selected_option->toArray());
+        // echo "---------------------------------- <br>";
         return $selected_option;
     }
 }

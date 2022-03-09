@@ -147,6 +147,21 @@ if($visa_service->question_as_sequence == 1){
                         <span class="lngpreselect text-danger"></span>
                         @endif
                         <div class="question-options mt-2" style="display:{{ $block }}">
+                        @if($ques->EligibilityQuestion->wage_type == '1')
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <input type="number" placeholder="Enter your wage" class="form-control bg-white p-2" name="question[{{$group->unique_id}}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}][wage_value]"  required />
+                                </div>
+                                <div class="col-md-4">
+                                    <select name="question[{{$group->unique_id}}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}][wage_type]" class="wage_type">
+                                        <option value="">Select Wage Type</div>
+                                        @foreach(wagesTypes() as $wagetype)
+                                        <option value="{{ $wagetype }}">{{ucfirst($wagetype)}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        @else
                             @if($ques->EligibilityQuestion->option_type == 'dropdown')
 
                             @if(!empty($check_ques))
@@ -271,11 +286,16 @@ if($visa_service->question_as_sequence == 1){
                                 </div>
                                 @endif
                                 <!-- End Form Check -->
+                            @endif
                         </div>
                     </div>
                     <div class="imm-assessment-form-list-question-footer">
                         @if($ques->EligibilityQuestion->additional_notes != '')
-                        <div class="mt-2"><?php echo $ques->EligibilityQuestion->additional_notes ?></div>
+                        <div class="mt-2"><strong>Note: </strong><?php echo $ques->EligibilityQuestion->additional_notes ?></div>
+                        @endif
+
+                        @if(!empty($ques->EligibilityQuestion->RandomFunFacts($ques->EligibilityQuestion->unique_id)))
+                        <div class="mt-2"><strong>Fun Facts: </strong><?php echo $ques->EligibilityQuestion->RandomFunFacts($ques->EligibilityQuestion->unique_id)->fun_facts ?></div>
                         @endif
                     </div>
                 </div>

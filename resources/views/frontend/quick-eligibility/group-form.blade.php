@@ -352,7 +352,11 @@
                                 </div>
                                 <div class="imm-assessment-form-list-question-footer">
                                     @if($ques->EligibilityQuestion->additional_notes != '')
-                                    <div class="mt-2"><?php echo $ques->EligibilityQuestion->additional_notes ?></div>
+                                    <div class="mt-2"><strong>Note: </strong><?php echo $ques->EligibilityQuestion->additional_notes ?></div>
+                                    @endif
+
+                                    @if(!empty($ques->EligibilityQuestion->RandomFunFacts($ques->EligibilityQuestion->unique_id)))
+                                    <div class="mt-2"><strong>Fun Facts: </strong><?php echo $ques->EligibilityQuestion->RandomFunFacts($ques->EligibilityQuestion->unique_id)->fun_facts ?></div>
                                     @endif
                                 </div>
                             </div>
@@ -475,6 +479,21 @@ action="{{ baseUrl('/quick-eligibility/g/'.$visa_service_id) }}" class="mt-3">
                     @endif
                     @endif
                     <div class="question-options mt-2" style="display:{{ $block }}">
+                    @if($ques->EligibilityQuestion->wage_type == '1')
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input type="number" placeholder="Enter your wage" class="form-control bg-white p-2" name="question[{{$group->unique_id}}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}][wage_value]"  required />
+                            </div>
+                            <div class="col-md-4">
+                                <select name="question[{{$group->unique_id}}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}][wage_type]" class="wage_type">
+                                    <option value="">Select Wage Type</div>
+                                    @foreach(wagesTypes() as $wagetype)
+                                    <option value="{{ $wagetype }}">{{ucfirst($wagetype)}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    @else
                         @if($ques->EligibilityQuestion->option_type == 'dropdown')
 
                         @if(!empty($check_ques))
@@ -570,8 +589,7 @@ action="{{ baseUrl('/quick-eligibility/g/'.$visa_service_id) }}" class="mt-3">
                                         <!-- <img class="avatar avatar-sm avatar-circle mr-2" src="../assets/img/160x160/img9.jpg" alt="Image description"> -->
                                         <h5 class="mb-0">None Eligible Option Selected</h5>
 
-                                        <button type="button" class="close ml-3" data-dismiss="toast"
-                                            aria-label="Close">
+                                        <button type="button" class="close ml-3" data-dismiss="toast" aria-label="Close">
                                             <i class="tio-clear" aria-hidden="true"></i>
                                         </button>
                                     </div>
@@ -583,6 +601,7 @@ action="{{ baseUrl('/quick-eligibility/g/'.$visa_service_id) }}" class="mt-3">
                             </div>
                             @endif
                             <!-- End Form Check -->
+                        @endif
                     </div>
                 </li>
                 @if($ques->EligibilityQuestion->linked_to_cv == 'yes' && !empty($check_ques))
