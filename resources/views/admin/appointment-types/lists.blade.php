@@ -43,7 +43,7 @@
                   <span id="datatableCounter">0</span>
                   Selected
                 </span>
-                <a class="btn btn-sm btn-outline-danger" data-href="{{ baseUrl('working-schedules/delete-multiple') }}" onclick="deleteMultiple(this)" href="javascript:;">
+                <a class="btn btn-sm btn-outline-danger" data-href="{{ baseUrl('appointment-types/delete-multiple') }}" onclick="deleteMultiple(this)" href="javascript:;">
                   <i class="tio-delete-outlined"></i> Delete
                 </a>
               </div>
@@ -53,8 +53,8 @@
 
 
         <div class="col-sm-3">
-          <a class="btn btn-primary float-right" onclick="showPopup('<?php echo baseUrl('working-schedules/add') ?>')" href="javascript:;">
-            Add Schedule
+          <a class="btn btn-primary float-right" onclick="showPopup('<?php echo baseUrl('appointment-types/add') ?>')" href="javascript:;">
+            Add Appointment
           </a>
         </div>
 
@@ -170,7 +170,7 @@ function loadData(page=1){
   var search = $("#datatableSearch").val();
     $.ajax({
         type: "POST",
-        url: BASEURL + '/working-schedules/ajax-list?page='+page,
+        url: BASEURL + '/appointment-types/ajax-list?page='+page,
         data:{
             _token:csrf_token,
             search:search
@@ -238,7 +238,7 @@ function confirmDelete(id){
       if (result.value) {
         $.ajax({
             type: "POST",
-            url: BASEURL + '/working-schedules/delete-user',
+            url: BASEURL + '/appointment-types/delete-user',
             data:{
                 _token:csrf_token,
                 user_id:id,
@@ -275,7 +275,7 @@ function changeStatus(e){
   if($(e).is(":checked")){
     $.ajax({
         type: "POST",
-        url: BASEURL + '/working-schedules/status/active',
+        url: BASEURL + '/appointment-types/status/active',
         data:{
             _token:csrf_token,
             id:id,
@@ -293,7 +293,7 @@ function changeStatus(e){
   }else{
     $.ajax({
         type: "POST",
-        url: BASEURL + '/working-schedules/status/inactive',
+        url: BASEURL + '/appointment-types/status/inactive',
         data:{
             _token:csrf_token,
             id:id,
@@ -319,7 +319,7 @@ function profileStatus(e){
   if($(e).is(":checked")){
     $.ajax({
         type: "POST",
-        url: BASEURL + '/working-schedules/profile-status/active',
+        url: BASEURL + '/appointment-types/profile-status/active',
         data:{
             _token:csrf_token,
             id:id,
@@ -336,7 +336,7 @@ function profileStatus(e){
   }else{
     $.ajax({
         type: "POST",
-        url: BASEURL + '/working-schedules/profile-status/inactive',
+        url: BASEURL + '/appointment-types/profile-status/inactive',
         data:{
             _token:csrf_token,
             id:id,

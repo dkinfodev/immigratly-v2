@@ -7,7 +7,7 @@
       </button>
     </div>
     <div class="modal-body">
-      <form method="post" id="popup-form" class="js-validate" action="{{ baseUrl('/working-schedules/save') }}">  
+      <form method="post" id="popup-form" class="js-validate" action="{{ baseUrl('/appointment-types/save') }}">  
           @csrf
           
 

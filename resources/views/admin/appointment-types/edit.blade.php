@@ -10,19 +10,19 @@
 @endsection
 
 @section('header-right')
-<a class="btn btn-primary" href="{{ baseUrl('/working-schedules') }}">
+<a class="btn btn-primary" href="{{ baseUrl('/appointment-types') }}">
     <i class="tio mr-1"></i> Back
 </a>
 @endsection
 
 @section('content')
 <!-- Content -->
-<div class="working-schedules">
+<div class="appointment-types">
    
     <!-- Card -->
     <div class="card">
         <div class="card-body">
-            <form id="form" class="js-validate" action="{{ baseUrl('working-schedules/save') }}" method="post">
+            <form id="form" class="js-validate" action="{{ baseUrl('appointment-types/save') }}" method="post">
                 @csrf
               <div class="row justify-content-md-between">
                 <div class="col-md-12">

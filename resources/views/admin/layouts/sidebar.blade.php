@@ -35,13 +35,14 @@
           
           <ul class="nav nav-sm nav-tabs nav-vertical mb-4">
             <li class="navbar-vertical-aside-has-menu show">
-            <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'dashboard'){ echo "active"; } } ?>" href="{{ baseUrl('/') }}">
-              <i class="tio-home-vs-1-outlined nav-icon"></i>
-              <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Dashboards</span>
-            </a>
-          </li>
+              <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'dashboard'){ echo "active"; } } ?>" href="{{ baseUrl('/') }}">
+                <i class="tio-home-vs-1-outlined nav-icon"></i>
+                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Dashboards</span>
+              </a>
+            </li>
 
             @if(profession_profile())
+            
             <li class="navbar-vertical-aside-has-menu">
               <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'services'){ echo "active"; } } ?>" href="{{ baseUrl('/services') }}">
                 <i class="tio-pages-outlined nav-icon"></i>
@@ -57,7 +58,12 @@
                 @endif
               </a>
             </li>
-
+            <li class="navbar-vertical-aside-has-menu">
+              <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'appointment-types'){ echo "active"; } } ?>" href="{{ baseUrl('/appointment-types') }}">
+                <i class="tio-book-opened nav-icon"></i>
+                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Appointment Type</span>
+              </a>
+            </li>
           </ul>
 
 
@@ -104,12 +110,7 @@
 
           
           
-          <li class="navbar-vertical-aside-has-menu">
-            <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'working-schedules'){ echo "active"; } } ?>" href="{{ baseUrl('/working-schedules') }}">
-              <i class="tio-book-opened nav-icon"></i>
-              <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Working Schedules</span>
-            </a>
-          </li>
+          
           <li class="navbar-vertical-aside-has-menu">
             <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'staff'){ echo "active"; } } ?>" href="{{ baseUrl('staff') }}">
               <i class="tio-user nav-icon"></i>

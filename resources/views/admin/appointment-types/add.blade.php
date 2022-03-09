@@ -10,7 +10,7 @@
 @endsection
 
 @section('header-right')
-<a class="btn btn-primary" href="{{ baseUrl('/working-schedules') }}">
+<a class="btn btn-primary" href="{{ baseUrl('/appointment-types') }}">
     <i class="tio mr-1"></i> Back
 </a>
 @endsection
@@ -35,7 +35,7 @@
 @endsection
 @section('content')
 <!-- Content -->
-<div class="working-schedules">
+<div class="appointment-types">
     <!-- Page Header -->
     <div class="page-header">
         <div class="row align-items-end">
@@ -44,7 +44,7 @@
                     <ol class="breadcrumb breadcrumb-no-gutter">
                         <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a>
                         </li>
-                        <!-- <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/working-schedules') }}">Working Schedules</a></li> -->
+                        <!-- <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/appointment-types') }}">Working Schedules</a></li> -->
                         <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
                     </ol>
                 </nav>
@@ -53,7 +53,7 @@
             </div>
 
             <div class="col-sm-auto">
-                <a class="btn btn-primary" href="{{ baseUrl('/working-schedules') }}">
+                <a class="btn btn-primary" href="{{ baseUrl('/appointment-types') }}">
                     <i class="tio mr-1"></i> Back
                 </a>
             </div>
@@ -65,7 +65,7 @@
     <!-- Card -->
     <div class="card">
         <div class="card-body">
-            <form id="form" class="js-validate" action="{{ baseUrl('working-schedules/save') }}" method="post">
+            <form id="form" class="js-validate" action="{{ baseUrl('appointment-types/save') }}" method="post">
                 @csrf
                 <div class="form-group">
                     <button type="submit" class="btn add-btn btn-primary">Add</button>

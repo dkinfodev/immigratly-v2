@@ -1167,15 +1167,15 @@ Route::group(array('prefix' => 'admin'), function () {
             Route::get('/change-password/{id}', [App\Http\Controllers\Admin\StaffController::class, 'changePassword']);
             Route::post('/update-password/{id}', [App\Http\Controllers\Admin\StaffController::class, 'updatePassword']);
         });
-        Route::group(array('prefix' => 'working-schedules'), function () {
-            Route::get('/', [App\Http\Controllers\Admin\WorkingSchedulesController::class, 'index']);
-            Route::post('/ajax-list', [App\Http\Controllers\Admin\WorkingSchedulesController::class, 'getAjaxList']);
-            Route::get('/add', [App\Http\Controllers\Admin\WorkingSchedulesController::class, 'add']);
-            Route::post('/save', [App\Http\Controllers\Admin\WorkingSchedulesController::class, 'save']);
-            Route::get('/edit/{id}', [App\Http\Controllers\Admin\WorkingSchedulesController::class, 'edit']);
-            Route::post('/update/{id}', [App\Http\Controllers\Admin\WorkingSchedulesController::class, 'update']);
-            Route::get('/delete/{id}', [App\Http\Controllers\Admin\WorkingSchedulesController::class, 'deleteSingle']);
-            Route::post('/delete-multiple', [App\Http\Controllers\Admin\WorkingSchedulesController::class, 'deleteMultiple']);
+        Route::group(array('prefix' => 'appointment-types'), function () {
+            Route::get('/', [App\Http\Controllers\Admin\AppointmentTypesController::class, 'index']);
+            Route::post('/ajax-list', [App\Http\Controllers\Admin\AppointmentTypesController::class, 'getAjaxList']);
+            Route::get('/add', [App\Http\Controllers\Admin\AppointmentTypesController::class, 'add']);
+            Route::post('/save', [App\Http\Controllers\Admin\AppointmentTypesController::class, 'save']);
+            Route::get('/edit/{id}', [App\Http\Controllers\Admin\AppointmentTypesController::class, 'edit']);
+            Route::post('/update/{id}', [App\Http\Controllers\Admin\AppointmentTypesController::class, 'update']);
+            Route::get('/delete/{id}', [App\Http\Controllers\Admin\AppointmentTypesController::class, 'deleteSingle']);
+            Route::post('/delete-multiple', [App\Http\Controllers\Admin\AppointmentTypesController::class, 'deleteMultiple']);
         });
         Route::group(array('prefix' => 'leads'), function () {
             Route::get('/', [App\Http\Controllers\Admin\LeadsController::class, 'newLeads']);

@@ -9,9 +9,9 @@ use View;
 use DB;
 
 use App\Models\ProfessionalServices;
-use App\Models\WorkingSchedules;
+use App\Models\AppointmentTypes;
 
-class WorkingSchedulesController extends Controller
+class AppointmentTypesController extends Controller
 {
     public function __construct()
     {
@@ -20,15 +20,15 @@ class WorkingSchedulesController extends Controller
 
     public function index()
     {
-        $viewData['pageTitle'] = "Working Schedules";
-        $viewData['activeTab'] = 'working-schedules';
-        return view(roleFolder().'.working-schedules.lists',$viewData);
+        $viewData['pageTitle'] = "Appointment Types";
+        $viewData['activeTab'] = 'appointment-types';
+        return view(roleFolder().'.appointment-types.lists',$viewData);
     } 
 
     public function getAjaxList(Request $request)
     {
         $search = $request->input("search");
-        $records = WorkingSchedules::orderBy('id',"desc")
+        $records = AppointmentTypes::orderBy('id',"desc")
                         ->where(function($query) use($search){
                             if($search != ''){
                                 $query->where("name","LIKE","%$search%");
@@ -36,7 +36,7 @@ class WorkingSchedulesController extends Controller
                         })
                         ->paginate();
         $viewData['records'] = $records;
-        $view = View::make(roleFolder().'.working-schedules.ajax-list',$viewData);
+        $view = View::make(roleFolder().'.appointment-types.ajax-list',$viewData);
         $contents = $view->render();
         $response['contents'] = $contents;
         $response['last_page'] = $records->lastPage();
@@ -46,8 +46,8 @@ class WorkingSchedulesController extends Controller
     }
     
     public function add(){
-        $viewData['pageTitle'] = "Add Schedule";
-        $view = View::make(roleFolder().'.working-schedules.modal.add-schedule',$viewData);
+        $viewData['pageTitle'] = "Add Appointment Type";
+        $view = View::make(roleFolder().'.appointment-types.modal.add-schedule',$viewData);
         $contents = $view->render();
         $response['contents'] = $contents;
         $response['status'] = true;
@@ -74,14 +74,14 @@ class WorkingSchedulesController extends Controller
             return response()->json($response);
         }
         $id = \Auth::user()->id;
-        $object = new WorkingSchedules();
+        $object = new AppointmentTypes();
         $object->unique_id = randomNumber();
         $object->name = $request->input("name");
-        
+        $object->duration = $request->input("duration");
         $object->save();
 
         $response['status'] = true;
-        $response['redirect_back'] = baseUrl('working-schedules');
+        $response['redirect_back'] = baseUrl('appointment-types');
         $response['message'] = "Schedule added sucessfully";
         
         return response()->json($response);
@@ -89,18 +89,18 @@ class WorkingSchedulesController extends Controller
  
     public function edit($id,Request $request){
         $id = base64_decode($id);
-        $viewData['pageTitle'] = "Edit Schedule";
-        $record = WorkingSchedules::where("id",$id)->first();
+        $viewData['pageTitle'] = "Edit Appointment Type";
+        $record = AppointmentTypes::where("id",$id)->first();
         $viewData['record'] = $record;
-        $viewData['activeTab'] = 'working-schedules';
-        return view(roleFolder().'.working-schedules.edit',$viewData);
+        $viewData['activeTab'] = 'appointment-types';
+        return view(roleFolder().'.appointment-types.edit',$viewData);
     }
 
 
     public function update($id,Request $request){
         // pre($request->all());
         $id = base64_decode($id);
-        $object =  WorkingSchedules::find($id);
+        $object =  AppointmentTypes::find($id);
 
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|unique:users,email,'.$object->id,
@@ -200,14 +200,14 @@ class WorkingSchedulesController extends Controller
 
     public function deleteSingle($id){
         $id = base64_decode($id);
-        WorkingSchedules::deleteRecord($id);
+        AppointmentTypes::deleteRecord($id);
         return redirect()->back()->with("success","Record has been deleted!");
     }
     public function deleteMultiple(Request $request){
         $ids = explode(",",$request->input("ids"));
         for($i = 0;$i < count($ids);$i++){
             $id = base64_decode($ids[$i]);
-            WorkingSchedules::deleteRecord($id);
+            AppointmentTypes::deleteRecord($id);
         }
         $response['status'] = true;
         \Session::flash('success', 'Records deleted successfully'); 
@@ -218,17 +218,17 @@ class WorkingSchedulesController extends Controller
     public function changePassword($id)
     {
         $id = base64_decode($id);
-        $record = WorkingSchedules::where("id",$id)->first();
+        $record = AppointmentTypes::where("id",$id)->first();
         $viewData['record'] = $record;
         $viewData['pageTitle'] = "Change Password";
-        $viewData['activeTab'] = 'working-schedules';
-        return view(roleFolder().'.working-schedules.change-password',$viewData);
+        $viewData['activeTab'] = 'appointment-types';
+        return view(roleFolder().'.appointment-types.change-password',$viewData);
     }
 
     public function updatePassword($id,Request $request)
     {
         $id = base64_decode($id);
-        $object =  WorkingSchedules::find($id);
+        $object =  AppointmentTypes::find($id);
 
         $validator = Validator::make($request->all(), [
             'password' => 'required|confirmed|min:4',

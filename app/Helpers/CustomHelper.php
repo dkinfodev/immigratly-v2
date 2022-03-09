@@ -2617,3 +2617,10 @@ if(!function_exists("matchWageOptions")){
         return $selected_option;
     }
 }
+
+if(!function_exists("appointmentDuration")){
+    function appointmentDuration(){
+        $types = array("15min",'30min','60min');
+        return $types;
+    }
+}
