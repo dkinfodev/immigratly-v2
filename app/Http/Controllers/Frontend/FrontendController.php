@@ -16,6 +16,7 @@ use App\Models\Articles;
 use App\Models\ChatGroups;
 use App\Models\News;
 use App\Models\Professionals;
+use App\Models\ProfessionalReview;
 use App\Models\ChatGroupComments;
 use App\Models\Webinar;
 use App\Models\VisaServices;
@@ -41,7 +42,7 @@ class FrontendController extends Controller
     }
 
     public function index(){
-        return redirect("signup/user");
+        //return redirect("signup/user");
         // $data['database'] = base64_encode("immigrat_main_immigratly");
         // $data['username'] = base64_encode("immigrat_immigratly");
         // $data['password'] = base64_encode("PHx#t;qv1p]S");
@@ -104,8 +105,10 @@ class FrontendController extends Controller
         $viewData['countries'] = $countries;
         $viewData['states'] = $states;
         $viewData['professionals'] = $professionals;
-        $viewData['pageTitle'] = "Home Page";   
+        $viewData['pageTitle'] = "Home Page"; 
+  
         return view('frontend.professional.list',$viewData);
+
     }
 
     public function professionalAjaxList(Request $request){
@@ -219,6 +222,95 @@ class FrontendController extends Controller
         }
     }
     
+
+    public function ReviewProfessional($unique_id){
+        $unique_id = $unique_id;
+
+        //$professional = User::where('role','professional')->where('unique_id',$unique_id)->first();
+
+        //print_r($professional);
+        //exit;
+
+        $professional = Professionals::where('unique_id',$unique_id)->first();
+
+        $domain = $professional->subdomain;
+        $checkDB = professionalAdmin($domain);
+        if(!empty($checkDB)){
+                    
+                $professionalDetail = professionalDetail($domain);
+                $subdomains[] = $domain;
+                $flag = 1;
+                $professionalDetails = DB::table(PROFESSIONAL_DATABASE.$domain.".professional_details")->orderBy('id',"desc")->first();
+        }
+
+        $viewData['professionalDetails'] = $professionalDetails;
+        $reviewData = ProfessionalReview::where('professional_id',$unique_id)->get();
+
+        $total = 0;
+        $totalRec = 0;
+        foreach ($reviewData as $key => $r) {
+            $total += $r->rating;
+            $totalRec += 1;
+        }
+        if($totalRec > 0){
+            $avg = $total/$totalRec;
+        }else{
+            $avg = 0;
+        }
+        $avg = round($avg);
+        
+        $viewData['record'] =  $professional;
+        $viewData['pageTitle'] = "Send Review";   
+        $viewData['reviewData'] = $reviewData;
+        $viewData['unique_id'] = $unique_id;
+        $viewData['avgRating'] = $avg;
+        $viewData['totaluser'] = $totalRec;   
+        $viewData['total'] = $totalRec;
+        $viewData['professionalDetail'] = $professionalDetail;
+
+        return view('frontend.professional.review',$viewData);
+        
+    }
+
+    public function sendReviewProfessional($unique_id,Request $request){
+
+        //echo $unique_id;
+        //exit;
+
+        $validator = Validator::make($request->all(), [
+            'review' => 'required',
+            'stars' => 'required',
+        ]);
+        if ($validator->fails()) {
+            $response['status'] = false;
+            $response['error_type'] = 'validation';
+            $error = $validator->errors()->toArray();
+            $errMsg = array();
+
+            foreach($error as $key => $err){
+                $errMsg[$key] = $err[0];
+            }
+            $response['message'] = $errMsg;
+            return response()->json($response);
+        }
+        //$unique_id = $unique_id;
+        $rating = $request->input("rating");
+        $review = $request->input("review");
+        $uid = \Auth::user()->unique_id;
+        $object = new ProfessionalReview;
+        $object->user_id = $uid;
+        $object->professional_id = $unique_id;
+        $object->rating = $rating;
+        $object->review = $review;
+        $object->save();
+
+
+        $response['status'] = true;
+        $response['redirect_back'] = Url('professional/write-review/'.$unique_id);
+        $response['message'] = "Review sent";
+        return response()->json($response);
+
+    }
 
     public function articles($category=''){
         if($category != ''){

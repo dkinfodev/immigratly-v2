@@ -12,6 +12,8 @@ use App\Models\DomainDetails;
 use App\Models\ProfessionalDetails;
 use App\Models\LicenceBodies;
 use App\Models\Languages;
+use App\Models\AppointmentSchedule;
+use App\Models\ProfessionalEvent;
 
 class ProfileController extends Controller
 {
@@ -558,4 +560,6 @@ class ProfileController extends Controller
         
         return response()->json($response);
     }
+
+    
 }

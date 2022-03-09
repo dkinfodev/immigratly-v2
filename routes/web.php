@@ -73,15 +73,6 @@ Route::group(array('middleware' => 'frontend'), function () {
  
         Route::get('/download-report/{id}', [App\Http\Controllers\Frontend\EligibilityCheckController::class, 'downloadReport']);
     });
-
-    //Professional
-    Route::get('/professionals/', [App\Http\Controllers\Frontend\FrontendController::class, 'professionals']);
-    
-
-    Route::post('/professionals-list/', [App\Http\Controllers\Frontend\FrontendController::class, 'professionalAjaxList']);
-    
-
-    Route::get('/professional/{subdomain}', [App\Http\Controllers\Frontend\FrontendController::class, 'professionalDetail']);
     
 
 });
@@ -103,6 +94,14 @@ Route::post('/signup/user', [App\Http\Controllers\Auth\RegisterController::class
 Route::post("send-verify-code",[App\Http\Controllers\Frontend\FrontendController::class, 'sendVerifyCode']);
 Route::post("verify-code",[App\Http\Controllers\Auth\RegisterController::class, 'verifyOtp']);
 
+
+
+    //Professional
+    Route::get('/professionals/', [App\Http\Controllers\Frontend\FrontendController::class, 'professionals']);
+    Route::post('/professionals-list/', [App\Http\Controllers\Frontend\FrontendController::class, 'professionalAjaxList']);
+    Route::get('/professional/{subdomain}', [App\Http\Controllers\Frontend\FrontendController::class, 'professionalDetail']);
+    Route::get('/professional/write-review/{unique_id}', [App\Http\Controllers\Frontend\FrontendController::class, 'ReviewProfessional']);
+    Route::post('/professional/send-review/{unique_id}', [App\Http\Controllers\Frontend\FrontendController::class, 'sendReviewProfessional']);
 
 Route::get('/login/{provider}', [App\Http\Controllers\SocialLoginController::class, 'redirect']);
 Route::get('/login/{provider}/callback', [App\Http\Controllers\SocialLoginController::class, 'Callback']);
@@ -1037,7 +1036,18 @@ Route::group(array('prefix' => 'admin'), function () {
         Route::post('/fetch-chats', [App\Http\Controllers\Admin\ProfileController::class, 'fetchSupportChats']);
         Route::post('/send-message-to-support', [App\Http\Controllers\Admin\ProfileController::class, 'sendChatToSupport']);
         Route::post('/send-file-to-support', [App\Http\Controllers\Admin\ProfileController::class, 'saveDocumentChatFile']);
+
+        Route::group(array('prefix' => 'appointment'), function () {
+        
+            Route::get('/', [App\Http\Controllers\Admin\AppointmentController::class, 'index']);
+            Route::post('/event-ajax-list', [App\Http\Controllers\Admin\AppointmentController::class, 'getAjaxList']); 
+            Route::get('/set-schedule', [App\Http\Controllers\Admin\AppointmentController::class, 'setSchedule']);
+            Route::post('/save-schedule', [App\Http\Controllers\Admin\AppointmentController::class, 'saveSchedule']);
+            Route::get('/add-event', [App\Http\Controllers\Admin\AppointmentController::class, 'addEvent']);
+            Route::post('/save-event', [App\Http\Controllers\Admin\AppointmentController::class, 'saveEvent']);
+        });
     }); 
+
     Route::group(array('middleware' => 'admin'), function () {
         Route::get('/connect-apps', [App\Http\Controllers\Admin\DashboardController::class, 'connectApps']);
         Route::get('/google-auth', [App\Http\Controllers\Admin\DashboardController::class, 'googleAuthention']);

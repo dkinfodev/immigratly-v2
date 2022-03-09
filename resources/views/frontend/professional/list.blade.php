@@ -9,7 +9,7 @@
 <!-- Search Section -->
 <div class="bg-dark">
     <div class="bg-img-hero-center"
-        style="background-image: url({{asset('assets/frontend/svg/components/abstract-shapes-19.svg')}});padding-top: 94px;">
+        style="background-image: url({{asset('assets/frontend/svg/components/abstract-shapes-19.svg')}});padding-top: 94px;padding-bottom: 30px;">
         <div class="container space-1">
             <div class="w-lg-100 mx-lg-auto">
                 <!-- Input -->
@@ -23,19 +23,19 @@
     <div class="w-lg-100 mx-lg-auto">
         <!-- Breadcrumbs -->
         <!-- Breadcrumbs -->
-        <nav aria-label="breadcrumb">
+        <!-- <nav aria-label="breadcrumb">
             <ol class="breadcrumb breadcrumb-no-gutter font-size-1 space-1">
                 <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
                 <li class="breadcrumb-item active">Professionals</li>
             </ol>
-        </nav>
+        </nav> -->
         <!-- End Breadcrumbs -->
 
 
 
-        <div class="card card-bordered custom-content-card p-5 mb-5">
+        <div class="card card-bordered custom-content-card mt-5 p-5 mb-5">
 
-            <h3 class="text-uppercase text-muted">Immigration Lawyers, Consultants, Advisers and Migration Agents (15450
+            <h3 class="text-uppercase text-muted">Immigration Lawyers, Consultants, Advisers and Migration Agents (3
                 results)</h3>
 
             <p>Find immigration professionals based on the destination country or their business location.</p>
@@ -167,11 +167,12 @@ $(document).ready(function() {
         }
     })
 
-    $('.datatable').each(function () {
-        var id = $(this).attr("id");
-        var datatable = $.HSCore.components.HSDatatables.init($('#'+id));
-        // $("#"+id).DataTable();
-    });
+    //commented of 7-3-22
+    // $('.datatable').each(function () {
+    //     var id = $(this).attr("id");
+    //     var datatable = $.HSCore.components.HSDatatables.init($('#'+id));
+    //     // $("#"+id).DataTable();
+    // });
     $("#btnsearch").click(function() {
         //alert("hell");
         loadData();

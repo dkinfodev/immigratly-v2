@@ -142,11 +142,11 @@ function bottomMessage(message,type){
 function redirect(url){
   window.location.href = url;
 }
-function initSelect(parent_id=''){
-	  $(parent_id+' select').not(".no_select2").each(function () {
-      $.HSCore.components.HSSelect2.init($(this));
-    });
-}
+// function initSelect(parent_id=''){
+// 	  $(parent_id+' select').not(".no_select2").each(function () {
+//       $.HSCore.components.HSSelect2.init($(this));
+//     });
+// }
 function confirmAction(e){
 	var url = $(e).attr("data-href");
 	Swal.fire({

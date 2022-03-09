@@ -8,7 +8,7 @@
 @section('content')
 <!-- Search Section -->
 <div class="bg-dark">
-  <div class="bg-img-hero-center" style="background-image: url({{asset('assets/frontend/svg/components/abstract-shapes-19.svg')}});padding-top: 94px;">
+  <div class="bg-img-hero-center" style="background-image: url({{asset('assets/frontend/svg/components/abstract-shapes-19.svg')}});padding-top: 94px;padding-bottom: 30px;">
     <div class="container space-1">
       <div class="w-lg-100 mx-lg-auto">
         <!-- Input -->
@@ -18,18 +18,19 @@
     </div>
   </div>
 </div>
-<div class="container space-bottom-2">
-  <div class="w-lg-100 mx-lg-auto">
+<div class="container space-top-2 space-bottom-2">
+  <div class="p-5 mt-5">
+  <br>
     <!-- Breadcrumbs -->
         <!-- Breadcrumbs -->
-    <nav aria-label="breadcrumb">
+    <!-- <nav aria-label="breadcrumb">
       <ol class="breadcrumb breadcrumb-no-gutter font-size-1 space-1">
         <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
         <li class="breadcrumb-item"><a href="{{url('/professionals')}}">Professionals</a></li>
 
         <li class="breadcrumb-item active">{{$company_data->company_name}}</li>
       </ol>
-    </nav>
+    </nav> -->
     <!-- End Breadcrumbs -->
 
 
@@ -238,8 +239,24 @@
             <!-- End Header -->
             <!-- Body -->
             <div class="card-body">
-                No Reviews posted yet.    
-            
+
+               <?php $checkForReview = checkReview($professional->unique_id); ?>
+
+                @if($checkForReview > 0)
+                  {{$checkForReview}} Reviews
+
+                @else
+                  <p>No Reviews posted yet.</p>
+                @endif  
+
+                @if(\Auth::check())
+                  <p class="mt-3">
+                  <a href="{{url('professional/write-review/'.$professional->unique_id)}}" class="btn btn-outline-primary">Write Review</a></p>
+                @else
+
+                  <p class="text-danger">Login to write review</p>
+                @endif
+
             </div>
             <!-- End Body -->
           </div>

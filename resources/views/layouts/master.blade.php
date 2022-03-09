@@ -308,7 +308,7 @@
   <script>
     $(document).on('ready', function () {
 
-      initSelect();
+      //initSelect();
 
       // INITIALIZATION OF UNFOLD
       // =======================================================
