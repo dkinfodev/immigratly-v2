@@ -1,4 +1,4 @@
-    
+<?php $cnt = 0; ?>
 @if(!empty($records))    
     @foreach($records as $key=>$prof)
     <tr>
@@ -61,10 +61,10 @@
               </div>
               <br>
 
-              @foreach($subdomains as $key=>$s)
-              <a href="{{url('professional/'.$s)}}">More Details</a>
-              @endforeach
               
+              <a href="{{url('professional/'.$subdomains[$cnt])}}" class="btn btn-primary">More Details</a>
+              
+              <?php ++$cnt; ?>
 
           </div>
         </div>

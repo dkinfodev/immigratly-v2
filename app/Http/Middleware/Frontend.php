@@ -17,10 +17,11 @@ class Frontend
      */
     public function handle($request, Closure $next)
     {
-        if(\Session::get('login_to') != 'professional_panel'){
+    //     if(\Session::get('login_to') != 'professional_panel'){
+    //         return $next($request);            
+    //     }else{
+    //         return Redirect::to('/login');
+    //     }
             return $next($request);            
-        }else{
-            return Redirect::to('/login');
-        }
     }
 }
