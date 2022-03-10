@@ -20,7 +20,8 @@ class Frontend
         if(\Session::get('login_to') != 'professional_panel'){
             return $next($request);            
         }else{
-            return Redirect::to('/login');
+            return $next($request);     
+            // return Redirect::to('/login');
         }
     }
 }

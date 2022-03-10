@@ -124,20 +124,21 @@ class FrontendController extends Controller
                 $professionalDetail = professionalDetail($domain);
                 $subdomains[] = $domain;
                 $flag = 1;
-                $record = DB::table(PROFESSIONAL_DATABASE.$domain.".professional_details")->orderBy('id',"desc")
-                    ->where(function($query) use($search){
+                $record = DB::table(PROFESSIONAL_DATABASE.$domain.".professional_details")
+                            ->orderBy('id',"desc")
+                            ->where(function($query) use($search){
                         
-                        if(isset($search['search_by_keyword']) && $search['search_by_keyword'] != ''){
-                            $query->where("company_name","LIKE","%".$search['search_by_keyword']."%");
-                        }
-                        if(isset($search['country']) && $search['country'] != '' && $search['country'] != 'all'){
-                            $query->where("country_id",$search['country']);
-                        }
-                        if(isset($search['state']) && $search['state'] != '' && $search['state'] != 'all'){
-                            $query->where("state_id",$search['state']);
-                        }
-                      })
-                      ->first();
+                                if(isset($search['search_by_keyword']) && $search['search_by_keyword'] != ''){
+                                    $query->where("company_name","LIKE","%".$search['search_by_keyword']."%");
+                                }
+                                if(isset($search['country']) && $search['country'] != '' && $search['country'] != 'all'){
+                                    $query->where("country_id",$search['country']);
+                                }
+                                if(isset($search['state']) && $search['state'] != '' && $search['state'] != 'all'){
+                                    $query->where("state_id",$search['state']);
+                                }
+                            })
+                            ->first();
                 if(empty($record)){
                     $flag = 0;
                 }
@@ -181,7 +182,6 @@ class FrontendController extends Controller
         }
 
         $records = $available_professional; 
-               
         $professionals = Professionals::orderBy('id','asc')
                         ->get();
         $search = $request->input("search");
@@ -648,6 +648,93 @@ class FrontendController extends Controller
         return view('frontend.visa-services.content-detail',$viewData);
 
     }
-    
+    public function ReviewProfessional($unique_id){
+        $unique_id = $unique_id;
+
+        //$professional = User::where('role','professional')->where('unique_id',$unique_id)->first();
+
+        //print_r($professional);
+        //exit;
+
+        $professional = Professionals::where('unique_id',$unique_id)->first();
+
+        $domain = $professional->subdomain;
+        $checkDB = professionalAdmin($domain);
+        if(!empty($checkDB)){
+                    
+                $professionalDetail = professionalDetail($domain);
+                $subdomains[] = $domain;
+                $flag = 1;
+                $professionalDetails = DB::table(PROFESSIONAL_DATABASE.$domain.".professional_details")->orderBy('id',"desc")->first();
+        }
+
+        $viewData['professionalDetails'] = $professionalDetails;
+        $reviewData = ProfessionalReview::where('professional_id',$unique_id)->get();
+
+        $total = 0;
+        $totalRec = 0;
+        foreach ($reviewData as $key => $r) {
+            $total += $r->rating;
+            $totalRec += 1;
+        }
+        if($totalRec > 0){
+            $avg = $total/$totalRec;
+        }else{
+            $avg = 0;
+        }
+        $avg = round($avg);
+        
+        $viewData['record'] =  $professional;
+        $viewData['pageTitle'] = "Send Review";   
+        $viewData['reviewData'] = $reviewData;
+        $viewData['unique_id'] = $unique_id;
+        $viewData['avgRating'] = $avg;
+        $viewData['totaluser'] = $totalRec;   
+        $viewData['total'] = $totalRec;
+        $viewData['professionalDetail'] = $professionalDetail;
+
+        return view('frontend.professional.review',$viewData);
+        
+    }
+
+    public function sendReviewProfessional($unique_id,Request $request){
+
+        //echo $unique_id;
+        //exit;
+
+        $validator = Validator::make($request->all(), [
+            'review' => 'required',
+            'stars' => 'required',
+        ]);
+        if ($validator->fails()) {
+            $response['status'] = false;
+            $response['error_type'] = 'validation';
+            $error = $validator->errors()->toArray();
+            $errMsg = array();
+
+            foreach($error as $key => $err){
+                $errMsg[$key] = $err[0];
+            }
+            $response['message'] = $errMsg;
+            return response()->json($response);
+        }
+        //$unique_id = $unique_id;
+        $rating = $request->input("rating");
+        $review = $request->input("review");
+        $uid = \Auth::user()->unique_id;
+        $object = new ProfessionalReview;
+        $object->user_id = $uid;
+        $object->professional_id = $unique_id;
+        $object->rating = $rating;
+        $object->review = $review;
+        $object->save();
+
+
+        $response['status'] = true;
+        $response['redirect_back'] = Url('professional/write-review/'.$unique_id);
+        $response['message'] = "Review sent";
+        return response()->json($response);
+
+    }
     // ************* END 28-8-update by y    
 }

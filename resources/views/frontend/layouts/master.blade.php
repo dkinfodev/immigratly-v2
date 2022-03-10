@@ -26,6 +26,8 @@
     <link rel="stylesheet" href="assets/vendor/toastr/toastr.css">
     <link rel="stylesheet" type="text/css" href="assets/vendor/sweetalert2/sweetalert2.min.css">
     <!-- <link rel="stylesheet" href="assets/front/vendor/tom-select/dist/css/tom-select.bootstrap5.css"> -->
+    <link rel="stylesheet" href="assets/front/vendor/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="assets/vendor/icon-set/style.css">
     <link rel="stylesheet" href="assets/front/css/front.css">
     <link rel="stylesheet" href="assets/vendor/select2/dist/css/select2.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css" />

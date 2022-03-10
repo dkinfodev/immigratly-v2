@@ -62,7 +62,7 @@
               <br>
 
               @foreach($subdomains as $key=>$s)
-              <a href="{{url('professional/'.$s)}}">More Details</a>
+              <a href="{{url('professional/'.$s)}}" class="btn btn-primary">More Details</a>
               @endforeach
               
 
