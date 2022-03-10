@@ -106,12 +106,11 @@ Route::group(array('middleware' => 'frontend'), function () {
 
     //Professional
     Route::get('/professionals/', [App\Http\Controllers\Frontend\FrontendController::class, 'professionals']);
-    
-
     Route::post('/professionals-list/', [App\Http\Controllers\Frontend\FrontendController::class, 'professionalAjaxList']);
-    
-
     Route::get('/professional/{subdomain}', [App\Http\Controllers\Frontend\FrontendController::class, 'professionalDetail']);
+    Route::get('/professional/write-review/{unique_id}', [App\Http\Controllers\Frontend\FrontendController::class, 'ReviewProfessional']);
+    Route::post('/professional/send-review/{unique_id}', [App\Http\Controllers\Frontend\FrontendController::class, 'sendReviewProfessional']);
+    
     
 
 });

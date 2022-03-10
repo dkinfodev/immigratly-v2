@@ -92,3 +92,39 @@ word-break: break-all;
 span.select2-selection.custom-select {
     height: auto !important;
 }
+.form-inline .form-group {
+    display: flex;
+    flex: 0 0 auto;
+    flex-flow: row wrap;
+    align-items: center;
+    margin-bottom: 0;
+    margin-right: 5px;
+}
+.form-inline {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+}
+.p-3 {
+    padding: 1rem !important;
+}
+.mt-4, .my-4 {
+    margin-top: 1.5rem!important;
+}
+.p-5 {
+    padding: 2rem!important;
+}
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: .0625rem solid rgba(231,234,243,.7);
+    border-radius: .75rem;
+}
+.pl-5, .px-5 {
+    padding-left: 2rem!important;
+}
