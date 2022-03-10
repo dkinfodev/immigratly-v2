@@ -36,50 +36,65 @@
                 @endif
             @endif
             <div class="question-options mt-2" style="display:{{ $block }}">
-                @if($ques->EligibilityQuestion->option_type == 'dropdown')
-
-                @if(!empty($check_ques))
-                    <select class="select2" onchange="conditionalQuestion(this,'select')" name="question[{{$group->unique_id}}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]"  required>
-                @else
-                    <select class="select2" name="question[{{$group->unique_id}}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]"  required>
-                @endif
-                        <option value="">Select Option</option>
-                        @foreach($ques->EligibilityQuestion->Options as $option)
-                        <option {{ (!empty($option_selected) && $option->option_value == $option_selected['option_selected'])?'selected':'' }} data-option-id="{{$option->id}}" value="{{ $option->option_value }}">
-                            {{$option->option_label}} ({{$option->score}})</option>
-                        @endforeach
-                    </select>
-                    @endif
-                    @if($ques->EligibilityQuestion->option_type == 'radio')
-                    <!-- Form Check -->
-                    @foreach($ques->EligibilityQuestion->Options as $option)
-                    <div class="form-check form-check-inline">
-                        <div class="custom-control custom-radio">
-                            
-                        @if(!empty($check_ques))
-                        <input type="radio" data-option-id="{{$option->id}}"
-                            id="customInlineRadio-{{ $component->unique_id }}-{{$option->id}}" 
-                            {{ (!empty($option_selected) && $option->id == $option_selected['option_selected'])?'checked':'' }}
-                            onchange="conditionalQuestion(this,'radio')"
-                            value="{{ $option->option_value }}" class="custom-control-input"
-                            name="question[{{$group->unique_id}}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]"  required>
-                        @else
-                        <input type="radio" data-option-id="{{$option->id}}"
-                            id="customInlineRadio-{{ $component->unique_id }}-{{$option->id}}" value="{{ $option->option_value }}"
-                            class="custom-control-input" 
-                            {{ (!empty($option_selected) && $option->id == $option_selected['option_selected'])?'checked':'' }}
-                            name="question[{{$group->unique_id}}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]" required>
-                        @endif
-                            
-                            <label class="custom-control-label"
-                                for="customInlineRadio-{{ $component->unique_id }}-{{$option->id}}">{{$option->option_label}} ({{$option->score}})</label>
+                @if($ques->EligibilityQuestion->wage_type == '1')
+                    <div class="row">
+                        <div class="col-md-4">
+                            <input type="number" placeholder="Enter your wage" class="form-control bg-white p-2" name="question[{{$group->unique_id}}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}][wage_value]"  required />
+                        </div>
+                        <div class="col-md-4">
+                        <select name="question[{{$group->unique_id}}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}][wage_type]" class="wage_type">
+                                <option value="">Select Wage Type</div>
+                                @foreach(wagesTypes() as $wagetype)
+                                <option value="{{ $wagetype }}">{{ucfirst($wagetype)}}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
-                    <!-- End Form Check -->
-                    @endforeach
+                @else
+                    @if($ques->EligibilityQuestion->option_type == 'dropdown')
+
+                        @if(!empty($check_ques))
+                            <select class="select2" onchange="conditionalQuestion(this,'select')" name="question[{{$group->unique_id}}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]"  required>
+                        @else
+                            <select class="select2" name="question[{{$group->unique_id}}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]"  required>
+                        @endif
+                            <option value="">Select Option</option>
+                            @foreach($ques->EligibilityQuestion->Options as $option)
+                            <option {{ (!empty($option_selected) && $option->option_value == $option_selected['option_selected'])?'selected':'' }} data-option-id="{{$option->id}}" value="{{ $option->option_value }}">
+                                {{$option->option_label}} ({{$option->score}})</option>
+                            @endforeach
+                        </select>
+                    @endif
+                    @if($ques->EligibilityQuestion->option_type == 'radio')
+                        <!-- Form Check -->
+                        @foreach($ques->EligibilityQuestion->Options as $option)
+                        <div class="form-check form-check-inline">
+                            <div class="custom-control custom-radio">
+                                
+                            @if(!empty($check_ques))
+                            <input type="radio" data-option-id="{{$option->id}}"
+                                id="customInlineRadio-{{ $component->unique_id }}-{{$option->id}}" 
+                                {{ (!empty($option_selected) && $option->id == $option_selected['option_selected'])?'checked':'' }}
+                                onchange="conditionalQuestion(this,'radio')"
+                                value="{{ $option->option_value }}" class="custom-control-input"
+                                name="question[{{$group->unique_id}}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]"  required>
+                            @else
+                            <input type="radio" data-option-id="{{$option->id}}"
+                                id="customInlineRadio-{{ $component->unique_id }}-{{$option->id}}" value="{{ $option->option_value }}"
+                                class="custom-control-input" 
+                                {{ (!empty($option_selected) && $option->id == $option_selected['option_selected'])?'checked':'' }}
+                                name="question[{{$group->unique_id}}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]" required>
+                            @endif
+                                
+                                <label class="custom-control-label" for="customInlineRadio-{{ $component->unique_id }}-{{$option->id}}">{{$option->option_label}} ({{$option->score}})</label>
+                            </div>
+                        </div>
+                        <!-- End Form Check -->
+                        @endforeach
 
                     @endif
-                    <!-- End Form Check -->
+                        <!-- End Form Check -->
+                @endif
             </div>
         </li>
         @if($ques->EligibilityQuestion->linked_to_cv == 'yes' && !empty($check_ques))

@@ -160,3 +160,11 @@ span.select2-selection.custom-select {
 .clearfix{
     clear:both;
 }
+.dependent_questions th {
+    vertical-align: middle;
+    text-align: center;
+}
+.imm-assessment-form-list-question-footer {
+    margin-left: 21px;
+    margin-bottom: 32px;
+}

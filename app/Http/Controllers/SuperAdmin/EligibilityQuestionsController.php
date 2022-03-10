@@ -27,6 +27,7 @@ use App\Models\CombinationalOptions;
 use App\Models\LanguageScorePoints;
 use App\Models\ComponentPreConditions;
 use App\Models\MultipleOptionsGroups;
+use App\Models\FunFacts;
 
 class EligibilityQuestionsController extends Controller
 {
@@ -131,6 +132,16 @@ class EligibilityQuestionsController extends Controller
         if($request->input("linked_to_cv") == 'yes'){
             $object->cv_section = $request->input("cv_section");
         }
+        if($request->input("language_prof_type") == '1'){
+            $object->language_prof_type = 1;
+        }else{
+            $object->language_prof_type = 0;
+        }
+        if($request->input("wage_type") == '1'){
+            $object->wage_type = 1;
+        }else{
+            $object->wage_type = 0;
+        }
         if($request->input("language_proficiency")){
             $object->language_proficiency = $request->input("language_proficiency");
         }
@@ -143,27 +154,27 @@ class EligibilityQuestionsController extends Controller
             $object->score_count_type = '';
         }
         if($request->input("score_count_type") == 'range_matching'){
-            if($request->input("one_match")){
-                $object->one_match = $request->input("one_match");
-            }else{
-                $object->one_match = '';
-            }
+            // if($request->input("one_match")){
+            //     $object->one_match = $request->input("one_match");
+            // }else{
+            //     $object->one_match = '';
+            // }
 
-            if($request->input("two_match")){
-                $object->two_match = $request->input("two_match");
-            }else{
-                $object->two_match = '';
-            }
+            // if($request->input("two_match")){
+            //     $object->two_match = $request->input("two_match");
+            // }else{
+            //     $object->two_match = '';
+            // }
 
-            if($request->input("three_match")){
-                $object->three_match = $request->input("three_match");
-            }else{
-                $object->three_match = '';
-            }
+            // if($request->input("three_match")){
+            //     $object->three_match = $request->input("three_match");
+            // }else{
+            //     $object->three_match = '';
+            // }
         }else{
-            $object->one_match = '';
-            $object->two_match = '';
-            $object->three_match = '';
+            // $object->one_match = '';
+            // $object->two_match = '';
+            // $object->three_match = '';
         }
 
         $object->added_by = \Auth::user()->unique_id;
@@ -177,6 +188,9 @@ class EligibilityQuestionsController extends Controller
             if(isset($option['criteria'])){
                 $obj->criteria = $option['criteria'];
             }
+            // if(isset($option['wage_type'])){
+            //     $obj->wage_type = $option['wage_type'];
+            // }
             $obj->score = $option['score'];
             if(isset($option['non_eligible'])){
                 $obj->non_eligible = 1;
@@ -215,6 +229,20 @@ class EligibilityQuestionsController extends Controller
                 $object_lang_prof->save();
             }
         }
+
+        if($request->input("fun_facts")){
+            $fun_facts = $request->input("fun_facts");
+            foreach($fun_facts as $fun_fact){
+                
+                $ff_object = new FunFacts();
+                $ff_object->visa_service_id = $visa_service->unique_id;
+                $ff_object->question_id = $unique_id;
+                $ff_object->fun_facts = $fun_fact['fun_facts'];
+                $ff_object->added_by = \Auth::user()->unique_id;
+                $ff_object->save();
+            }
+        }
+
         if($request->input("components")){
             $components[] = $request->input("components");
             foreach($components as $component){
@@ -331,6 +359,16 @@ class EligibilityQuestionsController extends Controller
         }else{
             $object->cv_section = '';
         }
+        if($request->input("language_prof_type") == '1'){
+            $object->language_prof_type = 1;
+        }else{
+            $object->language_prof_type = 0;
+        }
+        if($request->input("wage_type") == '1'){
+            $object->wage_type = 1;
+        }else{
+            $object->wage_type = 0;
+        }
         if($request->input("language_proficiency")){
             $object->language_proficiency = $request->input("language_proficiency");
         }else{
@@ -349,27 +387,27 @@ class EligibilityQuestionsController extends Controller
             $object->score_count_type = '';
         }
         if($request->input("score_count_type") == 'range_matching'){
-            if($request->input("one_match")){
-                $object->one_match = $request->input("one_match");
-            }else{
-                $object->one_match = '';
-            }
+            // if($request->input("one_match")){
+            //     $object->one_match = $request->input("one_match");
+            // }else{
+            //     $object->one_match = '';
+            // }
 
-            if($request->input("two_match")){
-                $object->two_match = $request->input("two_match");
-            }else{
-                $object->two_match = '';
-            }
+            // if($request->input("two_match")){
+            //     $object->two_match = $request->input("two_match");
+            // }else{
+            //     $object->two_match = '';
+            // }
 
-            if($request->input("three_match")){
-                $object->three_match = $request->input("three_match");
-            }else{
-                $object->three_match = '';
-            }
+            // if($request->input("three_match")){
+            //     $object->three_match = $request->input("three_match");
+            // }else{
+            //     $object->three_match = '';
+            // }
         }else{
-            $object->one_match = '';
-            $object->two_match = '';
-            $object->three_match = '';
+            // $object->one_match = '';
+            // $object->two_match = '';
+            // $object->three_match = '';
         }
 
         $object->save();
@@ -391,7 +429,14 @@ class EligibilityQuestionsController extends Controller
             }
             if(isset($option['criteria'])){
                 $obj->criteria = $option['criteria'];
+            }else{
+                $obj->criteria = '';
             }
+            // if(isset($option['wage_type'])){
+            //     $obj->wage_type = $option['wage_type'];
+            // }else{
+            //     $obj->wage_type = '';
+            // }
             $obj->score = $option['score'];
             if(isset($option['non_eligible'])){
                 $obj->non_eligible = 1;
@@ -448,6 +493,19 @@ class EligibilityQuestionsController extends Controller
             }
         }
         
+        if($request->input("fun_facts")){
+            FunFacts::where("question_id",$unique_id)->delete();
+            $fun_facts = $request->input("fun_facts");
+            foreach($fun_facts as $fun_fact){
+                
+                $ff_object = new FunFacts();
+                $ff_object->visa_service_id = $visa_service->unique_id;
+                $ff_object->question_id = $unique_id;
+                $ff_object->fun_facts = $fun_fact['fun_facts'];
+                $ff_object->added_by = \Auth::user()->unique_id;
+                $ff_object->save();
+            }
+        }
                     
         if($request->input("components")){
             $components[] = $request->input("components");
@@ -1105,8 +1163,13 @@ class EligibilityQuestionsController extends Controller
         $visa_service_id = base64_decode($visa_service_id);
         $visa_service = VisaServices::where("id",$visa_service_id)->first();
         
-       
+        $search = $request->input("search");
         $records = QuestionsGroups::where("visa_service_id",$visa_service->unique_id)
+                            ->where(function($query) use($search){
+                                if($search != ''){
+                                    $query->where("group_title","LIKE","%".$search."%");
+                                }
+                            })
                             ->orderBy('id',"desc")
                             ->paginate();
         
@@ -1168,7 +1231,7 @@ class EligibilityQuestionsController extends Controller
         }
         $visa_service = VisaServices::where("id",$id)->first();
         $unique_id = randomNumber();
-        $last_group = QuestionsGroups::where("visa_service_id",$visa_service->unique_id)->orderBy('sort_order','desc')->first();
+        // $last_group = QuestionsGroups::where("visa_service_id",$visa_service->unique_id)->orderBy('sort_order','desc')->first();
         $object =  new QuestionsGroups();
         $object->unique_id = $unique_id;
         $object->visa_service_id = $visa_service->unique_id;
@@ -1178,11 +1241,11 @@ class EligibilityQuestionsController extends Controller
         }else{
             $object->description = '';
         }
-        if(!empty($last_group)){
-            $object->sort_order = $last_group->sort_order + 1;
-        }else{
-            $object->sort_order = 1;
-        }
+        // if(!empty($last_group)){
+        //     $object->sort_order = $last_group->sort_order + 1;
+        // }else{
+        //     $object->sort_order = 1;
+        // }
         $object->min_score = $request->input("min_score");
         $object->max_score = $request->input("max_score");
         $object->added_by = \Auth::user()->unique_id;
@@ -1828,7 +1891,7 @@ class EligibilityQuestionsController extends Controller
         for($i=0;$i < count($question_ids);$i++){
             $question_ids[$i] = base64_decode($question_ids[$i]);
         }
-       
+        
         $visa_service = VisaServices::where("id",$id)->first();
         $sub_visa_services = VisaServices::where("parent_id",$visa_service->id)->get();
         $visa_service_id = $visa_service->unique_id;
@@ -2187,5 +2250,7 @@ class EligibilityQuestionsController extends Controller
     // public function fetchComponentQuestions($visa_service_id,Request $request){
     //     $question_ids = ComponentQuestionIds::where("component_id",$request->input("compoent_id"))->get();
     // }
+
+   
 }
 

@@ -20,7 +20,7 @@
     <!-- Header -->
     <div class="card-header">
       <div class="row justify-content-between align-items-center flex-grow-1">
-        <div class="col-sm-6 col-md-4 mb-3 mb-sm-0">
+        <div class="col-sm-5 col-md-4 mb-3 mb-sm-0">
           <form>
             <!-- Search -->
             <div class="input-group input-group-merge input-group-flush">
@@ -35,7 +35,7 @@
           </form>
         </div>
 
-        <div class="col-sm-12">
+        <div class="col-sm-5">
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
             <!-- Datatable Info -->
             <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0" style="display: none;">
@@ -50,6 +50,14 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <div class="col-sm-2">
+         <div class="col-sm-auto">
+          <a class="btn btn-primary float-right" href="{{ baseUrl('/visa-service-groups/add') }}">
+            <i class="tio-add mr-1"></i> Add 
+          </a>
+        </div>
         </div>
       </div>
       <!-- End Row -->

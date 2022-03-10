@@ -1953,9 +1953,6 @@ if(!function_exists("criteria_options")){
         return $criteria_options;
     }
 }
-
-
-
 if(!function_exists("cvBasedOptions")){
     function cvBasedOptions($cv_section,$options,$question=array(),$component_id=''){
         // echo "component_id: ".$component_id."<br>";
@@ -2561,4 +2558,80 @@ if(!function_exists("dependentQuestions")){
         return $result;
     }
 }
+if(!function_exists("languageProficiencies")){
+    function languageProficiencies($type){
+        $proficencies = array();
+        if($type == 'first_official'){
+            if(Auth::check()){
+                $first_official = UserLanguageProficiency::where("user_id",\Auth::user()->unique_id)->where('type','first_official')->first();
+                if(!empty($first_official)){
+                    $viewData['first_official'] = $first_official;
+                    // $second_off_languages = OfficialLanguages::where("unique_id","!=",$first_official->language_id)->get();
+                    $proficiencies = LanguageProficiency::where("official_language",$first_official->language_id)->get();
+                }
+            }else{
+                $proficiencies = LanguageProficiency::get(); 
+            }
+        }else{
+            if(Auth::check()){
+                $second_official = UserLanguageProficiency::where("user_id",\Auth::user()->unique_id)
+                                                ->where('type','second_official')
+                                                ->first();
+                if(!empty($second_official)){
+                    $proficiencies = LanguageProficiency::where("official_language",$second_official->language_id)->get();
+                }
+            }else{
+                $proficiencies = LanguageProficiency::get(); 
+            }
+        }
+        
+        $second_off_languages = array();
+        $first_proficencies = array();
+        $second_proficencies = array();
+        
+        return $proficiencies;
+    }
+}
 
+if(!function_exists("wagesTypes")){
+    function wagesTypes(){
+        $types = array("hours","week","monthly","yearly");
+        return $types;
+    }
+}
+
+if(!function_exists("matchWageOptions")){
+    function matchWageOptions($selected_wage,$type,$options){
+        // echo "ALL----------------<br>";
+        // pre($options->toArray());
+        if($type == 'monthly'){
+            $annual_wage = $selected_wage * 12;
+        }elseif($type == 'week'){
+            $annual_wage = $selected_wage * 52;
+        }elseif($type == 'hours'){
+            $annual_wage = (($selected_wage * 40)*4) * 12;
+        }else{
+            $annual_wage = $selected_wage;
+        }
+        // echo "<h2>".$annual_wage."</h2>";
+        $selected_option = array();
+        foreach($options as $option){
+            
+            $wage_range = explode("-",$option->option_value);
+            if(count($wage_range) == 2){
+                if($annual_wage >= $wage_range[0]  && $annual_wage <= $wage_range[1]){
+                    $selected_option = $option;                   
+                }
+            }
+            if(count($wage_range) == 1){
+                if($annual_wage >= $wage_range[0]){
+                    $selected_option = $option;
+                }
+            }
+        }
+        // echo "---------------------------------- <Br>selected option: ";
+        // pre($selected_option->toArray());
+        // echo "---------------------------------- <br>";
+        return $selected_option;
+    }
+}

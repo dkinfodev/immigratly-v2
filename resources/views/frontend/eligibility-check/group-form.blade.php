@@ -64,6 +64,21 @@
                                             @endif
                                         @endif
                                         <div class="question-options mt-2" style="display:{{ $block }}">
+                                        @if($ques->EligibilityQuestion->wage_type == '1')
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <input type="number" placeholder="Enter your wage" class="form-control bg-white p-2" name="question[{{$group->unique_id}}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}][wage_value]"  required />
+                                                </div>
+                                                <div class="col-md-4">
+                                                <select name="question[{{$group->unique_id}}][{{ $component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}][wage_type]" class="wage_type">
+                                                        <option value="">Select Wage Type</div>
+                                                        @foreach(wagesTypes() as $wagetype)
+                                                        <option value="{{ $wagetype }}">{{ucfirst($wagetype)}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        @else
                                             @if($ques->EligibilityQuestion->option_type == 'dropdown')
                         
                                             @if(!empty($check_ques))
@@ -96,9 +111,7 @@
                                                         class="custom-control-input"
                                                         name="question[{{ $record->Group->unique_id }}][{{ $component->Component->unique_id }}][{{$ques->EligibilityQuestion->unique_id}}]"  required>
                                                     @endif
-                                                        
-                                                        <label class="custom-control-label"
-                                                            for="customInlineRadio-{{$component->component_id}}-{{$option->id}}">{{$option->option_label}} ({{$option->score}})</label>
+                                                        <label class="custom-control-label" for="customInlineRadio-{{$component->component_id}}-{{$option->id}}">{{$option->option_label}}({{$option->score}})</label>
                                                     </div>
                                                 </div>
                                                 <!-- End Form Check -->
@@ -106,6 +119,7 @@
 
                                                 @endif
                                                 <!-- End Form Check -->
+                                            @endif
                                         </div>
                                     </li>
                                     @if(\Auth::check())    

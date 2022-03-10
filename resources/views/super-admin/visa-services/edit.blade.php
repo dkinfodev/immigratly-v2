@@ -28,7 +28,7 @@
         <div class="js-form-message form-group row">
           <label class="col-sm-2 col-form-label">Service Under</label>
           <div class="col-sm-10">
-            <select class="form-control" name="parent_id"
+            <select class="form-control" id="parent_id" name="parent_id"
             data-hs-select2-options='{
               "placeholder": "Select Service"
             }'
@@ -63,6 +63,42 @@
               <option {{ (in_array($document->id,$document_folders))?'selected':'' }} value="{{ $document->id }}">{{$document->name}}</option>
               @endforeach
             </select>
+          </div>
+        </div>
+        <div class="form-group row dependent_checkbox">
+          <label class="col-sm-2 col-form-label">Is Dependent</label>
+          <div class="col-sm-10">  
+            <div class="custom-control custom-checkbox mt-2">
+              <input {{$record->is_dependent == 1?'checked':''}} type="checkbox" id="is_dependent" value="1" name="is_dependent" class="custom-control-input">
+              <label class="custom-control-label" for="is_dependent">&nbsp;</label>
+            </div>
+          </div>
+        </div>
+        <div class="js-form-message form-group row dependent_visa_service" style="display: {{$record->is_dependent == 1?'':'none'}}">
+          <label class="col-sm-2 col-form-label">Dependent Services</label>
+          <div class="col-sm-10">
+            <select class="form-control dependent_service" name="dependent_visa_service"
+            data-hs-select2-options='{
+              "placeholder": "Select Visa Service"
+            }'
+            >
+              <option value="0">None</option>
+              @foreach($main_services as $service)
+              <option {{$record->dependent_visa_service == $service->unique_id?'selected':''}} value="{{ $service->unique_id }}">{{$service->name}}</option>
+              @endforeach
+            </select>
+          </div>
+        </div>
+        <div class="js-form-message form-group row dependent_visa_service" style="display:none">
+          <label class="col-sm-2 col-form-label">Select Questions</label>
+          <div class="col-sm-10">
+            <div class="dependent_questions"></div>
+            <!-- <select class="form-control dependent_questions" name="dependent_questions[]" multiple
+            data-hs-select2-options='{
+              "placeholder": "Select Questions"
+            }'
+            >
+            </select> -->
           </div>
         </div>
         <div class="js-form-message form-group row">
@@ -113,6 +149,63 @@
   @section('javascript')
   <script type="text/javascript">
     $(document).ready(function(){
+      $("#parent_id").change(function(){
+        if($(this).val() != 0){
+          $(".dependent_checkbox").hide();
+          $("#is_dependent").prop("checked",false);
+          $(".dependent_visa_service").hide();
+        }else{
+          $(".dependent_checkbox").show();
+        }
+      })
+      $(".dependent_service").change(function(){
+        if($(this).val() != ''){
+          var current_visa_service = "{{$record->dependent_visa_service}}";
+          if($(this).val() == current_visa_service){
+            $(".dependent_visa_service").hide();
+            $(".dependent_questions").html('');
+            return false;
+          }
+          $.ajax({
+              type: "POST",
+              url: BASEURL + '/visa-services/fetch-questions-with-components',
+              data:{
+                  _token:csrf_token,
+                  visa_service_id:$(this).val(),
+              },
+              dataType:'json',
+              beforeSend:function(){
+                  showLoader();
+                  $(".dependent_questions").html('');
+              },
+              success: function (response) {
+                  hideLoader();
+                  if(response.status == true){
+                   
+                    
+                    $(".dependent_visa_service").show();
+                    
+                    $(".dependent_questions").html(response.options);
+                    initSelect(".dependent_questions");
+                  }else{
+                    $(".dependent_questions").html('');
+                  }
+              },
+              error:function(){
+                internalError();
+              }
+          });
+        }else{
+          $(".dependent_questions").html('');
+        }
+      });
+      $("#is_dependent").change(function(){
+        if($(this).is(":checked")){
+          $(".dependent_visa_service").show();
+        }else{
+          $(".dependent_visa_service").hide();
+        }
+      });
       $(".update-btn").click(function(e){
         e.preventDefault(); 
         $(".update-btn").attr("disabled","disabled");
@@ -129,9 +222,10 @@
           data:formData,
           dataType:"json",
           beforeSend:function(){
-
+            showLoader();
           },
           success:function(response){
+            hideLoader();
            $(".update-btn").find(".fa-spin").remove();
            $(".update-btn").removeAttr("disabled");
            if(response.status == true){
@@ -155,6 +249,20 @@
      });
       });
     });
+    function checkAll(e){
+      if($(e).is(":checked")){
+        $(".ques_check").prop("checked",true);
+      }else{
+        $(".ques_check").prop("checked",false);
+      }
+    }
+    function selectQues(e){
+      if($(e).is(":checked")){
+        $(e).parents("tr").find('.dependent_ques').removeAttr("disabled");
+      }else{
+        $(e).parents("tr").find('.dependent_ques').attr("disabled","disabled");
+      }
+    }
   </script>
 
   @endsection

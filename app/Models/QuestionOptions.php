@@ -15,7 +15,9 @@ class QuestionOptions extends Model
         CombinationalOptions::where("option_one_id",$id)->orWhere("option_two_id",$id)->delete();
 
     }
-
+    public function getTableColumns() {
+        return $this->getConnection()->getSchemaBuilder()->getColumnListing($this->getTable());
+    }
     public function Question()
     {
         return $this->belongsTo('App\Models\EligibilityQuestions','question_id','unique_id');

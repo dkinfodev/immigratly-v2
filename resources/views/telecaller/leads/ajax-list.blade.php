@@ -1,6 +1,6 @@
 @foreach($records as $key => $record)
 <tr>
-  <td class="table-column-pr-0">
+  <td scope="col" class="table-column-pr-0 table-column-pl-0 pr-0 ">
     <div class="custom-control custom-checkbox">
       <input type="checkbox" class="custom-control-input row-checkbox" value="{{ base64_encode($record->id) }}" id="row-{{$key}}">
       <label class="custom-control-label" for="row-{{$key}}"></label>
@@ -63,7 +63,7 @@
    </td>
    @if(role_permission('leads','recommend-as-client') && $record->mark_as_client == 0)
    <td>
-      <button data-href="<?php echo baseUrl('leads/recommend-as-client/'.$record->unique_id) ?>" href="javascript:;" onclick="recommendAsClient(this)" type="button" class="btn btn-primary btn-xs"><i class="tio-user-switch"></i> Recommend as Client</button>
+      <button data-href="<?php echo baseUrl('leads/recommend-as-client/'.$record->unique_id) ?>" href="javascript:;" onclick="recommendAsClient(this)" type="button" class="btn btn-primary btn-xs"><i class="tio-user-switch"></i> Make Client</button>
    </td>
    @endif
    @if($record->mark_as_client == 0)

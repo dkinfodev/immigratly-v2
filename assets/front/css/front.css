@@ -85,3 +85,10 @@
 .select2-selection__arrow {
     height: 50px !important;
 }
+.question-options .form-check {
+width: 23%;
+word-break: break-all;
+}
+span.select2-selection.custom-select {
+    height: auto !important;
+}

@@ -64,6 +64,8 @@ class VisaServiceGroupsController extends Controller
                                                                 $query->whereNotIn("unique_id",$visa_service_ids);
                                                             }
                                                     })
+                                                    ->where("parent_id",0)
+                                                    ->where("is_dependent",0)
                                                     ->get();
         $viewData['program_types'] = ProgramTypes::get();
         
@@ -145,6 +147,8 @@ class VisaServiceGroupsController extends Controller
                                                                 $query->whereNotIn("unique_id",$visa_service_ids);
                                                             }
                                                     })
+                                                    ->where("parent_id",0)
+                                                    ->where("is_dependent",0)
                                                     ->get();
         $viewData['program_types'] = ProgramTypes::get();
         $viewData['pageTitle'] = "Edit Visa Group Service";

@@ -111,7 +111,7 @@
                     <label class="form-label" for="fullNameSrEmail">Full name</label>
                     <!-- Form Group -->
                     <!-- Form Group -->
-                    <div class="form-row">
+                    <div class="row">
                         <div class="col-sm-6">
                             <div class="js-form-message form-group">
                                 <input type="text" class="form-control form-control-lg" name="first_name"

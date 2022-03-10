@@ -111,7 +111,7 @@ li.select2-selection__choice {
                 <div class="mb-3"> 
                   <label class="form-label" for="fullNameSrEmail">Full name</label>
                   <!-- Form Group -->
-                    <div class="form-row">
+                    <div class="row">
                       <div class="col-sm-6">
                         <div class="js-form-message form-group">
                           <input type="text" class="form-control form-control-lg" name="first_name" id="first_name" placeholder="First name" aria-label="First name" required data-msg="Please enter your first name.">
@@ -135,7 +135,7 @@ li.select2-selection__choice {
             <div class="mb-3 js-form-message"> 
              <label class="form-label" for="fullNameSrEmail">Your phone number</label>
              <!-- Form Group -->
-             <div class="form-row">
+             <div class="row">
               <div class="col-6 ">
                <!-- Select -->
 

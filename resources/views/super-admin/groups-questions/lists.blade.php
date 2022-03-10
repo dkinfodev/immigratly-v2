@@ -23,31 +23,7 @@
 @section('content')
 <!-- Content -->
 <div class="groups_questions">
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="row align-items-end">
-      <div class="col-sm mb-2 mb-sm-0">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb breadcrumb-no-gutter">
-            <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/visa-services') }}">Visa Services</a></li>
-            <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/visa-services/eligibility-questions/'.$visa_service_id) }}">Eligibility Question</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
-          </ol>
-        </nav>
 
-        <h1 class="page-title">{{$pageTitle}}</h1>
-      </div>
-      <div class="col-sm-auto">
-      
-        <a class="btn btn-primary" href="{{ baseUrl('/visa-services/eligibility-questions/'.$visa_service_id.'/groups-questions/add') }}">
-          <i class="tio-add mr-1"></i> Add 
-        </a>
-      </div>
-    </div>
-    <!-- End Row -->
-  </div>
-  <!-- End Page Header -->
 
   <!-- Card -->
   <div class="card">
@@ -57,29 +33,36 @@
         <div class="col-sm-6 col-md-4 mb-3 mb-sm-0">
          
             <!-- Search -->
-            <!-- <div class="input-group input-group-merge input-group-flush">
+            <div class="input-group input-group-merge input-group-flush">
               <div class="input-group-prepend">
                 <div class="input-group-text">
                   <i class="tio-search"></i>
                 </div>
               </div>
-              <input id="datatableSearch"  type="text" class="form-control" placeholder="Search Language" aria-label="Search Language">
-            </div> -->
+              <input id="datatableSearch"  type="text" class="form-control" placeholder="Search Group" aria-label="Search Group">
+            </div>
         </div>
 
-        <div class="col-sm-6">
-          <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
-            <!-- Datatable Info -->
-            <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0" style="display: none;">
-              <div class="d-flex align-items-center">
-                <span class="font-size-sm mr-3">
-                  <span id="datatableCounter">0</span>
-                  Selected
-                </span>
-                <a class="btn btn-sm btn-outline-danger" data-href="{{ baseUrl('visa-services/eligibility-questions/'.$visa_service_id.'/groups-questions/delete-multiple') }}" onclick="deleteMultiple(this)" href="javascript:;">
-                  <i class="tio-delete-outlined"></i> Delete
-                </a>
+        <div class="col-sm-6 text-right">
+          <div class="float-right">
+            <div class="d-sm-flex">
+              <div class="justify-content-sm-end align-items-sm-center">
+                <!-- Datatable Info -->
+                <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0" style="display: none;">
+                  <div class="d-flex align-items-center">
+                    <span class="font-size-sm mr-3">
+                      <span id="datatableCounter">0</span>
+                      Selected
+                    </span>
+                    <a class="btn btn-sm btn-outline-danger" data-href="{{ baseUrl('visa-services/eligibility-questions/'.$visa_service_id.'/groups-questions/delete-multiple') }}" onclick="deleteMultiple(this)" href="javascript:;">
+                      <i class="tio-delete-outlined"></i> Delete
+                    </a>
+                  </div>
+                </div>
               </div>
+              <a class="btn btn-primary ml-3" href="{{ baseUrl('/visa-services/eligibility-questions/'.$visa_service_id.'/groups-questions/add') }}">
+                <i class="tio-add mr-1"></i> Add 
+              </a>
             </div>
           </div>
         </div>
@@ -168,11 +151,13 @@ $(document).ready(function(){
 })
 loadData();
 function loadData(page=1){
+  var  search = $("#datatableSearch").val();
     $.ajax({
         type: "POST",
         url: BASEURL + '/visa-services/eligibility-questions/{{$visa_service_id}}/groups-questions/ajax-list?page='+page,
         data:{
             _token:csrf_token,
+            search:search
         },
         dataType:'json',
         beforeSend:function(){

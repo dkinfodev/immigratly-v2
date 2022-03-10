@@ -23,5 +23,9 @@ class LanguageProficiency extends Model
         return $this->hasMany('App\Models\LanguageScoreChart','language_proficiency_id','unique_id')->orderBy("clb_level","desc");
     }
    
+    public function OffLang()
+    {
+        return $this->belongsTo('App\Models\OfficialLanguages','official_language','unique_id');
+    }
     
 }

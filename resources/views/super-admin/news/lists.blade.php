@@ -70,7 +70,7 @@
         </div>
 
         <div class="col-sm-2">
-          <a class="btn btn-primary" href="{{ baseUrl('/news/add') }}">
+          <a class="btn btn-primary float-right" href="{{ baseUrl('/news/add') }}">
             <i class="tio-add mr-1"></i> Add 
           </a>
         </div>

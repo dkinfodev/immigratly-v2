@@ -53,7 +53,7 @@
 
 
         <div class="col-sm-3">
-          <a class="btn btn-primary" onclick="showPopup('<?php echo baseUrl('working-schedules/add') ?>')" href="javascript:;">
+          <a class="btn btn-primary float-right" onclick="showPopup('<?php echo baseUrl('working-schedules/add') ?>')" href="javascript:;">
             Add Schedule
           </a>
         </div>

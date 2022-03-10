@@ -112,7 +112,7 @@ class DashboardController extends Controller
             $response['message'] = $errMsg;
             return response()->json($response);
         }
-       
+ 
         // $object->first_name = $request->input("first_name");
         // $object->last_name = $request->input("last_name");
         // // $object->email = $request->input("email");
@@ -160,9 +160,7 @@ class DashboardController extends Controller
 
         $languages = Languages::get();
         $viewData['languages'] = $languages;
-
-        $viewData['countries'] = $countries;
-        
+        $viewData['countries'] = $countries;    
         $viewData['record'] = $record;
         $viewData['record2'] = $record2;
 

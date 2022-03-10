@@ -1,12 +1,11 @@
-@if(count($records) > 0)
 @foreach($records as $key => $record)
 <tr>
-  <th scope="row">
+  <td scope="col" class="table-column-pr-0 table-column-pl-0 pr-0 ">
     <div class="custom-control custom-checkbox">
       <input type="checkbox" class="custom-control-input row-checkbox parent-check" data-key="{{ $key }}" id="row-{{$key}}" value="{{ base64_encode($record->id) }}">
       <label class="custom-control-label" for="row-{{$key}}"></label>
     </div>
-  </th>
+  </td>
   <td class="table-column-pl-0">
       {{$record->name}}
   </td>
@@ -129,11 +128,7 @@
 </tr>
 @endforeach
 @endforeach
-@else
-<tr>
-  <td colspan="3" class="text-center text-danger">No records available</td>
-</tr>
-@endif
+
 
 <script>
 $(document).ready(function(){

@@ -56,6 +56,24 @@
             </select>
           </div>
         </div>
+        <div class="js-form-message form-group row">
+          <label class="col-sm-2 col-form-label">Is Language Proficiency</label>
+          <div class="col-sm-10 pt-2">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" name="language_prof_type" id="language_prof_type" class="custom-control-input row-checkbox non-eligible" value="1" >
+                <label class="custom-control-label non-eligible-label" for="language_prof_type">&nbsp;</label>
+              </div>
+          </div>
+        </div>
+        <div class="js-form-message form-group row">
+          <label class="col-sm-2 col-form-label">Is Wage Type</label>
+          <div class="col-sm-10 pt-2">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" name="wage_type" id="wage_type" class="custom-control-input row-checkbox non-eligible" value="1" >
+                <label class="custom-control-label non-eligible-label" for="wage_type">&nbsp;</label>
+              </div>
+          </div>
+        </div>
         <div style="display:none" id="cv_section">
           <div class="js-form-message form-group row">
             <label class="col-sm-2 col-form-label">CV Section</label>
@@ -145,7 +163,7 @@
             </select>
           </div>
         </div>
-        <div class="js-add-field"
+        <div class="option-blocks js-add-field"
                data-hs-add-field-options='{
                   "template": "#addOptionsTemplate",
                   "container": "#addOptionsContainer",
@@ -164,6 +182,9 @@
                 <div class="col-sm-2 d-none d-sm-inline-block">
                   <h6 class="card-title text-cap">Option Label</h6>
                 </div>
+                <!-- <div class="col-sm-2 wage_type_block" style="display:none">
+                  <h6 class="card-title text-cap">Wage Type</h6>
+                </div> -->
                 <div class="col-sm-2 d-none d-sm-inline-block">
                   <h6 class="card-title text-cap">Score</h6>
                 </div>
@@ -209,6 +230,14 @@
                       <div class="col-md-2 js-form-message">
                         <input type="text" class="form-control mb-3 option_label" placeholder="Option Label" aria-label="Option Label">
                       </div>
+                      <!-- <div class="col-md-2 js-form-message wage_type_block" style="display:none">
+                          <select class="wage_type no_select2">
+                              <option value="">Select Option</option>
+                              @foreach(wagesTypes() as $wagetype)
+                              <option value="{{ $wagetype }}">{{ucfirst($wagetype)}}</option>
+                              @endforeach
+                          </select>
+                      </div> -->
                       <div class="col-md-2 js-form-message">
                         <input type="number" class="form-control mb-3 score" placeholder="Score" aria-label="Score">
                       </div>
@@ -233,6 +262,9 @@
                 </div>
             <!-- End Add Phone Input Field -->
           </div>
+
+
+          
           <div class="js-form-message form-group row score_points" style="display:none">
               <div class="col-md-12">
                   <table class="table table-bordered">
@@ -276,6 +308,50 @@
                 <textarea name="response_comment" data-msg="Please enter description." id="response_comment" class="form-control editor"></textarea>
             </div>
         </div>
+        <div class="form-group fun-facts-block">
+            <div class="ff-add-field">
+
+                <div class="form-group">
+                    <!-- Container For Input Field -->
+                    <div class="row">
+                        <div class="col-md-3 pt-4">
+                            <label>Enter Fun Facts</label>
+                        </div>
+                        <div class="col-md-9">
+                            <div id="addFunFactsContainer">
+                               
+                            </div>
+                            <a id="add-fun-facts" href="javascript:;"
+                                class="form-link btn btn-sm btn-no-focus btn-ghost-primary">
+                                <i class="tio-add"></i> Add More
+                            </a>
+                        </div>
+                    </div>
+
+
+
+                    <!-- Add Phone Input Field -->
+                    <div id="addFunFactsTemplate" class="item-row" style="display: none;">
+                        <!-- Content -->
+                        <div class="item-row">
+                            <div class="row">
+                                <div class="col-md-10 js-form-message">
+                                    <input type="text" class="form-control mb-3 fun_facts" placeholder="Enter Fun Facts" aria-label="Fun Facts">
+                                </div>
+                                <div class="col-md-2">
+                                    <a class="input-group-add-field-delete" href="javascript:;" onclick="deleteFunFacts(this)" data-toggle="tooltip" data-placement="top" title="Remove item">
+                                        <i class="tio-clear"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Add Phone Input Field -->
+                    </div>
+                </div>
+            </div>
+            <!-- End Input Group -->
+            </form>
+        </div>
         <div class="form-group text-center">
           <button type="submit" class="btn add-btn btn-primary">Save</button>
         </div>
@@ -302,8 +378,18 @@ $(document).ready(function(){
           $("#cv_section").hide();
         }
     });
-    
-  $('.js-add-field').each(function () {
+    // $("#wage_type").change(function() {
+    //     if ($(this).val() == '1') {
+    //         $(".wage_type_block").show();
+    //         $(".wage_type_block").find(".wage_type").removeAttr("disabled");
+    //         $("#addOptionsContainer > .item-row:last").find(".wage_type_block").find('.wage_type').removeClass("no_select2");
+    //         initSelect("#addOptionsContainer");
+    //     } else {
+    //         $(".wage_type_block").hide();
+    //         $(".wage_type_block").find(".wage_type").attr("disabled","disabled");
+    //     }
+    // });
+  $('.js-add-field.option-blocks').each(function () {
     new HSAddField($(this), {
       addedField: function() {
         var index = randomNumber();
@@ -325,6 +411,8 @@ $(document).ready(function(){
         $("#addOptionsContainer > .item-row:last").find(".option_label").attr("required","true");
         $("#addOptionsContainer > .item-row:last").find(".score").attr("name","options["+index+"][score]");
         $("#addOptionsContainer > .item-row:last").find(".score").attr("required","true");
+        // $("#addOptionsContainer > .item-row:last").find(".wage_type").attr("name","options["+index+"][wage_type]");
+        
         $("#addOptionsContainer > .item-row:last").find(".image").attr("name","options["+index+"][image]");
 
         $("#addOptionsContainer > .item-row:last").find(".language_proficiency_id").attr("name", "options[" + index + "][language_proficiency_id]");
@@ -348,6 +436,19 @@ $(document).ready(function(){
             $("#addOptionsContainer > .item-row:last").find(".criteria_block").hide();
             $("#addOptionsContainer > .item-row:last").find(".criteria_block").html('');
         }
+        // if($("#wage_type:checked").val() == '1'){
+            // $("#addOptionsContainer > .item-row:last").find(".wage_type").attr("required","true");
+            // $("#addOptionsContainer > .item-row:last").find(".wage_type_block").show();
+            // $("#addOptionsContainer > .item-row:last").find(".wage_type_block").find('.wage_type').removeAttr('disabled');
+            // $("#addOptionsContainer > .item-row:last").find(".wage_type_block").find('.wage_type').removeClass("no_select2");
+        // }else{
+            // $("#addOptionsContainer > .item-row:last").find(".wage_type_block").hide();
+            // $("#addOptionsContainer > .item-row:last").find(".wage_type_block").find('.wage_type').attr('disabled','disabled');
+            // $("#addOptionsContainer > .item-row:last").find(".wage_type_block").find('.wage_type').addClass("no_select2");
+            
+
+            // initSelect("#addOptionsContainer");
+        // }
         $('[data-toggle="tooltip"]').tooltip();
         
       },
@@ -356,6 +457,27 @@ $(document).ready(function(){
       }
     }).init();
   });
+  // $('.fun-facts-block .ff-add-field').each(function() {
+  //     var addField = new HSAddField($(this), {
+  //         addedField: function() {
+  //             var index = randomNumber();
+  //             $("#addFunFactsContainer > .item-row:last").find(".fun_facts").attr("name",
+  //                 "fun_facts[" + index + "][fun_facts]");
+  //             // $("#addFunFactsContainer > .item-row:last").find(".fun_fact_id").attr(
+  //             //     "name", "fun_facts[" + index + "][id]");
+
+  //         },
+  //         deletedField: function() {
+  //             $('.tooltip').hide();
+  //         }
+  //     }).init();
+  // });
+  $("#add-fun-facts").click(function(){
+      var html = $("#addFunFactsTemplate").html();
+      $("#addFunFactsContainer").append(html);
+      var index = randomNumber();
+      $("#addFunFactsContainer > .item-row:last").find(".fun_facts").attr("name","fun_facts[" + index + "][fun_facts]");
+  })
   $("#form").submit(function(e){
         e.preventDefault(); 
         if($("#addOptionsContainer .item-row").length <= 0){
@@ -389,6 +511,9 @@ $(document).ready(function(){
      });
   });
 });
+function deleteFunFacts(e){
+    $(e).parents(".item-row").remove();
+}
 function checkEligible(e){
   if($(e).is(":checked")){
     $(e).parents(".non-elg-area").find(".non-eligible-reason").show();
