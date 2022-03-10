@@ -39,6 +39,7 @@ use App\Models\CombinationalOptions;
 use App\Models\MultipleOptionsGroups;
 use App\Models\QuestionOptions;
 use App\Models\ComponentQuestionIds;
+use App\Models\ProfessionalReview;
 
 if (! function_exists('getFileType')) {
     function getFileType($ext) {
@@ -62,6 +63,17 @@ if (! function_exists('allowed_extension')) {
     function allowed_extension(){
         $ext = array(".doc",".docx",".xls",".xlsx",".csv",".ppt",".pptx",".pdf",".jpg",".jpeg",".png",".gif","doc","docx","xls","xlsx","csv","ppt","pptx","pdf","jpg","jpeg","png","gif");
         return $ext;
+    }
+}
+
+if (! function_exists('checkReview')) {
+    function checkReview($id) {
+        $object = ProfessionalReview::where("professional_id",$id)->count();
+        if(!empty($object)){
+            return $object;
+        }else{
+            return 0;
+        }   
     }
 }
 if (! function_exists('pre')) {
