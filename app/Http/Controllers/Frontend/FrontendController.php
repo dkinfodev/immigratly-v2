@@ -27,6 +27,7 @@ use App\Models\States;
 use App\Models\City;
 use App\Models\Languages;
 use App\Models\ArrangeGroups;
+use App\Models\ProfessionalReview;
 
 class FrontendController extends Controller
 {
