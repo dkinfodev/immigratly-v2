@@ -25,6 +25,27 @@
           </div>
           <!-- End Form Group -->
 
+          <!-- Form Group -->
+          <div class="row form-group js-form-message">
+            <label class="col-sm-3 col-form-label input-label">Duration</label>
+            <div class="col-sm-9">
+            <select class="form-control @error('duration') is-invalid @enderror" name="duration" id="duration">
+              <option value="">Select</option>
+              <?php $durations = appointmentDuration() ?>
+              @foreach($durations as $duration)
+              <option value="{{$duration}}">{{$duration}}</option>
+              @endforeach
+            </select>
+
+              @error('duration')
+              <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+              </span>
+              @enderror
+            </div>
+          </div>
+          <!-- End Form Group -->
+
         </form>
     </div>
     <div class="modal-footer">
@@ -36,7 +57,7 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-    initSelect('#popup-form ');
+    //initSelect('#popup-form ');
     
     $("#popup-form").submit(function(e){
         e.preventDefault();

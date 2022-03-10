@@ -22,49 +22,40 @@
     <!-- Card -->
     <div class="card">
         <div class="card-body">
-            <form id="form" class="js-validate" action="{{ baseUrl('appointment-types/save') }}" method="post">
+            <form id="form" class="js-validate" action="{{ baseUrl('appointment-types/update/'.base64_encode($record->id)) }}" method="post">
                 @csrf
               <div class="row justify-content-md-between">
                 <div class="col-md-12">
-                  <div class="js-form-message form-group">
-                    <label class="input-label font-weight-bold">Name</label>
-                    <input type="text" class="form-control form-control-hover-light" id="name" placeholder="Enter Schedule" name="name"  data-msg="Please enter Enter Schedule name" aria-label="Enter Schedule name" value="{{ $record->name }}">
-                  </div>
-                </div>
-                <div class="col-md-12">
-                  <!-- Form Group -->
-                    <div class="js-add-field row form-group"
-                        data-hs-add-field-options='{
-                            "template": "#addAddressFieldEgTemplate",
-                            "container": "#addAddressFieldEgContainer",
-                            "defaultCreated": 0
-                          }'>
-                      <label for="addressLineLabelEg1" class="col-sm-3 col-form-label input-label">Working Horus</span></label>
+                  <div class="js-form-message row form-group">
+                      <label for="addressLineLabelEg1" class="col-sm-3 col-form-label input-label">Name</span></label>
 
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" name="addressLineEg1" id="addressLineLabelEg1" placeholder="Your address" aria-label="Your address">
+                      <input type="text" class="form-control form-control-hover-light" id="name" placeholder="Enter Schedule" name="name"  data-msg="Please enter schedule name" aria-label="Enter schedule name" value="{{ $record->name }}">
+                      </div>
+
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+                  <!-- Form Group -->
+                    <div class="js-add-field row form-group">
+                      <label for="addressLineLabelEg1" class="col-sm-3 col-form-label input-label">Duration</span></label>
+
+                      <div class="col-sm-9">
+                        <select class="form-control @error('duration') is-invalid @enderror" name="duration" id="duration">
+                          <option value="">Select</option>
+                          <?php $durations = appointmentDuration() ?>
+                          @foreach($durations as $duration)
+                          <option value="{{$duration}}">{{$duration}}</option>
+                          @endforeach
+                        </select>
 
                         <!-- Container For Input Field -->
-                        <div id="addAddressFieldEgContainer"></div>
-
-                        <a href="javascript:;" class="js-create-field form-link btn btn-sm btn-no-focus btn-ghost-primary">
-                          <i class="tio-add"></i> Add address
-                        </a>
+                        
                       </div>
                     </div>
                     <!-- End Form Group -->
 
-                    <!-- Add Phone Input Field -->
-                    <div id="addAddressFieldEgTemplate" style="display: none;">
-                      <div class="input-group-add-field">
-                        <input type="text" class="form-control" data-name="addressLine" placeholder="Your address" aria-label="Your address">
-
-                        <a class="js-delete-field input-group-add-field-delete" href="javascript:;">
-                          <i class="tio-clear"></i>
-                        </a>
-                      </div>
-                    </div>
-                    <!-- End Add Phone Input Field -->
                 </div>
               </div>
               <div class="form-group">

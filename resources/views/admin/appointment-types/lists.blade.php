@@ -75,7 +75,9 @@
               </div>
             </th>
             <th scope="col">Name</th>
+            <th scope="col">Duration</th>
             <th scope="col">Action</th>
+
           </tr>
         </thead>
         <tbody>
@@ -222,7 +224,10 @@ function changePage(action){
   }
   
 }
-function confirmDelete(id){
+function confirmDelete(e){
+
+    var id = e.id;
+    alert("hello");
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -238,7 +243,7 @@ function confirmDelete(id){
       if (result.value) {
         $.ajax({
             type: "POST",
-            url: BASEURL + '/appointment-types/delete-user',
+            url: BASEURL + '/appointment-types/delete/'+id,
             data:{
                 _token:csrf_token,
                 user_id:id,
@@ -249,10 +254,9 @@ function confirmDelete(id){
                     Swal.fire({
                         type: "success",
                         title: 'Deleted!',
-                        text: 'User has been deleted.',
+                        text: 'Record has been deleted.',
                         confirmButtonClass: 'btn btn-success',
                     }).then(function () {
-
                         window.location.href= result.redirect;
                     });
                 }else{
@@ -314,47 +318,6 @@ function changeStatus(e){
   }
 }
 
-function profileStatus(e){
-  var id = $(e).attr("data-id");
-  if($(e).is(":checked")){
-    $.ajax({
-        type: "POST",
-        url: BASEURL + '/appointment-types/profile-status/active',
-        data:{
-            _token:csrf_token,
-            id:id,
-        },
-        dataType:'json',
-        success: function (result) {
-            if(result.status == true){
-                successMessage(result.message);
-            }else{
-                errorMessage(result.message);
-            }
-        },
-    });
-  }else{
-    $.ajax({
-        type: "POST",
-        url: BASEURL + '/appointment-types/profile-status/inactive',
-        data:{
-            _token:csrf_token,
-            id:id,
-        },
-        dataType:'json',
-        success: function (result) {
-            if(result.status == true){
-                successMessage(result.message);
-                loadData();
-            }else{
-                errorMessage(result.message);
-            }
-        },
-        error: function(){
-          internalError();
-        }
-    });
-  }
-}
+
 </script>
 @endsection

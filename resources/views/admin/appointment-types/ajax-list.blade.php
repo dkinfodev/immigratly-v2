@@ -13,6 +13,13 @@
   </td>
 
   <td>
+    <div class="d-flex">
+      {{$record->duration}}
+    </div>
+  </td>
+
+
+  <td>
     <div class="hs-unfold">
       <a class="js-hs-action btn btn-sm btn-white" href="javascript:;"
          data-hs-unfold-options='{

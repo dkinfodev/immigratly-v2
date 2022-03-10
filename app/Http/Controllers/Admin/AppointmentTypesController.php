@@ -103,21 +103,7 @@ class AppointmentTypesController extends Controller
         $object =  AppointmentTypes::find($id);
 
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email|unique:users,email,'.$object->id,
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'country_code' => 'required',
-            'phone_no' => 'required|unique:users,phone_no,'.$object->id,
-            'gender'=>'required',
-            'date_of_birth'=>'required',
-            // 'languages_known'=>'required',
-            'country_id'=>'required',
-            'state_id'=>'required',
-            'city_id'=>'required',
-            'address'=>'required',
-            'zip_code'=>'required',
-            'role'=>'required',
-            'profile_image'=>'mimes:jpeg,jpg,png,gif'
+            'name'=>'required',
         ]);
 
         if ($validator->fails()) {
@@ -126,83 +112,33 @@ class AppointmentTypesController extends Controller
             $errMsg = array();
             
             foreach($error as $key => $err){
+               
                 $errMsg[$key] = $err[0];
             }
             $response['message'] = $errMsg;
             return response()->json($response);
         }
-        $object->first_name = $request->input("first_name");
-        $object->last_name = $request->input("last_name");
-        $object->email = $request->input("email");
-        $object->country_code = $request->input("country_code");
-        $object->phone_no = $request->input("phone_no");
-        $object->date_of_birth = $request->input("date_of_birth");
-        $object->gender = $request->input("gender");
-        $object->country_id = $request->input("country_id");
-        $object->state_id = $request->input("state_id");
-        $object->city_id = $request->input("city_id");
-        $object->address = $request->input("address");
-        $object->zip_code = $request->input("zip_code");
-        
-        $object->role = $request->input("role");
-        $path = professionalDir()."/profile";
-        $object->languages_known = json_encode($request->input("languages_known"));
-        if($object->profile_image !=''){
-            if(file_exists($path.'/'.$object->profile_image))
-                unlink($path.'/'.$object->profile_image);
+        $id = \Auth::user()->id;
 
-            if(file_exists($path.'/thumb/'.$object->profile_image))
-                unlink($path.'/thumb/'.$object->profile_image);
-
-            if(file_exists($path.'/medium/'.$object->profile_image))
-                unlink($path.'/medium/'.$object->profile_image);
-        }
-        if ($file = $request->file('profile_image')){
-                
-            $fileName        = $file->getClientOriginalName();
-            $extension       = $file->getClientOriginalExtension() ?: 'png';
-            $newName        = mt_rand(1,99999)."-".$fileName;
-            $source_url = $file->getPathName();
-            // Thumb Image
-            
-            $destinationPath = $path.'/thumb';
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0777, true);
-            }
-            $destination_url = $destinationPath.'/'.$newName;
-            resizeImage($source_url, $destination_url, 100,100,80);
-
-            $destinationPath = $path.'/medium';
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0777, true);
-            }
-            $destination_url = $destinationPath.'/'.$newName;
-            resizeImage($source_url, $destination_url, 500,500,80);
-
-            $destinationPath = professionalDir()."/profile";
-            if($file->move($destinationPath, $newName)){
-                $object->profile_image = $newName;
-            }
-        }
-
-        $object->is_active = 1;
-        $object->is_verified = 1;
-        $object->created_by = \Auth::user()->id;
-
+        $object->name = $request->input("name");
+        $object->duration = $request->input("duration");
         $object->save();
-
-        $response['status'] = true;
-        $response['redirect_back'] = baseUrl('staff');
-        $response['message'] = "Updation sucessfully";
         
+        $response['status'] = true;
+        $response['redirect_back'] = baseUrl('appointment-types');
+        $response['message'] = "Record updated successfully";
+
         return response()->json($response);
     }
 
     public function deleteSingle($id){
         $id = base64_decode($id);
         AppointmentTypes::deleteRecord($id);
-        return redirect()->back()->with("success","Record has been deleted!");
+        
+        // \Session::flash('success', 'Records deleted successfully'); 
+        return redirect()->back()->with('error',"Record deleted successfully");
     }
+
     public function deleteMultiple(Request $request){
         $ids = explode(",",$request->input("ids"));
         for($i = 0;$i < count($ids);$i++){
