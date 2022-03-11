@@ -59,17 +59,23 @@
               </a>
             </li>
             <li class="navbar-vertical-aside-has-menu">
+              <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'locations'){ echo "active"; } } ?>" href="{{ baseUrl('/locations') }}">
+                <i class="tio-globe nav-icon"></i>
+                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Locations</span>
+              </a>
+            </li>
+            <li class="navbar-vertical-aside-has-menu">
               <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'appointment-types'){ echo "active"; } } ?>" href="{{ baseUrl('/appointment-types') }}">
                 <i class="tio-book-opened nav-icon"></i>
                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Appointment Type</span>
               </a>
             </li>
-            <li class="navbar-vertical-aside-has-menu">
+            <!-- <li class="navbar-vertical-aside-has-menu">
               <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'appointment-schedule'){ echo "active"; } } ?>" href="{{ baseUrl('/appointment/set-schedule') }}">
                 <i class="tio-book-opened nav-icon"></i>
                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Appointment Schedule</span>
               </a>
-            </li>
+            </li> -->
           </ul>
 
 

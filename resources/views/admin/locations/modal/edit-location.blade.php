@@ -13,13 +13,13 @@
         </div>
     </div>
     <div class="modal-body imm-education-modal-body">
-      <form method="post" id="popup-form" class="js-validate" action="{{ baseUrl('/appointment-types/save') }}">  
+      <form method="post" id="popup-form" class="js-validate" action="{{ baseUrl('/locations/update/'.base64_encode($record->id)) }}">  
           @csrf
           <!-- Form Group -->
           <div class="row form-group js-form-message">
-            <label class="col-sm-3 col-form-label input-label">Name</label>
+            <label class="col-sm-3 col-form-label input-label">Address</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name" placeholder="Enter Schedule Name" aria-label="Enter Schedule Name" value="">
+              <textarea type="text" class="form-control @error('name') is-invalid @enderror" name="address" id="name" placeholder="Enter Your Location" aria-label="Enter Your Location">{{$record->address}}</textarea>
               @error('name')
               <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
@@ -29,26 +29,6 @@
           </div>
           <!-- End Form Group -->
 
-          <!-- Form Group -->
-          <div class="row form-group js-form-message">
-            <label class="col-sm-3 col-form-label input-label">Duration</label>
-            <div class="col-sm-9">
-            <select class="form-control @error('duration') is-invalid @enderror" name="duration" id="duration">
-              <option value="">Select</option>
-              <?php $durations = appointmentDuration() ?>
-              @foreach($durations as $duration)
-              <option value="{{$duration}}">{{$duration}}</option>
-              @endforeach
-            </select>
-
-              @error('duration')
-              <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-              </span>
-              @enderror
-            </div>
-          </div>
-          <!-- End Form Group -->
 
         </form>
     </div>

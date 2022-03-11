@@ -1087,16 +1087,8 @@ Route::group(array('prefix' => 'admin'), function () {
         Route::post('/edit-reminder-note/{id}', [App\Http\Controllers\Admin\DashboardController::class, 'updateReminderNote']);
         Route::get('/delete-reminder-note/{id}', [App\Http\Controllers\Admin\DashboardController::class, 'deleteReminderNote']);
         
-        Route::group(array('prefix' => 'appointment'), function () {
         
-            Route::get('/', [App\Http\Controllers\Admin\AppointmentController::class, 'index']);
-            Route::post('/event-ajax-list', [App\Http\Controllers\Admin\AppointmentController::class, 'getAjaxList']); 
-            Route::get('/set-schedule', [App\Http\Controllers\Admin\AppointmentController::class, 'setSchedule']);
-            Route::post('/save-schedule', [App\Http\Controllers\Admin\AppointmentController::class, 'saveSchedule']);
-            Route::get('/add-event', [App\Http\Controllers\Admin\AppointmentController::class, 'addEvent']);
-            Route::post('/save-event', [App\Http\Controllers\Admin\AppointmentController::class, 'saveEvent']);
-        });
-        
+
         Route::group(array('prefix' => 'services'), function () {
             Route::get('/', [App\Http\Controllers\Admin\ServicesController::class, 'index']);
             Route::post('/ajax-list', [App\Http\Controllers\Admin\ServicesController::class, 'getAjaxList']); 
@@ -1176,6 +1168,16 @@ Route::group(array('prefix' => 'admin'), function () {
             Route::get('/change-password/{id}', [App\Http\Controllers\Admin\StaffController::class, 'changePassword']);
             Route::post('/update-password/{id}', [App\Http\Controllers\Admin\StaffController::class, 'updatePassword']);
         });
+        Route::group(array('prefix' => 'locations'), function () {
+            Route::get('/', [App\Http\Controllers\Admin\LocationsController::class, 'index']);
+            Route::post('/ajax-list', [App\Http\Controllers\Admin\LocationsController::class, 'getAjaxList']);
+            Route::get('/add', [App\Http\Controllers\Admin\LocationsController::class, 'add']);
+            Route::post('/save', [App\Http\Controllers\Admin\LocationsController::class, 'save']);
+            Route::get('/edit/{id}', [App\Http\Controllers\Admin\LocationsController::class, 'edit']);
+            Route::post('/update/{id}', [App\Http\Controllers\Admin\LocationsController::class, 'update']);
+            Route::get('/delete/{id}', [App\Http\Controllers\Admin\LocationsController::class, 'deleteSingle']);
+            Route::post('/delete-multiple', [App\Http\Controllers\Admin\LocationsController::class, 'deleteMultiple']);
+        });
         Route::group(array('prefix' => 'appointment-types'), function () {
             Route::get('/', [App\Http\Controllers\Admin\AppointmentTypesController::class, 'index']);
             Route::post('/ajax-list', [App\Http\Controllers\Admin\AppointmentTypesController::class, 'getAjaxList']);
@@ -1185,6 +1187,15 @@ Route::group(array('prefix' => 'admin'), function () {
             Route::post('/update/{id}', [App\Http\Controllers\Admin\AppointmentTypesController::class, 'update']);
             Route::get('/delete/{id}', [App\Http\Controllers\Admin\AppointmentTypesController::class, 'deleteSingle']);
             Route::post('/delete-multiple', [App\Http\Controllers\Admin\AppointmentTypesController::class, 'deleteMultiple']);
+        });
+        Route::group(array('prefix' => 'appointment/{location_id}'), function () {
+        
+            // Route::get('/', [App\Http\Controllers\Admin\AppointmentController::class, 'index']);
+            // Route::post('/event-ajax-list', [App\Http\Controllers\Admin\AppointmentController::class, 'getAjaxList']); 
+            Route::get('/set-schedule', [App\Http\Controllers\Admin\AppointmentController::class, 'setSchedule']);
+            Route::post('/save-schedule', [App\Http\Controllers\Admin\AppointmentController::class, 'saveSchedule']);
+            Route::get('/add-event', [App\Http\Controllers\Admin\AppointmentController::class, 'addEvent']);
+            Route::post('/save-event', [App\Http\Controllers\Admin\AppointmentController::class, 'saveEvent']);
         });
         Route::group(array('prefix' => 'leads'), function () {
             Route::get('/', [App\Http\Controllers\Admin\LeadsController::class, 'newLeads']);

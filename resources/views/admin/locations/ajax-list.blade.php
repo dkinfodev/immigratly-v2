@@ -8,13 +8,7 @@
   </td>
   <td>
     <div class="d-flex">
-      {{$record->name}}
-    </div>
-  </td>
-
-  <td>
-    <div class="d-flex">
-      {{$record->duration}}
+      {{$record->address}}
     </div>
   </td>
 
@@ -30,9 +24,9 @@
       </a>
 
       <div id="action-{{$key}}" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm dropdown-menu-right">
-        <a class="dropdown-item" href="javascript:;" onclick="showPopup('<?php echo baseUrl('appointment-types/edit/'.base64_encode($record->id)) ?>')">Edit</a>
-        
-        <a class="dropdown-item text-danger" href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('appointment-types/delete/'.base64_encode($record->id))}}">Delete</a> 
+        <a class="dropdown-item" href="javascript:;" onclick="showPopup('<?php echo baseUrl('locations/edit/'.base64_encode($record->id)) ?>')">Edit</a>
+        <a class="dropdown-item" href="{{ baseUrl('appointment/'.$record->unique_id.'/set-schedule') }}">Add Schedule</a>
+        <a class="dropdown-item text-danger" href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('locations/delete/'.base64_encode($record->id))}}">Delete</a> 
       </div>
     </div>
   </td>

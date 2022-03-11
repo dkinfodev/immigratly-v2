@@ -9,9 +9,9 @@ use View;
 use DB;
 
 use App\Models\ProfessionalServices;
-use App\Models\AppointmentTypes;
+use App\Models\ProfessionalLocations;
 
-class AppointmentTypesController extends Controller
+class LocationsController extends Controller
 {
     public function __construct()
     {
@@ -20,23 +20,23 @@ class AppointmentTypesController extends Controller
 
     public function index()
     {
-        $viewData['pageTitle'] = "Appointment Types";
-        $viewData['activeTab'] = 'appointment-types';
-        return view(roleFolder().'.appointment-types.lists',$viewData);
+        $viewData['pageTitle'] = "Locations";
+        $viewData['activeTab'] = 'locations';
+        return view(roleFolder().'.locations.lists',$viewData);
     } 
 
     public function getAjaxList(Request $request)
     {
         $search = $request->input("search");
-        $records = AppointmentTypes::orderBy('id',"desc")
+        $records = ProfessionalLocations::orderBy('id',"desc")
                         ->where(function($query) use($search){
                             if($search != ''){
-                                $query->where("name","LIKE","%$search%");
+                                $query->where("address","LIKE","%$search%");
                             }
                         })
                         ->paginate();
         $viewData['records'] = $records;
-        $view = View::make(roleFolder().'.appointment-types.ajax-list',$viewData);
+        $view = View::make(roleFolder().'.locations.ajax-list',$viewData);
         $contents = $view->render();
         $response['contents'] = $contents;
         $response['last_page'] = $records->lastPage();
@@ -46,8 +46,8 @@ class AppointmentTypesController extends Controller
     }
     
     public function add(){
-        $viewData['pageTitle'] = "Add Appointment Type";
-        $view = View::make(roleFolder().'.appointment-types.modal.add-schedule',$viewData);
+        $viewData['pageTitle'] = "Add Location";
+        $view = View::make(roleFolder().'.locations.modal.add-location',$viewData);
         $contents = $view->render();
         $response['contents'] = $contents;
         $response['status'] = true;
@@ -58,7 +58,7 @@ class AppointmentTypesController extends Controller
     public function save(Request $request){
         // pre($request->all());
         $validator = Validator::make($request->all(), [
-            'name'=>'required',
+            'address'=>'required',
         ]);
 
         if ($validator->fails()) {
@@ -73,25 +73,24 @@ class AppointmentTypesController extends Controller
             $response['message'] = $errMsg;
             return response()->json($response);
         }
-        $object = new AppointmentTypes();
+        $object = new ProfessionalLocations();
         $object->unique_id = randomNumber();
-        $object->name = $request->input("name");
-        $object->duration = $request->input("duration");
+        $object->address = $request->input("address");
         $object->save();
 
         $response['status'] = true;
-        $response['redirect_back'] = baseUrl('appointment-types');
+        $response['redirect_back'] = baseUrl('locations');
         $response['message'] = "Schedule added sucessfully";
         
         return response()->json($response);
     }
  
     public function edit($id,Request $request){
-        $viewData['pageTitle'] = "Edit Appointment Type";
+        $viewData['pageTitle'] = "Edit Location";
         $id = base64_decode($id);
-        $record = AppointmentTypes::find($id);
+        $record = ProfessionalLocations::find($id);
         $viewData['record'] = $record;
-        $view = View::make(roleFolder().'.appointment-types.modal.edit-schedule',$viewData);
+        $view = View::make(roleFolder().'.locations.modal.edit-location',$viewData);
         $contents = $view->render();
         $response['contents'] = $contents;
         $response['status'] = true;
@@ -102,10 +101,10 @@ class AppointmentTypesController extends Controller
     public function update($id,Request $request){
         // pre($request->all());
         $id = base64_decode($id);
-        $object =  AppointmentTypes::find($id);
+        $object =  ProfessionalLocations::find($id);
 
         $validator = Validator::make($request->all(), [
-            'name'=>'required',
+            'address'=>'required',
         ]);
 
         if ($validator->fails()) {
@@ -122,12 +121,11 @@ class AppointmentTypesController extends Controller
         }
         $id = \Auth::user()->id;
 
-        $object->name = $request->input("name");
-        $object->duration = $request->input("duration");
+        $object->address = $request->input("address");
         $object->save();
         
         $response['status'] = true;
-        $response['redirect_back'] = baseUrl('appointment-types');
+        $response['redirect_back'] = baseUrl('locations');
         $response['message'] = "Record updated successfully";
 
         return response()->json($response);
@@ -135,7 +133,7 @@ class AppointmentTypesController extends Controller
 
     public function deleteSingle($id){
         $id = base64_decode($id);
-        AppointmentTypes::deleteRecord($id);
+        ProfessionalLocations::deleteRecord($id);
         
         // \Session::flash('success', 'Records deleted successfully'); 
         return redirect()->back()->with('error',"Record deleted successfully");
@@ -145,7 +143,7 @@ class AppointmentTypesController extends Controller
         $ids = explode(",",$request->input("ids"));
         for($i = 0;$i < count($ids);$i++){
             $id = base64_decode($ids[$i]);
-            AppointmentTypes::deleteRecord($id);
+            ProfessionalLocations::deleteRecord($id);
         }
         $response['status'] = true;
         \Session::flash('success', 'Records deleted successfully'); 

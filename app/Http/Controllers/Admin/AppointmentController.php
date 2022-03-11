@@ -23,7 +23,7 @@ class AppointmentController extends Controller
     }
     
     
-    public function index(){
+    public function index($location_id){
 
         if(\Auth::user()->role != 'admin'){
             return redirect(baseUrl('/'));
@@ -31,40 +31,41 @@ class AppointmentController extends Controller
         
         $viewData['pageTitle'] = "Appointment";
         $viewData['activeTab'] = "appointment-schedule";
+        $viewData['location_id'] = $location_id;
 
         return view(roleFolder().'.appointment.lists',$viewData);
 
     }
 
 
-    public function getAjaxList(Request $request)
-    {
-        $search = $request->input("search");
-        $records = ProfessionalEvent::orderBy('id',"desc")
-                        ->where(function($query) use($search){
-                            if($search != ''){
-                                $query->where("name","LIKE","%$search%");
-                            }
-                        })
-                        ->paginate();
-        $viewData['records'] = $records;
-        $view = View::make(roleFolder().'.appointment.event-ajax-list',$viewData);
-        $contents = $view->render();
-        $response['contents'] = $contents;
-        $response['last_page'] = $records->lastPage();
-        $response['current_page'] = $records->currentPage();
-        $response['total_records'] = $records->total();
-        return response()->json($response);
-    }
+    // public function getAjaxList($location_id,Request $request)
+    // {
+    //     $search = $request->input("search");
+    //     $records = ProfessionalEvent::orderBy('id',"desc")
+    //                     ->where(function($query) use($search){
+    //                         if($search != ''){
+    //                             $query->where("name","LIKE","%$search%");
+    //                         }
+    //                     })
+    //                     ->paginate();
+    //     $viewData['records'] = $records;
+    //     $view = View::make(roleFolder().'.appointment.event-ajax-list',$viewData);
+    //     $contents = $view->render();
+    //     $response['contents'] = $contents;
+    //     $response['last_page'] = $records->lastPage();
+    //     $response['current_page'] = $records->currentPage();
+    //     $response['total_records'] = $records->total();
+    //     return response()->json($response);
+    // }
 
     //8-3-22 ys
-    public function setSchedule(){
+    public function setSchedule($location_id){
 
         if(\Auth::user()->role != 'admin'){
             return redirect(baseUrl('/'));
         }
         
-        $records = AppointmentSchedule::get();
+        $records = AppointmentSchedule::where("location_id",$location_id)->get();
 
         $schedules = array();
         foreach($records as $record){
@@ -73,32 +74,37 @@ class AppointmentController extends Controller
         
         
         $viewData['pageTitle'] = "Appointment Schedule";
-        $viewData['activeTab'] = "personal_tab";
+        $viewData['activeTab'] = "appointment-schedule";
         $viewData['schedules'] = $schedules;
-
+        $viewData['location_id'] = $location_id;
         return view(roleFolder().'.appointment.set-schedule',$viewData);
 
     }
 
-    public function saveSchedule(Request $request){
+    public function saveSchedule($location_id,Request $request){
 
         //pre($request->all());
         $schedules = $request->input("schedule");
         $active_days = array();
         foreach($schedules as $schedule){
-            $checkSchedule = AppointmentSchedule::where("day",$schedule['day'])->first();
+            $checkSchedule = AppointmentSchedule::where("day",$schedule['day'])
+                                                ->where("location_id",$location_id)
+                                                ->first();
             if(!empty($checkSchedule)){
                 $object = AppointmentSchedule::find($checkSchedule->id);
             }else{
                 $object = new AppointmentSchedule();
             }
+            $object->location_id = $location_id;
             $object->day = $schedule['day'];
             $object->from_time = $schedule['from'];
             $object->to_time = $schedule['to'];
             $object->save();
             $active_days[] = $schedule['day'];
         }
-        AppointmentSchedule::whereNotIn("day",$active_days)->delete();
+        AppointmentSchedule::whereNotIn("day",$active_days)
+                            ->where("location_id",$location_id)
+                            ->delete();
         $response['status'] = true;
         $response['message'] = "Appointment Schedule set successfully.";
 
@@ -113,7 +119,7 @@ class AppointmentController extends Controller
         }
         
         $viewData['pageTitle'] = "Add Event";
-        $viewData['active_tab'] = "personal_tab";
+        $viewData['activeTab'] = "appointment-schedule";
 
         return view(roleFolder().'.appointment.add-event',$viewData);
     }

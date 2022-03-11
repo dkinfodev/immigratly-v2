@@ -13,13 +13,13 @@
         </div>
     </div>
     <div class="modal-body imm-education-modal-body">
-      <form method="post" id="popup-form" class="js-validate" action="{{ baseUrl('/appointment-types/save') }}">  
+      <form method="post" id="popup-form" class="js-validate" action="{{ baseUrl('/appointment-types/update/'.base64_encode($record->id)) }}">  
           @csrf
           <!-- Form Group -->
           <div class="row form-group js-form-message">
             <label class="col-sm-3 col-form-label input-label">Name</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name" placeholder="Enter Schedule Name" aria-label="Enter Schedule Name" value="">
+              <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{$record->name}}" id="name" placeholder="Enter Schedule Name" aria-label="Enter Schedule Name" value="">
               @error('name')
               <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
@@ -37,7 +37,7 @@
               <option value="">Select</option>
               <?php $durations = appointmentDuration() ?>
               @foreach($durations as $duration)
-              <option value="{{$duration}}">{{$duration}}</option>
+              <option {{ ($record->duration == $duration)?'selected':'' }} value="{{$duration}}">{{$duration}}</option>
               @endforeach
             </select>
 
