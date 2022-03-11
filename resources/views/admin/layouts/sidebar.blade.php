@@ -64,6 +64,12 @@
                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Appointment Type</span>
               </a>
             </li>
+            <li class="navbar-vertical-aside-has-menu">
+              <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'appointment-schedule'){ echo "active"; } } ?>" href="{{ baseUrl('/appointment/set-schedule') }}">
+                <i class="tio-book-opened nav-icon"></i>
+                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Appointment Schedule</span>
+              </a>
+            </li>
           </ul>
 
 

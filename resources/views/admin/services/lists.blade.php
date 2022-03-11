@@ -25,20 +25,7 @@
 @section('content')
 <!-- Content -->
 <div class="services">
-  <div class="page-header">
-    <div class="row align-items-end">
-      <div class="col-sm mb-2 mb-sm-0">
-       <!--  <nav aria-label="breadcrumb">
-          <ol class="breadcrumb breadcrumb-no-gutter">
-            <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/services') }}">Services</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
-          </ol>
-        </nav> -->
-        <!-- <h1 class="page-title">{{$pageTitle}}</h1> -->
-      </div>
-    </div>
-  </div>
+
   <div class="accordion" id="accordionExample">
     <div class="card" id="headingOne">
       <a class="card-header card-btn btn-block" href="javascript:;" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">

@@ -1086,7 +1086,17 @@ Route::group(array('prefix' => 'admin'), function () {
         Route::get('/edit-reminder-note/{id}', [App\Http\Controllers\Admin\DashboardController::class, 'editReminderNote']);
         Route::post('/edit-reminder-note/{id}', [App\Http\Controllers\Admin\DashboardController::class, 'updateReminderNote']);
         Route::get('/delete-reminder-note/{id}', [App\Http\Controllers\Admin\DashboardController::class, 'deleteReminderNote']);
-
+        
+        Route::group(array('prefix' => 'appointment'), function () {
+        
+            Route::get('/', [App\Http\Controllers\Admin\AppointmentController::class, 'index']);
+            Route::post('/event-ajax-list', [App\Http\Controllers\Admin\AppointmentController::class, 'getAjaxList']); 
+            Route::get('/set-schedule', [App\Http\Controllers\Admin\AppointmentController::class, 'setSchedule']);
+            Route::post('/save-schedule', [App\Http\Controllers\Admin\AppointmentController::class, 'saveSchedule']);
+            Route::get('/add-event', [App\Http\Controllers\Admin\AppointmentController::class, 'addEvent']);
+            Route::post('/save-event', [App\Http\Controllers\Admin\AppointmentController::class, 'saveEvent']);
+        });
+        
         Route::group(array('prefix' => 'services'), function () {
             Route::get('/', [App\Http\Controllers\Admin\ServicesController::class, 'index']);
             Route::post('/ajax-list', [App\Http\Controllers\Admin\ServicesController::class, 'getAjaxList']); 
