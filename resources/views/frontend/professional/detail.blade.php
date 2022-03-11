@@ -5,42 +5,24 @@
 
 @endsection
 
+
+@section('breadcrumb')
+<!-- Content -->
+<ol class="breadcrumb breadcrumb-no-gutter">
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ url('/') }}">Home</a></li>
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ url('/professionals') }}">Professional</a></li>
+
+  <li class="breadcrumb-item active" aria-current="page">{{$subdomain}}</li>
+</ol>
+<!-- End Content -->
+@endsection
+
 @section('content')
 <!-- Search Section -->
-<div class="bg-dark">
-  <div class="bg-img-hero-center" style="background-image: url({{asset('assets/frontend/svg/components/abstract-shapes-19.svg')}});padding-top: 94px;">
-    <div class="container space-1">
-      <div class="w-lg-100 mx-lg-auto">
-        <!-- Input -->
-        <h1 class="text-lh-sm text-white">Professionals</h1>
-        <!-- End Input -->
-      </div>
-    </div>
-  </div>
-</div>
-<div class="container space-bottom-2">
-  <div class="w-lg-100 mx-lg-auto">
-    <!-- Breadcrumbs -->
-        <!-- Breadcrumbs -->
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb breadcrumb-no-gutter font-size-1 space-1">
-        <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{{url('/professionals')}}">Professionals</a></li>
-
-        <li class="breadcrumb-item active">{{$company_data->company_name}}</li>
-      </ol>
-    </nav>
-    <!-- End Breadcrumbs -->
 
 
-    <!-- End Breadcrumbs -->
-
-    
-
-   
-
-    <!-- Content Section -->
-    <div class="container space-1 space-top-lg-1 space-bottom-lg-2 mt-lg-n10">
+<div class="container space-bottom-2 ">
+  <div class="w-lg-100 ">
       <div class="row">
         <div class="col-lg-5">
           <!-- Navbar -->
@@ -75,7 +57,7 @@
 
                   <hr>
                   <p class="font-size-2" style="color:#000;">
-                  <i class="fas fa-map-marker-alt nav-icon font-size-2"></i>
+                  <i class="fa fa-map-marker nav-icon font-size-2"></i>
                     {{ getCountryName($company_data->country_id)}}
                   </p>
 
@@ -85,19 +67,19 @@
                   <hr>
                   <div class="sharing-icons">
                   <p><i class="fa fa-share"></i> Share this profile</p>
-                    <a class="btn btn-primary" href="www.facebook.com" style="margin-left: 10px;margin-right: 10px;"><i class="fab fa-facebook" style="font-size: 20px;"></i></a>
+                    <a class="btn btn-primary" href="www.facebook.com" style="margin-left: 10px;margin-right: 10px;"><i class="fa fa-facebook" style="font-size: 20px;padding-top:4px;"></i></a>
 
 
-                    <a class="btn btn-info"  href="www.facebook.com" style="margin-left: 10px;margin-right: 10px;"><i class="fab fa-twitter" style="font-size: 20px;"></i></a>
+                    <a class="btn btn-info"  href="www.facebook.com" style="margin-left: 10px;margin-right: 10px;"><i class="fa fa-twitter" style="font-size: 20px;padding-top:4px;"></i></a>
 
                     
-                    <a class="btn btn-warning"  href="www.facebook.com" style="margin-left: 10px;margin-right: 10px;"><i class="fa fa-envelope" style="font-size: 20px;"></i></a>
+                    <a class="btn btn-warning"  href="www.facebook.com" style="margin-left: 10px;margin-right: 10px;"><i class="fa fa-envelope" style="font-size: 20px;padding-top:4px;"></i></a>
 
 
-                    <a class="btn btn-primary bg-navy"  href="www.facebook.com" style="margin-left: 10px;margin-right: 10px;"><i class="fab fa-linkedin" style="font-size: 20px;"></i></a>
+                    <a class="btn btn-primary bg-navy"  href="www.facebook.com" style="margin-left: 10px;margin-right: 10px;"><i class="fa fa-linkedin" style="font-size: 20px;padding-top:4px;"></i></a>
 
 
-                    <a class="btn btn-secondary"  href="www.facebook.com" style="margin-left: 10px;margin-right: 10px;"><i class="fa fa-link" style="font-size: 20px;"></i></a>
+                    <a class="btn btn-secondary"  href="www.facebook.com" style="margin-left: 10px;margin-right: 10px;"><i class="fa fa-link" style="font-size: 20px;padding-top:4px;"></i></a>
 
                   </div>
                 </div>
@@ -261,16 +243,10 @@
             <!-- End Body -->
           </div>
           <!-- End Review Card -->
-
-
         </div>
       </div>
-      <!-- End Row -->
-    </div>
     <!-- End Content Section -->
-    
-
-  
+  </div>
 </div>
 @endsection
 

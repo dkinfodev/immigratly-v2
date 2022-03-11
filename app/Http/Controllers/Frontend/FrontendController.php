@@ -104,7 +104,7 @@ class FrontendController extends Controller
         $viewData['countries'] = $countries;
         $viewData['states'] = $states;
         $viewData['professionals'] = $professionals;
-        $viewData['pageTitle'] = "Home Page";   
+        $viewData['pageTitle'] = "Professionals";   
         return view('frontend.professional.list',$viewData);
     }
 
@@ -211,7 +211,8 @@ class FrontendController extends Controller
             $viewData['company_data'] = $company_data;
             $viewData['professional'] = $professional;
             $viewData['professionalAdmin'] = $professionalAdmin;
-            $viewData['pageTitle'] = $subdomain." Detail";   
+            $viewData['pageTitle'] = "Professional Detail";   
+            $viewData['subdomain'] = $subdomain;
             return view('frontend.professional.detail',$viewData);
         }
         else{
