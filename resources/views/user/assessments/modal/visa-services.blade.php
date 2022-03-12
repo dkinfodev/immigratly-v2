@@ -1,13 +1,27 @@
-<div class="modal-dialog modal-lg" role="document">
+<style>
+.invalid-feedback {
+    position: absolute;
+    bottom: -20px;
+}
+</style>
+
+<div class="modal-dialog" role="document">
   <div class="modal-content">
     <div class="modal-header">
-      <h5 class="modal-title" id="staticBackdropLabel">{{$pageTitle}}</h5>
-      <button type="button" class="btn btn-xs btn-icon btn-ghost-secondary" data-dismiss="modal" aria-label="Close">
-        <i class="tio-clear tio-lg"></i>
-      </button>
+        <div class="imm-modal-slanted-div angled lower-start">
+          <div class="row">
+            <div class="col-10">
+              <h3 class="modal-title" id="exampleModalLongTitle">{{$pageTitle}}</h3>
+            </div>
+           <div class="col-2" style="text-align:right"> 
+              <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+          </div>
+        </div>
     </div>
-    <div class="modal-body">
-    <div class="accordion" id="accordionExample">
+
+    <div class="modal-body imm-education-modal-body">
+      <div class="accordion" id="accordionExample">
         @foreach($cv_types as $key => $type)
         <div class="card" id="heading-{{$key}}">
           <a class="card-header card-btn btn-block" href="javascript:;" data-toggle="collapse" data-target="#collapse-{{$key}}" aria-expanded="true" aria-controls="collapse-{{$key}}">
@@ -98,12 +112,16 @@
         @endforeach
       </div>
     </div>
+    
     <div class="modal-footer">
       <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+      <button form="popup-form" type="submit" class="btn btn-primary">Save</button>
     </div>
+
   </div>
 </div>
-<script src="assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
+
+
 <script type="text/javascript">
   function chooseService(id,name){
       $("#visa_service_id").val(id);

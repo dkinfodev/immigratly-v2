@@ -1,4 +1,8 @@
-<style type="text/css">
+<style>
+.invalid-feedback {
+    position: absolute;
+    bottom: -20px;
+}
 .folder-block .app-icon {
     font-size: 50px;
 }
@@ -12,65 +16,65 @@
     transition: 0.6s;
 }
 </style>
-<div class="modal-dialog modal-xl" role="document">
+
+<div class="modal-dialog" role="document">
   <div class="modal-content">
     <div class="modal-header">
-      <h5 class="modal-title" id="staticBackdropLabel">{{$pageTitle}}</h5>
-      <button type="button" class="btn btn-xs btn-icon btn-ghost-secondary" data-dismiss="modal" aria-label="Close">
-        <i class="tio-clear tio-lg"></i>
-      </button>
-    </div>
-    <div class="modal-body">
-      <form method="post" id="popup-form" class="js-validate" action="{{ baseUrl('/documents/google-drive/upload-from-gdrive') }}">  
-        @csrf
-        <input type="hidden" name="folder_id" value="{{$folder_id}}" />
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb directory-nav">
-            <li class="breadcrumb-item root-directory"><a href="javascript:;">Root</a></li>
-          </ol>
-        </nav>
-        <div class="row" id="main-folders">
-          @foreach($drive_folders as $key => $folder)
-            <div class="col-md-2 mb-3">
-                @if($folder['mimetype'] == 'application/vnd.google-apps.folder')
-                  <div class="card folder-block h-100" onclick="fetch_google_drive('{{$folder['id']}}','{{$folder['name']}}')" data-type="folder" data-id="{{$folder['id']}}" data-name="{{$folder['name']}}">
-                    <div class="card-body text-center">
-                      <div class="app-icon">
-                        <i class="tio-folder-add text-warning"></i>
-                      </div>
-                      <h3 class="mb-1">
-                        <span class="text-dark">{{$folder['name']}}</span>
-                      </h3>
-                    </div>
-                    <!-- End Body -->
-                  </div>
-                @else
-                  <div class="card folder-block h-100" data-type="file" data-id="{{$folder['id']}}" data-name="{{$folder['name']}}">
-                      <div class="card-body text-center gdrive-file">
-                        <input type="checkbox" class="chk-file" style="display:none" name="files[]" value="{{$folder['id']}}" id="row-{{$key}}">
-                        <div class="clearfix"></div>
-                        <div class="app-icon">
-                          <i class="tio-document-text"></i>
-                        </div>
-                        <h3 class="mb-1">
-                          <span class="text-dark">{{$folder['name']}}</span>
-                        </h3>
-                      </div>
-                      <!-- End Body -->
-                    </div>
-                @endif
+        <div class="imm-modal-slanted-div angled lower-start">
+          <div class="row">
+            <div class="col-10">
+              <h3 class="modal-title" id="exampleModalLongTitle">{{$pageTitle}}</h3>
             </div>
-          @endforeach
+           <div class="col-2" style="text-align:right"> 
+              <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+          </div>
         </div>
-        <div id="gdrive-files"></div>
-      </form>
+    </div>
+
+    <div class="modal-body imm-education-modal-body">
+      <form method="post" id="popup-form"  action="{{ baseUrl('/notes/add-reminder-note') }}">  
+          @csrf
+          <!-- Form Group -->
+          <div class="row form-group">
+            <label class="col-sm-3 col-form-label input-label">Reminder Date</label>
+
+            <div class="col-sm-9 js-form-message">
+              <input autocomplete="off" type="text" class="form-control reminder_date @error('reminder_date') is-invalid @enderror" name="reminder_date" id="reminder_date" placeholder="Enter Reminder Date" aria-label="Enter Reminder Date" value="">
+              @error('reminder_date')
+              <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+              </span>
+              @enderror
+            </div>
+          </div>
+          <!-- End Form Group -->
+
+          <!-- Form Group -->
+          <div class="row form-group">
+            <label class="col-sm-3 col-form-label input-label">Message</label>
+
+            <div class="col-sm-9 js-form-message">
+              <textarea class="form-control @error('message') is-invalid @enderror" name="message" placeholder="Enter your message..." aria-label="Percentage" value=""></textarea>
+              @error('percentage')
+              <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+              </span>
+              @enderror
+            </div>
+          </div>
+          <!-- End Form Group -->
+        </form>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-      <button form="popup-form" class="btn btn-primary">Upload Files</button>
+      <button form="popup-form" type="submit" class="btn btn-primary">Save</button>
     </div>
+
   </div>
 </div>
+
+
 
 <script type="text/javascript">
 $(document).ready(function(){

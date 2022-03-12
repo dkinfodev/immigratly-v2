@@ -1,4 +1,8 @@
-<style type="text/css">
+<style>
+.invalid-feedback {
+    position: absolute;
+    bottom: -20px;
+}
 .folder-block .app-icon {
     font-size: 50px;
 }
@@ -14,15 +18,23 @@
     border-radius: 10px;
 }
 </style>
-<div class="modal-dialog modal-xl" role="document">
+
+<div class="modal-dialog" role="document">
   <div class="modal-content">
     <div class="modal-header">
-      <h5 class="modal-title" id="staticBackdropLabel">{{$pageTitle}}</h5>
-      <button type="button" class="btn btn-xs btn-icon btn-ghost-secondary" data-dismiss="modal" aria-label="Close">
-        <i class="tio-clear tio-lg"></i>
-      </button>
+        <div class="imm-modal-slanted-div angled lower-start">
+          <div class="row">
+            <div class="col-10">
+              <h3 class="modal-title" id="exampleModalLongTitle">{{$pageTitle}}</h3>
+            </div>
+           <div class="col-2" style="text-align:right"> 
+              <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+          </div>
+        </div>
     </div>
-    <div class="modal-body">
+
+    <div class="modal-body imm-education-modal-body">
       <form method="post" id="popup-form" class="js-validate" action="{{ baseUrl('/assessments/dropbox/upload-from-dropbox') }}">  
         @csrf
         <input type="hidden" name="folder_id" value="{{$folder_id}}" />
@@ -70,10 +82,12 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-      <button form="popup-form" class="btn btn-primary">Upload Files</button>
+      <button form="popup-form" type="submit" class="btn btn-primary">Save</button>
     </div>
+
   </div>
 </div>
+
 
 <script type="text/javascript">
 $(document).ready(function(){

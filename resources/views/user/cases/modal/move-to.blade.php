@@ -108,7 +108,7 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-      <button form="popup-form" class="btn btn-primary">Save</button>
+      <button form="popup-form" type="submit" class="btn btn-primary">Save</button>
     </div>
   </div>
 </div>

@@ -1,17 +1,3 @@
-<style type="text/css">
-.folder-block .app-icon {
-    font-size: 50px;
-}
-.folder-block {
-    background-color: #EEE;
-    cursor: pointer;
-    transition: 0.6s;
-}
-.folder-block:hover,.active-card {
-    background-color: #ddd;
-    transition: 0.6s;
-}
-</style>
 @if(count($drive_folders) > 0)
 <div class="custom-control custom-checkbox mb-3 float-right">
   <input type="checkbox" id="customCheck11" class="custom-control-input checkall">

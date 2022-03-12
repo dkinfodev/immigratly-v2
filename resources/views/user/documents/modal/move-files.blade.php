@@ -6,12 +6,12 @@
   padding: 16px;
   border:2px solid transparent;
   cursor: pointer;
-  tranistion:0.6s;
+  transition:0.6s;
 }
 .folder-block.active {
   background-color: #eee;
   border-color: #1164FF;
-  tranistion:0.6s;
+  transition:0.6s;
 }
 </style>
 <div class="modal-dialog modal-xl" role="document">
@@ -54,7 +54,7 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-      <button form="popup-form" class="btn btn-primary">Save</button>
+      <button form="popup-form" type="submit" class="btn btn-primary">Save</button>
     </div>
   </div>
 </div>
