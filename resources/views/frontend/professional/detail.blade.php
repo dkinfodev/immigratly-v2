@@ -124,10 +124,14 @@
                 <div class="col-sm-12 mb-5">
                   <h5>Licence Body</h5>
                   <?php
-                  $license_body = json_decode($company_data->license_body,true);
-                  foreach ($license_body as $key => $lb) {
-                    $licenceBody = getLicenceBodyName($lb);
-                    echo $licenceBody ."<br>";
+                  if(!empty($company_data->license_body)){
+                    $license_body = json_decode($company_data->license_body,true);
+                    foreach ($license_body as $key => $lb) {
+                      $licenceBody = getLicenceBodyName($lb);
+                      echo $licenceBody ."<br>";
+                    }
+                  }else{
+                    echo "<span class='text-danger'>N/A</span>";
                   }
                   ?>
                 </div>
@@ -171,11 +175,25 @@
             <div class="card-body">
               <div class="row">
                 
-                <div class="col-md-6">
+                <div class="col-md-12">
+                  
+                  @if(!empty($company_data->locations))
+                  <table class="table table-striped">
+                  @foreach($company_data->locations as $location)
+                  <tr>
+                    <td>{{$location->address}}</td>
+                    <td align="right">
+                        <a href="{{ url('professional/'.$subdomain.'/book-appointment/'.$location->unique_id) }}" class="btn btn-primary btn-sm">Book Appointment</a>
+                    </td>
+                  </tr>
+                  @endforeach
+                </table>
+                  @else
                   No Location Selected
+                  @endif
                 </div>
                 
-                <div class="col-md-6">
+                <!-- <div class="col-md-6">
                   <p><b>Business Name</b> - {{$company_data->company_name}}</p>
 
                   <p><b>Address</b> - {{ $company_data->address}} {{ getCityName($company_data->city_id)}}, {{ getStateName($company_data->state_id)}}, {{ getCountryName($company_data->country_id)}} - {{ $company_data->zip_code}}</p>
@@ -185,7 +203,7 @@
 
                   <a href="tel:{{$company_data->country_code}} {{$company_data->phone_no}}" class="btn btn-outline-primary btn-sm  btn-block"><i class="tio-call nav-icon"></i>{{$company_data->country_code}} {{$company_data->phone_no}}</a>   
                   
-                </div>
+                </div> -->
 
               </div>
               <!-- End Row -->

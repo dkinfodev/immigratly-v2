@@ -174,6 +174,7 @@ class FrontendController extends Controller
                     }
                 }
                 if($flag == 1){
+                    $record->subdomain = $domain;
                     $record->user_details = $detail;
                     $available_professional[] = $record;
                 }
@@ -183,10 +184,8 @@ class FrontendController extends Controller
         }
 
         $records = $available_professional; 
-        $professionals = Professionals::orderBy('id','asc')
-                        ->get();
+        $professionals = Professionals::orderBy('id','asc')->get();
         $search = $request->input("search");
-       
         $viewData['records'] = $records;
         $viewData['details'] = $details;
         $viewData['subdomains'] = $subdomains;
@@ -221,6 +220,29 @@ class FrontendController extends Controller
         }
     }
     
+    public function bookAppointment($subdomain,$location_id){
+        $subdomain = $subdomain;
+
+        $company_data = professionalDetail($subdomain);
+        $professionalAdmin = professionalAdmin($subdomain);
+        $appointment_schedule = DB::table(PROFESSIONAL_DATABASE.$subdomain.".appointment_schedule")->where("location_id",$location_id)->get();
+        $appointment_types = DB::table(PROFESSIONAL_DATABASE.$subdomain.".appointment_types")->get();
+        $professional = Professionals::where('subdomain',$subdomain)->first();
+        $viewData['appointment_types'] = $appointment_types;
+        $viewData['appointment_schedule'] = $appointment_schedule;
+        if(!empty($company_data)){    
+            
+            $viewData['company_data'] = $company_data;
+            $viewData['professional'] = $professional;
+            $viewData['professionalAdmin'] = $professionalAdmin;
+            $viewData['pageTitle'] = "Book Appointment with ".$company_data->company_name;   
+            $viewData['subdomain'] = $subdomain;
+            return view('frontend.professional.book-appointment',$viewData);
+        }
+        else{
+            echo "No Details found";
+        }
+    }
 
     public function articles($category=''){
         if($category != ''){

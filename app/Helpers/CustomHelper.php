@@ -692,12 +692,15 @@ if(!function_exists("professionalCurl")){
 }
 
 if(!function_exists("domain")){
-    function domain(){
+    function domain($return_live=false){
         $site_url = DB::table(MAIN_DATABASE.".settings")->where("meta_key","site_url")->first();
         $site_url = $site_url->meta_value;
         if($_SERVER['SERVER_NAME'] == 'localhost'){
             $domain = url('/');
         }else{
+            $domain = $site_url;
+        }
+        if($return_live){
             $domain = $site_url;
         }
         return $domain;
@@ -861,6 +864,8 @@ if(!function_exists("professionalDetail")){
 
         if (!empty($db)) {
             $user = DB::table($database.".professional_details")->first();
+            $locations = DB::table($database.".professional_locations")->get();
+            $user->locations = $locations;
             return $user;
         }else{
             return array();

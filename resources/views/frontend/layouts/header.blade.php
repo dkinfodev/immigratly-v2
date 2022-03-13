@@ -122,7 +122,11 @@
               <!-- End Blog -->
 
               
-
+              @if(Auth::check())
+              <li class="nav-item">
+               <a class="btn text-primary" target="_blank" href="{{ baseUrl('/') }}">Dashboard</a>
+              </li>
+              @else
               <!-- Button -->
               <li class="nav-item">
                <a class="btn text-primary" target="_blank" href="{{ url('/signup/user') }}">User Signup</a>
@@ -135,7 +139,7 @@
               <li class="nav-item">
                 <a class="btn btn-primary btn-transition" href="{{ url('/login') }}" target="_blank">Login</a>
               </li>
-
+              @endif
 
               <li class="nav-item">
                 <a class="btn btn-dark" href="{{ url('/quick-eligibility') }}" target="_blank">Click for Quick Eligibility</a>

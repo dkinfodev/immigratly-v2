@@ -110,7 +110,7 @@ Route::group(array('middleware' => 'frontend'), function () {
     Route::get('/professional/{subdomain}', [App\Http\Controllers\Frontend\FrontendController::class, 'professionalDetail']);
     Route::get('/professional/write-review/{unique_id}', [App\Http\Controllers\Frontend\FrontendController::class, 'ReviewProfessional']);
     Route::post('/professional/send-review/{unique_id}', [App\Http\Controllers\Frontend\FrontendController::class, 'sendReviewProfessional']);
-    
+    Route::get('/professional/{subdomain}/book-appointment/{location}', [App\Http\Controllers\Frontend\FrontendController::class, 'bookAppointment']);
     
 
 });

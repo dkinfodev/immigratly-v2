@@ -14,17 +14,18 @@
         <div class="row">
           <div class="col-md-2 text-center">
             <img class="img-fluid w-100 rounded-lg" src="{{professionalLogo('m','fastzone')}}" alt="Image Description">
-             <span class="text-center mt-2"><b>{{ucwords($prof->company_name)}}</b></span> 
-            
+             <div><span class="text-center mt-2"><b>{{ucwords($prof->company_name)}}</b></span> </div>
+             
+           
           </div>
           <div class="col-md-9 pl-5">
-
+          
             <h3>
               <img class="verified-badge" src="./assets/svg/illustrations/top-vendor.svg" alt="Image Description" data-toggle="tooltip" data-placement="top" title="" data-original-title="Verified user" aria-describedby="tooltip851946">
               {{$prof->company_name}}
             </h3>
-            <h5>
-                <b><i class="tio-user nav-icon"></i> Owner:</b>{{$prof->user_details->first_name." ".$prof->user_details->last_name}}</h5>
+            <h5><b><i class="tio-user nav-icon"></i> Owner:</b>{{$prof->user_details->first_name." ".$prof->user_details->last_name}}</h5>
+            <div><span class="text-center mt-2"><b><i class="tio-globe"></i> {{ subdomain($prof->subdomain) }}</b></span> </div>
               <div class="row">
                 <div class="col-6">
                   <i class="tio-map nav-icon"></i> {{getStateName($prof->state_id)}},{{ getCountryName($prof->country_id)}}
@@ -62,7 +63,7 @@
               <br>
 
               
-              <a href="{{url('professional/'.$subdomains[$cnt])}}" class="btn btn-primary">More Details</a>
+              <a href="{{url('professional/'.$prof->subdomain)}}" class="btn btn-primary">More Details</a>
               
               <?php ++$cnt; ?>
 
