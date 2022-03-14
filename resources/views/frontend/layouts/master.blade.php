@@ -522,7 +522,8 @@
             </div>
         </div>
     </div>
-
+    <div class="modal fade imm-addeducation-modal" id="popupModal" tabindex="-1" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    </div>
     <!-- Go To -->
     <a class="js-go-to go-to position-fixed" href="javascript:;" style="visibility: hidden;" data-hs-go-to-options='{
        "offsetTop": 700,

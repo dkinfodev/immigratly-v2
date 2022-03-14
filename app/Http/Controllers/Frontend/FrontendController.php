@@ -287,6 +287,8 @@ class FrontendController extends Controller
         $date = $request->input("date");
         $schedule_id = $request->input("schedule_id");
         $professional = $request->input("professional");
+        $date = $request->input("date");
+        $location_id = $request->input("location_id");
         $appointment_type_id = $request->input("appointment_type_id");
         $appointment_schedule = \DB::table(PROFESSIONAL_DATABASE.$professional.".appointment_schedule")
                     ->where("id",$schedule_id)
@@ -300,10 +302,18 @@ class FrontendController extends Controller
         $from_time = $appointment_schedule->from_time;
         $to_time = $appointment_schedule->to_time;
         $time_slots = getTimeSlot($interval,$from_time,$to_time);
+        $viewData['date'] = date("F d, Y",strtotime($date));
+        $viewData['time_slots'] = $time_slots;
+        $viewData['schedule_id'] = $schedule_id;
+        $viewData['location_id'] = $location_id;
+        $viewData['appointment_type_id'] = $appointment_type_id;
+        $viewData['pageTitle'] = "Selct Your Time Slot";
+        $view = View::make('frontend.professional.time-slots',$viewData);
+        $contents = $view->render();
 
         $response['status'] = true;
-        $response['time_slots'] = $time_slots;
-        pre($time_slots);
+        $response['contents'] = $contents;
+         return response()->json($response);
     }
     public function articles($category=''){
         if($category != ''){

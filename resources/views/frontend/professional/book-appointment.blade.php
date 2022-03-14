@@ -143,27 +143,35 @@ function loadCalendar() {
     },
     eventClick: function(info, jsEvent, view) {
       var appointment_type = $("input[name=appointment_type]:checked").val();
-      alert(appointment_type);
       if(appointment_type == undefined){
         alert("Select meeting duration first");
       }else{
-        $.ajax({
-          url: "{{ url('professional/fetch-available-slots') }}",
-          dataType: 'json',
-          type: 'POST',
-          data:{
-            _token:csrf_token,
+        var url = "{{ url('professional/fetch-available-slots') }}";
+        var param = {
             location_id: "{{$location_id}}",
             professional:"{{$subdomain}}",
             date:info.start.format('YYYY-MM-DD'),
             schedule_id:info.id,
             appointment_type_id:appointment_type
-          },
-          success: function(response) {
-           schedule = response.schedule;
-            callback(schedule);
-          }
-        });
+          };
+        showPopup(url,"post",param);
+        // $.ajax({
+        //   url: "{{ url('professional/fetch-available-slots') }}",
+        //   dataType: 'json',
+        //   type: 'POST',
+        //   data:{
+        //     _token:csrf_token,
+        //     location_id: "{{$location_id}}",
+        //     professional:"{{$subdomain}}",
+        //     date:info.start.format('YYYY-MM-DD'),
+        //     schedule_id:info.id,
+        //     appointment_type_id:appointment_type
+        //   },
+        //   success: function(response) {
+        //    schedule = response.schedule;
+        //     callback(schedule);
+        //   }
+        // });
       }
     }
   });
