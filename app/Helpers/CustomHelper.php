@@ -2637,7 +2637,47 @@ if(!function_exists("matchWageOptions")){
 
 if(!function_exists("appointmentDuration")){
     function appointmentDuration(){
-        $types = array("15min",'30min','60min');
+        $types = array("15:min",'30:min','60:min');
         return $types;
+    }
+}
+if(!function_exists("getBetweenDates")){
+    function getBetweenDates($startDate, $endDate)
+    {
+        $rangArray = [];
+        $startDate = strtotime($startDate);
+        $endDate = strtotime($endDate);
+
+
+        for ($currentDate = $startDate; $currentDate <= $endDate; $currentDate += (86400)) {                            
+
+            $date = date('Y-m-d', $currentDate);
+            $rangArray[] = $date;
+
+        }
+        return $rangArray;
+
+    }
+}
+if(!function_exists("getTimeSlot")){
+    function getTimeSlot($interval, $start_time, $end_time)
+    {
+        $start = new DateTime($start_time);
+        $end = new DateTime($end_time);
+        $startTime = $start->format('H:i');
+        $endTime = $end->format('H:i');
+        $i=0;
+        $time = [];
+        while(strtotime($startTime) <= strtotime($endTime)){
+            $start = $startTime;
+            $end = date('H:i',strtotime('+'.$interval.' minutes',strtotime($startTime)));
+            $startTime = date('H:i',strtotime('+'.$interval.' minutes',strtotime($startTime)));
+            $i++;
+            if(strtotime($startTime) <= strtotime($endTime)){
+                $time[$i]['start_time'] = $start;
+                $time[$i]['end_time'] = $end;
+            }
+        }
+        return $time;
     }
 }

@@ -24,103 +24,7 @@
           <!-- Collapse -->
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
-              <!-- Landings -->
-              <li class="hs-has-mega-menu nav-item">
-                <a id="landingsMegaMenu" class="hs-mega-menu-invoker nav-link dropdown-toggle " aria-current="page"
-                  href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Landings</a>
-
-                <!-- Mega Menu -->
-                <div class="hs-mega-menu dropdown-menu w-100" aria-labelledby="landingsMegaMenu"
-                  style="min-width: 30rem;">
-                  <div class="row">
-                    <div class="col-lg-6 d-none d-lg-block">
-                      <!-- Banner Image -->
-                      <div class="navbar-dropdown-menu-banner"
-                        style="background-image: url(assets/svg/components/shape-3.svg);">
-                        <div class="navbar-dropdown-menu-banner-content">
-                          <div class="mb-4">
-                            <span class="h2 d-block">Branding Works</span>
-                            <p>Experience a level of our quality in both design &amp; customization works.</p>
-                          </div>
-                          <a class="btn btn-primary btn-transition" href="#">Learn more <i
-                              class="bi-chevron-right small"></i></a>
-                        </div>
-                      </div>
-                      <!-- End Banner Image -->
-                    </div>
-                    <!-- End Col -->
-
-                    <div class="col-lg-6">
-                      <div class="navbar-dropdown-menu-inner">
-                        <div class="row">
-                          <div class="col-sm mb-3 mb-sm-0">
-                            <span class="dropdown-header">Classic</span>
-                            <a class="dropdown-item " href="landing-classic-corporate.html">Corporate</a>
-                            <a class="dropdown-item " href="landing-classic-analytics.html">Analytics <span
-                                class="badge bg-primary rounded-pill ms-1">Hot</span></a>
-                            <a class="dropdown-item " href="landing-classic-studio.html">Studio</a>
-                            <a class="dropdown-item " href="landing-classic-marketing.html">Marketing</a>
-                            <a class="dropdown-item " href="landing-classic-advertisement.html">Advertisement</a>
-                            <a class="dropdown-item " href="landing-classic-consulting.html">Consulting</a>
-                            <a class="dropdown-item " href="landing-classic-portfolio.html">Portfolio</a>
-                            <a class="dropdown-item " href="landing-classic-software.html">Software</a>
-                            <a class="dropdown-item " href="landing-classic-business.html">Business</a>
-                          </div>
-                          <!-- End Col -->
-
-                          <div class="col-sm">
-                            <div class="mb-3">
-                              <span class="dropdown-header">App</span>
-                              <a class="dropdown-item " href="landing-app-ui-kit.html">UI Kit</a>
-                              <a class="dropdown-item " href="landing-app-saas.html">SaaS</a>
-                              <a class="dropdown-item " href="landing-app-workflow.html">Workflow</a>
-                              <a class="dropdown-item " href="landing-app-payment.html">Payment</a>
-                              <a class="dropdown-item " href="landing-app-tool.html">Tool</a>
-                            </div>
-
-                            <span class="dropdown-header">Onepage</span>
-                            <a class="dropdown-item " href="landing-onepage-corporate.html">Corporate</a>
-                            <a class="dropdown-item " href="landing-onepage-saas.html">SaaS <span
-                                class="badge bg-primary rounded-pill ms-1">Hot</span></a>
-                          </div>
-                          <!-- End Col -->
-                        </div>
-                        <!-- End Row -->
-                      </div>
-                    </div>
-                    <!-- End Col -->
-                  </div>
-                  <!-- End Row -->
-                </div>
-                <!-- End Mega Menu -->
-              </li>
-              <!-- End Landings -->
-
-              <!-- Company -->
-              <li class="hs-has-sub-menu nav-item">
-                <a id="companyMegaMenu" class="hs-mega-menu-invoker nav-link dropdown-toggle " href="#" role="button"
-                  data-bs-toggle="dropdown" aria-expanded="false">Company</a>
-
-                <!-- Mega Menu -->
-                <div class="hs-sub-menu dropdown-menu" aria-labelledby="companyMegaMenu" style="min-width: 14rem;">
-                    
-                 
-                  <a class="dropdown-item " href="page-hire-us.html">Hire Us</a>
-                  <a class="dropdown-item " href="page-pricing.html">Pricing</a>
-                  <a class="dropdown-item " href="page-contacts-agency.html">Contacts: Agency</a>
-                  <a class="dropdown-item " href="page-contacts-startup.html">Contacts: Startup</a>
-                </div>
-                <!-- End Mega Menu -->
-              </li>
-              <!-- End Company -->
-
-            
               
-
-              <!-- Blog -->
-              
-              <!-- End Blog -->
-
               
               @if(Auth::check())
               <li class="nav-item">
@@ -588,7 +492,7 @@
                   style="color: #343f52 !important;/* background: #343f52; */padding: 0;font-size: 12px;display: inline-block;margin-bottom: 0.2rem;border-radius: 1rem;/* border: 1px solid rgba(164, 174, 198, 0.2); */">
                   </span> -->
               </div>
-              <h1 class="page-header-title">{{$pageTitle}}</h1><!-- Breadcrumb -->
+              <h1 class="page-header-title">{!!$pageTitle!!}</h1><!-- Breadcrumb -->
               <nav aria-label="breadcrumb">
                 @yield("breadcrumb")
               </nav>

@@ -28,7 +28,8 @@ use App\Models\City;
 use App\Models\Languages;
 use App\Models\ArrangeGroups;
 use App\Models\ProfessionalReview;
-
+use App\Models\AppointmentSchedule;
+use App\Models\AppointmentTypes;
 class FrontendController extends Controller
 {
     /**
@@ -227,15 +228,20 @@ class FrontendController extends Controller
         $professionalAdmin = professionalAdmin($subdomain);
         $appointment_schedule = DB::table(PROFESSIONAL_DATABASE.$subdomain.".appointment_schedule")->where("location_id",$location_id)->get();
         $appointment_types = DB::table(PROFESSIONAL_DATABASE.$subdomain.".appointment_types")->get();
+        // pre($appointment_schedule->toArray());
+        // exit;
+        $professional_location = DB::table(PROFESSIONAL_DATABASE.$subdomain.".professional_locations")->where('unique_id',$location_id)->first();
         $professional = Professionals::where('subdomain',$subdomain)->first();
         $viewData['appointment_types'] = $appointment_types;
         $viewData['appointment_schedule'] = $appointment_schedule;
+        $viewData['location_id'] = $location_id;
+        $viewData['professional_location'] = $professional_location;
         if(!empty($company_data)){    
             
             $viewData['company_data'] = $company_data;
             $viewData['professional'] = $professional;
             $viewData['professionalAdmin'] = $professionalAdmin;
-            $viewData['pageTitle'] = "Book Appointment with ".$company_data->company_name;   
+            $viewData['pageTitle'] = "Book Appointment with ".$company_data->company_name." <small>(".$professional_location->address.")</small>";   
             $viewData['subdomain'] = $subdomain;
             return view('frontend.professional.book-appointment',$viewData);
         }
@@ -243,7 +249,62 @@ class FrontendController extends Controller
             echo "No Details found";
         }
     }
+    public function fetchHours(Request $request){
+        $location_id = $request->input("location_id");
+        $month = $request->input("month");
+        $year = $request->input("year");
+        $start_date = $request->input("start_date");
+        $end_date = $request->input("end_date");
+        $professional = $request->input("professional");
+        
+        $day_schedules = array();
+        // $date = $year."-".$month."-01";
+        // $start_date = date("Y-m-d",strtotime($date));
+        // $end_date = date("Y-m-t",strtotime($date));
+        $dates = getBetweenDates($start_date,$end_date);
+        
+        for($d=0;$d < count($dates);$d++){
+            $day = date("l",strtotime($dates[$d]));
+            $hours = \DB::table(PROFESSIONAL_DATABASE.$professional.".appointment_schedule")
+                    ->where("location_id",$location_id)
+                    ->where("day",strtolower($day))
+                    ->first();
+            if(!empty($hours)){
+                $temp = array();
+                $temp['start'] = $dates[$d];
+                $temp['end'] = $dates[$d];
+                $temp['id'] = $hours->id;
+                $temp['title'] = "Working Hours \n".$hours->from_time." to ".$hours->to_time;
+                $day_schedules[] = $temp;
+            }
+        }
+        $response['status'] = true;
+        $response['schedule'] = $day_schedules;
 
+        return response()->json($response);
+    }
+    public function fetchAvailabilityHours(Request $request){
+        $date = $request->input("date");
+        $schedule_id = $request->input("schedule_id");
+        $professional = $request->input("professional");
+        $appointment_type_id = $request->input("appointment_type_id");
+        $appointment_schedule = \DB::table(PROFESSIONAL_DATABASE.$professional.".appointment_schedule")
+                    ->where("id",$schedule_id)
+                    ->first();
+        $appointment_type = \DB::table(PROFESSIONAL_DATABASE.$professional.".appointment_types")
+                    ->where("unique_id",$appointment_type_id)
+                    ->first();
+        
+        $duration = explode(":",$appointment_type->duration);
+        $interval = $duration[0];
+        $from_time = $appointment_schedule->from_time;
+        $to_time = $appointment_schedule->to_time;
+        $time_slots = getTimeSlot($interval,$from_time,$to_time);
+
+        $response['status'] = true;
+        $response['time_slots'] = $time_slots;
+        pre($time_slots);
+    }
     public function articles($category=''){
         if($category != ''){
             $visa_service = VisaServices::where("slug",$category)->first();

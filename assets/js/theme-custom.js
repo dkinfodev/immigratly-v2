@@ -99,7 +99,7 @@ function successMessage(message){
   $('#successToast').toast('show');
 }
 function errorMessage(message){  
-  // toastr.error(message, 'Warning');
+
   $('#errorToast').toast({
     delay: 2500
   });

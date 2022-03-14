@@ -19,7 +19,13 @@
 
 @section('content')
 <!-- Search Section -->
-
+<style>
+  td.fc-event-container a {
+    text-align: center;
+    height: 85px;
+    padding-top: 55px;
+}
+</style>
 
 <div class="container space-bottom-2 ">
   <div class="w-lg-100 ">
@@ -62,9 +68,10 @@
 
                 <div class="col-sm-12 mb-5">
                  <!-- Fullcalendar-->
-                    <div class="js-fullcalendar fullcalendar-custom" data-hs-fullscreen-options='{
+                 <div id="calendar"></div>
+                    <!-- <div class="js-fullcalendar fullcalendar-custom" data-hs-fullscreen-options='{
                     "initialDate": "2020-09-10"
-                    }'></div>
+                    }'></div> -->
                     <!-- End Fullcalendar -->
                 </div>
 
@@ -85,63 +92,83 @@
 @endsection
 
 @section("javascript")
-<link rel="stylesheet" href="assets/vendor/fullcalendar/main.min.css">
-<script src="assets/vendor/fullcalendar/main.min.js"></script>
+<script src="assets/vendor/moment/moment-with-locales.min.js"></script>
+<link rel="stylesheet" href="assets/vendor/fullcalendar-v3/dist/fullcalendar.min.css">
+<script src="assets/vendor/fullcalendar-v3/dist/fullcalendar.min.js"></script>
 
 <script>
-   $(document).on('ready', function () {
+$(document).ready(function() {
+  loadCalendar();
+});
 
+function loadCalendar() {
 
-     var fullcalendaDraggable = $.HSCore.components.HSFullcalendar.init($('.js-fullcalendar'), {
-       initialDate: "2020-09-10",
-       headerToolbar: {
-         left: "prev,next today",
-         center: "title",
-         right: ""
-       },
-       editable: false,
-       eventContent({event}) {
-         return {
-           html: `
-           <div class='d-flex align-items-center px-2'>
-             ${event.extendedProps.image ? `<img class="avatar avatar-xss" src="${event.extendedProps.image}" alt="Image Description">` : ''}
-             <span class="fc-event-title fc-sticky">${event.title}</span>
-           </div>
-           `
-         }
-       },
-       events: [
-         {
-           "title": "English Lesson",
-           "start": "2020-09-03T01:00:00",
-           "end": "2020-09-03T02:30:00"
-         },
-         {
-           "title": "Spanish Lesson",
-           "start": "2020-09-03T04:00:00",
-           "end": "2020-09-03T05:30:00"
-         },
-         {
-           "title": "Javascript Lesson",
-           "start": "2020-09-14T01:00:00",
-           "end": "2020-09-16T02:30:00"
-         },
-         {
-           "title": "PHP Lesson",
-           "start": "2020-09-06T04:00:00",
-           "end": "2020-09-09T05:30:00"
-         }
-       ]
-     });
-   });
-</script>
-<script>
+  $('#calendar').fullCalendar({
 
-$(document).on('ready', function () {
-    // initialization of fullcalendar
-    // $('.js-fullcalendar').each(function () {
-    //   var fullcalendar = $.HSCore.components.HSFullcalendar.init($(this));
-    // });
+    // other options here...
+    eventColor: 'transparent',
+    eventTextColor: '#999',
+    events: function(start, end,timezone, callback) {
+      var date = new Date(end);
+      var year = date.getFullYear();
+      var month = date.getMonth();
+      var start_date = start.format('YYYY-MM-DD');
+      var end_date = end.format('YYYY-MM-DD');
+  
+      var schedule = [];
+      // if (new_url != current_url) {
+
+        $.ajax({
+          url: "{{ url('professional/fetch-hours') }}",
+          dataType: 'json',
+          type: 'POST',
+          data:{
+            _token:csrf_token,
+            location_id: "{{$location_id}}",
+            professional:"{{$subdomain}}",
+            year:year,
+            start_date:start_date,
+            end_date:end_date,
+            month:month
+          },
+          success: function(response) {
+           schedule = response.schedule;
+            callback(schedule);
+          }
+        });
+        // callback(schedule);
+      // } else {
+      //   callback(user_events);
+      // }
+    },
+    eventClick: function(info, jsEvent, view) {
+      var appointment_type = $("input[name=appointment_type]:checked").val();
+      alert(appointment_type);
+      if(appointment_type == undefined){
+        alert("Select meeting duration first");
+      }else{
+        $.ajax({
+          url: "{{ url('professional/fetch-available-slots') }}",
+          dataType: 'json',
+          type: 'POST',
+          data:{
+            _token:csrf_token,
+            location_id: "{{$location_id}}",
+            professional:"{{$subdomain}}",
+            date:info.start.format('YYYY-MM-DD'),
+            schedule_id:info.id,
+            appointment_type_id:appointment_type
+          },
+          success: function(response) {
+           schedule = response.schedule;
+            callback(schedule);
+          }
+        });
+      }
+    }
   });
+  
+}
 </script>
+
 @endsection

@@ -23,10 +23,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     
-    <!-- CSS Front Template -->
-    <link rel="stylesheet" href="assets/css/theme.min.css">
+    
 
-    <link rel="stylesheet" href="assets/vendor/toastr/toastr.css">
+    
     <link rel="stylesheet" type="text/css" href="assets/vendor/sweetalert2/sweetalert2.min.css">
     <!-- <link rel="stylesheet" href="assets/front/vendor/tom-select/dist/css/tom-select.bootstrap5.css"> -->
     <link rel="stylesheet" href="assets/front/vendor/fontawesome/css/all.min.css">
@@ -35,7 +34,9 @@
     <link rel="stylesheet" href="assets/vendor/select2/dist/css/select2.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css" />
 
-
+    <link rel="stylesheet" href="assets/vendor/toastr/toastr.css">
+    <!-- CSS Front Template -->
+    <link rel="stylesheet" href="assets/css/theme.min.css">
     <script>
     var BASEURL = "{{ baseUrl('/') }}";
     var SITEURL = "{{ url('/') }}";
@@ -572,7 +573,7 @@
   <script src="assets/vendor/datatables.net-buttons/js/buttons.html5.min.js"></script>
   <script src="assets/vendor/datatables.net-buttons/js/buttons.print.min.js"></script>
   <script src="assets/vendor/datatables.net-buttons/js/buttons.colVis.min.js"></script>
-  <!-- <script src="assets/vendor/toastr/toastr.min.js"></script> -->
+  <script src="assets/vendor/toastr/toastr.min.js"></script>
   <script src="assets/vendor/ckeditor/ckeditor.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
   <script src="assets/vendor/sweetalert2/sweetalert2.all.min.js"></script>
