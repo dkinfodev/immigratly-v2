@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class TimeDuration extends Model
 {
-    protected $table = 'time_duration';
     use HasFactory;
+    protected $table = "time_duration";
+
+    static function deleteRecord($id){
+	TimeDuration::where("id",$id)->delete();
+    }
 }

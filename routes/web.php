@@ -1180,6 +1180,17 @@ Route::group(array('prefix' => 'admin'), function () {
             Route::get('/delete/{id}', [App\Http\Controllers\Admin\LocationsController::class, 'deleteSingle']);
             Route::post('/delete-multiple', [App\Http\Controllers\Admin\LocationsController::class, 'deleteMultiple']);
         });
+        Route::group(array('prefix' => 'time-duration'), function () {
+            Route::get('/', [App\Http\Controllers\Admin\TimeDurationController::class, 'index']);
+            Route::post('/ajax-list', [App\Http\Controllers\Admin\TimeDurationController::class, 'getAjaxList']);
+            Route::get('/add', [App\Http\Controllers\Admin\TimeDurationController::class, 'add']);
+            Route::post('/save', [App\Http\Controllers\Admin\TimeDurationController::class, 'save']);
+            Route::get('/edit/{id}', [App\Http\Controllers\Admin\TimeDurationController::class, 'edit']);
+            Route::post('/update/{id}', [App\Http\Controllers\Admin\TimeDurationController::class, 'update']);
+            Route::get('/delete/{id}', [App\Http\Controllers\Admin\TimeDurationController::class, 'deleteSingle']);
+            Route::post('/delete-multiple', [App\Http\Controllers\Admin\TimeDurationController::class, 'deleteMultiple']);
+        });
+
         Route::group(array('prefix' => 'appointment-types'), function () {
             Route::get('/', [App\Http\Controllers\Admin\AppointmentTypesController::class, 'index']);
             Route::post('/ajax-list', [App\Http\Controllers\Admin\AppointmentTypesController::class, 'getAjaxList']);
