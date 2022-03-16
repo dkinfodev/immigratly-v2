@@ -65,6 +65,9 @@ Route::group(array('middleware' => 'curl_api'), function () {
 Route::group(array('middleware' => 'professional_curl'), function () {
 	Route::group(array('prefix' => 'professional'), function () {
 		Route::post('/information', [App\Http\Controllers\Api\ProfessionalApiController::class, 'professionalInfo']);
+		Route::post('/appointment-types', [App\Http\Controllers\Api\ProfessionalApiController::class, 'appointmentTypes']);
+		Route::post('/appointment-schedules', [App\Http\Controllers\Api\ProfessionalApiController::class, 'appointmentSchedules']);
+		Route::post('/locations', [App\Http\Controllers\Api\ProfessionalApiController::class, 'professionalLocations']);
 		Route::group(array('prefix' => 'cases'), function () {
 			Route::post('/', [App\Http\Controllers\Api\ProfessionalApiController::class, 'clientCases']);
 			Route::post('/view', [App\Http\Controllers\Api\ProfessionalApiController::class, 'caseDetail']);
@@ -108,5 +111,6 @@ Route::group(array('middleware' => 'professional_curl'), function () {
 			Route::post('/case-chats', [App\Http\Controllers\Api\ProfessionalApiController::class, 'caseChats']);
 			Route::post('/document-chats', [App\Http\Controllers\Api\ProfessionalApiController::class, 'documentChats']);
 		});
+
 	});	
 });

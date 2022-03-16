@@ -47,14 +47,14 @@
                 <div class="col-sm-4">
                   <div class="card text-center">
                       <div class="card-body">
-                          <h3>{{$type->name}}</h3>
-                          <h4>{{$type->duration}}</h4>
+                          <h3>{{$type['name']}}</h3>
+                          <h4>{{$type['time_duration']['name']}}</h4>
                       </div>
                       <div class="card-footer">
                             <div class="form-group">
                             <!-- Checkbox -->
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" id="customRadio-{{$key}}" class="custom-control-input" name="appointment_type" value="{{$type->unique_id}}">
+                                    <input type="radio" id="customRadio-{{$key}}" class="custom-control-input" name="appointment_type" value="{{$type['unique_id']}}">
                                     <label class="custom-control-label" for="customRadio-{{$key}}">Select Type</label>
                                 </div>
                                 <!-- End Checkbox -->
@@ -100,7 +100,6 @@
 $(document).ready(function() {
   loadCalendar();
 });
-
 function loadCalendar() {
 
   $('#calendar').fullCalendar({
@@ -122,6 +121,9 @@ function loadCalendar() {
           url: "{{ url('professional/fetch-hours') }}",
           dataType: 'json',
           type: 'POST',
+          beforeSend:function(){
+            showLoader();
+          },
           data:{
             _token:csrf_token,
             location_id: "{{$location_id}}",
@@ -132,7 +134,8 @@ function loadCalendar() {
             month:month
           },
           success: function(response) {
-           schedule = response.schedule;
+            hideLoader();
+            schedule = response.schedule;
             callback(schedule);
           }
         });

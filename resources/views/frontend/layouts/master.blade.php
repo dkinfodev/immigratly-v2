@@ -34,9 +34,10 @@
     <link rel="stylesheet" href="assets/vendor/select2/dist/css/select2.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css" />
 
-    <link rel="stylesheet" href="assets/vendor/toastr/toastr.css">
+    
     <!-- CSS Front Template -->
     <link rel="stylesheet" href="assets/css/theme.min.css">
+    <link rel="stylesheet" href="assets/vendor/toastr/toastr.css">
     <script>
     var BASEURL = "{{ baseUrl('/') }}";
     var SITEURL = "{{ url('/') }}";
@@ -45,7 +46,12 @@
 </head>
 
 <body>
-
+<div class="loader">
+<div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+    <span class="sr-only"></span>
+</div>
+<h4 class="text-danger">Loading...</h4>
+</div>
     @include('frontend.layouts.header')
 
     <!-- ========== MAIN CONTENT ========== -->

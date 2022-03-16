@@ -30,6 +30,7 @@ use App\Models\ArrangeGroups;
 use App\Models\ProfessionalReview;
 use App\Models\AppointmentSchedule;
 use App\Models\AppointmentTypes;
+use App\Models\BookedAppointments;
 class FrontendController extends Controller
 {
     /**
@@ -226,8 +227,27 @@ class FrontendController extends Controller
 
         $company_data = professionalDetail($subdomain);
         $professionalAdmin = professionalAdmin($subdomain);
-        $appointment_schedule = DB::table(PROFESSIONAL_DATABASE.$subdomain.".appointment_schedule")->where("location_id",$location_id)->get();
-        $appointment_types = DB::table(PROFESSIONAL_DATABASE.$subdomain.".appointment_types")->get();
+
+     
+        $apiData = professionalCurl('appointment-types',$subdomain);
+        if(isset($apiData['status']) && $apiData['status'] == 'success'){
+            $appointment_types = $apiData['data'];
+        }else{
+            $appointment_types = array();
+        }
+        $data = array();
+        $data['location_id'] = $location_id;
+        $apiData = professionalCurl('appointment-schedules',$subdomain,$data);
+        if(isset($apiData['status']) && $apiData['status'] == 'success'){
+            $appointment_schedule = $apiData['data'];
+        }else{
+            $appointment_schedule = array();
+        }
+        // $appointment_schedule = DB::table(PROFESSIONAL_DATABASE.$subdomain.".appointment_schedule")->where("location_id",$location_id)->get();
+        // $appointment_types = DB::table(PROFESSIONAL_DATABASE.$subdomain.".appointment_types as at")
+        //                     ->leftJoin(PROFESSIONAL_DATABASE.$subdomain.".time_duration as td", 'td.unique_id', '=', 'at.duration')
+        //                     ->select("at.*,td.name,td.duration")
+        //                     ->get();
         // pre($appointment_schedule->toArray());
         // exit;
         $professional_location = DB::table(PROFESSIONAL_DATABASE.$subdomain.".professional_locations")->where('unique_id',$location_id)->first();
@@ -290,22 +310,59 @@ class FrontendController extends Controller
         $date = $request->input("date");
         $location_id = $request->input("location_id");
         $appointment_type_id = $request->input("appointment_type_id");
-        $appointment_schedule = \DB::table(PROFESSIONAL_DATABASE.$professional.".appointment_schedule")
-                    ->where("id",$schedule_id)
-                    ->first();
-        $appointment_type = \DB::table(PROFESSIONAL_DATABASE.$professional.".appointment_types")
-                    ->where("unique_id",$appointment_type_id)
-                    ->first();
+
+        $data = array();
+        $data['return'] = 'single';
+        $data['id'] = $appointment_type_id;
+        $apiData = professionalCurl('appointment-types',$professional,$data);
+        if(isset($apiData['status']) && $apiData['status'] == 'success'){
+            $appointment_type = $apiData['data'];
+        }else{
+            $appointment_type = array();
+        }
+        $data = array();
+        $data['schedule_id'] = $schedule_id;
+        $data['return'] = 'single';
+        $apiData = professionalCurl('appointment-schedules',$professional,$data);
+        if(isset($apiData['status']) && $apiData['status'] == 'success'){
+            $appointment_schedule = $apiData['data'];
+        }else{
+            $appointment_schedule = array();
+        }
+        // $appointment_schedule = \DB::table(PROFESSIONAL_DATABASE.$professional.".appointment_schedule")
+        //             ->where("id",$schedule_id)
+        //             ->first();
+        // $appointment_type = \DB::table(PROFESSIONAL_DATABASE.$professional.".appointment_types")
+        //             ->where("unique_id",$appointment_type_id)
+        //             ->first();
         
-        $duration = explode(":",$appointment_type->duration);
-        $interval = $duration[0];
-        $from_time = $appointment_schedule->from_time;
-        $to_time = $appointment_schedule->to_time;
+        $type = $appointment_type['time_duration']['type'];
+        if($type == 'minutes'){
+            $interval = $appointment_type['time_duration']['duration'];
+        }else{
+            $interval = $appointment_type['time_duration']['duration'] * 60;
+        }
+        
+        
+        $from_time = $appointment_schedule['from_time'];
+        $to_time = $appointment_schedule['to_time'];
+        $booked_slots = BookedAppointments::where("professional",$professional)
+                                        ->where("location_id",$location_id)
+                                        ->whereDate("appointment_date",$date)
+                                        ->get();
+        if(!empty($booked_slots)){
+            $booked_slots = $booked_slots->toArray();
+        }else{
+            $booked_slots = array();
+        }
+        pre($booked_slots);
         $time_slots = getTimeSlot($interval,$from_time,$to_time);
         $viewData['date'] = date("F d, Y",strtotime($date));
         $viewData['time_slots'] = $time_slots;
         $viewData['schedule_id'] = $schedule_id;
         $viewData['location_id'] = $location_id;
+        $viewData['professional'] = $professional;
+        $viewData['date'] = $date;
         $viewData['appointment_type_id'] = $appointment_type_id;
         $viewData['pageTitle'] = "Selct Your Time Slot";
         $view = View::make('frontend.professional.time-slots',$viewData);
@@ -313,7 +370,24 @@ class FrontendController extends Controller
 
         $response['status'] = true;
         $response['contents'] = $contents;
-         return response()->json($response);
+        return response()->json($response);
+    }
+
+    public function placeBooking(Request $request){
+        $duration = explode("-",$request->input("duration"));
+        $object = new BookedAppointments();
+        $object->unique_id = randomNumber();
+        $object->professional = $request->input("professional");
+        $object->location_id = $request->input("location_id");
+        $object->appointment_date = $request->input("date");
+        $object->user_id = \Auth::user()->unique_id;
+        $object->status = 'awaiting_approval';
+        $object->start_time = $duration[0];
+        $object->end_time = $duration[1];
+        $object->save();
+        $response['status'] = true;
+        $response['message'] = "Your time slot is booked successfully. Team will contact you soon!";
+        return response()->json($response);
     }
     public function articles($category=''){
         if($category != ''){

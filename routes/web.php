@@ -111,8 +111,10 @@ Route::group(array('middleware' => 'frontend'), function () {
     Route::get('/professional/write-review/{unique_id}', [App\Http\Controllers\Frontend\FrontendController::class, 'ReviewProfessional']);
     Route::post('/professional/send-review/{unique_id}', [App\Http\Controllers\Frontend\FrontendController::class, 'sendReviewProfessional']);
     Route::get('/professional/{subdomain}/book-appointment/{location}', [App\Http\Controllers\Frontend\FrontendController::class, 'bookAppointment']);
+
     Route::post('/professional/fetch-hours', [App\Http\Controllers\Frontend\FrontendController::class, 'fetchHours']);
     Route::post('/professional/fetch-available-slots', [App\Http\Controllers\Frontend\FrontendController::class, 'fetchAvailabilityHours']);
+    Route::post('/place-booking', [App\Http\Controllers\Frontend\FrontendController::class, 'placeBooking']);
 });
 // Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

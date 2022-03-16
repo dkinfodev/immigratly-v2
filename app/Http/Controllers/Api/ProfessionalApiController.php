@@ -27,6 +27,8 @@ use App\Models\AssessmentCase;
 use App\Models\CaseTasks;
 use App\Models\ChatRead;
 use App\Models\CaseActivityLogs;
+use App\Models\AppointmentTypes;
+use App\Models\AppointmentSchedule;
 
 class ProfessionalApiController extends Controller
 {
@@ -1758,6 +1760,61 @@ class ProfessionalApiController extends Controller
             $response['grouped_messages'] = $grouped_messages;
             $response['messages'] = $messages;
             $response['status'] = "success";
+        } catch (Exception $e) {
+            $response['status'] = "error";
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response); 
+    }
+
+    public function professionalLocations(Request $request){
+        try{
+            $result = ProfessionalLocations::with('AppointmentSchedules')->whereHas('AppointmentSchedules')->get();
+
+            $response['status'] = true;
+            $response['data'] = $result;
+        } catch (Exception $e) {
+            $response['status'] = "error";
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response); 
+    }
+
+    public function appointmentTypes(Request $request){
+        try{
+            
+            $postData = $request->input();
+            $request->request->add($postData);
+            if($request->input('return') == 'single'){
+                $result = AppointmentTypes::with('timeDuration')->where('unique_id',$request->input('id'))->first();
+            }else{
+                $result = AppointmentTypes::with('timeDuration')->get();
+            }
+            
+
+            $response['status'] = true;
+            $response['data'] = $result;
+        } catch (Exception $e) {
+            $response['status'] = "error";
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response); 
+    }
+
+    public function appointmentSchedules(Request $request){
+        try{
+
+            $postData = $request->input();
+            $request->request->add($postData);
+
+            if($request->input('return') == 'single'){
+                $result = AppointmentSchedule::where('id',$request->input('schedule_id'))->with('Location')->first();
+            }else{ 
+                $result = AppointmentSchedule::where('location_id',$request->input('location_id'))->with('Location')->get();
+            }
+           
+            $response['status'] = true;
+            $response['data'] = $result;
         } catch (Exception $e) {
             $response['status'] = "error";
             $response['message'] = $e->getMessage();

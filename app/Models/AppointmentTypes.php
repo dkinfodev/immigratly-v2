@@ -12,4 +12,9 @@ class AppointmentTypes extends Model
     static function deleteRecord($id){
         AppointmentTypes::where("id",$id)->delete();
     }
+
+    public function timeDuration()
+    {
+        return $this->belongsTo('App\Models\TimeDuration','duration','unique_id');
+    }
 }

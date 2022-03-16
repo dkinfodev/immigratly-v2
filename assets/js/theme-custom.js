@@ -91,20 +91,21 @@ function hideLoader(){
     
 }
 function successMessage(message){
-  // toastr.success(message, 'Success');
-  $('#successToast').toast({
-    delay: 2000
-  });
-  $('#successToast').find(".toast-body").html(message);
-  $('#successToast').toast('show');
+  toastr.success(message, 'Success');
+  
+  // $('#successToast').toast({
+  //   delay: 2000
+  // });
+  // $('#successToast').find(".toast-body").html(message);
+  // $('#successToast').toast('show');
 }
 function errorMessage(message){  
-
-  $('#errorToast').toast({
-    delay: 2500
-  });
-  $('#errorToast').find(".toast-body").html(message);
-  $('#errorToast').toast('show');
+  toastr.error(message, 'Warning');
+  // $('#errorToast').toast({
+  //   delay: 2500
+  // });
+  // $('#errorToast').find(".toast-body").html(message);
+  // $('#errorToast').toast('show');
 }
 function warningMessage(message){
   // toastr.warning(message, 'Warning');

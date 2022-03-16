@@ -14,4 +14,9 @@ class ProfessionalLocations extends Model
     static function deleteRecord($id){
         ProfessionalLocations::where("id",$id)->delete();
     }
+
+    public function AppointmentSchedules()
+    {
+        return $this->hasMany('App\AppointmentSchedule','location_id','unique_id');
+    }
 }
