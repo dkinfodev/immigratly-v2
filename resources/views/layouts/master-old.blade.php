@@ -725,22 +725,22 @@
       
     </div>
   </div>
-<div id="errorToast" class="toast notificationToast errorToast" role="alert" aria-live="assertive" aria-atomic="true" style="position: fixed; top: 20px; right: 20px; z-index: 9999;">
-  <div class="toast-header">
-    <!-- <img class="avatar avatar-sm avatar-circle mr-2" src="../assets/img/160x160/img4.jpg" alt="Image description"> -->
-    <!-- <div class="avatar avatar-circle bg-secondary">
-      <i class="tio-warning"></i>
-    </div> -->
-    <h5 class="mb-0">Warning</h5>
-    <!-- <small class="ml-auto">11 mins ago</small> -->
-    <button type="button" class="close ml-3" data-dismiss="toast" aria-label="Close">
-      <i class="tio-clear" aria-hidden="true"></i>
-    </button>
+  <div id="errorToast" class="toast notificationToast errorToast" role="alert" aria-live="assertive" aria-atomic="true" style="position: fixed; top: 20px; right: 20px; z-index: 9999;">
+    <div class="toast-header">
+      <!-- <img class="avatar avatar-sm avatar-circle mr-2" src="../assets/img/160x160/img4.jpg" alt="Image description"> -->
+      <!-- <div class="avatar avatar-circle bg-secondary">
+        <i class="tio-warning"></i>
+      </div> -->
+      <h5 class="mb-0">Warning</h5>
+      <!-- <small class="ml-auto">11 mins ago</small> -->
+      <button type="button" class="close ml-3" data-dismiss="toast" aria-label="Close">
+        <i class="tio-clear" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="toast-body">
+      
+    </div>
   </div>
-  <div class="toast-body">
-    
-  </div>
-</div>
   <!-- End Welcome Message Modal -->
   <!-- ========== END SECONDARY CONTENTS ========== -->
 

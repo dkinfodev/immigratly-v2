@@ -355,8 +355,34 @@ class FrontendController extends Controller
         }else{
             $booked_slots = array();
         }
-        pre($booked_slots);
         $time_slots = getTimeSlot($interval,$from_time,$to_time);
+        // pre($time_slots);
+        if(!empty($booked_slots)){
+            foreach($time_slots as $key => $slot){
+                $start_time = $date." ".$slot['start_time'];
+                $end_time = $date." ".$slot['end_time'];
+              
+                foreach($booked_slots as $b_slot){
+                    // echo 'b start_time : '.$b_slot['start_time']."<Br>";
+                    // echo 'b end_time: '.$b_slot['end_time']."<Br>";
+                    $b_start_time = $date." ".$b_slot['start_time'].":00";
+                    $b_end_time = $date." ".$b_slot['end_time'].":00";
+                    $current_time = date("Y-m-d H:i:s",strtotime($start_time));
+                    if ($current_time >= $b_start_time && $current_time <= $b_end_time)
+                    {
+                        unset($time_slots[$key]);
+                        // echo '<h1>Time Booked: '.$b_start_time." To ".$b_end_time."</h1><Br>";
+                    }else{
+                        // echo "<h3>Empty Slot</h3>";
+                        // echo 'start_time : '.$start_time."<Br>";
+                        // echo 'end_time: '.$end_time."<Br>";
+                    }
+                }
+                // echo "<br>---------------------------------------<br>";
+            }
+        }
+        $time_slots = array_values($time_slots);
+        // pre($time_slots);
         $viewData['date'] = date("F d, Y",strtotime($date));
         $viewData['time_slots'] = $time_slots;
         $viewData['schedule_id'] = $schedule_id;

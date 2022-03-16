@@ -108,12 +108,12 @@ function errorMessage(message){
   // $('#errorToast').toast('show');
 }
 function warningMessage(message){
-  // toastr.warning(message, 'Warning');
-  $('#warningToast').toast({
-    delay: 2500
-  });
-  $('#warningToast').find(".toast-body").html(message);
-  $('#warningToast').toast('show');
+  toastr.warning(message, 'Warning');
+  // $('#warningToast').toast({
+  //   delay: 2500
+  // });
+  // $('#warningToast').find(".toast-body").html(message);
+  // $('#warningToast').toast('show');
 }
 function bottomMessage(message,type){
   toastr.options = {

@@ -24,7 +24,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css" />
 <!-- CSS Front Template -->
 <link rel="stylesheet" href="assets/css/theme.min.css">
-<!-- <link rel="stylesheet" href="assets/vendor/toastr/toastr.css"> -->
+<link rel="stylesheet" href="assets/vendor/toastr/toastr.css">
 <link rel="stylesheet" type="text/css" href="assets/vendor/sweetalert2/sweetalert2.min.css">
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="stylesheet" href="assets/css/custom.css">
@@ -260,7 +260,54 @@
       <!-- End Copyright -->
     </div>
   </footer>
-
+  <div id="successToast" class="toast notificationToast successToast" role="alert" aria-live="assertive" aria-atomic="true" style="position: fixed; top: 20px; right: 20px; z-index: 9999;">
+    <div class="toast-header">
+      <!-- <img class="avatar avatar-sm avatar-circle mr-2" src="../assets/img/160x160/img4.jpg" alt="Image description"> -->
+      <!-- <div class="avatar avatar-circle bg-secondary">
+        <i class="tio-done"></i>
+      </div> -->
+      <h5 class="mb-0">Success</h5>
+      <!-- <small class="ml-auto">11 mins ago</small> -->
+      <button type="button" class="close ml-3" data-dismiss="toast" aria-label="Close">
+        <i class="tio-clear" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="toast-body">
+      
+    </div>
+  </div>
+  <div id="warningToast" class="toast notificationToast warningToast" role="alert" aria-live="assertive" aria-atomic="true" style="position: fixed; top: 20px; right: 20px; z-index: 9999;">
+    <div class="toast-header">
+      <!-- <img class="avatar avatar-sm avatar-circle mr-2" src="../assets/img/160x160/img4.jpg" alt="Image description"> -->
+      <!-- <div class="avatar avatar-circle bg-secondary">
+        <i class="tio-done"></i>
+      </div> -->
+      <h5 class="mb-0">Warning</h5>
+      <!-- <small class="ml-auto">11 mins ago</small> -->
+      <button type="button" class="close ml-3" data-dismiss="toast" aria-label="Close">
+        <i class="tio-clear" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="toast-body">
+      
+    </div>
+  </div>
+  <div id="errorToast" class="toast notificationToast errorToast" role="alert" aria-live="assertive" aria-atomic="true" style="position: fixed; top: 20px; right: 20px; z-index: 9999;">
+    <div class="toast-header">
+      <!-- <img class="avatar avatar-sm avatar-circle mr-2" src="../assets/img/160x160/img4.jpg" alt="Image description"> -->
+      <!-- <div class="avatar avatar-circle bg-secondary">
+        <i class="tio-warning"></i>
+      </div> -->
+      <h5 class="mb-0">Warning</h5>
+      <!-- <small class="ml-auto">11 mins ago</small> -->
+      <button type="button" class="close ml-3" data-dismiss="toast" aria-label="Close">
+        <i class="tio-clear" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="toast-body">
+      
+    </div>
+  </div>
   <!-- ========== END FOOTER ========== -->
 
   <!-- ========== SECONDARY CONTENTS ========== -->
@@ -296,7 +343,7 @@
   <script src="assets/vendor/datatables.net-buttons/js/buttons.html5.min.js"></script>
   <script src="assets/vendor/datatables.net-buttons/js/buttons.print.min.js"></script>
   <script src="assets/vendor/datatables.net-buttons/js/buttons.colVis.min.js"></script>
-  <!-- <script src="assets/vendor/toastr/toastr.min.js"></script> -->
+  <script src="assets/vendor/toastr/toastr.min.js"></script>
   <script src="assets/vendor/ckeditor/ckeditor.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
   <script src="assets/vendor/sweetalert2/sweetalert2.all.min.js"></script>
