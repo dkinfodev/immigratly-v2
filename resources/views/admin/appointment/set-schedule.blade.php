@@ -9,6 +9,35 @@
 <!-- End Content -->
 @endsection
 
+@section('header-right')
+    
+    <a class="btn btn-primary float-right" onclick="showPopup('<?php echo baseUrl('custom-time/'.$location_id.'/add') ?>')" href="javascript:;">
+            Customized Time
+    </a>
+
+    
+    <!-- <div class="hs-unfold">
+        <a class="js-hs-action btn btn-sm btn-white" href="javascript:;"
+          data-hs-unfold-options='{
+            "target": "#action",
+            "type": "css-animation"
+          }'>More  <i class="tio-chevron-down ml-1"></i>
+        </a>
+        <div id="action" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right">
+
+          <i class="tio-edit dropdown-item-icon"></i>
+          Edit
+          
+          <a class="dropdown-item" href="{{baseUrl('/')}}">
+          <i class="tio-globe dropdown-item-icon"></i>
+          View
+          </a>
+          
+        </div>
+    </div> -->
+   
+@endsection
+
 
 
 @section('content')
