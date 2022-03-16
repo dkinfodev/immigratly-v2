@@ -118,7 +118,7 @@ function loadCalendar() {
       // if (new_url != current_url) {
 
         $.ajax({
-          url: "{{ url('professional/fetch-hours') }}",
+          url: "{{ baseUrl('professional/fetch-hours') }}",
           dataType: 'json',
           type: 'POST',
           beforeSend:function(){
@@ -149,7 +149,7 @@ function loadCalendar() {
       if(appointment_type == undefined){
         alert("Select meeting duration first");
       }else{
-        var url = "{{ url('professional/fetch-available-slots') }}";
+        var url = "{{ baseUrl('professional/fetch-available-slots') }}";
         var param = {
             location_id: "{{$location_id}}",
             professional:"{{$subdomain}}",

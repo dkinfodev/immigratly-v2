@@ -183,7 +183,7 @@
                   <tr>
                     <td>{{$location->address}}</td>
                     <td align="right">
-                        <a href="{{ url('professional/'.$subdomain.'/book-appointment/'.$location->unique_id) }}" class="btn btn-primary btn-sm">Book Appointment</a>
+                        <a href="{{ baseUrl('professional/'.$subdomain.'/book-appointment/'.$location->unique_id) }}" class="btn btn-primary btn-sm">Book Appointment</a>
                     </td>
                   </tr>
                   @endforeach
