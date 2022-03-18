@@ -59,6 +59,10 @@ Route::group(array('middleware' => 'curl_api'), function () {
 			Route::post('/delete', [App\Http\Controllers\Api\MasterApiController::class, 'deleteWebinar']);
 			Route::post('/delete-image', [App\Http\Controllers\Api\MasterApiController::class, 'deleteWebinarImage']);
 		});
+
+		Route::group(array('prefix' => 'booked-appointments'), function () {
+			Route::post('/', [App\Http\Controllers\Api\MasterApiController::class, 'bookedAppointments']);
+		});
 	});	
 
 });

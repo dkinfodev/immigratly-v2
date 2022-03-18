@@ -26,6 +26,8 @@ use App\Models\AsssessmentNotes;
 use App\Models\AssessmentReports;
 use App\Models\AssessmentForms;
 use App\Models\ExternalAssessments;
+use App\Models\BookedAppointments;
+
 
 class MasterApiController extends Controller
 {
@@ -1087,5 +1089,35 @@ class MasterApiController extends Controller
             $response['message'] = $e->getMessage();
         }
         return response()->json($response);
+    }
+
+    public function bookedAppointments(Request $request){
+        try{
+            $postData = $request->input();
+            $request->request->add($postData);
+            $search = $request->input("search");
+            $records = BookedAppointments::with(['Client'])
+                        ->orderBy('appointment_date',"desc")
+                        // ->where(function($query) use($search){
+                        //     if($search != ''){
+                        //         $query->where("assessment_title","LIKE","%$search%");
+                        //     }
+                        // })
+                        ->where("professional",$request->input("subdomain"))
+                        ->whereHas("Client")
+                        ->paginate();
+           
+            $response['status'] = 'success';
+            $response['data'] = $records->items();
+            $response['records'] = $records;
+            $response['last_page'] = $records->lastPage();
+            $response['current_page'] = $records->currentPage();
+            $response['total_records'] = $records->total();
+        } catch (Exception $e) {
+            $response['status'] = "error";
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response);
+        
     }
 }

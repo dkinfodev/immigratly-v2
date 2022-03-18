@@ -13,11 +13,13 @@
         </div>
     </div>
     <div class="modal-body imm-education-modal-body">
-      <form method="post" id="popup-form"  action="{{ url('/place-booking') }}">
+      <form method="post" id="popup-form"  action="{{ baseUrl('/place-booking') }}">
           @csrf
 
           <input type="hidden" name="professional" value="{{$professional}}" />
           <input type="hidden" name="location_id" value="{{$location_id}}" />
+          <input type="hidden" name="interval" value="{{$interval}}" />          
+          <input type="hidden" name="schedule_id" value="{{$schedule_id}}" />
           <input type="hidden" name="date" value="{{$date}}" />
           <div class="imm-education-add-inner">
                 <h3>Available time slot for {{$date}}</h3>

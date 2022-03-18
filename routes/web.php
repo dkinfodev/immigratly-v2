@@ -79,6 +79,13 @@ Route::group(array('middleware' => 'frontend'), function () {
     Route::post('/discussions/fetch-comments', [App\Http\Controllers\Frontend\FrontendController::class, 'fetchComments']);
     Route::post('/discussions/send-comment', [App\Http\Controllers\Frontend\FrontendController::class, 'sendComment']);
     
+    //Professional
+    Route::get('/professionals/', [App\Http\Controllers\Frontend\FrontendController::class, 'professionals']);
+    Route::post('/professionals-list/', [App\Http\Controllers\Frontend\FrontendController::class, 'professionalAjaxList']);
+    Route::get('/professional/{subdomain}', [App\Http\Controllers\Frontend\FrontendController::class, 'professionalDetail']);
+    Route::get('/professional/write-review/{unique_id}', [App\Http\Controllers\Frontend\FrontendController::class, 'ReviewProfessional']);
+    Route::post('/professional/send-review/{unique_id}', [App\Http\Controllers\Frontend\FrontendController::class, 'sendReviewProfessional']);
+    
 
     // Visa Services
     Route::get('/visa-services/{slug}', [App\Http\Controllers\Frontend\FrontendController::class, 'visaServices']);
@@ -104,12 +111,6 @@ Route::group(array('middleware' => 'frontend'), function () {
         Route::get('/download-report/{id}', [App\Http\Controllers\Frontend\EligibilityCheckController::class, 'downloadReport']);
     });
 
-    //Professional
-    Route::get('/professionals/', [App\Http\Controllers\Frontend\FrontendController::class, 'professionals']);
-    Route::post('/professionals-list/', [App\Http\Controllers\Frontend\FrontendController::class, 'professionalAjaxList']);
-    Route::get('/professional/{subdomain}', [App\Http\Controllers\Frontend\FrontendController::class, 'professionalDetail']);
-    Route::get('/professional/write-review/{unique_id}', [App\Http\Controllers\Frontend\FrontendController::class, 'ReviewProfessional']);
-    Route::post('/professional/send-review/{unique_id}', [App\Http\Controllers\Frontend\FrontendController::class, 'sendReviewProfessional']);
     
 });
 // Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
@@ -1256,6 +1257,11 @@ Route::group(array('prefix' => 'admin'), function () {
             });
         });
 
+        Route::group(array('prefix' => 'booked-appointments'), function () {
+            Route::get('/', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'index']);
+            Route::post('/ajax-list', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'getAjaxList']);
+        });
+        
         Route::group(array('prefix' => 'messages-center'), function () {
             Route::get('/', [App\Http\Controllers\Admin\MessagesCenterController::class, 'allMessages']);
             Route::post('/save-chat', [App\Http\Controllers\Admin\MessagesCenterController::class, 'saveChat']);

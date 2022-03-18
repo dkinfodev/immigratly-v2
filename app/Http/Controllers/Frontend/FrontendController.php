@@ -387,6 +387,7 @@ class FrontendController extends Controller
         $viewData['time_slots'] = $time_slots;
         $viewData['schedule_id'] = $schedule_id;
         $viewData['location_id'] = $location_id;
+        $viewData['interval'] = $interval;
         $viewData['professional'] = $professional;
         $viewData['date'] = $date;
         $viewData['appointment_type_id'] = $appointment_type_id;
@@ -407,7 +408,9 @@ class FrontendController extends Controller
         $object->location_id = $request->input("location_id");
         $object->appointment_date = $request->input("date");
         $object->user_id = \Auth::user()->unique_id;
-        $object->status = 'awaiting_approval';
+        $object->status = 'awaiting';
+        $object->schedule_id = $request->input("schedule_id");
+        $object->meeting_duration = $request->input("interval");
         $object->start_time = $duration[0];
         $object->end_time = $duration[1];
         $object->save();

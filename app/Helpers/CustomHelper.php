@@ -609,14 +609,13 @@ if(!function_exists("curlRequest")){
         $site_url = DB::table(MAIN_DATABASE.".settings")->where("meta_key","site_url")->first();
         $site_url = $site_url->meta_value;
         if($subdomain == 'localhost'){
-            // $api_url = url('/api/main');
+            $api_url = url('/api/main');
             // $api_url = "https://immigratly.com/api/main";
-            $api_url = "http://localhost/jw/new-immigratly/ys_code/new_immigratly/api/main";
+            // $api_url = "http://localhost/jw/new-immigratly/ys_code/new_immigratly/api/main";
         }else{
             $api_url = $site_url."api/main";
         }
         $token = $client_key->client_secret;
-        // echo $api_url."/".$url;
         $ch = curl_init($api_url."/".$url);
        
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -2679,5 +2678,16 @@ if(!function_exists("getTimeSlot")){
             }
         }
         return $time;
+    }
+}
+if(!function_exists("professionalLocation")){
+    function professionalLocation($location_id,$subdomain='')
+    {
+        if($subdomain == ''){
+            $subdomain = \Session::get("subdomain");
+        }
+        $location = \DB::table(PROFESSIONAL_DATABASE.$subdomain.".professional_locations")->where("unique_id",$location_id)->first();
+
+        return $location;
     }
 }
