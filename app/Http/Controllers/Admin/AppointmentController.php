@@ -73,7 +73,12 @@ class AppointmentController extends Controller
             $schedules[$record->day] = array("from"=>$record->from_time,"to"=>$record->to_time);
         }
         
-        
+        $customTime = CustomTime::where('location_id',$location_id)->get();
+
+        //echo $location_id;
+        // print_r($customTime);
+        //  exit; 
+        $viewData['customTime'] = $customTime;
         $viewData['pageTitle'] = "Appointment Schedule";
         $viewData['activeTab'] = "appointment-schedule";
         $viewData['schedules'] = $schedules;
@@ -179,6 +184,21 @@ class AppointmentController extends Controller
         return response()->json($response);
     }
 
+    public function editCustomTime($location_id,$id){
+
+        $id = base64_decode($id);
+        $viewData['pageTitle'] = "Edit Customized Time";
+        $viewData['location_id'] = $location_id;
+
+        $rec = CustomTime::where('id',$id)->first();
+        $viewData['rec'] = $rec;
+        $view = View::make(roleFolder().'.appointment.custom-time.edit',$viewData);
+        $contents = $view->render();
+        $response['contents'] = $contents;
+        $response['status'] = true;
+        return response()->json($response);
+    }
+
     public function saveCustomTime($location_id,Request $request){
         // pre($request->all());
         
@@ -257,6 +277,91 @@ class AppointmentController extends Controller
         return response()->json($response);
     }
  
+    public function updateCustomTime($location_id,Request $request){
+        // pre($request->all());
+        $object = CustomTime::where('id',base64_decode($request->input("rec_id")))->first();
+
+        try{
+            $valid = array(
+                'date'=>'required',
+                'type'=>'required', 
+            );
+
+
+            if($request->input("type") == "day-off"){
+                    $valid['description'] = 'required';
+                    
+            }
+
+            if($request->input("type") == "custom-time"){
+                    $valid['from'] = 'required';
+                    $valid['to'] = 'required';        
+            }
+
+            $validator = Validator::make($request->all(),$valid);
+
+            if ($validator->fails()) {
+                $response['status'] = false;
+                $response['error_type'] = 'validation';
+                $error = $validator->errors()->toArray();
+                $errMsg = array();
+                
+                foreach($error as $key => $err){
+                    $errMsg[$key] = $err[0];
+                }
+                $response['message'] = $errMsg;
+                return response()->json($response);
+            }
+        
+
+            $location_id = base64_decode($location_id);
+
+            $object->location_id = $request->input("location_id");
+            $object->date = $request->input("date");
+            
+            $object->type = $request->input("type");
+            
+            if( $request->input("type") != "day-off"){
+
+                if(!empty($request->input("from")))
+                {
+                    $object->from_time = $request->input("from");
+                }
+
+                if(!empty($request->input("to")))
+                {
+                    $object->to_time = $request->input("to");
+                }
+            }
+            else
+            {
+                $object->description = $request->input("description");
+            }
+
+            //$object->duration = $request->input("duration");
+            
+            $object->save();
+
+            $response['status'] = true;
+            $response['redirect_back'] = baseUrl('appointment/'.base64_encode($location_id).'/set-schedule');
+            $response['message'] = "Custom Time updated sucessfully";
+        }
+        catch (Exception $e) {
+            $response['status'] = false;
+            $response['message'] = $e->getMessage();
+        }
+        
+        return response()->json($response);
+    }
+
+    public function deleteCustomTime($location_id,$id){
+        $id = base64_decode($id);
+        CustomTime::deleteRecord($id);
+        
+        // \Session::flash('success', 'Records deleted successfully'); 
+        return redirect()->back()->with('error',"Record deleted successfully");
+    }
+
     // public function edit($id,Request $request){
     //     $viewData['pageTitle'] = "Edit Appointment Type";
     //     $id = base64_decode($id);

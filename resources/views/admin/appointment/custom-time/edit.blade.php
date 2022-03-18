@@ -1,3 +1,9 @@
+<style>
+.hidden{
+  display: none;
+}
+</style>
+
 <div class="modal-dialog modal-lg" role="document">
   <div class="modal-content">
     <div class="modal-header">
@@ -13,13 +19,36 @@
         </div>
     </div>
     <div class="modal-body imm-education-modal-body">
-      <form method="post" id="popup-form" class="js-validate" action="{{ baseUrl('/appointment-types/update/'.base64_encode($record->id)) }}">  
+      <form method="post" id="popup-form" class="js-validate" action="{{ baseUrl('/custom-time/'.$location_id.'/update') }}">  
           @csrf
           <!-- Form Group -->
+
+          <input type="hidden" name="location_id" id="location_id" value="{{$location_id}}">
+          <input type="hidden" name="rec_id" id="rec_id" value="{{base64_encode($rec->id)}}">
+
+          <!-- Form Group -->
           <div class="row form-group js-form-message">
-            <label class="col-sm-3 col-form-label input-label">Name</label>
+            <label class="col-sm-3 col-form-label input-label">Type</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{$record->name}}" id="name" placeholder="Enter Schedule Name" aria-label="Enter Schedule Name" value="">
+            <select class="form-control @error('type') is-invalid @enderror" name="type" id="type">
+              <option value="">Select</option>
+              <option <?php if($rec->type=="custom-time"){ echo "selected"; } ?> value="custom-time">Custom Time</option>
+              <option <?php if($rec->type=="day-off"){ echo "selected"; } ?> value="day-off">Day Off</option>
+            </select>
+
+              @error('type')
+              <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+              </span>
+              @enderror
+            </div>
+          </div>
+          <!-- End Form Group -->
+
+          <div class="row form-group js-form-message">
+            <label class="col-sm-3 col-form-label input-label">Date</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control @error('date') is-invalid @enderror" name="date" id="date" placeholder="Enter Date" aria-label="Enter Date" value="{{$rec->date}}">
               @error('name')
               <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
@@ -29,19 +58,54 @@
           </div>
           <!-- End Form Group -->
 
-          <!-- Form Group -->
-          <div class="row form-group js-form-message">
-            <label class="col-sm-3 col-form-label input-label">Duration</label>
-            <div class="col-sm-9">
-            <select class="form-control @error('duration') is-invalid @enderror" name="duration" id="duration">
-              <option value="">Select</option>
-              <?php $durations = appointmentDuration() ?>
-              @foreach($durations as $duration)
-              <option {{ ($record->duration == $duration)?'selected':'' }} value="{{$duration}}">{{$duration}}</option>
-              @endforeach
-            </select>
 
-              @error('duration')
+          <div class="row form-group desc <?php if($rec->type == 'custom-time'){echo 'hidden'; } ?>  js-form-message">
+            <label class="col-sm-3 col-form-label input-label">Description</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control @error('description') is-invalid @enderror" name="description" id="description" placeholder="Enter Description" aria-label="Enter description" value="{{$rec->description}}">
+              @error('description')
+              <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+              </span>
+              @enderror
+            </div>
+          </div>
+          <!-- End Form Group -->
+
+          <!-- Form Group -->
+          <div class="row time <?php if($rec->type == 'day-off'){echo 'hidden'; } ?>  form-group js-form-message">
+            <label class="col-sm-3 col-form-label input-label">From</label>
+            <div class="col-sm-9">
+             <!--  <input type="date" class="form-control @error('from') is-invalid @enderror" name="date" id="date" placeholder="Enter Date" aria-label="Enter Date" value=""> -->
+
+              <input type="text" class="js-masked-input form-control from"  id="from" name="from" placeholder="xx:xx" value="{{$rec->from_time}}" 
+                                data-hs-mask-options='{
+                                "template": "00:00"
+                                }'>
+
+
+              @error('from')
+              <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+              </span>
+              @enderror
+            </div>
+          </div>
+          <!-- End Form Group -->
+
+
+          <!-- Form Group -->
+          <div class="row time <?php if($rec->type == 'day-off'){echo 'hidden'; } ?>  form-group js-form-message">
+            <label class="col-sm-3 col-form-label input-label">To</label>
+            <div class="col-sm-9">
+             <!--  <input type="date" class="form-control @error('from') is-invalid @enderror" name="date" id="date" placeholder="Enter Date" aria-label="Enter Date" value=""> -->
+
+             <input type="text" class="js-masked-input form-control from"  id="to" name="to" placeholder="xx:xx" value="{{$rec->to_time}}"
+                                data-hs-mask-options='{
+                                "template": "00:00"
+                                }'>
+
+              @error('to')
               <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
               </span>
@@ -64,6 +128,19 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
+
+    $('.js-masked-input').each(function () {
+      $.HSCore.components.HSMask.init($(this));
+    });
+
+    $('#date').datepicker({
+          format: 'dd/mm/yyyy',
+          autoclose: true,
+          maxDate:(new Date()).getDate(),
+          todayHighlight: true,
+          orientation: "bottom auto"
+        });
+
     initSelect('#popup-form ');
     
     $("#popup-form").submit(function(e){
@@ -94,4 +171,21 @@ $(document).ready(function(){
         });
     });
 });
+
+    $("#type").change(function(){
+        if($(this).val() == "custom-time"){
+            $(".time").removeClass("hidden"); 
+            $(".desc").addClass("hidden"); 
+                  
+        }else if($(this).val() == "day-off"){
+            $(".time").addClass("hidden");
+            $(".desc").removeClass("hidden"); 
+            $("#from").val = "";
+            $("#to").val = "";
+        }
+        else{
+           $(".time").addClass("hidden");
+           $(".desc").addClass("hidden");
+        }
+    });
 </script>
