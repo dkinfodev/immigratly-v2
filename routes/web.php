@@ -1221,7 +1221,9 @@ Route::group(array('prefix' => 'admin'), function () {
         
             Route::get('/add', [App\Http\Controllers\Admin\AppointmentController::class, 'addCustomTime']);
             Route::post('/save', [App\Http\Controllers\Admin\AppointmentController::class, 'saveCustomTime']);
-
+             Route::get('/edit/{id}', [App\Http\Controllers\Admin\AppointmentController::class, 'editCustomTime']);
+             Route::post('/update', [App\Http\Controllers\Admin\AppointmentController::class, 'updateCustomTime']);
+             Route::get('/delete/{id}', [App\Http\Controllers\Admin\AppointmentController::class, 'deleteCustomTime']);
 
         });
 

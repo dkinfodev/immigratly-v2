@@ -235,6 +235,7 @@ class FrontendController extends Controller
         }else{
             $appointment_types = array();
         }
+        
         $data = array();
         $data['location_id'] = $location_id;
         $apiData = professionalCurl('appointment-schedules',$subdomain,$data);

@@ -227,7 +227,7 @@ function changePage(action){
 function confirmDelete(e){
 
     var id = e.id;
-    alert("hello");
+    //alert("hello");
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",

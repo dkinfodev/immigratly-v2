@@ -151,7 +151,57 @@
 
     </form>    
 
+
+    @if(count($customTime)>0)
+    <div class="row mt-5">
+      <h4>Custom Time</h4>  
+      <div class="col-md-12 datatable-custom mt-5">
+        <table class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
+        <tr>
+          <th>Date</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Action</th>
+        </tr>
+
+        @foreach($customTime as $key=>$cT)
+          <tr>
+            <td>{{$cT->date}}</td>
+            <td>{{$cT->type}}</td>
+            <td>
+                @if(!empty($cT->description))
+                {{$cT->description}}
+                @else
+                <span class="text-danger">-</span>  
+                @endif
+            </td>
+            <td>
+              @if(!empty($cT->from_time))
+              {{$cT->from_time}}
+              @else
+              <span class="text-danger">-</span>
+              @endif
+            </td>
+            <td>
+              @if(!empty($cT->to_time))
+              {{$cT->to_time}}
+              @else
+              <span class="text-danger">-</span>
+              @endif
+            </td>
+            <td>
+            <a onclick="showPopup('<?php echo baseUrl('custom-time/'.$location_id.'/edit/'.base64_encode($cT->id)) ?>')" href="javascript:;"><i class="tio-edit"></i></a>
+            <a onclick="confirmAction(this)" href="javascript:;" data-href="{{baseUrl('custom-time/'.$location_id.'/delete/'.base64_encode($cT->id))}}"><i class="tio-delete"></i></a>
+            </td>
+          </tr>
+        @endforeach
+        </table>
+      </div>
     </div>
+    @endif
+    </div> <!-- card body -->
 
   </div>
   <!-- End Card -->
@@ -225,5 +275,55 @@ $(document).on('ready', function () {
     });
   });
   
+  function confirmDelete(e){
+
+    var id = e.id;
+    var url1 = e.attr("data-href");
+    alert(url1);
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      confirmButtonClass: 'btn btn-primary',
+      cancelButtonClass: 'btn btn-danger ml-1',
+      buttonsStyling: false,
+    }).then(function(result) {
+      if (result.value) {
+        $.ajax({
+            type: "POST",
+            url: url1,
+            data:{
+                _token:csrf_token,
+                user_id:id,
+            },
+            dataType:'json',
+            success: function (result) {
+                if(result.status == true){
+                    Swal.fire({
+                        type: "success",
+                        title: 'Deleted!',
+                        text: 'Record has been deleted.',
+                        confirmButtonClass: 'btn btn-success',
+                    }).then(function () {
+                        window.location.href= result.redirect;
+                    });
+                }else{
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Error while deleting",
+                        type: "error",
+                        confirmButtonClass: 'btn btn-primary',
+                        buttonsStyling: false,
+                    });
+                }
+            },
+        });
+      }
+    })
+}
 </script>
 @endsection
