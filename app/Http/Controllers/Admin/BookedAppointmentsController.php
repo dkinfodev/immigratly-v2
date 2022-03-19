@@ -53,112 +53,19 @@ class BookedAppointmentsController extends Controller
         return response()->json($response);
     }
     
-    public function add(){
-        $viewData['pageTitle'] = "Add Appointment Type";
-        $view = View::make(roleFolder().'.booked-appointments.modal.add-schedule',$viewData);
-        $contents = $view->render();
-        $response['contents'] = $contents;
-        $response['status'] = true;
-        return response()->json($response);
-    }
-
-
-    public function save(Request $request){
-        // pre($request->all());
-        $validator = Validator::make($request->all(), [
-            'name'=>'required',
-        ]);
-
-        if ($validator->fails()) {
-            $response['status'] = false;
-            $error = $validator->errors()->toArray();
-            $errMsg = array();
-            
-            foreach($error as $key => $err){
-               
-                $errMsg[$key] = $err[0];
-            }
-            $response['message'] = $errMsg;
-            return response()->json($response);
-        }
-        $object = new AppointmentTypes();
-        $object->unique_id = randomNumber();
-        $object->name = $request->input("name");
-        $object->duration = $request->input("duration");
-        $object->save();
-
-        $response['status'] = true;
-        $response['redirect_back'] = baseUrl('booked-appointments');
-        $response['message'] = "Schedule added sucessfully";
+    
+    public function changeStatus($id,$status){
+        $apiData['subdomain'] = \Session::get("subdomain");
+        $apiData['id'] = $id;
+        $apiData['status'] = $status;
+        $result = curlRequest("booked-appointments/change-status",$apiData);
         
-        return response()->json($response);
+        $viewData = array();
+        if($result['status'] == 'success'){
+            return redirect()->back()->with("success","Booking status changed successfully");
+        }else{
+            return redirect()->back()->with("error","Something wents wrong");
+        }        
     }
- 
-    public function edit($id,Request $request){
-        $viewData['pageTitle'] = "Edit Appointment Type";
-        $id = base64_decode($id);
-        $record = AppointmentTypes::find($id);
-        $viewData['record'] = $record;
-        $view = View::make(roleFolder().'.booked-appointments.modal.edit-schedule',$viewData);
-        $contents = $view->render();
-        $response['contents'] = $contents;
-        $response['status'] = true;
-        return response()->json($response);
-    }
-
-
-    public function update($id,Request $request){
-        // pre($request->all());
-        $id = base64_decode($id);
-        $object =  AppointmentTypes::find($id);
-
-        $validator = Validator::make($request->all(), [
-            'name'=>'required',
-        ]);
-
-        if ($validator->fails()) {
-            $response['status'] = false;
-            $error = $validator->errors()->toArray();
-            $errMsg = array();
-            
-            foreach($error as $key => $err){
-               
-                $errMsg[$key] = $err[0];
-            }
-            $response['message'] = $errMsg;
-            return response()->json($response);
-        }
-        $id = \Auth::user()->id;
-
-        $object->name = $request->input("name");
-        $object->duration = $request->input("duration");
-        $object->save();
-        
-        $response['status'] = true;
-        $response['redirect_back'] = baseUrl('booked-appointments');
-        $response['message'] = "Record updated successfully";
-
-        return response()->json($response);
-    }
-
-    public function deleteSingle($id){
-        $id = base64_decode($id);
-        AppointmentTypes::deleteRecord($id);
-        
-        // \Session::flash('success', 'Records deleted successfully'); 
-        return redirect()->back()->with('error',"Record deleted successfully");
-    }
-
-    public function deleteMultiple(Request $request){
-        $ids = explode(",",$request->input("ids"));
-        for($i = 0;$i < count($ids);$i++){
-            $id = base64_decode($ids[$i]);
-            AppointmentTypes::deleteRecord($id);
-        }
-        $response['status'] = true;
-        \Session::flash('success', 'Records deleted successfully'); 
-        return response()->json($response);
-    }
-
 
 }

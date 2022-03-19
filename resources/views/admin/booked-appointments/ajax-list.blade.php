@@ -38,13 +38,23 @@
   </td>
   <td class="table-column-pl-0">{{$record['start_time']." ".$record['end_time']}}</td>
   <td class="table-column-pl-0">
-      {{$record['meeting_duration'] }}
+      {{$record['meeting_duration'] }} Minutes
   </td>
   <td class="table-column-pl-0">
-      {{$record['status']}}
+      @if($record['status'] == 'awaiting')
+      <span class="badge badge-warning">{{$record['status']}}</span>
+      @elseif($record['status'] == 'success')
+      <span class="badge badge-success">{{$record['status']}}</span>
+      @else
+      <span class="badge badge-danger">{{$record['status']}}</span>
+      @endif
   </td>
   <td class="table-column-pl-0">
-    <a class="btn btn-primary btn-sm" href="{{baseUrl('assessments/view/'.$record['unique_id'])}}">View</a>
+      @if($record['status'] == 'awaiting' || $record['status'] == 'reject')
+        <a class="text-success" href="{{baseUrl('booked-appointments/status/'.$record['unique_id'])}}/approved">Click to Approve</a>
+      @else
+        <a class="text-danger" href="{{baseUrl('booked-appointments/status/'.$record['unique_id'])}}/reject">Click to Reject</a>
+      @endif
   </td>
 </tr>
 @endforeach

@@ -1120,4 +1120,23 @@ class MasterApiController extends Controller
         return response()->json($response);
         
     }
+
+    public function changeBookingStatus(Request $request){
+        try{
+            $postData = $request->input();
+            $request->request->add($postData);
+
+            $status = $request->input("status");
+            $id = $request->input("id");
+
+            BookedAppointments::where('unique_id',$id)->update(["status"=>$status]);
+
+            $response['status'] = "success";
+            $response['message'] = "Booking status changed";
+        } catch (Exception $e) {
+            $response['status'] = "error";
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response);
+    }
 }
