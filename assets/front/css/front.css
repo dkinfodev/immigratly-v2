@@ -126,5 +126,8 @@ span.select2-selection.custom-select {
     border-radius: .75rem;
 }
 .pl-5, .px-5 {
-    padding-left: 2rem!important;
+    padding-left: 2rem !important;
 }
+.payment-option .nav-link:hover {
+    color: #999 !important;
+  }

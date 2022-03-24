@@ -20,10 +20,12 @@
 @section('content')
 <!-- Search Section -->
 <style>
-  td.fc-event-container a {
+.available-appointment {
+    height: 80px !important;
+    margin-top: 15px !important;
+}
+td.fc-event-container a {
     text-align: center;
-    height: 85px;
-    padding-top: 55px;
 }
 </style>
 

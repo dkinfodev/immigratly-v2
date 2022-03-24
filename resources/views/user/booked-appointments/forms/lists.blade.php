@@ -1,59 +1,86 @@
 @extends('layouts.master')
-
-@section('breadcrumb')
+@section('pageheader')
 <!-- Content -->
-<ol class="breadcrumb breadcrumb-no-gutter">
-  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
-  
-  <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
-</ol>
+<div class="">
+    <div class="content container" style="height: 25rem;">
+        <!-- Page Header -->
+        <div class="page-header page-header-light page-header-reset">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h1 class="page-header-title">{{$pageTitle}}</h1>
+                </div>
+            </div>
+            <!-- End Row -->
+        </div>
+        <!-- End Page Header -->
+    </div>
+</div> 
 <!-- End Content -->
 @endsection
-
-
-
 @section('content')
 <!-- Content -->
 <div class="assessments">
   <!-- Page Header -->
-  
+  <div class="page-header">
+    <div class="row align-items-end">
+      <div class="col-sm mb-2 mb-sm-0">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb breadcrumb-no-gutter">
+            <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
+          </ol>
+        </nav>
+
+        <h1 class="page-title">{{$pageTitle}}</h1>
+      </div>
+
+      <div class="col-sm-auto">
+        <a class="btn btn-primary" href="{{ baseUrl('/assessments/forms/'.$record['unique_id'].'/add') }}">
+          <i class="tio-add mr-1"></i> Add 
+        </a>
+      </div>
+    </div>
+    <!-- End Row -->
+  </div>
+  <!-- End Page Header -->
 
   <!-- Card -->
   <div class="card">
     <!-- Header -->
     <div class="card-header">
-      <h5 class="card-header-title">Appointments with Clients</h5>
-      <!-- <div class="row justify-content-between align-items-center flex-grow-1">
+      <div class="row justify-content-between align-items-center flex-grow-1">
         <div class="col-sm-6 col-md-4 mb-3 mb-sm-0">
           <form>
+            <!-- Search -->
             <div class="input-group input-group-merge input-group-flush">
               <div class="input-group-prepend">
                 <div class="input-group-text">
                   <i class="tio-search"></i>
                 </div>
               </div>
-              <input id="datatableSearch" type="search" class="form-control" placeholder="Search Assessment" aria-label="Search Assessment">
+              <input id="datatableSearch" type="search" class="form-control" placeholder="Search Form" aria-label="Search Assessment">
             </div>
+            <!-- End Search -->
           </form>
         </div>
 
         <div class="col-sm-6">
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
-      
+            <!-- Datatable Info -->
             <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0" style="display: none;">
               <div class="d-flex align-items-center">
                 <span class="font-size-sm mr-3">
                   <span id="datatableCounter">0</span>
                   Selected
                 </span>
-                <a class="btn btn-sm btn-outline-danger" data-href="{{ baseUrl('assessments/delete-multiple') }}" onclick="deleteMultiple(this)" href="javascript:;">
+                <a class="btn btn-sm btn-outline-danger" data-href="{{ baseUrl('assessments/forms/'.$assessment_id.'/delete-multiple') }}" onclick="deleteMultiple(this)" href="javascript:;">
                   <i class="tio-delete-outlined"></i> Delete
                 </a>
               </div>
             </div>
           </div>
         </div>
-      </div> -->
+      </div>
       <!-- End Row -->
     </div>
     <!-- End Header -->
@@ -64,20 +91,16 @@
         <table id="tableList" class="table table-borderless">
           <thead class="thead-light">
             <tr>
-              <!-- <th scope="col" class="table-column-pr-0">
+              <th scope="col" class="table-column-pr-0">
                 <div class="custom-control custom-checkbox">
                   <input id="datatableCheckAll" type="checkbox" class="custom-control-input">
                   <label class="custom-control-label" for="datatableCheckAll"></label>
                 </div>
-              </th> -->
-              <th scope="col" class="table-column-pl-0">Client</th>
-              <th scope="col" class="table-column-pl-0">Location</th>
-              <th scope="col" class="table-column-pl-0">Visa Service</th>
-              <th scope="col" class="table-column-pl-0">Meeting Date/Time</th>
-              <th scope="col" class="table-column-pl-0">Status</th>
-              <th scope="col" class="table-column-pl-0">Payment Status</th>
-              <th scope="col" class="table-column-pl-0">Price</th>
-              <th scope="col">Action</th>
+              </th>
+              <th scope="col">Form Title</th>
+              <th scope="col">External Link</th>
+              <th width="10%" scope="col">Action</th>
+              <th scope="col">&nbsp;</th>
             </tr>
           </thead>
           <tbody>
@@ -150,7 +173,7 @@ function loadData(page=1){
     var search = $("#datatableSearch").val();
     $.ajax({
         type: "POST",
-        url: BASEURL + '/booked-appointments/ajax-list?page='+page,
+        url: BASEURL + '/assessments/forms/{{ $assessment_id }}/ajax-list?page='+page,
         data:{
             _token:csrf_token,
             search:search
@@ -174,6 +197,11 @@ function loadData(page=1){
 function search(keyword){
     loadData();
 }
+function copyLink(id,e){
+  var elem = $("#link-"+id);
+  copyToClipboard(elem);
+  $(e).text("Copied");
 
+}
 </script>
 @endsection

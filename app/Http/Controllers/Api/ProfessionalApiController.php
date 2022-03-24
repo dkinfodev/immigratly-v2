@@ -1821,4 +1821,28 @@ class ProfessionalApiController extends Controller
         }
         return response()->json($response); 
     }
+
+    public function professionalServices(Request $request){
+        try{
+
+            $postData = $request->input();
+            $request->request->add($postData);
+
+            $services = ProfessionalServices::get();
+            $visa_services = array();
+            foreach($services as $service){
+                if(!empty($service->Service($service->service_id))){
+                    $temp = $service;
+                    $temp->visa_service = $service->Service($service->service_id);
+                    $visa_services[] = $temp;
+                }
+            }           
+            $response['status'] = true;
+            $response['data'] = $visa_services;
+        } catch (Exception $e) {
+            $response['status'] = "error";
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response); 
+    }
 }

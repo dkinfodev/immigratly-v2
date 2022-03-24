@@ -735,6 +735,7 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
     Route::post('/professional/fetch-hours', [App\Http\Controllers\Frontend\FrontendController::class, 'fetchHours']);
     Route::post('/professional/fetch-available-slots', [App\Http\Controllers\Frontend\FrontendController::class, 'fetchAvailabilityHours']);
     Route::post('/place-booking', [App\Http\Controllers\Frontend\FrontendController::class, 'placeBooking']);
+    Route::get('/appointment-payment/{id}', [App\Http\Controllers\Frontend\FrontendController::class, 'appointmentPayment']);
     
     Route::get('/', [App\Http\Controllers\User\DashboardController::class, 'dashboard']);
     Route::get('/notifications', [App\Http\Controllers\User\DashboardController::class, 'notifications']);
@@ -748,6 +749,13 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
     Route::get('/complete-profile', [App\Http\Controllers\User\DashboardController::class, 'completeProfile'])->name("user-edit-profile");;
     Route::post('/complete-profile', [App\Http\Controllers\User\DashboardController::class, 'saveProfile'])->name("user-update-profile");;
 
+    Route::group(array('prefix' => 'booked-appointments'), function () {
+        Route::get('/', [App\Http\Controllers\User\BookedAppointmentsController::class, 'index']);
+        Route::post('/ajax-list', [App\Http\Controllers\User\BookedAppointmentsController::class, 'getAjaxList']);
+        Route::get('/delete/{id}', [App\Http\Controllers\User\BookedAppointmentsController::class, 'delete']);
+        Route::post('/payment-success', [App\Http\Controllers\User\TransactionController::class, 'appointmentPaymentSuccess']);
+        Route::post('/payment-failed', [App\Http\Controllers\User\TransactionController::class, 'appointmentPaymentFailed']);
+    });
     Route::group(array('prefix' => 'notes'), function () {
         Route::get('/', [App\Http\Controllers\User\ReminderNotesController::class, 'list']);
         Route::get('/add-reminder-note', [App\Http\Controllers\User\ReminderNotesController::class, 'addReminderNote']);
@@ -1263,7 +1271,6 @@ Route::group(array('prefix' => 'admin'), function () {
             Route::get('/', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'index']);
             Route::post('/ajax-list', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'getAjaxList']);
             Route::get('/status/{id}/{status}', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'changeStatus']);
-            
         });
         
         Route::group(array('prefix' => 'messages-center'), function () {

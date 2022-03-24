@@ -31,6 +31,8 @@ use App\Models\ProfessionalReview;
 use App\Models\AppointmentSchedule;
 use App\Models\AppointmentTypes;
 use App\Models\BookedAppointments;
+use App\Models\UserInvoices;
+use App\Models\InvoiceItems;
 class FrontendController extends Controller
 {
     /**
@@ -290,12 +292,26 @@ class FrontendController extends Controller
                     ->where("location_id",$location_id)
                     ->where("day",strtolower($day))
                     ->first();
+
             if(!empty($hours)){
                 $temp = array();
                 $temp['start'] = $dates[$d];
                 $temp['end'] = $dates[$d];
                 $temp['id'] = $hours->id;
                 $temp['title'] = "Working Hours \n".$hours->from_time." to ".$hours->to_time;
+                $temp['className'] = 'available-appointment';
+                $day_schedules[] = $temp;
+            }
+
+            $booked_appointment = BookedAppointments::where("user_id",\Auth::user()->unique_id)
+                                                    ->where("appointment_date",$dates[$d])
+                                                    ->count();
+            if($booked_appointment > 0){
+                $temp = array();
+                $temp['start'] = $dates[$d];
+                $temp['id'] = $hours->id;
+                $temp['title'] = $booked_appointment. " Appointment(s) booked";
+                $temp['className'] = 'text-danger booked-appointment';
                 $day_schedules[] = $temp;
             }
         }
@@ -330,6 +346,16 @@ class FrontendController extends Controller
         }else{
             $appointment_schedule = array();
         }
+
+        $data = array();
+        $apiData = professionalCurl('services',$professional);
+        if(isset($apiData['status']) && $apiData['status'] == 'success'){
+            $visa_services = $apiData['data'];
+        }else{
+            $visa_services = array();
+        }
+        // pre($visa_services);
+        $viewData['visa_services'] = $visa_services;
         // $appointment_schedule = \DB::table(PROFESSIONAL_DATABASE.$professional.".appointment_schedule")
         //             ->where("id",$schedule_id)
         //             ->first();
@@ -402,22 +428,95 @@ class FrontendController extends Controller
     }
 
     public function placeBooking(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'duration' => 'required',
+            'visa_service' => 'required',
+        ]);
+        if ($validator->fails()) {
+            $response['status'] = false;
+            $response['error_type'] = 'validation';
+            $error = $validator->errors()->toArray();
+            $errMsg = array();
+
+            foreach($error as $key => $err){
+                $errMsg[$key] = $err[0];
+            }
+            $response['message'] = $errMsg;
+            return response()->json($response);
+        }
         $duration = explode("-",$request->input("duration"));
+        $booking_id = randomNumber();
+        $inv_unique_id = randomNumber();
         $object = new BookedAppointments();
-        $object->unique_id = randomNumber();
+        $object->unique_id = $booking_id;
         $object->professional = $request->input("professional");
         $object->location_id = $request->input("location_id");
+        $object->visa_service_id = $request->input("visa_service");
         $object->appointment_date = $request->input("date");
         $object->user_id = \Auth::user()->unique_id;
         $object->status = 'awaiting';
+        if($request->input("price") > 0){
+            $object->payment_status = 'pending';
+        }else{
+            $object->payment_status = 'paid';
+        }
         $object->schedule_id = $request->input("schedule_id");
+        $object->price = $request->input("price");
         $object->meeting_duration = $request->input("interval");
         $object->start_time = $duration[0];
         $object->end_time = $duration[1];
+        $object->invoice_id = $inv_unique_id;
         $object->save();
+
+                
+        
+        $object2 = new UserInvoices();
+        $object2->unique_id = $inv_unique_id;
+        $object2->client_id = \Auth::user()->unique_id;
+        $object2->payment_status = "pending";
+        $object2->amount = $request->input("price");
+        $object2->link_to = 'appointment';
+        $object2->link_id = $booking_id;
+        $object2->invoice_date = date("Y-m-d"); 
+        $object2->created_by = \Auth::user()->unique_id;
+        $object2->save();
+
+        $object2 = new InvoiceItems();
+        $object2->invoice_id = $inv_unique_id;
+        $object2->unique_id = randomNumber();
+        $object2->particular = "Appointment Fee";
+        $object2->amount = $request->input("price");
+        $object2->save();
+
         $response['status'] = true;
         $response['message'] = "Your time slot is booked successfully. Team will contact you soon!";
+        if($request->input("price") > 0){
+            $response['redirect_back'] = baseUrl('appointment-payment/'.$booking_id);
+        }else{
+            $response['redirect_back'] = baseUrl('booked-appointments');
+        }
         return response()->json($response);
+    }
+
+    public function appointmentPayment($id){
+        $appointment = BookedAppointments::where("unique_id",$id)->first();
+      
+        $invoice = UserInvoices::where("unique_id",$appointment->invoice_id)->first();
+        if(empty($appointment)){
+            return redirect()->back()->with("error","Invalid Appointment");
+        }
+        $subdomain = $appointment->professional;
+        $pay_amount = $appointment->price;  
+        // pre($appointment->toArray());
+        // exit;
+        $viewData['pageTitle'] = "Pay for appointment";
+        // $pay_amount = 0;
+        $viewData['appointment'] = $appointment;
+        $viewData['pay_amount'] = $pay_amount;
+        $viewData['subdomain'] = $subdomain;
+        $viewData['invoice_id'] = $invoice->unique_id;
+        return view('frontend.professional.appointment-payment',$viewData);
     }
     public function articles($category=''){
         if($category != ''){

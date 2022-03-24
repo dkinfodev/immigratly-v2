@@ -43,14 +43,14 @@
            <div class="js-quantity-counter input-group-quantity-counter">
               <input type="number" name="price" class="js-result form-control input-group-quantity-counter-control" value="1">
 
-              <div class="input-group-quantity-counter-toggle">
+              <!-- <div class="input-group-quantity-counter-toggle">
                 <a class="js-minus input-group-quantity-counter-btn" href="javascript:;">
                   <i class="tio-remove"></i>
                 </a>
                 <a class="js-plus input-group-quantity-counter-btn" href="javascript:;">
                   <i class="tio-add"></i>
                 </a>
-              </div>
+              </div> -->
             </div>
          </div>
         </div>

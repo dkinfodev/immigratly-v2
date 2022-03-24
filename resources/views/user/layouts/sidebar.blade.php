@@ -110,6 +110,13 @@
                                 Activities</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="js-nav-tooltip-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'booked-appointments'){ echo "active"; } } ?>" href="{{ baseUrl('/booked-appointments') }}" data-placement="left">
+                            <i class="tio-calendar nav-icon"></i>
+                            <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Booked
+                                Appointments</span>
+                        </a>
+                    </li>
                     <!-- End Personal -->
 
                     <!-- Professionals -->

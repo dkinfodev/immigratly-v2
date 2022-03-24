@@ -1811,6 +1811,7 @@ if(!function_exists("professionalService")){
         if($checkProf == true){
             $service = DB::table(PROFESSIONAL_DATABASE.$subdomain.".professional_services")->where("service_id",$service_id)->first();
             if(!empty($service)){
+                $service->visa_service = visaService($service->service_id);
                 return $service;
             }else{
                 return array();
@@ -2687,7 +2688,7 @@ if(!function_exists("professionalLocation")){
             $subdomain = \Session::get("subdomain");
         }
         $location = \DB::table(PROFESSIONAL_DATABASE.$subdomain.".professional_locations")->where("unique_id",$location_id)->first();
-
+        // pre($location);
         return $location;
     }
 }

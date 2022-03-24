@@ -1,11 +1,11 @@
 @foreach($records as $key => $record)
 <tr>
-  <td class="table-column-pr-0">
+  <!-- <td class="table-column-pr-0">
     <div class="custom-control custom-checkbox">
       <input type="checkbox" class="custom-control-input row-checkbox" id="row-{{$key}}">
       <label class="custom-control-label" for="row-{{$key}}"></label>
     </div>
-  </td>
+  </td> -->
   <td class="table-column-pl-0">
     <a class="d-flex align-items-center" href="javascript:;">
       <div class="avatar avatar-soft-primary mt-4 avatar-circle">
@@ -34,27 +34,37 @@
     @endif
   </td>
   <td class="table-column-pl-0">
-      {{dateFormat($record['appointment_date'])}}
-  </td>
-  <td class="table-column-pl-0">{{$record['start_time']." ".$record['end_time']}}</td>
-  <td class="table-column-pl-0">
-      {{$record['meeting_duration'] }} Minutes
+      {{dateFormat($record['appointment_date'])}}<br>
+      {{$record['start_time']." ".$record['end_time']}}<br>
+      ({{$record['meeting_duration'] }} Minutes)
   </td>
   <td class="table-column-pl-0">
       @if($record['status'] == 'awaiting')
       <span class="badge badge-warning">{{$record['status']}}</span>
-      @elseif($record['status'] == 'success')
+      @elseif($record['status'] == 'approved')
       <span class="badge badge-success">{{$record['status']}}</span>
       @else
       <span class="badge badge-danger">{{$record['status']}}</span>
       @endif
   </td>
   <td class="table-column-pl-0">
-      @if($record['status'] == 'awaiting' || $record['status'] == 'reject')
-        <a class="text-success" href="{{baseUrl('booked-appointments/status/'.$record['unique_id'])}}/approved">Click to Approve</a>
+      @if($record['payment_status'] == 'pending')
+      <span class="badge badge-warning">{{$record['payment_status']}}</span>
+      @elseif($record['payment_status'] == 'paid')
+      <span class="badge badge-success">{{$record['payment_status']}}</span>
       @else
-        <a class="text-danger" href="{{baseUrl('booked-appointments/status/'.$record['unique_id'])}}/reject">Click to Reject</a>
+      <span class="badge badge-danger">{{$record['payment_status']}}</span>
       @endif
+  </td>
+  <td class="table-column-pl-0">
+    {{currencyFormat().$record['price']}}
+  </td>
+  <td class="table-column-pl-0">
+      @if($record['status'] == 'awaiting' || $record['status'] == 'reject')
+        <a class="badge badge-success" href="{{baseUrl('booked-appointments/status/'.$record['unique_id'])}}/approved">Click to Approve</a>
+      @endif
+        <a class="badge badge-danger" href="{{baseUrl('booked-appointments/status/'.$record['unique_id'])}}/reject">Click to Reject</a>
+     
   </td>
 </tr>
 @endforeach

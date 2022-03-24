@@ -9,6 +9,8 @@ use DB;
 use View;
 use Razorpay\Api\Api;
 
+
+use App\Models\BookedAppointments;
 use App\Models\Invoices;
 use App\Models\CaseInvoiceItems;
 use App\Models\CaseInvoices;
@@ -267,6 +269,111 @@ class TransactionController extends Controller
 
         try {
             $invoice_id = $request->input("invoice_id");
+            $razorpay_payment_id = $request->input("razorpay_payment_id");
+            $subdomain = $request->input("subdomain");
+            $razorpay_order_id = $request->input("razorpay_order_id");
+            $razorpay_signature = $request->input("razorpay_signature");
+            $api = new Api(config('razorpay.razor_key'), config('razorpay.razor_secret'));
+            $payment = $api->payment->fetch($razorpay_payment_id);
+            $result = $api->payment->fetch($razorpay_payment_id)
+                    ->capture(array('amount'=>$payment['amount'])); 
+            $result = $result->toArray();
+            $data['payment_method'] = $payment->method;
+            $data['amount_paid'] = $payment->amount / 100;
+            $transaction_response = array("razorpay_order_id"=>$razorpay_order_id,"razorpay_payment_id"=>$razorpay_payment_id,"razorpay_signature"=>$razorpay_signature);
+            $data['transaction_response'] = json_encode($result);
+            $data['paid_by'] = \Auth::user()->unique_id;
+            $data['invoice_id'] = $invoice_id;
+            $api_response = professionalCurl('cases/send-invoice-data',$subdomain,$data);
+
+            $object = new UserTransactions();
+            $object->user_id = \Auth::user()->unique_id;
+            $object->professional = $subdomain;
+            $object->invoice_id = $invoice_id;
+            $object->payment_method = $payment->method;
+            $object->save();
+
+            if($api_response['status'] != 'success'){
+                $response['status'] = false;
+                $response['message'] = "Payment submission failed";
+            }else{
+                $response['status'] = true;
+                $response['link_to'] = $api_response['link_to'];
+                $response['message'] = $api_response['message'];
+            }
+
+        } catch (\Exception $e) {
+            $response['status'] = false;
+            $response['message'] = $e->getMessage();
+            
+        }
+        
+       return response()->json($response);
+    }
+
+    public function appointmentPaymentSuccess(Request $request){
+
+        try {
+            $invoice_id = $request->input("invoice_id");
+            $appointment_id = $request->input("appointment_id");
+            $appointment = BookedAppointments::where("unique_id",$appointment_id)->first();
+            $professional = $request->input("professional");
+            $razorpay_payment_id = $request->input("razorpay_payment_id");
+            $razorpay_order_id = $request->input("razorpay_order_id");
+            $razorpay_signature = $request->input("razorpay_signature");
+            $api = new Api(config('razorpay.razor_key'), config('razorpay.razor_secret'));
+            $payment = $api->payment->fetch($razorpay_payment_id);
+            $result = $api->payment->fetch($razorpay_payment_id)
+                    ->capture(array('amount'=>$payment['amount'])); 
+            $result = $result->toArray();
+            $data['payment_method'] = $payment->method;
+            $data['paid_amount'] = $payment->amount / 100;
+            $transaction_response = array("razorpay_order_id"=>$razorpay_order_id,"razorpay_payment_id"=>$razorpay_payment_id,"razorpay_signature"=>$razorpay_signature);
+            $data['transaction_response'] = json_encode($result);
+            $data['paid_by'] = \Auth::user()->unique_id;
+            $data['payment_status'] = "paid";
+            $data['paid_date'] = date("Y-m-d H:i:s");
+            UserInvoices::where("unique_id",$invoice_id)->update($data);
+
+            $data = array();
+            $data['invoice_id'] = $invoice_id;
+            $data['payment_status'] = "paid";
+            $data['paid_date'] = date("Y-m-d H:i:s");
+            BookedAppointments::where("unique_id",$appointment_id)->update($data);
+            // $api_response = professionalCurl('cases/send-invoice-data',$subdomain,$data);
+            $response['status'] = true;
+            $response['message'] = "Payment paid successfully";
+            $response['redirect_back'] = baseUrl("booked-appointments");
+            $mailData = array();
+            $mail_message = "Hello Admin,<Br> ".\Auth::user()->first_name." ".\Auth::user()->last_name." has booked an appointment. Please check the panel";
+            
+            $mailData['mail_message'] = $mail_message;
+            $view = View::make('emails.notification',$mailData);
+            
+            $message = $view->render();
+            $professionalAdmin = professionalAdmin($professional);
+            $parameter['to'] = $professionalAdmin->email;
+            $parameter['to_name'] = $professionalAdmin->first_name;
+            $parameter['message'] = $message;
+            
+            $parameter['view'] = "emails.notification";
+            $parameter['data'] = $mailData;
+            $mailRes = sendMail($parameter);
+
+        } catch (\Exception $e) {
+            $response['status'] = false;
+            $response['message'] = $e->getMessage();
+            
+        }
+        
+       return response()->json($response);
+    }
+
+    public function appointmentPaymentFailed(Request $request){
+
+        try {
+            $invoice_id = $request->input("invoice_id");
+            $appointment_id = $request->input("appointment_id");
             $razorpay_payment_id = $request->input("razorpay_payment_id");
             $subdomain = $request->input("subdomain");
             $razorpay_order_id = $request->input("razorpay_order_id");

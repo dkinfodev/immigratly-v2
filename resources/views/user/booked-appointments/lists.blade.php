@@ -22,7 +22,7 @@
   <div class="card">
     <!-- Header -->
     <div class="card-header">
-      <h5 class="card-header-title">Appointments with Clients</h5>
+      <h5 class="card-header-title">Appointments with Professionals</h5>
       <!-- <div class="row justify-content-between align-items-center flex-grow-1">
         <div class="col-sm-6 col-md-4 mb-3 mb-sm-0">
           <form>
@@ -38,6 +38,7 @@
         </div>
 
         <div class="col-sm-6">
+          
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
       
             <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0" style="display: none;">
@@ -54,7 +55,6 @@
           </div>
         </div>
       </div> -->
-      <!-- End Row -->
     </div>
     <!-- End Header -->
 
@@ -70,14 +70,12 @@
                   <label class="custom-control-label" for="datatableCheckAll"></label>
                 </div>
               </th> -->
-              <th scope="col" class="table-column-pl-0">Client</th>
-              <th scope="col" class="table-column-pl-0">Location</th>
-              <th scope="col" class="table-column-pl-0">Visa Service</th>
+              <th scope="col">Professional</th>
               <th scope="col" class="table-column-pl-0">Meeting Date/Time</th>
+              <th scope="col" class="table-column-pl-0">Meeting Duration</th>
               <th scope="col" class="table-column-pl-0">Status</th>
               <th scope="col" class="table-column-pl-0">Payment Status</th>
-              <th scope="col" class="table-column-pl-0">Price</th>
-              <th scope="col">Action</th>
+              <th scope="col">&nbsp;</th>
             </tr>
           </thead>
           <tbody>
