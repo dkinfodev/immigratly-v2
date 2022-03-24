@@ -31,9 +31,9 @@
 
           <!-- Form Group -->
           <div class="row form-group js-form-message">
-            <label class="col-sm-3 col-form-label input-label">Duration</label>
+            <label class="col-sm-3 col-form-label input-label">Duration in Minutes</label>
             <div class="col-sm-9">
-            <input type="text" class="form-control @error('duration') is-invalid @enderror" name="duration" id="duration" placeholder="Enter duration" aria-label="Enter duration" value="">
+            <input type="number" class="form-control @error('duration') is-invalid @enderror" name="duration" id="duration" placeholder="Enter duration" aria-label="Enter duration" value="">
              
               @error('duration')
               <span class="invalid-feedback" role="alert">
@@ -45,12 +45,12 @@
           <!-- End Form Group -->
 
           <!-- Form Group -->
-          <div class="row form-group js-form-message">
+          <div class="row form-group js-form-message" style="display:none">
             <label class="col-sm-3 col-form-label input-label">Type</label>
             <div class="col-sm-9">
             <select class="form-control @error('type') is-invalid @enderror" name="type" id="type">
               <option value="">Select</option>
-              <option value="minutes">Minutes</option>
+              <option selected value="minutes">Minutes</option>
               <option value="hours">Hours</option>
             </select>
 

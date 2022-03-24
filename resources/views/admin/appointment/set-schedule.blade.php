@@ -168,7 +168,7 @@
 
         @foreach($customTime as $key=>$cT)
           <tr>
-            <td>{{$cT->date}}</td>
+            <td>{{dateFormat($cT->custom_date,'d-m-Y')}}</td>
             <td>{{$cT->type}}</td>
             <td>
                 @if(!empty($cT->description))

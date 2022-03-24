@@ -24,15 +24,20 @@ class HomeController extends Controller
      */
     public function index()
     {
-        if(\Session::get("login_to") != 'admin_panel'){
-            if(\Auth::check()){
-                return redirect(baseUrl('/'));
-            }else{
-                return redirect('/login');
-            }
+        if(\Auth::check()){
+            return redirect(baseUrl('/'));
         }else{
-            return redirect("/professionals");
+            return redirect('/login');
         }
+        // if(\Session::get("login_to") != 'admin_panel'){
+        //     if(\Auth::check()){
+        //         return redirect(baseUrl('/'));
+        //     }else{
+        //         return redirect('/login');
+        //     }
+        // }else{
+        //     return redirect("/professionals");
+        // }
         
     }
     public function random_number(){

@@ -27,6 +27,9 @@
 td.fc-event-container a {
     text-align: center;
 }
+.day-off {
+    padding-top: 25px;
+}
 </style>
 
 <div class="container space-bottom-2 ">
@@ -70,7 +73,11 @@ td.fc-event-container a {
 
                 <div class="col-sm-12 mb-5">
                  <!-- Fullcalendar-->
+                 @if(!empty($appointment_types))
                  <div id="calendar"></div>
+                 @else
+                  <div class="text-center h3">No Booking Slots Available</div>
+                 @endif
                     <!-- <div class="js-fullcalendar fullcalendar-custom" data-hs-fullscreen-options='{
                     "initialDate": "2020-09-10"
                     }'></div> -->
@@ -147,16 +154,21 @@ function loadCalendar() {
       // }
     },
     eventClick: function(info, jsEvent, view) {
+      if(info.time_type == 'day_off'){
+        return false;
+      }
       var appointment_type = $("input[name=appointment_type]:checked").val();
       if(appointment_type == undefined){
         alert("Select meeting duration first");
       }else{
+        
         var url = "{{ baseUrl('professional/fetch-available-slots') }}";
         var param = {
             location_id: "{{$location_id}}",
             professional:"{{$subdomain}}",
             date:info.start.format('YYYY-MM-DD'),
             schedule_id:info.id,
+            time_type:info.time_type,
             appointment_type_id:appointment_type
           };
         showPopup(url,"post",param);

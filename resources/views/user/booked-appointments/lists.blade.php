@@ -71,6 +71,7 @@
                 </div>
               </th> -->
               <th scope="col">Professional</th>
+              <th scope="col" class="table-column-pl-0">Visa Service</th>
               <th scope="col" class="table-column-pl-0">Meeting Date/Time</th>
               <th scope="col" class="table-column-pl-0">Meeting Duration</th>
               <th scope="col" class="table-column-pl-0">Status</th>

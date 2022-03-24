@@ -33,7 +33,9 @@
         <div class="js-form-message form-group row">
           <label class="col-sm-2 col-form-label">Service Name</label>
           <div class="col-sm-10 pt-2 font-weight-bold">
+          @if(!empty($record->Service($record->service_id)))
            {{$record->Service($record->service_id)->name}}
+          @endif
          </div>
         </div>
         <div class="js-form-message form-group row">

@@ -748,7 +748,7 @@ if(!function_exists("subdomain")){
 
 if(!function_exists("checkProfileStatus")){
     function checkProfileStatus($subdomain){
-        $db_prefix = Settings::where("meta_key","database_prefix")->first();
+        $db_prefix = \DB::table(MAIN_DATABASE.".settings")->where("meta_key","database_prefix")->first();
         $db_prefix = $db_prefix->meta_value;
         $database = $db_prefix.$subdomain;
         
@@ -768,7 +768,7 @@ if(!function_exists("checkProfileStatus")){
 }
 if(!function_exists("db_prefix")){
     function db_prefix(){
-        $db_prefix = Settings::where("meta_key","database_prefix")->first();
+        $db_prefix = \DB::table(MAIN_DATABASE.".settings")->where("meta_key","database_prefix")->first();
         $db_prefix = $db_prefix->meta_value;
         return $db_prefix;
     }
@@ -1806,10 +1806,10 @@ if(!function_exists("site_url")){
 }
 
 if(!function_exists("professionalService")){
-    function professionalService($subdomain,$service_id){
+    function professionalService($subdomain,$service_id,$search_by = 'service_id'){
         $checkProf = checkProfessionalDB($subdomain);
         if($checkProf == true){
-            $service = DB::table(PROFESSIONAL_DATABASE.$subdomain.".professional_services")->where("service_id",$service_id)->first();
+                $service = DB::table(PROFESSIONAL_DATABASE.$subdomain.".professional_services")->where($search_by,$service_id)->first();
             if(!empty($service)){
                 $service->visa_service = visaService($service->service_id);
                 return $service;
@@ -2312,7 +2312,7 @@ if(!function_exists("diffInDays")){
 
 if(!function_exists("visaService")){
     function visaService($id){
-        $visa_service = VisaServices::where("unique_id",$id)->first();
+        $visa_service = \DB::table(MAIN_DATABASE.".visa_services")->where("unique_id",$id)->first();
         if(!empty($visa_service)){
             return $visa_service;
         }else{
@@ -2360,7 +2360,7 @@ if(!function_exists("cronCurl")){
 if(!function_exists("checkProfessionalDB")){
     function checkProfessionalDB($subdomain){
         
-        $db_prefix = Settings::where("meta_key","database_prefix")->first();
+        $db_prefix = \DB::table(MAIN_DATABASE.".settings")->where("meta_key","database_prefix")->first();
         $db_prefix = $db_prefix->meta_value;
         $database = $db_prefix.$subdomain;
 
@@ -2636,8 +2636,12 @@ if(!function_exists("matchWageOptions")){
 }
 
 if(!function_exists("appointmentDuration")){
-    function appointmentDuration(){
-        $types = array("15:min",'30:min','60:min');
+    function appointmentDuration($subdomain=''){
+        if($subdomain == ''){
+            $subdomain = \Session::get("subdomain");
+        }
+        $types = \DB::table(PROFESSIONAL_DATABASE.$subdomain.".time_duration")->get();
+        // $types = array("15:min",'30:min','60:min');
         return $types;
     }
 }

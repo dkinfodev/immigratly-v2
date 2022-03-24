@@ -37,7 +37,7 @@
               <option value="">Select</option>
               <?php $durations = appointmentDuration() ?>
               @foreach($durations as $duration)
-              <option {{ ($record->duration == $duration)?'selected':'' }} value="{{$duration}}">{{$duration}}</option>
+              <option {{ ($record->duration == $duration->unique_id)?'selected':'' }} value="{{$duration->unique_id}}">{{$duration->name}}</option>
               @endforeach
             </select>
 

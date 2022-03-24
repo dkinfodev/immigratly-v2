@@ -19,6 +19,7 @@
           <input type="hidden" name="location_id" value="{{$location_id}}" />
           <input type="hidden" name="interval" value="{{$interval}}" />          
           <input type="hidden" name="schedule_id" value="{{$schedule_id}}" />
+          <input type="hidden" name="time_type" value="{{$time_type}}" />
           <input type="hidden" name="date" value="{{$date}}" />
           <div class="form-group js-form-message">
               <label>Select Service for Appointment</label>

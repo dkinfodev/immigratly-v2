@@ -24,6 +24,15 @@
     @endif
   </td>
   <td class="table-column-pl-0">
+    @php 
+    $visa_service = professionalService($record->professional,$record->visa_service_id,'unique_id');
+
+    @endphp
+    @if(!empty($visa_service->visa_service))
+      {{$visa_service->visa_service->name}}
+    @endif
+  </td>
+  <td class="table-column-pl-0">
       {{dateFormat($record->appointment_date)}}<br>
       {{$record->start_time." ".$record->end_time}}
   </td>

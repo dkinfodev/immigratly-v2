@@ -37,7 +37,7 @@
               <option value="">Select</option>
               <?php $durations = appointmentDuration() ?>
               @foreach($durations as $duration)
-              <option value="{{$duration}}">{{$duration}}</option>
+              <option value="{{$duration->unique_id}}">{{$duration->name}}</option>
               @endforeach
             </select>
 

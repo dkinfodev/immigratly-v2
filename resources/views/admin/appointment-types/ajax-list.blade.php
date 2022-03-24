@@ -14,7 +14,7 @@
 
   <td>
     <div class="d-flex">
-      {{$record->duration}}
+      {{$record->timeDuration->duration." ".$record->timeDuration->type}}
     </div>
   </td>
 

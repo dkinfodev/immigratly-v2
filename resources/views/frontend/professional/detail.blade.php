@@ -183,7 +183,11 @@
                   <tr>
                     <td>{{$location->address}}</td>
                     <td align="right">
+                        @if(Auth::check())
                         <a href="{{ baseUrl('professional/'.$subdomain.'/book-appointment/'.$location->unique_id) }}" class="btn btn-primary btn-sm">Book Appointment</a>
+                        @else
+                        <a href="{{ url('login') }}" class="text-primary">Login to Book Appointment</a>
+                        @endif
                     </td>
                   </tr>
                   @endforeach

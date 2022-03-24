@@ -134,7 +134,7 @@ $(document).ready(function(){
     });
 
     $('#date').datepicker({
-          format: 'dd/mm/yyyy',
+          format: 'dd-mm-yyyy',
           autoclose: true,
           maxDate:(new Date()).getDate(),
           todayHighlight: true,

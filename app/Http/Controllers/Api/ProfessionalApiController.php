@@ -29,7 +29,7 @@ use App\Models\ChatRead;
 use App\Models\CaseActivityLogs;
 use App\Models\AppointmentTypes;
 use App\Models\AppointmentSchedule;
-
+use App\Models\CustomTime;
 class ProfessionalApiController extends Controller
 {
     var $subdomain;
@@ -1806,11 +1806,18 @@ class ProfessionalApiController extends Controller
 
             $postData = $request->input();
             $request->request->add($postData);
-
-            if($request->input('return') == 'single'){
-                $result = AppointmentSchedule::where('id',$request->input('schedule_id'))->with('Location')->first();
-            }else{ 
-                $result = AppointmentSchedule::where('location_id',$request->input('location_id'))->with('Location')->get();
+            if($request->input("time_type") == 'default'){
+                if($request->input('return') == 'single'){
+                    $result = AppointmentSchedule::where('id',$request->input('schedule_id'))->with('Location')->first();
+                }else{ 
+                    $result = AppointmentSchedule::where('location_id',$request->input('location_id'))->with('Location')->get();
+                }
+            }else{
+                if($request->input('return') == 'single'){
+                    $result = CustomTime::where('id',$request->input('schedule_id'))->with('Location')->first();
+                }else{ 
+                    $result = CustomTime::where('location_id',$request->input('location_id'))->with('Location')->get();
+                }
             }
            
             $response['status'] = true;

@@ -48,7 +48,7 @@
           <div class="row form-group js-form-message">
             <label class="col-sm-3 col-form-label input-label">Date</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control @error('date') is-invalid @enderror" name="date" id="date" placeholder="Enter Date" aria-label="Enter Date" value="{{$rec->date}}">
+              <input type="text" class="form-control @error('date') is-invalid @enderror" name="date" id="date" placeholder="Enter Date" aria-label="Enter Date" value="{{dateFormat($rec->date,'d-m-Y')}}">
               @error('name')
               <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
@@ -134,7 +134,7 @@ $(document).ready(function(){
     });
 
     $('#date').datepicker({
-          format: 'dd/mm/yyyy',
+          format: 'dd-mm-yyyy',
           autoclose: true,
           maxDate:(new Date()).getDate(),
           todayHighlight: true,

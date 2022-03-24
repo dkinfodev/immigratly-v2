@@ -292,15 +292,40 @@ class FrontendController extends Controller
                     ->where("location_id",$location_id)
                     ->where("day",strtolower($day))
                     ->first();
-
-            if(!empty($hours)){
-                $temp = array();
-                $temp['start'] = $dates[$d];
-                $temp['end'] = $dates[$d];
-                $temp['id'] = $hours->id;
-                $temp['title'] = "Working Hours \n".$hours->from_time." to ".$hours->to_time;
-                $temp['className'] = 'available-appointment';
-                $day_schedules[] = $temp;
+            $custom_time = \DB::table(PROFESSIONAL_DATABASE.$professional.".custom_time")
+                    ->where("custom_date",$dates[$d])
+                    ->where("location_id",$location_id)
+                    ->first();
+            if(!empty($custom_time)){
+                if($custom_time->type == 'custom-time'){
+                    $temp = array();
+                    $temp['start'] = $dates[$d];
+                    $temp['end'] = $dates[$d];
+                    $temp['time_type'] = 'custom_time';
+                    $temp['id'] = $custom_time->id;
+                    $temp['title'] = "Working Hours \n".$custom_time->from_time." to ".$custom_time->to_time;
+                    $temp['className'] = 'available-appointment';
+                    $day_schedules[] = $temp;
+                }else{
+                    $temp['start'] = $dates[$d];
+                    $temp['end'] = $dates[$d];
+                    $temp['id'] = $custom_time->id;
+                    $temp['time_type'] = 'day_off';
+                    $temp['title'] = $custom_time->description;
+                    $temp['className'] = 'text-danger day-off';
+                    $day_schedules[] = $temp;
+                }
+            }else{
+                if(!empty($hours)){
+                    $temp = array();
+                    $temp['start'] = $dates[$d];
+                    $temp['end'] = $dates[$d];
+                    $temp['id'] = $hours->id;
+                    $temp['time_type'] = 'default';
+                    $temp['title'] = "Working Hours \n".$hours->from_time." to ".$hours->to_time;
+                    $temp['className'] = 'available-appointment';
+                    $day_schedules[] = $temp;
+                }
             }
 
             $booked_appointment = BookedAppointments::where("user_id",\Auth::user()->unique_id)
@@ -311,7 +336,7 @@ class FrontendController extends Controller
                 $temp['start'] = $dates[$d];
                 $temp['id'] = $hours->id;
                 $temp['title'] = $booked_appointment. " Appointment(s) booked";
-                $temp['className'] = 'text-danger booked-appointment';
+                $temp['className'] = 'text-primary booked-appointment';
                 $day_schedules[] = $temp;
             }
         }
@@ -323,6 +348,8 @@ class FrontendController extends Controller
     public function fetchAvailabilityHours(Request $request){
         $date = $request->input("date");
         $schedule_id = $request->input("schedule_id");
+        
+        $time_type = $request->input("time_type");
         $professional = $request->input("professional");
         $date = $request->input("date");
         $location_id = $request->input("location_id");
@@ -339,6 +366,7 @@ class FrontendController extends Controller
         }
         $data = array();
         $data['schedule_id'] = $schedule_id;
+        $data['time_type'] = $time_type;
         $data['return'] = 'single';
         $apiData = professionalCurl('appointment-schedules',$professional,$data);
         if(isset($apiData['status']) && $apiData['status'] == 'success'){
@@ -416,6 +444,8 @@ class FrontendController extends Controller
         $viewData['location_id'] = $location_id;
         $viewData['interval'] = $interval;
         $viewData['professional'] = $professional;
+        $viewData['time_type'] = $time_type;
+        
         $viewData['date'] = $date;
         $viewData['appointment_type_id'] = $appointment_type_id;
         $viewData['pageTitle'] = "Selct Your Time Slot";
@@ -462,6 +492,8 @@ class FrontendController extends Controller
             $object->payment_status = 'paid';
         }
         $object->schedule_id = $request->input("schedule_id");
+        $object->time_type = $request->input("time_type");
+        
         $object->price = $request->input("price");
         $object->meeting_duration = $request->input("interval");
         $object->start_time = $duration[0];

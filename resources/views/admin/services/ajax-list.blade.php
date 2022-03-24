@@ -1,4 +1,5 @@
 @foreach($records as $key => $record)
+@if(!empty($record->Service($record->service_id)))
 <tr>
   <td class="table-column-pr-0">
     <div class="custom-control custom-checkbox">
@@ -33,6 +34,7 @@
     </div>
   </td>
 </tr>
+@endif
 @endforeach
 
 
