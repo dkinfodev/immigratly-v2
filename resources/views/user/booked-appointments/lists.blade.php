@@ -23,38 +23,16 @@
     <!-- Header -->
     <div class="card-header">
       <h5 class="card-header-title">Appointments with Professionals</h5>
-      <!-- <div class="row justify-content-between align-items-center flex-grow-1">
-        <div class="col-sm-6 col-md-4 mb-3 mb-sm-0">
-          <form>
-            <div class="input-group input-group-merge input-group-flush">
-              <div class="input-group-prepend">
-                <div class="input-group-text">
-                  <i class="tio-search"></i>
-                </div>
-              </div>
-              <input id="datatableSearch" type="search" class="form-control" placeholder="Search Assessment" aria-label="Search Assessment">
-            </div>
-          </form>
-        </div>
+      <div class="row justify-content-between align-items-center flex-grow-1">
+       
 
-        <div class="col-sm-6">
+        <div class="col-sm-6 offset-md-6">
           
-          <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
-      
-            <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0" style="display: none;">
-              <div class="d-flex align-items-center">
-                <span class="font-size-sm mr-3">
-                  <span id="datatableCounter">0</span>
-                  Selected
-                </span>
-                <a class="btn btn-sm btn-outline-danger" data-href="{{ baseUrl('assessments/delete-multiple') }}" onclick="deleteMultiple(this)" href="javascript:;">
-                  <i class="tio-delete-outlined"></i> Delete
-                </a>
-              </div>
-            </div>
-          </div>
+          <!-- <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
+              <a href="{{ baseUrl('/booked-appointments/calendar') }}">View Booking in Caledn</a>
+          </div> -->
         </div>
-      </div> -->
+      </div>
     </div>
     <!-- End Header -->
 

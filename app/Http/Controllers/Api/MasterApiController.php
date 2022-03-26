@@ -1139,4 +1139,52 @@ class MasterApiController extends Controller
         }
         return response()->json($response);
     }
+
+    public function fetchAppointments(Request $request){
+        try{
+            $postData = $request->input();
+            $request->request->add($postData);
+            $search = $request->input("search");
+            $location_id = '';
+            if($request->input("location_id")){
+                $location_id = $request->input("location_id");
+            }
+            if($request->input("response_type") == 'date_counter'){
+                $records = BookedAppointments::where("appointment_date",">=",$request->input("start_date"))
+                    ->where("appointment_date","<=",$request->input("end_date"))
+                    ->where("professional",$request->input("professional"))
+                    ->where(function($query) use($location_id){
+                        if($location_id != ''){
+                            $query->where("location_id",$location_id);
+                        }
+                    })
+                    ->whereHas("Client")
+                    ->orderBy('appointment_date',"desc")
+                    ->groupBy("appointment_date")
+                    ->select(\DB::raw("COUNT(id) as total_appointment,appointment_date"))
+                    ->get();
+            }else{
+                $records = BookedAppointments::with(['Client'])
+                    ->where("appointment_date",$request->input("start_date"))
+                    ->where("appointment_date",$request->input("end_date"))
+                    ->where("professional",$request->input("professional"))
+                    ->where(function($query) use($location_id){
+                        if($location_id != ''){
+                            $query->where("location_id",$location_id);
+                        }
+                    })
+                    ->whereHas("Client")
+                    ->orderBy('appointment_date',"desc")
+                    ->get();
+            }
+           
+            $response['status'] = 'success';
+            $response['data'] = $records;
+        } catch (Exception $e) {
+            $response['status'] = "error";
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response);
+        
+    }
 }

@@ -52,8 +52,51 @@ class BookedAppointmentsController extends Controller
         $response['contents'] = $contents;
         return response()->json($response);
     }
-    
-    
+    public function viewCalendar()
+    {
+        $viewData['pageTitle'] = "Booked Appointments";
+        $viewData['activeTab'] = 'booked-appointments';
+        $viewData['professional'] = \Session::get("subdomain");
+        return view(roleFolder().'.booked-appointments.calendar',$viewData);
+    } 
+    public function fetchAppointments(Request $request){
+        $month = $request->input("month");
+        $year = $request->input("year");
+        $start_date = $request->input("start_date");
+        $end_date = $request->input("end_date");
+        $professional = $request->input("professional");
+        
+        $day_schedules = array();
+        $apiData['professional'] = \Session::get("subdomain");
+        $apiData['start_date'] = $start_date;
+        $apiData['end_date'] = $end_date;
+        $apiData['response_type'] = "date_counter";
+        $result = curlRequest("booked-appointments/fetch-appointments",$apiData);
+        if($result['status'] == 'success'){
+            $appointments = $result['data'];
+        }else{
+            $appointments = array();
+        }
+        $dates = getBetweenDates($start_date,$end_date);
+        
+        for($d=0;$d < count($dates);$d++){
+            $day = date("l",strtotime($dates[$d]));
+            foreach($appointments as $appointment){
+                if($appointment['appointment_date'] == $dates[$d]){
+                    $temp = array();
+                    $temp['start'] = $dates[$d];
+                    $temp['title'] = $appointment['total_appointment']. " Appointment(s) \n are booked";
+                    $temp['className'] = 'text-primary booked-appointment';
+                    $day_schedules[] = $temp;
+                }
+            }
+        }
+        $response['status'] = true;
+        $response['schedule'] = $day_schedules;
+
+        return response()->json($response);
+    }
+
     public function changeStatus($id,$status){
         $apiData['subdomain'] = \Session::get("subdomain");
         $apiData['id'] = $id;

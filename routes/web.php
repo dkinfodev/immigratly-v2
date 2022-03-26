@@ -1269,6 +1269,8 @@ Route::group(array('prefix' => 'admin'), function () {
 
         Route::group(array('prefix' => 'booked-appointments'), function () {
             Route::get('/', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'index']);
+            Route::get('/calendar', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'viewCalendar']);
+            Route::post('/fetch-appointments', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'fetchAppointments']);
             Route::post('/ajax-list', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'getAjaxList']);
             Route::get('/status/{id}/{status}', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'changeStatus']);
         });

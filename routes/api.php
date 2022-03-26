@@ -63,6 +63,7 @@ Route::group(array('middleware' => 'curl_api'), function () {
 		Route::group(array('prefix' => 'booked-appointments'), function () {
 			Route::post('/', [App\Http\Controllers\Api\MasterApiController::class, 'bookedAppointments']);
 			Route::post('/change-status', [App\Http\Controllers\Api\MasterApiController::class, 'changeBookingStatus']);
+			Route::post('/fetch-appointments', [App\Http\Controllers\Api\MasterApiController::class, 'fetchAppointments']);
 		});
 	});	
 
