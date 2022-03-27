@@ -4,7 +4,7 @@
 <!-- Content -->
 <ol class="breadcrumb breadcrumb-no-gutter">
   <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
-  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/appointment') }}">Appointment</a></li>
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/event') }}">Event</a></li>
   <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
 </ol>
 <!-- End Content -->
@@ -12,7 +12,7 @@
 
 
 @section('header-right')
-    <a class="btn btn-primary" href="{{baseUrl('/appointment')}}">
+    <a class="btn btn-primary" href="{{baseUrl('/event')}}">
             <i class="tio mr-1"></i> Back 
     </a>
 @endsection
@@ -24,13 +24,17 @@
 .page-header-tabs {
     margin-bottom: 0px !important;
 }
+
+.hidden{
+  display: none;
+}
+
 </style>
 <!-- Content -->
 
 
 <!-- Content -->
 <div class="case-list">
-
 
   <!-- Card -->
   <div class="card">
@@ -44,37 +48,90 @@
     <!-- End Header -->
     <div class="card-body">
         
-    <form id="form" class="js-validate" action="{{ baseUrl('appointment/save-event') }}" method="post">    
+    <form id="form" class="js-validate" action="{{ baseUrl('event/save') }}" method="post">    
     @csrf
    
         <div class="row">
             <div class="col-md-6">
-                <div class="form-group">
+                <div class="form-group js-form-message">
                     <label>Event Name</label>
                     <input type="text" class="form-control" name="event_name" id="event_name">
                 </div>
             </div>
 
             <div class="col-md-6">
-                <div class="form-group">
-                    <label>Time</label>
-                    <input type="time" class="form-control" name="event_time" id="event_time">
+                <div class="form-group js-form-message">
+                    <label>Event Date</label>
+                    <input type="text" class="form-control @error('event_date') is-invalid @enderror" name="event_date" id="event_date" placeholder="Enter event date" aria-label="Enter Date" value="">
+                    @error('event_date')
+                    <span class="invalid-feedback" role="alert">
+                      <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+            </div>
+
+          
+            <div class="col-md-6">
+                <div class="form-group js-form-message">
+                    <label>From time</label>
+                    <input type="time" class="form-control" name="event_from_time" id="event_from_time">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group js-form-message">
+                    <label>To time</label>
+                    <input type="time" class="form-control" name="event_to_time" id="event_to_time">
                 </div>
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-12">
-               <div class="form-group">
+               <div class="form-group js-form-message">
                <label>Description/Instruction</label>
                <textarea name="description" id="description" class="form-control"></textarea>
                </div>
             </div>
         </div>
 
-        <div class="row">
+        <!-- Form Group -->
+        <div class="row form-group js-form-message">
+          <label class="">Location</label>
+          <div class="">
+          
+          <select class="form-control @error('type') is-invalid @enderror" name="location" id="location" placeholder="Select location" aria-label="Enter location">
+            <option value="">Select</option>
+            @if(!empty($locations))
+              @foreach($locations as $key=>$rec)
+              <option data-type="{{$rec->type}}" value="{{$rec->unique_id}}">{{$rec->address}} ({{$rec->type}})</option>
+              @endforeach
+            @endif
+          </select>
+            @error('location')
+            <span class="invalid-feedback" role="alert">
+              <strong>{{ $message }}</strong>
+            </span>
+            @enderror
+          </div>
+        </div>
+        <!-- End Form Group -->
+
+
+        <!-- <div class="row">
             <div class="col-md-12">
-               <div class="form-group">
+               <div class="form-group js-form-message">
+               <label for="is_online">Is the event online?</label>
+               <input type="checkbox" value="1" name="is_online" id="is_online">
+               </div>
+            </div>
+        </div>
+ -->
+
+        <div class="row hidden event-link">
+            <div class="col-md-12">
+               <div class="form-group js-form-message">
                <label>Event Link</label>
                <input type="text" class="form-control" name="event_link" id="event_link">
                </div>
@@ -118,11 +175,39 @@
 <script src="assets/vendor/quill/dist/quill.min.js"></script>
 
 <script>
+
+  
     
 initEditor("description"); 
 
 $(document).on('ready', function () {
-    
+
+    $('#event_date').datepicker({
+      format: 'dd/mm/yyyy',
+      autoclose: true,
+      maxDate:(new Date()).getDate(),
+      todayHighlight: true,
+      orientation: "bottom auto"
+    });
+
+    $("#location").change(function(){
+        var tx = $(this).find(':selected').data('type');
+        if(tx == "virtual"){
+          $(".event-link").removeClass('hidden');
+        }
+        else{
+          $(".event-link").addClass('hidden');  
+        }
+    });
+
+    // $('#is_online').change(function() {
+    //   if ($(this).is(':checked')) {
+    //     $(".event-link").removeClass('hidden');
+    //   } else {
+    //     $(".event-link").addClass('hidden');
+    //   }
+    // });
+
     $("#form").submit(function(e){
       e.preventDefault();
       var formData = new FormData($(this)[0]);

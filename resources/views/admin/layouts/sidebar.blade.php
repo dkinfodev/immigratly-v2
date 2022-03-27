@@ -84,6 +84,13 @@
                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Booked Appointments</span>
               </a>
             </li>
+
+            <li class="navbar-vertical-aside-has-menu">
+              <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'event'){ echo "active"; } } ?>" href="{{ baseUrl('/event') }}">
+                <i class="tio-book-opened nav-icon"></i>
+                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Events</span>
+              </a>
+            </li>
             <!-- <li class="navbar-vertical-aside-has-menu">
               <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'appointment-schedule'){ echo "active"; } } ?>" href="{{ baseUrl('/appointment/set-schedule') }}">
                 <i class="tio-book-opened nav-icon"></i>

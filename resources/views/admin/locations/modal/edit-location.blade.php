@@ -29,6 +29,26 @@
           </div>
           <!-- End Form Group -->
 
+          <!-- Form Group -->
+          <div class="row form-group js-form-message">
+            <label class="col-sm-3 col-form-label input-label">Type</label>
+            <div class="col-sm-9">
+            
+            <select class="form-control @error('type') is-invalid @enderror" name="type" id="type" placeholder="Enter type" aria-label="Enter type">
+              <option value="">Select</option>
+              <option <?php if($record->type=="onsite")
+              { echo "selected"; } ?> value="onsite">On-site</option>
+              <option <?php if($record->type=="virtual")
+              { echo "selected"; } ?> value="virtual">Virtual</option>
+            </select>
+              @error('type')
+              <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+              </span>
+              @enderror
+            </div>
+          </div>
+          <!-- End Form Group -->
 
         </form>
     </div>

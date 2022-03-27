@@ -1,23 +1,37 @@
 @foreach($records as $key => $record)
 <tr>
-  <td class="table-column-pr-0">
+  <!-- <td class="table-column-pr-0">
     <div class="custom-control custom-checkbox">
       <input type="checkbox" class="custom-control-input row-checkbox" value="{{ base64_encode($record->id) }}" id="row-{{$key}}">
       <label class="custom-control-label" for="row-{{$key}}"></label>
     </div>
-  </td>
+  </td> -->
   <td>
     <div class="d-flex">
-      {{$record->address}}
+      {{$record->name}}
     </div>
   </td>
 
   <td>
     <div class="d-flex">
-      {{$record->type}}
+      {{$record->event_date}}
     </div>
   </td>
 
+  <td>
+    <div class="d-flex">
+      {{$record->from_time}}
+      &nbsp; - &nbsp; 
+      {{$record->to_time}}
+    </div>
+  </td>
+
+
+  <td>
+    <div class="d-flex">
+      {{$record->event_type}}
+    </div>
+  </td>
 
   <td>
     <div class="hs-unfold">
@@ -30,9 +44,9 @@
       </a>
 
       <div id="action-{{$key}}" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm dropdown-menu-right">
-        <a class="dropdown-item" href="javascript:;" onclick="showPopup('<?php echo baseUrl('locations/edit/'.base64_encode($record->id)) ?>')">Edit</a>
-        <a class="dropdown-item" href="{{ baseUrl('appointment/'.$record->unique_id.'/set-schedule') }}">Add Schedule</a>
-        <a class="dropdown-item text-danger" href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('locations/delete/'.base64_encode($record->id))}}">Delete</a> 
+        <a class="dropdown-item" href="{{baseUrl('event/edit/'.base64_encode($record->id))}}">Edit</a>
+        
+        <a class="dropdown-item text-danger" href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('event/delete/'.base64_encode($record->id))}}">Delete</a> 
       </div>
     </div>
   </td>

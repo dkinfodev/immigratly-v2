@@ -77,6 +77,7 @@ class TimeDurationController extends Controller
             $response['message'] = $errMsg;
             return response()->json($response);
         }
+     
         $object = new TimeDuration();
         $object->unique_id = randomNumber();
         $object->name = $request->input("name");
