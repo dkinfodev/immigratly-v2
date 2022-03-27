@@ -1207,6 +1207,16 @@ Route::group(array('prefix' => 'admin'), function () {
         });
 
 
+        Route::group(array('prefix' => 'events'), function () {
+
+             Route::get('/', [App\Http\Controllers\Admin\AppointmentController::class, 'index']);
+             Route::post('/event-ajax-list', [App\Http\Controllers\Admin\AppointmentController::class, 'getAjaxList']);
+
+            Route::get('/add-event', [App\Http\Controllers\Admin\AppointmentController::class, 'addEvent']);
+            Route::post('/save-event', [App\Http\Controllers\Admin\AppointmentController::class, 'saveEvent']); 
+
+        });    
+
         Route::group(array('prefix' => 'appointment/{location_id}'), function () {
         
             // Route::get('/', [App\Http\Controllers\Admin\AppointmentController::class, 'index']);

@@ -35,11 +35,11 @@ class AppServiceProvider extends ServiceProvider
                 die();
             }
         }
-        $visa_services = VisaServices::with('SubServices')
-                                    ->where("parent_id",0)
-                                    ->select("id","name","slug","unique_id")
-                                    ->get();
+        // $visa_services = VisaServices::with('SubServices')
+        //                             ->where("parent_id",0)
+        //                             ->select("id","name","slug","unique_id")
+        //                             ->get();
        
-        view()->share('visa_services', $visa_services);
+        // view()->share('visa_services', $visa_services);
     }
 }
