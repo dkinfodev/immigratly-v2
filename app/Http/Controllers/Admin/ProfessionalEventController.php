@@ -159,7 +159,7 @@ class ProfessionalEventController extends Controller
 	        $object->unique_id = randomNumber();
 	        $object->location_id = $location;
 	        $object->date = $event_date;
-            $object->type = "custom-time";
+            $object->type = "event-time";
             
             //Need to set as per schedule - pod
             $object->from_time = $request->input("event_from_time");
@@ -251,7 +251,7 @@ class ProfessionalEventController extends Controller
 	        $object = CustomTime::where('location_id',$old_location)->first();
 	        $object->location_id = $location;
 	        $object->date = $event_date;
-            $object->type = "custom-time";
+            $object->type = "event-time";
             
             //Need to set as per schedule - pod
             $object->from_time = $request->input("event_from_time");
