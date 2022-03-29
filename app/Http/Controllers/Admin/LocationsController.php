@@ -59,6 +59,7 @@ class LocationsController extends Controller
         // pre($request->all());
         $validator = Validator::make($request->all(), [
             'address'=>'required',
+            'type'=>'required',
         ]);
 
         if ($validator->fails()) {
@@ -76,11 +77,12 @@ class LocationsController extends Controller
         $object = new ProfessionalLocations();
         $object->unique_id = randomNumber();
         $object->address = $request->input("address");
+        $object->type = $request->input("type");
         $object->save();
 
         $response['status'] = true;
         $response['redirect_back'] = baseUrl('locations');
-        $response['message'] = "Schedule added sucessfully";
+        $response['message'] = "Location added sucessfully";
         
         return response()->json($response);
     }
@@ -105,6 +107,7 @@ class LocationsController extends Controller
 
         $validator = Validator::make($request->all(), [
             'address'=>'required',
+            'type'=>'required',
         ]);
 
         if ($validator->fails()) {
@@ -122,6 +125,7 @@ class LocationsController extends Controller
         $id = \Auth::user()->id;
 
         $object->address = $request->input("address");
+        $object->type = $request->input("type");
         $object->save();
         
         $response['status'] = true;

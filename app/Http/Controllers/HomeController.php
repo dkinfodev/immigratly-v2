@@ -24,21 +24,45 @@ class HomeController extends Controller
      */
     public function index()
     {
-        if(\Auth::check()){
-            return redirect(baseUrl('/'));
-        }else{
-            return redirect('/login');
+        if(\Session::get("login_to") != 'admin_panel'){
+            if(\Auth::check()){
+                return redirect(baseUrl('/'));
+            }else{
+                return redirect('/login');
+            }
         }
-        // if(\Session::get("login_to") != 'admin_panel'){
-        //     if(\Auth::check()){
-        //         return redirect(baseUrl('/'));
-        //     }else{
-        //         return redirect('/login');
-        //     }
-        // }else{
-        //     return redirect("/professionals");
-        // }
-        
+        else{
+           
+            $now = \Carbon\Carbon::now();
+            $articles = Articles::where("status","publish")
+                            ->whereHas("Category")
+                            ->orderBy('id','desc')
+                            ->limit(4)
+                            ->get();
+            
+            $news = News::where(DB::raw("(STR_TO_DATE(news_date,'%d-%m-%Y'))"), ">=",$now)
+                        ->orderBy("id",'desc')
+                        ->limit(4)
+                        ->get();
+
+            $webinars = Webinar::where("status","publish")
+                            ->whereHas("Category")
+                            ->where(DB::raw("(STR_TO_DATE(webinar_date,'%d-%m-%Y'))"), ">=",$now)
+                            ->orderBy(DB::raw("(STR_TO_DATE(webinar_date,'%d-%m-%Y'))"),'desc')
+                            ->limit(4)
+                            ->get();
+
+            $professionals = Professionals::orderBy('id','desc')
+                            ->limit(6)
+                            ->get();
+           
+            $viewData['webinars'] = $webinars;
+            $viewData['professionals'] = $professionals;
+            $viewData['articles'] = $articles;   
+            $viewData['news'] = $news;   
+            $viewData['pageTitle'] = "Home Page";   
+            return view('frontend.index',$viewData);
+        }    
     }
     public function random_number(){
         echo randomNumber();

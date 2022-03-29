@@ -62,6 +62,7 @@ class TimeDurationController extends Controller
             'name'=>'required',
             'duration'=>'required',
             'type'=>'required',
+            'break_time'=>'numeric',
         ]);
 
         if ($validator->fails()) {
@@ -76,11 +77,13 @@ class TimeDurationController extends Controller
             $response['message'] = $errMsg;
             return response()->json($response);
         }
+     
         $object = new TimeDuration();
         $object->unique_id = randomNumber();
         $object->name = $request->input("name");
         $object->duration = $request->input("duration");
         $object->type = $request->input("type");
+        $object->break_time = $request->input("break_time");
         $object->save();
 
         $response['status'] = true;
@@ -115,6 +118,7 @@ class TimeDurationController extends Controller
             'name'=>'required',
             'duration'=>'required',
             'type'=>'required',
+            'break_time'=>'numeric',
         ]);
 
         if ($validator->fails()) {
@@ -134,6 +138,7 @@ class TimeDurationController extends Controller
         $object->name = $request->input("name");
         $object->duration = $request->input("duration");
         $object->type = $request->input("type");
+        $object->break_time = $request->input("break_time");
         $object->save();
         
         $response['status'] = true;

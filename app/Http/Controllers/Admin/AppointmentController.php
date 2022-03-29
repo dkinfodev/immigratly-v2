@@ -39,25 +39,6 @@ class AppointmentController extends Controller
     }
 
 
-    // public function getAjaxList($location_id,Request $request)
-    // {
-    //     $search = $request->input("search");
-    //     $records = ProfessionalEvent::orderBy('id',"desc")
-    //                     ->where(function($query) use($search){
-    //                         if($search != ''){
-    //                             $query->where("name","LIKE","%$search%");
-    //                         }
-    //                     })
-    //                     ->paginate();
-    //     $viewData['records'] = $records;
-    //     $view = View::make(roleFolder().'.appointment.event-ajax-list',$viewData);
-    //     $contents = $view->render();
-    //     $response['contents'] = $contents;
-    //     $response['last_page'] = $records->lastPage();
-    //     $response['current_page'] = $records->currentPage();
-    //     $response['total_records'] = $records->total();
-    //     return response()->json($response);
-    // }
 
     //8-3-22 ys
     public function setSchedule($location_id){
@@ -116,61 +97,6 @@ class AppointmentController extends Controller
 
         return response()->json($response);
     }
-
-    // 9-3-22 ys
-    public function addEvent(){
-
-        if(\Auth::user()->role != 'admin'){
-            return redirect(baseUrl('/'));
-        }
-        
-        $viewData['pageTitle'] = "Add Event";
-        $viewData['activeTab'] = "appointment-schedule";
-
-        return view(roleFolder().'.appointment.add-event',$viewData);
-    }
-
-    // public function saveEvent(Request $request){
-
-    //     //pre($request->all());
-
-    //     $validator = Validator::make($request->all(), [
-    //         'event_name'=>'required',
-    //         'event_link'=>'required',
-    //         'event_time'=>'required',
-    //         'description'=>'required',
-            
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         $response['status'] = false;
-    //         $error = $validator->errors()->toArray();
-    //         $errMsg = array();
-            
-    //         foreach($error as $key => $err){
-    //             $errMsg[$key] = $err[0];
-    //         }
-    //         $response['message'] = $errMsg;
-    //         return response()->json($response);
-    //     }
-    //     $event_name = $request->input("event_name");
-    //     $event_link = $request->input("event_link");
-    //     $event_time = $request->input("event_time");
-    //     $description = $request->input("description");
-
-    //     $object = new ProfessionalEvent;
-
-    //     $object->name = $event_name;
-    //     $object->link = $event_link;
-    //     $object->time = $event_time;
-    //     $object->description = $description;
-    //     $object->save();
-
-    //     $response['status'] = true;
-    //     $response['message'] = "Event set successfully";
-
-    //     return response()->json($response);
-    // }
 
     //16-3-22
     public function addCustomTime($location_id){

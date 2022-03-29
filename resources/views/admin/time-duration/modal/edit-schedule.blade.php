@@ -45,7 +45,22 @@
           <!-- End Form Group -->
 
           <!-- Form Group -->
-          <div class="row form-group js-form-message" style="display:none">
+          <div class="row form-group js-form-message">
+            <label class="col-sm-3 col-form-label input-label">Break time <small class="text-danger">(optional)</small></label>
+            <div class="col-sm-9">
+             <input type="number" class="form-control @error('break_time') is-invalid @enderror" name="break_time" id="break_time" placeholder="Enter duration " aria-label="Enter break time" value="{{$record->break_time}}">
+
+              @error('break_time')
+              <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+              </span>
+              @enderror
+            </div>
+          </div>
+          <!-- End Form Group -->
+
+          <!-- Form Group -->
+          <div class="row form-group js-form-message">
             <label class="col-sm-3 col-form-label input-label">Type</label>
             <div class="col-sm-9">
             <select class="form-control @error('type') is-invalid @enderror" name="type" id="type">

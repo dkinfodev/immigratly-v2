@@ -29,6 +29,9 @@
   </head>
 
   <body class="d-flex align-items-center min-h-100">
+
+    @include('frontend.layouts.header')
+
     @yield("content")
 
     <!-- JS Global Compulsory  -->

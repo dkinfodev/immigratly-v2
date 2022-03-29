@@ -46,7 +46,7 @@ class FrontendController extends Controller
     }
 
     public function index(){
-        return redirect("signup/user");
+        //return redirect("signup/user");
         // $data['database'] = base64_encode("immigrat_main_immigratly");
         // $data['username'] = base64_encode("immigrat_immigratly");
         // $data['password'] = base64_encode("PHx#t;qv1p]S");

@@ -1215,6 +1215,23 @@ Route::group(array('prefix' => 'admin'), function () {
         });
 
 
+        Route::group(array('prefix' => 'event'), function () {
+
+             Route::get('/', [App\Http\Controllers\Admin\ProfessionalEventController::class, 'index']);
+             Route::post('/event-ajax-list', [App\Http\Controllers\Admin\ProfessionalEventController::class, 'getAjaxList']);
+
+            Route::get('/add', [App\Http\Controllers\Admin\ProfessionalEventController::class, 'addEvent']);
+
+            Route::get('/edit/{id}', [App\Http\Controllers\Admin\ProfessionalEventController::class, 'editEvent']);
+
+            Route::post('/save', [App\Http\Controllers\Admin\ProfessionalEventController::class, 'saveEvent']); 
+
+            Route::post('/update/{id}', [App\Http\Controllers\Admin\ProfessionalEventController::class, 'updateEvent']); 
+
+            Route::get('/delete/{id}', [App\Http\Controllers\Admin\ProfessionalEventController::class, 'deleteEvent']); 
+
+        });    
+
         Route::group(array('prefix' => 'appointment/{location_id}'), function () {
         
             // Route::get('/', [App\Http\Controllers\Admin\AppointmentController::class, 'index']);

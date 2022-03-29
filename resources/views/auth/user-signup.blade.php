@@ -1,9 +1,9 @@
 @extends('frontend.layouts.master')
 
 @section('content')
-<div class="row">
+<div class="row mt-5 pt-3">
     <div class="col-lg-6 col-xl-4  d-none d-lg-flex justify-content-center align-items-center min-vh-lg-100 position-relative offset-xl-2 offset-md-0">
-        <div class="flex-grow-1 p-5">
+        <div class="flex-grow-1 p-1">
             <!-- Blockquote -->
             <figure class="text-center">
                 <div class="mb-4">

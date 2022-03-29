@@ -2645,6 +2645,7 @@ if(!function_exists("appointmentDuration")){
         return $types;
     }
 }
+
 if(!function_exists("getBetweenDates")){
     function getBetweenDates($startDate, $endDate)
     {

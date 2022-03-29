@@ -1,26 +1,25 @@
-@extends('layouts.login-master')
+@extends('frontend.layouts.master')
 
 @section('content')
-
 
     <!-- ========== MAIN CONTENT ========== -->
     <main id="content" role="main" class="main pt-0">
       <!-- Content -->
       <div class="container-fluid px-3">
-        <div class="row">
+        <div class="row mb-5 pb-2 pt-5">
           <!-- Cover -->
-          <div class="col-lg-6 d-none d-lg-flex justify-content-center align-items-center min-vh-lg-100 position-relative bg-light px-0">
+          <div class="col-lg-6 mb-5 d-none d-lg-flex justify-content-center align-items-center min-vh-lg-100 position-relative  px-0">
             <!-- Logo & Language -->
-            <div class="position-absolute top-0 left-0 right-0 mt-3 mx-3">
+            <!-- <div class="position-absolute top-0 left-0 right-0 mt-3 mx-3">
               <div class="d-none d-lg-flex justify-content-between">
                 <a href="{{ url('/') }}">
                   <img class="w-100" src="assets/svg/logos/logo.svg" alt="Image Description" style="min-width: 7rem; max-width: 7rem;">
                 </a>                
               </div>
-            </div>
+            </div> -->
             <!-- End Logo & Language -->
 
-            <div style="max-width: 23rem;">
+            <div class="mt-5" style="max-width: 23rem;">
               <div class="text-center mb-5">
                 <img class="img-fluid" src="assets/svg/illustrations/chat.svg" alt="Image Description" style="width: 12rem;">
               </div>
@@ -62,8 +61,8 @@
           </div>
           <!-- End Cover -->
 
-          <div class="col-lg-6 min-vh-lg-100">
-          <a href="{{ url('/quick-eligibility') }}" class="btn btn-primary float-right mt-3">Click for Quick Eligibility</a>
+          <div class="col-lg-6 pt-5 mt-5 min-vh-lg-100">
+          <!-- <a href="{{ url('/quick-eligibility') }}" class="btn btn-primary float-right mt-3">Click for Quick Eligibility</a> -->
           <div class="clearfix"></div>
             <div class="w-100 pt-10 pt-lg-7 pb-7">
               <!-- Form -->

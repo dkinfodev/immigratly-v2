@@ -44,13 +44,15 @@ class LoginController extends Controller
     {
         // echo $this->redirectTo;
         // exit;
+        $viewData['pageTitle'] = "Login";
+
         if(isset($_GET['assessment']) && $_GET['assessment'] != ''){
              $url = url('assessment/u/'.$_GET['assessment']);
              \Session::put("redirect_back",$url);
         }else{
             $this->redirectTo = url()->previous();
         } 
-        return view('auth.login');
+        return view('auth.login',$viewData);
     }
 
     public function redirectTo()

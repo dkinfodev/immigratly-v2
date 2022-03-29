@@ -12,6 +12,12 @@
     </div>
   </td>
 
+  <td>
+    <div class="d-flex">
+      {{$record->type}}
+    </div>
+  </td>
+
 
   <td>
     <div class="hs-unfold">

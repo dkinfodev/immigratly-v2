@@ -34,33 +34,27 @@
           </form>
         </div>
 
-        <div class="col-sm-6">
+        <div class="col-sm-5">
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
             <!-- Datatable Info -->
-            <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0" style="display: none;">
+            <!-- <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0" style="display: none;">
               <div class="d-flex align-items-center">
                 <span class="font-size-sm mr-3">
                   <span id="datatableCounter">0</span>
                   Selected
                 </span>
-                <a class="btn btn-sm btn-outline-danger" data-href="{{ baseUrl('working-schedules/delete-multiple') }}" onclick="deleteMultiple(this)" href="javascript:;">
+                <a class="btn btn-sm btn-outline-danger" data-href="{{ baseUrl('appointment-types/delete-multiple') }}" onclick="deleteMultiple(this)" href="javascript:;">
                   <i class="tio-delete-outlined"></i> Delete
                 </a>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
 
 
-        <!-- <div class="col-sm-1 justify-content-sm-end align-items-sm-end">
-          <a class="btn btn-primary" href="{{baseUrl('appointment/add-event')}}">
+        <div class="col-sm-3">
+          <a class="btn btn-primary float-right"  href="{{baseUrl('event/add')}}">
             Add 
-          </a>
-        </div> -->
-
-        <div class="col-sm-auto">
-          <a class="btn btn-primary" href="{{baseUrl('appointment/add-event')}}">
-            <i class="tio-add mr-1"></i> Add 
           </a>
         </div>
 
@@ -71,16 +65,26 @@
 
     <!-- Table -->
     <div class="datatable-custom">
-
-      <div class="row" id="tableList">
-
-
-
-      </div>
-
+      <table id="tableList" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
+        <thead class="thead-light">
+          <tr>
+            <!-- <th scope="col" class="table-column-pr-0">
+              <div class="custom-control custom-checkbox">
+                <input id="datatableCheckAll" type="checkbox" class="custom-control-input">
+                <label class="custom-control-label" for="datatableCheckAll"></label>
+              </div>
+            </th> -->
+            <th scope="col">Event Name</th>
+            <th scope="col">Event Date</th>
+            <th scope="col">Event Time</th>
+            <th scope="col">Event Type</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
     </div>
-
-   
     <!-- End Table -->
 
     <!-- Footer -->
@@ -169,7 +173,7 @@ function loadData(page=1){
   var search = $("#datatableSearch").val();
     $.ajax({
         type: "POST",
-        url: BASEURL + '/appointment/event-ajax-list?page='+page,
+        url: BASEURL + '/event/event-ajax-list?page='+page,
         data:{
             _token:csrf_token,
             search:search
@@ -181,7 +185,7 @@ function loadData(page=1){
             // $("#paginate").html('');
         },
         success: function (data) {
-            $("#tableList").html(data.contents);
+            $("#tableList tbody").html(data.contents);
             
             if(data.total_records > 0){
               var pageinfo = data.current_page+" of "+data.last_page+" <small class='text-danger'>("+data.total_records+" records)</small>";
@@ -221,8 +225,10 @@ function changePage(action){
   }
   
 }
+function confirmDelete(e){
 
-function confirmDelete(id){
+    var id = e.id;
+    //alert("hello");
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -238,7 +244,7 @@ function confirmDelete(id){
       if (result.value) {
         $.ajax({
             type: "POST",
-            url: BASEURL + '/working-schedules/delete-user',
+            url: BASEURL + '/event/delete/'+id,
             data:{
                 _token:csrf_token,
                 user_id:id,
@@ -249,10 +255,9 @@ function confirmDelete(id){
                     Swal.fire({
                         type: "success",
                         title: 'Deleted!',
-                        text: 'User has been deleted.',
+                        text: 'Record has been deleted.',
                         confirmButtonClass: 'btn btn-success',
                     }).then(function () {
-
                         window.location.href= result.redirect;
                     });
                 }else{
@@ -270,6 +275,49 @@ function confirmDelete(id){
     })
 }
 
+function changeStatus(e){
+  var id = $(e).attr("data-id");
+  if($(e).is(":checked")){
+    $.ajax({
+        type: "POST",
+        url: BASEURL + '/appointment-types/status/active',
+        data:{
+            _token:csrf_token,
+            id:id,
+        },
+        dataType:'json',
+        success: function (result) {
+            if(result.status == true){
+                successMessage(result.message);
+                loadData();
+            }else{
+                errorMessage(result.message);
+            }
+        },
+    });
+  }else{
+    $.ajax({
+        type: "POST",
+        url: BASEURL + '/appointment-types/status/inactive',
+        data:{
+            _token:csrf_token,
+            id:id,
+        },
+        dataType:'json',
+        success: function (result) {
+            if(result.status == true){
+                successMessage(result.message);
+                loadData();
+            }else{
+                errorMessage(result.message);
+            }
+        },
+        error: function(){
+          internalError();
+        }
+    });
+  }
+}
 
 
 </script>
