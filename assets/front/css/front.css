@@ -131,3 +131,6 @@ span.select2-selection.custom-select {
 .payment-option .nav-link:hover {
     color: #999 !important;
   }
+  .bg-disabled{
+    background-color: #e9ecef;
+  }

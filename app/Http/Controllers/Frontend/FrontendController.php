@@ -224,14 +224,25 @@ class FrontendController extends Controller
         }
     }
     
-    public function bookAppointment($subdomain,$location_id){
+    public function bookAppointment(Request $request,$subdomain,$location_id){
         $subdomain = $subdomain;
 
         $company_data = professionalDetail($subdomain);
         $professionalAdmin = professionalAdmin($subdomain);
+        
+        if($request->get("service_id")){
+            $type = "book_appointment";
+            $visa_service = professionalService($subdomain,$request->get("service_id"),'unique_id');
+            
+            $viewData['visa_service_id'] = $request->get("service_id");
+            $viewData['service'] = $visa_service;
+        }else{
+            $type = 'services';
+        }
+        $viewData['type'] = $type;
 
-     
         $apiData = professionalCurl('appointment-types',$subdomain);
+        
         if(isset($apiData['status']) && $apiData['status'] == 'success'){
             $appointment_types = $apiData['data'];
         }else{
@@ -261,6 +272,15 @@ class FrontendController extends Controller
         $viewData['professional_location'] = $professional_location;
         if(!empty($company_data)){    
             
+            $data = array();
+            $apiData = professionalCurl('services',$subdomain);
+            if(isset($apiData['status']) && $apiData['status'] == 'success'){
+                $visa_services = $apiData['data'];
+            }else{
+                $visa_services = array();
+            }
+            // pre($visa_services);
+            $viewData['visa_services'] = $visa_services;
             $viewData['company_data'] = $company_data;
             $viewData['professional'] = $professional;
             $viewData['professionalAdmin'] = $professionalAdmin;
@@ -269,7 +289,7 @@ class FrontendController extends Controller
             return view('frontend.professional.book-appointment',$viewData);
         }
         else{
-            echo "No Details found";
+            return redirect()->back()->with("error","Professional Details found");
         }
     }
     public function fetchHours(Request $request){
@@ -348,13 +368,19 @@ class FrontendController extends Controller
     public function fetchAvailabilityHours(Request $request){
         $date = $request->input("date");
         $schedule_id = $request->input("schedule_id");
-        
-        $time_type = $request->input("time_type");
+        $service_id = $request->input("service_id");
+        $break_time = $request->input("break_time");
+       
+        if($request->input("time_type")){
+            $time_type = $request->input("time_type");
+        }else{
+            $time_type = 'default';
+        }
         $professional = $request->input("professional");
         $date = $request->input("date");
         $location_id = $request->input("location_id");
         $appointment_type_id = $request->input("appointment_type_id");
-
+        $visa_service = professionalService($professional,$service_id,'unique_id');
         $data = array();
         $data['return'] = 'single';
         $data['id'] = $appointment_type_id;
@@ -369,21 +395,14 @@ class FrontendController extends Controller
         $data['time_type'] = $time_type;
         $data['return'] = 'single';
         $apiData = professionalCurl('appointment-schedules',$professional,$data);
+      
         if(isset($apiData['status']) && $apiData['status'] == 'success'){
             $appointment_schedule = $apiData['data'];
         }else{
             $appointment_schedule = array();
         }
-
-        $data = array();
-        $apiData = professionalCurl('services',$professional);
-        if(isset($apiData['status']) && $apiData['status'] == 'success'){
-            $visa_services = $apiData['data'];
-        }else{
-            $visa_services = array();
-        }
         // pre($visa_services);
-        $viewData['visa_services'] = $visa_services;
+        $viewData['visa_service'] = $visa_service;
         // $appointment_schedule = \DB::table(PROFESSIONAL_DATABASE.$professional.".appointment_schedule")
         //             ->where("id",$schedule_id)
         //             ->first();
@@ -410,34 +429,104 @@ class FrontendController extends Controller
         }else{
             $booked_slots = array();
         }
-        $time_slots = getTimeSlot($interval,$from_time,$to_time);
-        // pre($time_slots);
-        if(!empty($booked_slots)){
-            foreach($time_slots as $key => $slot){
-                $start_time = $date." ".$slot['start_time'];
-                $end_time = $date." ".$slot['end_time'];
-              
-                foreach($booked_slots as $b_slot){
-                    // echo 'b start_time : '.$b_slot['start_time']."<Br>";
-                    // echo 'b end_time: '.$b_slot['end_time']."<Br>";
-                    $b_start_time = $date." ".$b_slot['start_time'].":00";
-                    $b_end_time = $date." ".$b_slot['end_time'].":00";
-                    $current_time = date("Y-m-d H:i:s",strtotime($start_time));
-                    if ($current_time >= $b_start_time && $current_time <= $b_end_time)
-                    {
-                        unset($time_slots[$key]);
-                        // echo '<h1>Time Booked: '.$b_start_time." To ".$b_end_time."</h1><Br>";
-                    }else{
-                        // echo "<h3>Empty Slot</h3>";
-                        // echo 'start_time : '.$start_time."<Br>";
-                        // echo 'end_time: '.$end_time."<Br>";
-                    }
-                }
-                // echo "<br>---------------------------------------<br>";
-            }
+        $book_slots = array();
+        foreach($booked_slots as $b_slot){
+            $temp = new \stdClass();
+            $temp->from_time = $b_slot['start_time'];
+            $temp->to_time = $b_slot['end_time'];
+            $book_slots[] = $temp;
         }
+        $prev_endtime = array();
+        if(!empty($book_slots)){
+            asort($book_slots);
+            $array_of_time = array();
+            $book_slots = array_values($book_slots);
+            foreach($book_slots as $key => $slot){
+                if($key == 0){
+                    $app_from_time = $from_time;
+                    $app_to_time = $slot->to_time;
+                    $time_slot = getTimeSlot($interval,$app_from_time,$app_to_time);
+                    $array_of_time = array_merge($array_of_time,$time_slot);
+                    $prev_endtime[$key] = $slot->to_time;
+                    // $start_time = date("Y-m-d H:i",strtotime($date." ".$from_time));
+                    // $end_time = date("Y-m-d H:i",strtotime($date." ".$slot->from_time));
+                    
+                    // $starttime = strtotime($start_time);
+                    // $endtime = strtotime($end_time);
+                    // $valid = 1;
+                    
+                    // $time_slot = $this->timeSlot($starttime,$endtime,$interval);
+                    // $array_of_time = array_merge($array_of_time,$time_slot);
+                    
+                    
+                }else{
+                    $app_from_time = $prev_endtime[$key-1];
+                    $app_to_time = $slot->to_time;
+                    $time_slot = getTimeSlot($interval,$app_from_time,$app_to_time);
+                    $array_of_time = array_merge($array_of_time,$time_slot);
+                    $prev_endtime[$key] = $slot->to_time;
+                    // $start_time = date("Y-m-d H:i",strtotime($date." ".$prev_endtime[$key-1]));
+                    // $end_time = date("Y-m-d H:i",strtotime($date." ".$slot->from_time));
+
+                    // $prev_endtime[$key] = $slot->to_time;
+
+                    // $starttime = strtotime($start_time);
+                    // $endtime = strtotime($end_time);
+
+                    // $time_slots = $this->timeSlot($starttime,$endtime,$interval);
+                    // $array_of_time = array_merge($array_of_time,$time_slots);
+                    
+                }
+            }
+
+            $app_from_time = end($prev_endtime);
+            $app_to_time = $to_time;
+            $time_slot = getTimeSlot($interval,$app_from_time,$app_to_time);
+            $array_of_time = array_merge($array_of_time,$time_slot);
+            $time_slots = $array_of_time;
+        }else{
+            $time_slots = getTimeSlot($interval,$from_time,$to_time);
+            // $start_time = date("Y-m-d H:i",strtotime($date." ".$from_time));
+            // $end_time = date("Y-m-d H:i",strtotime($date." ".$to_time));
+
+            // $starttime = strtotime($start_time);
+            // $endtime = strtotime($end_time);
+
+            // $time_slots = $this->timeSlot($starttime,$endtime,$interval);
+        }
+        pre($time_slots);
+        
+        
+        // pre($time_slots);
+        // if(!empty($booked_slots)){
+        //     foreach($time_slots as $key => $slot){
+        //         $start_time = $date." ".$slot['start_time'];
+        //         $end_time = $date." ".$slot['end_time'];
+              
+        //         foreach($booked_slots as $b_slot){
+        //             // echo 'b start_time : '.$b_slot['start_time']."<Br>";
+        //             // echo 'b end_time: '.$b_slot['end_time']."<Br>";
+        //             $b_start_time = $date." ".$b_slot['start_time'].":00";
+        //             $b_end_time = $date." ".$b_slot['end_time'].":00";
+        //             $b_end_time = date("Y-m-d H:i:s",strtotime($b_end_time." +".$b_slot['break_time']." minute"));
+        //             echo $b_end_time;
+        //             $current_time = date("Y-m-d H:i:s",strtotime($start_time));
+        //             if ($current_time >= $b_start_time && $current_time <= $b_end_time)
+        //             {
+        //                 unset($time_slots[$key]);
+        //                 // echo '<h1>Time Booked: '.$b_start_time." To ".$b_end_time."</h1><Br>";
+        //             }else{
+        //                 // echo "<h3>Empty Slot</h3>";
+        //                 // echo 'start_time : '.$start_time."<Br>";
+        //                 // echo 'end_time: '.$end_time."<Br>";
+        //             }
+        //         }
+        //         // echo "<br>---------------------------------------<br>";
+        //     }
+        // }
         $time_slots = array_values($time_slots);
         // pre($time_slots);
+        $viewData['break_time'] = $break_time;
         $viewData['date'] = date("F d, Y",strtotime($date));
         $viewData['time_slots'] = $time_slots;
         $viewData['schedule_id'] = $schedule_id;
@@ -456,7 +545,16 @@ class FrontendController extends Controller
         $response['contents'] = $contents;
         return response()->json($response);
     }
+    public function timeSlot($start_time,$end_time,$add_mins){
+        $array_of_time = array();
+        while ($start_time <= $end_time) // loop between time
+        {
+           $array_of_time[] = date("H:i", $start_time);
+           $start_time += $add_mins; // to check endtie=me
+        }
+        return $array_of_time;
 
+    }
     public function placeBooking(Request $request){
 
         $validator = Validator::make($request->all(), [
@@ -476,14 +574,18 @@ class FrontendController extends Controller
             return response()->json($response);
         }
         $duration = explode("-",$request->input("duration"));
+        
         $booking_id = randomNumber();
         $inv_unique_id = randomNumber();
         $object = new BookedAppointments();
         $object->unique_id = $booking_id;
         $object->professional = $request->input("professional");
         $object->location_id = $request->input("location_id");
+        $object->break_time = $request->input("break_time");
+        
         $object->visa_service_id = $request->input("visa_service");
         $object->appointment_date = $request->input("date");
+        $object->appointment_type_id = $request->input("appointment_type_id");
         $object->user_id = \Auth::user()->unique_id;
         $object->status = 'awaiting';
         if($request->input("price") > 0){

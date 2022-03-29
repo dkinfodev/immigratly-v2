@@ -1820,7 +1820,7 @@ class ProfessionalApiController extends Controller
                 }
             }
            
-            $response['status'] = true;
+            $response['status'] = "success";
             $response['data'] = $result;
         } catch (Exception $e) {
             $response['status'] = "error";

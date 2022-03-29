@@ -22,15 +22,14 @@
   <div class="card">
     <!-- Header -->
     <div class="card-header">
-      <h5 class="card-header-title">Appointments with Professionals</h5>
       <div class="row justify-content-between align-items-center flex-grow-1">
-       
-
-        <div class="col-sm-6 offset-md-6">
-          
-          <!-- <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
-              <a href="{{ baseUrl('/booked-appointments/calendar') }}">View Booking in Caledn</a>
-          </div> -->
+        <div class="col-sm-6 col-md-4 mb-3 mb-sm-0">
+          <h5 class="card-header-title">Appointments with Professionals</h5>
+        </div>
+        <div class="col-sm-6">
+          <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
+              <a href="{{ url('/professionals') }}">View all Professionals</a>
+          </div>
         </div>
       </div>
     </div>

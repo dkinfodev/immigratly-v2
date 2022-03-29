@@ -21,33 +21,14 @@
           <input type="hidden" name="schedule_id" value="{{$schedule_id}}" />
           <input type="hidden" name="time_type" value="{{$time_type}}" />
           <input type="hidden" name="date" value="{{$date}}" />
-          <div class="form-group js-form-message">
-              <label>Select Service for Appointment</label>
-              <table class="table table-bordered services">
-                <thead>
-                    <th width="10%">&nbsp;</th>
-                    <th>Visa Service</th>
-                    <th>Appointment Price</th>
-                </thead>
-                <tbody>
-                    @foreach($visa_services as $key => $service)
-                        <tr>
-                            <td>
-                                <div class="custom-control custom-radio">
-                                    <input onchange="selectService(this)" type="radio" id="vs-{{$key}}" class="custom-control-input" name="visa_service" value="{{$service['unique_id']}}">
-                                    <label class="custom-control-label" for="vs-{{$key}}">&nbsp;</label>
-                                </div>
-                                <input type="hidden" name="price" class="price" disabled value="{{$service['price']}}" />
-                            </td>
-                            <td>{{$service['visa_service']['name']}}</td>
-                            <td>{{currencyFormat().$service['price']}}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-              </table>
-          </div>
+          <input type="hidden" name="visa_service" value="{{$visa_service->unique_id}}" />
+          <input type="hidden" name="price" class="price" value="{{$visa_service->price}}" />
+          <input type="hidden" name="break_time" value="{{$break_time}}" />
+          <input type="hidden" name="appointment_type_id" value="{{$appointment_type_id}}" />
+          
+          
           <div class="imm-education-add-inner">
-              <h3>Available time slot for {{$date}}</h3>
+              <h3>Available time slot for {{dateFormat($date)}}</h3>
               <div class="row js-form-message">
               @foreach($time_slots as $key => $slot)
               <div class="col-3">

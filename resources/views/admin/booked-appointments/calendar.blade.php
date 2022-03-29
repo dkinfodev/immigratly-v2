@@ -70,12 +70,21 @@ $(document).ready(function() {
   loadCalendar();
 });
 function loadCalendar() {
-
+ 
   $('#calendar').fullCalendar({
 
     // other options here...
     eventColor: 'transparent',
     eventTextColor: '#999',
+    selectAllow: function(select) {
+      return moment().diff(select.start, 'days') <= 0
+   },
+   dayRender: function(date, cell){
+        var maxDate = new Date();
+        if (date < maxDate){
+            $(cell).addClass('disabled bg-light alert');
+        }
+    },
     events: function(start, end,timezone, callback) {
       var date = new Date(end);
       var year = date.getFullYear();
@@ -106,25 +115,9 @@ function loadCalendar() {
         });
     },
     eventClick: function(info, jsEvent, view) {
-      if(info.time_type == 'day_off'){
+      var maxDate = new Date();
+      if(info.start.format('YYYY-MM-DD') < maxData){
         return false;
-      }
-      var appointment_type = $("input[name=appointment_type]:checked").val();
-      if(appointment_type == undefined){
-        alert("Select meeting duration first");
-      }else{
-        
-        var url = "{{ baseUrl('professional/fetch-available-slots') }}";
-        var param = {
-           
-            professional:"{{$professional}}",
-            date:info.start.format('YYYY-MM-DD'),
-            schedule_id:info.id,
-            time_type:info.time_type,
-            appointment_type_id:appointment_type
-          };
-        showPopup(url,"post",param);
-        
       }
     }
   });
