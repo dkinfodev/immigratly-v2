@@ -24,6 +24,7 @@ use App\Models\Chats;
 use App\Models\ChatRead;
 use App\Models\ProfessionalDetails;
 use App\Models\CaseTasks;
+use App\Models\CaseStages;
 use App\Models\CaseTaskComments;
 use App\Models\CaseTaskFiles;
 use App\Models\CaseActivityLogs;
@@ -2095,4 +2096,162 @@ class CasesController extends Controller
         $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.case-dependents',$viewData);
     }
+
+    //ys 29-3-22
+
+    public function stages($case_id,Request $request){
+        $case_id = base64_decode($case_id);
+        $case = Cases::where("id",$case_id)->first();
+        $viewData['case'] = $case;
+
+        
+        $viewData['pageTitle'] = "Stages List";
+        $viewData['activeTab'] = 'cases';
+        return view(roleFolder().'.cases.stages',$viewData);
+    }
+
+    public function getStagesList(Request $request)
+    {
+        $search = $request->input("search");
+        $records = CaseStages::orderBy('id',"desc")
+                        ->where(function($query) use($search){
+                            if($search != ''){
+                                $query->where("name","LIKE","%$search%");
+                            }
+                        })
+                        ->where("case_id",$request->input("case_id"))
+                        ->paginate(5);
+        $viewData['records'] = $records;
+        $view = View::make(roleFolder().'.cases.stages-list',$viewData);
+        $contents = $view->render();
+        $response['contents'] = $contents;
+        $response['last_page'] = $records->lastPage();
+        $response['current_page'] = $records->currentPage();
+        $response['total_records'] = $records->total();
+        return response()->json($response);
+    }
+
+    public function addNewStage($case_id,Request $request){
+       
+        $viewData['pageTitle'] = "Add case stage";
+        $case_id = base64_decode($case_id);
+        $case = Cases::where("id",$case_id)->first();
+        $viewData['case'] = $case; 
+        return view(roleFolder().'.cases.add-stage',$viewData);
+    }
+
+    public function saveStage($case_id,Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'short_description' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $response['status'] = false;
+            $response['error_type'] = 'validation';
+            $error = $validator->errors()->toArray();
+            $errMsg = array();
+            
+            foreach($error as $key => $err){
+                $errMsg[$key] = $err[0];
+            }
+            $response['message'] = $errMsg;
+            return response()->json($response);
+        }
+        $case = Cases::where("unique_id",$case_id)->first();
+        $task_unique_id = randomNumber();
+        $object = new CaseStages();
+        $object->case_id = $case_id;
+        $object->client_id = $case->client_id;
+        $object->unique_id = $task_unique_id;
+        $object->name = $request->input("name");
+        $object->short_description = $request->input("short_description");
+        $object->save();
+        
+        $response['status'] = true;
+        $response['message'] = "Stage added successfully";
+        $response['redirect'] = baseUrl('cases/stages/list/'.base64_encode($case->id));
+        return response()->json($response);
+    }
+
+    public function editStage($id,Request $request){
+       
+        $viewData['pageTitle'] = "Edit case stage";
+        $record = CaseStages::where("unique_id",$id)->first();
+
+        $case_id = $record->case_id;
+        $case = Cases::where("unique_id",$case_id)->first();
+        $viewData['case'] = $case;
+        
+        $viewData['record'] = $record;
+        $viewData['activeTab'] = 'cases';
+        return view(roleFolder().'.cases.edit-stage',$viewData);
+        // $view = View::make(roleFolder().'.cases.modal.edit-task',$viewData);
+        // $contents = $view->render();
+        // $response['contents'] = $contents;
+        // $response['status'] = true;
+        // return response()->json($response);
+    }
+    public function updateStage($id,Request $request){
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'short_description' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $response['status'] = false;
+            $response['error_type'] = 'validation';
+            $error = $validator->errors()->toArray();
+            $errMsg = array();
+            
+            foreach($error as $key => $err){
+                $errMsg[$key] = $err[0];
+            }
+            $response['message'] = $errMsg;
+            return response()->json($response);
+        }
+        
+        $record = CaseStages::where("unique_id",$id)->first();
+        $case_id = $record->case_id;
+        $case = Cases::where("unique_id",$case_id)->first();
+        $object = CaseStages::where("unique_id",$id)->first();
+        $object->client_id = $case->client_id;
+        $object->short_description = $request->input("short_description");
+        $object->name = $request->input("name");
+       
+        $object->save();
+        
+        $response['status'] = true;
+        $response['message'] = "Stage edited successfully";
+        $response['redirect'] = baseUrl('cases/stage/list/'.base64_encode($case->id));
+        return response()->json($response);
+    }
+
+    
+    public function deleteSingleStage($id){
+        $id = base64_decode($id);
+        CaseStages::deleteRecord($id);
+        return redirect()->back()->with("success","Record has been deleted!");
+    }
+
+    // public function deleteMultipleTasks(Request $request){
+    //     $ids = explode(",",$request->input("ids"));
+    //     for($i = 0;$i < count($ids);$i++){
+    //         $id = base64_decode($ids[$i]);
+    //         CaseTasks::deleteRecord($id);
+    //     }
+    //     $response['status'] = true;
+    //     \Session::flash('success', 'Records deleted successfully'); 
+    //     return response()->json($response);
+    // }
+
+    // public function viewTask($id){
+    //     $record = CaseTasks::where("unique_id",$id)->first();
+    //     $viewData['pageTitle'] = "View Task";
+    //     $viewData['record'] = $record;
+    //     $viewData['task_id'] = $id;
+    //     return view(roleFolder().'.cases.view-task',$viewData);
+
+    // }
 }
