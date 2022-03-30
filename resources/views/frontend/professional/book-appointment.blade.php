@@ -69,7 +69,17 @@ td.fc-event-container a {
           <div class="card mb-3 mb-lg-5">
             <!-- Header -->
             <div class="card-header">
-              <h5 class="card-header-title float-left">Book your appointment for {{$service->visa_service->name}}</h5>
+              <h5 class="card-header-title float-left">
+                @if($action == 'edit')
+                  Edit your appointment for {{$service->visa_service->name}} dated on {{dateFormat($appointment->appointment_date)}}
+                  <div class="mt-2">
+                    <span class="text-danger"><b>Duration:</b>{{$appointment->meeting_duration}} Minutes</span>
+                    <span class="text-danger"> | <b>Time:</b>{{$appointment->start_time}} to {{$appointment->end_time}}</span>
+                  </div>
+                @else
+                Book your appointment for {{$service->visa_service->name}}
+                @endif
+              </h5>
               <h3 class="float-right text-danger">Charge:
                 @if($service->price == 0)
                   Free
@@ -176,7 +186,9 @@ function loadCalendar() {
             year:year,
             start_date:start_date,
             end_date:end_date,
-            month:month
+            month:month,
+            action:"{{$action}}",
+            eid:"{{$eid}}",
           },
           success: function(response) {
             hideLoader();
@@ -216,7 +228,9 @@ function loadCalendar() {
             time_type:info.time_type,
             service_id:"{{ $service->unique_id}}",
             appointment_type_id:appointment_type,
-            break_time:break_time
+            break_time:break_time,
+            action:"{{$action}}",
+            eid:"{{$eid}}",
           };
         showPopup(url,"post",param);
         // $.ajax({

@@ -53,7 +53,7 @@
               <th scope="col" class="table-column-pl-0">Meeting Duration</th>
               <th scope="col" class="table-column-pl-0">Status</th>
               <th scope="col" class="table-column-pl-0">Payment Status</th>
-              <th scope="col">&nbsp;</th>
+              <th scope="col">Action</th>
             </tr>
           </thead>
           <tbody>

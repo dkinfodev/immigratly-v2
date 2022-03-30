@@ -51,19 +51,19 @@
   <td class="table-column-pl-0">
       @if($record->payment_status == 'pending')
       <span class="badge badge-warning">{{$record->payment_status}}</span>
+      @if($record->payment_status != 'paid')
+          <!-- <a class="text-primary" href="{{baseUrl('appointment-payment/'.$record->unique_id)}}"><i class="tio-dollar"></i> Click to Pay</a> -->
+        @endif
       @elseif($record->payment_status == 'paid')
       <span class="badge badge-success">{{$record->payment_status}}</span>
       @else
       <span class="badge badge-danger">{{$record->payment_status}}</span>
+     
       @endif
   </td>
-  <td>
-      @if($record->payment_status != 'paid')
-        <a class="btn btn-outline-primary btn-sm" href="{{baseUrl('appointment-payment/'.$record->unique_id)}}"><i class="tio-dollar"></i> Click to Pay</a>
-      @endif
-  </td>
-  <!-- <td class="table-column-pl-0">
-  <div class="hs-unfold">
+  <td class="table-column-pl-0">
+    @if($record->appointment_date > date("Y-m-d"))
+    <div class="hs-unfold">
       <a class="js-hs-action btn btn-sm btn-white" href="javascript:;"
          data-hs-unfold-options='{
            "target": "#action-{{$key}}",
@@ -71,17 +71,20 @@
          }'>
               More <i class="tio-chevron-down ml-1"></i>
       </a>
-
+      
       <div id="action-{{$key}}" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm dropdown-menu-right">
-        <a class="dropdown-item" href="{{baseUrl('booked-appointments/edit/'.$record->unique_id)}}">Edit</a>
+        <a class="dropdown-item" href="{{baseUrl('professional/'.$record->professional.'/book-appointment/'.$record->location_id)}}?service_id={{ $record->visa_service_id }}&action=edit&eid={{ $record->unique_id }}">Edit</a>
         @if($record->payment_status != 'paid')
         <a class="dropdown-item" href="{{baseUrl('appointment-payment/'.$record->unique_id)}}">Pay Now</a>
         @endif
-        <a class="dropdown-item text-danger" href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('booked-appointments/delete/'.base64_encode($record->id))}}">Delete</a> 
+        {{-- <a class="dropdown-item text-danger" href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('booked-appointments/delete/'.base64_encode($record->id))}}">Delete</a> --}}
         
       </div>
     </div>
-  </td> -->
+    @else
+    <span class="text-danger">Appointment End</span>
+    @endif
+  </td>
 </tr>
 @endforeach
 

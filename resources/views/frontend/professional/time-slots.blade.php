@@ -25,8 +25,10 @@
           <input type="hidden" name="price" class="price" value="{{$visa_service->price}}" />
           <input type="hidden" name="break_time" value="{{$break_time}}" />
           <input type="hidden" name="appointment_type_id" value="{{$appointment_type_id}}" />
-          
-          
+          @if($action == 'edit')
+            <input type="hidden" name="eid" value="{{$eid}}" />
+          @endif
+          <input type="hidden" name="action" value="{{$action}}" />
           <div class="imm-education-add-inner">
               <h3>Available time slot for {{dateFormat($date)}}</h3>
               <div class="row js-form-message">

@@ -239,6 +239,16 @@ class FrontendController extends Controller
         }else{
             $type = 'services';
         }
+        if($request->get("action") == 'edit' && $request->get("eid")){
+            $eid = $request->get("eid");
+            $viewData['action'] = "edit";
+            $viewData['eid'] = $eid;
+            $appointment = BookedAppointments::where("unique_id",$eid)->first();
+            $viewData['appointment'] = $appointment;
+        }else{
+            $viewData['action'] = "add";
+            $viewData['eid'] = '';
+        }
         $viewData['type'] = $type;
 
         $apiData = professionalCurl('appointment-types',$subdomain);
@@ -304,6 +314,13 @@ class FrontendController extends Controller
         // $date = $year."-".$month."-01";
         // $start_date = date("Y-m-d",strtotime($date));
         // $end_date = date("Y-m-t",strtotime($date));
+        if($request->action == 'edit' && $request->eid != ''){
+            $eid = $request->eid;
+            $appointment = BookedAppointments::where("unique_id",$eid)->first();
+            $appointment_date = $appointment->appointment_date;
+        }else{
+            $appointment_date = '';
+        }
         $dates = getBetweenDates($start_date,$end_date);
         
         for($d=0;$d < count($dates);$d++){
@@ -359,6 +376,13 @@ class FrontendController extends Controller
                 $temp['className'] = 'text-primary booked-appointment';
                 $day_schedules[] = $temp;
             }
+            if($appointment_date == $dates[$d]){
+                $temp = array();
+                $temp['start'] = $dates[$d];
+                $temp['title'] = "Current Appointment Date";
+                $temp['className'] = 'bg-warning';
+                $day_schedules[] = $temp;
+            }
         }
         $response['status'] = true;
         $response['schedule'] = $day_schedules;
@@ -376,6 +400,18 @@ class FrontendController extends Controller
         }else{
             $time_type = 'default';
         }
+
+        if($request->get("action") == 'edit' && $request->get("eid")){
+            $eid = $request->get("eid");
+            $viewData['action'] = "edit";
+            $viewData['eid'] = $eid;
+            $appointment = BookedAppointments::where("unique_id",$eid)->first();
+            $viewData['appointment'] = $appointment;
+        }else{
+            $viewData['action'] = "add";
+            $viewData['eid'] = '';
+        }
+
         $professional = $request->input("professional");
         $date = $request->input("date");
         $location_id = $request->input("location_id");
@@ -535,10 +571,21 @@ class FrontendController extends Controller
         }
         $duration = explode("-",$request->input("duration"));
         
-        $booking_id = randomNumber();
-        $inv_unique_id = randomNumber();
-        $object = new BookedAppointments();
-        $object->unique_id = $booking_id;
+        
+        if($request->input("action") == 'edit'){
+            $object = BookedAppointments::where("unique_id",$request->input("eid"))->first();
+            $appointment = $object;
+            $booking_id = $object->unique_id;
+            $object->edit_counter = $object->edit_counter+1;
+        }else{
+            $appointment = array();
+            $booking_id = randomNumber();
+            $inv_unique_id = randomNumber();
+            $object = new BookedAppointments();
+            $object->unique_id = $booking_id;
+        }
+        
+        
         $object->professional = $request->input("professional");
         $object->location_id = $request->input("location_id");
         $object->break_time = $request->input("break_time");
@@ -560,13 +607,19 @@ class FrontendController extends Controller
         $object->meeting_duration = $request->input("interval");
         $object->start_time = $duration[0];
         $object->end_time = $duration[1];
-        $object->invoice_id = $inv_unique_id;
+        if($request->input("action") == 'add'){
+            $object->invoice_id = $inv_unique_id;
+        }
         $object->save();
 
                 
-        
-        $object2 = new UserInvoices();
-        $object2->unique_id = $inv_unique_id;
+        if($request->input("action") == 'edit'){
+            $object2 = UserInvoices::where("link_id",$booking_id)->where("link_to","appointment")->first();
+            $inv_unique_id = $object2->unique_id;
+        }else{
+            $object2 = new UserInvoices();
+            $object2->unique_id = $inv_unique_id;
+        }
         $object2->client_id = \Auth::user()->unique_id;
         $object2->payment_status = "pending";
         $object2->amount = $request->input("price");
@@ -576,19 +629,32 @@ class FrontendController extends Controller
         $object2->created_by = \Auth::user()->unique_id;
         $object2->save();
 
-        $object2 = new InvoiceItems();
-        $object2->invoice_id = $inv_unique_id;
-        $object2->unique_id = randomNumber();
+        if($request->input("action") == 'edit'){
+            $object2 = InvoiceItems::where("invoice_id",$inv_unique_id)->first();
+        }else{
+            $object2 = new InvoiceItems();
+            $object2->invoice_id = $inv_unique_id;
+            $object2->unique_id = randomNumber();
+        }
+        
         $object2->particular = "Appointment Fee";
         $object2->amount = $request->input("price");
         $object2->save();
 
         $response['status'] = true;
         $response['message'] = "Your time slot is booked successfully. Team will contact you soon!";
-        if($request->input("price") > 0){
-            $response['redirect_back'] = baseUrl('appointment-payment/'.$booking_id);
+        if($request->input("action") == 'edit'){
+            if($appointment->price == 0 &&  $request->input("price") > 0){
+                $response['redirect_back'] = baseUrl('appointment-payment/'.$booking_id);
+            }else{
+                $response['redirect_back'] = baseUrl('booked-appointments');
+            }
         }else{
-            $response['redirect_back'] = baseUrl('booked-appointments');
+            if($request->input("price") > 0){
+                $response['redirect_back'] = baseUrl('appointment-payment/'.$booking_id);
+            }else{
+                $response['redirect_back'] = baseUrl('booked-appointments');
+            }
         }
         return response()->json($response);
     }
