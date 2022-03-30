@@ -145,6 +145,10 @@
           <i class="tio-pages dropdown-item-icon"></i>
           Case Tasks
           </a>
+          <a class="dropdown-item" href="{{baseUrl('cases/stages/list/'.base64_encode($record->id))}}">
+          <i class="tio-pages dropdown-item-icon"></i>
+          Case Stages
+          </a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item text-danger" href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('cases/delete/'.base64_encode($record->id))}}">
           <i class="tio-delete-outlined dropdown-item-icon"></i>

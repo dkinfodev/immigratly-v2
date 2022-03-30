@@ -989,6 +989,7 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
         Route::post('/save-chat-file', [App\Http\Controllers\User\ProfessionalCasesController::class, 'saveChatFile']);
         Route::get('/chat-demo', [App\Http\Controllers\User\ProfessionalCasesController::class, 'chatdemo']);
         
+       
         Route::group(array('prefix' => 'google-drive'), function () {
             Route::post('/folder/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'fetchGoogleDrive']);
             Route::post('/files-list', [App\Http\Controllers\User\ProfessionalCasesController::class, 'googleDriveFilesList']);
@@ -1370,6 +1371,19 @@ Route::group(array('prefix' => 'admin'), function () {
                 
                 Route::post('/send-comment', [App\Http\Controllers\Admin\CasesController::class, 'sendTaskComment']);
                 Route::post('/change-status', [App\Http\Controllers\Admin\CasesController::class, 'changeTaskComment']);
+                
+            });
+ 
+            Route::group(array('prefix' => 'stages'), function () {
+                Route::get('/list/{id}', [App\Http\Controllers\Admin\CasesController::class, 'stages']);
+                Route::post('/ajax-list', [App\Http\Controllers\Admin\CasesController::class, 'getStagesList']);
+                Route::get('/add/{id}', [App\Http\Controllers\Admin\CasesController::class, 'addNewStage']);
+                Route::post('/add/{id}', [App\Http\Controllers\Admin\CasesController::class, 'saveStage']);
+                Route::get('/edit/{id}', [App\Http\Controllers\Admin\CasesController::class, 'editStage']);
+                Route::post('/edit/{id}', [App\Http\Controllers\Admin\CasesController::class, 'updateStage']);
+                Route::get('/delete/{id}', [App\Http\Controllers\Admin\CasesController::class, 'deleteSingleStage']);
+                //Route::post('/delete-multiple', [App\Http\Controllers\Admin\CasesController::class, 'deleteMultipleStage']);
+                //Route::get('/view/{id}', [App\Http\Controllers\Admin\CasesController::class, 'viewStage']);
                 
             });
         });
