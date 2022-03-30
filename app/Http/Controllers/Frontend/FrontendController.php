@@ -433,9 +433,23 @@ class FrontendController extends Controller
         foreach($booked_slots as $b_slot){
             $temp = new \stdClass();
             $temp->from_time = $b_slot['start_time'];
-            $temp->to_time = $b_slot['end_time'];
+       
+            $temp->to_time = date("H:i",strtotime($b_slot['end_time']." +".$b_slot['break_time']." minutes"));
             $book_slots[] = $temp;
         }
+
+        $custom_times = \DB::table(PROFESSIONAL_DATABASE.$professional.".custom_time")
+                    ->where("custom_date",$date)
+                    ->where("type","event-time")
+                    ->get();
+        foreach($custom_times as $b_slot){
+            $temp = new \stdClass();
+            $temp->from_time = $b_slot->from_time;
+        
+            $temp->to_time = $b_slot->to_time;
+            $book_slots[] = $temp;
+        }
+        // pre($book_slots);
         $prev_endtime = array();
         if(!empty($book_slots)){
             asort($book_slots);
@@ -444,37 +458,19 @@ class FrontendController extends Controller
             foreach($book_slots as $key => $slot){
                 if($key == 0){
                     $app_from_time = $from_time;
-                    $app_to_time = $slot->to_time;
-                    $time_slot = getTimeSlot($interval,$app_from_time,$app_to_time);
-                    $array_of_time = array_merge($array_of_time,$time_slot);
+                    $app_to_time = $slot->from_time;
+                    if($app_from_time < $app_to_time){
+                        $time_slot = getTimeSlot($interval,$app_from_time,$app_to_time);
+                        $array_of_time = array_merge($array_of_time,$time_slot);
+                    }
                     $prev_endtime[$key] = $slot->to_time;
-                    // $start_time = date("Y-m-d H:i",strtotime($date." ".$from_time));
-                    // $end_time = date("Y-m-d H:i",strtotime($date." ".$slot->from_time));
-                    
-                    // $starttime = strtotime($start_time);
-                    // $endtime = strtotime($end_time);
-                    // $valid = 1;
-                    
-                    // $time_slot = $this->timeSlot($starttime,$endtime,$interval);
-                    // $array_of_time = array_merge($array_of_time,$time_slot);
-                    
                     
                 }else{
                     $app_from_time = $prev_endtime[$key-1];
-                    $app_to_time = $slot->to_time;
+                    $app_to_time = $slot->from_time;
                     $time_slot = getTimeSlot($interval,$app_from_time,$app_to_time);
                     $array_of_time = array_merge($array_of_time,$time_slot);
                     $prev_endtime[$key] = $slot->to_time;
-                    // $start_time = date("Y-m-d H:i",strtotime($date." ".$prev_endtime[$key-1]));
-                    // $end_time = date("Y-m-d H:i",strtotime($date." ".$slot->from_time));
-
-                    // $prev_endtime[$key] = $slot->to_time;
-
-                    // $starttime = strtotime($start_time);
-                    // $endtime = strtotime($end_time);
-
-                    // $time_slots = $this->timeSlot($starttime,$endtime,$interval);
-                    // $array_of_time = array_merge($array_of_time,$time_slots);
                     
                 }
             }
@@ -486,44 +482,8 @@ class FrontendController extends Controller
             $time_slots = $array_of_time;
         }else{
             $time_slots = getTimeSlot($interval,$from_time,$to_time);
-            // $start_time = date("Y-m-d H:i",strtotime($date." ".$from_time));
-            // $end_time = date("Y-m-d H:i",strtotime($date." ".$to_time));
-
-            // $starttime = strtotime($start_time);
-            // $endtime = strtotime($end_time);
-
-            // $time_slots = $this->timeSlot($starttime,$endtime,$interval);
         }
-        pre($time_slots);
         
-        
-        // pre($time_slots);
-        // if(!empty($booked_slots)){
-        //     foreach($time_slots as $key => $slot){
-        //         $start_time = $date." ".$slot['start_time'];
-        //         $end_time = $date." ".$slot['end_time'];
-              
-        //         foreach($booked_slots as $b_slot){
-        //             // echo 'b start_time : '.$b_slot['start_time']."<Br>";
-        //             // echo 'b end_time: '.$b_slot['end_time']."<Br>";
-        //             $b_start_time = $date." ".$b_slot['start_time'].":00";
-        //             $b_end_time = $date." ".$b_slot['end_time'].":00";
-        //             $b_end_time = date("Y-m-d H:i:s",strtotime($b_end_time." +".$b_slot['break_time']." minute"));
-        //             echo $b_end_time;
-        //             $current_time = date("Y-m-d H:i:s",strtotime($start_time));
-        //             if ($current_time >= $b_start_time && $current_time <= $b_end_time)
-        //             {
-        //                 unset($time_slots[$key]);
-        //                 // echo '<h1>Time Booked: '.$b_start_time." To ".$b_end_time."</h1><Br>";
-        //             }else{
-        //                 // echo "<h3>Empty Slot</h3>";
-        //                 // echo 'start_time : '.$start_time."<Br>";
-        //                 // echo 'end_time: '.$end_time."<Br>";
-        //             }
-        //         }
-        //         // echo "<br>---------------------------------------<br>";
-        //     }
-        // }
         $time_slots = array_values($time_slots);
         // pre($time_slots);
         $viewData['break_time'] = $break_time;

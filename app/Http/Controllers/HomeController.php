@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
-
+use App\Models\Articles;
+use App\Models\ChatGroups;
+use App\Models\News;
+use App\Models\Professionals;
+use App\Models\Webinar;
 class HomeController extends Controller
 {
     /**
