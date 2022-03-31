@@ -19,18 +19,7 @@
 
 @section('content')
 <!-- Search Section -->
-<style>
-.available-appointment {
-    height: 80px !important;
-    margin-top: 15px !important;
-}
-td.fc-event-container a {
-    text-align: center;
-}
-.day-off {
-    padding-top: 25px;
-}
-</style>
+
 
 <div class="container space-bottom-2 ">
   <div class="w-lg-100 ">

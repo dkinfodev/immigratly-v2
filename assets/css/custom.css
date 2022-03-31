@@ -5615,3 +5615,16 @@ border-bottom-left-radius: 0;
   background-color: #71869d;
 }
 
+.available-appointment {
+  height: 80px !important;
+  margin-top: 15px !important;
+}
+td.fc-event-container a {
+  text-align: center;
+}
+.day-off {
+  padding-top: 25px;
+}
+.bg-disabled{
+  background-color: #e9ecef;
+}

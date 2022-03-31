@@ -1292,6 +1292,9 @@ Route::group(array('prefix' => 'admin'), function () {
             Route::post('/fetch-appointments', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'fetchAppointments']);
             Route::post('/ajax-list', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'getAjaxList']);
             Route::get('/status/{id}/{status}', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'changeStatus']);
+            Route::post('/fetch-hours', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'fetchHours']);
+            Route::post('/fetch-available-slots', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'fetchAvailabilityHours']);
+            Route::post('/update-appointment', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'updateAppointment']);
         });
         
         Route::group(array('prefix' => 'messages-center'), function () {

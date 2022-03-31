@@ -69,10 +69,17 @@
     {{currencyFormat().$record['price']}}
   </td>
   <td class="table-column-pl-0">
-      @if($record['status'] == 'awaiting' || $record['status'] == 'reject')
-        <a class="badge badge-success" href="{{baseUrl('booked-appointments/status/'.$record['unique_id'])}}/approved">Click to Approve</a>
+      @if($record['appointment_date'] > date("Y-m-d"))
+        <div class="btn-group">
+          @if($record['status'] == 'awaiting' || $record['status'] == 'reject')
+            <a class="p-2 btn btn-sm btn-success mr-2 js-nav-tooltip-link" href="{{baseUrl('booked-appointments/status/'.$record['unique_id'])}}/approved" data-toggle="tooltip" data-html="true" title="Click to Approved"><i class="tio-done"></i></a>
+          @endif
+            <a class="p-2 btn btn-sm btn-danger mr-2 js-nav-tooltip-link" href="{{baseUrl('booked-appointments/status/'.$record['unique_id'])}}/reject" data-toggle="tooltip" data-html="true" title="Click to Reject"><i class="tio-clear-circle"></i></a>
+            <a class="p-2 btn btn-sm btn-info js-nav-tooltip-link" href="{{baseUrl('booked-appointments/reschedule-appointment/'.$record['unique_id'])}}" data-toggle="tooltip" data-html="true" title="Click to Reschedule"><i class="tio-calendar"></i></a>
+        </div>
+      @else
+        <span class="badge badge-warning">Appointment Expired</span>
       @endif
-        <a class="badge badge-danger" href="{{baseUrl('booked-appointments/status/'.$record['unique_id'])}}/reject">Click to Reject</a>
      
   </td>
 </tr>
@@ -81,6 +88,7 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
+  $('.js-nav-tooltip-link').tooltip({ boundary: 'window' })
   $('.js-hs-action').each(function () {
     var unfold = new HSUnfold($(this)).init();
   });

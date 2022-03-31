@@ -27,7 +27,8 @@ use App\Models\AssessmentReports;
 use App\Models\AssessmentForms;
 use App\Models\ExternalAssessments;
 use App\Models\BookedAppointments;
-
+use App\Models\UserInvoices;
+use App\Models\InvoiceItems;
 
 class MasterApiController extends Controller
 {
@@ -1186,5 +1187,105 @@ class MasterApiController extends Controller
         }
         return response()->json($response);
         
+    }
+
+    public function appointmentDetail(Request $request){
+        try{
+            $postData = $request->input();
+            $request->request->add($postData);
+            $appointment_id = $request->input("appointment_id");
+
+            $appointment = BookedAppointments::with(['Client'])->where("unique_id",$appointment_id)->first();
+            $response['status'] = 'success';
+            $response['data'] = $appointment;
+        } catch (Exception $e) {
+            $response['status'] = "error";
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response);
+    }
+
+    public function updateAppointment(Request $request){
+
+        try{
+            $postData = $request->input();
+            $request->request->add($postData);
+            $duration = explode("-",$request->input("duration"));
+            
+            
+            if($request->input("action") == 'edit'){
+                $object = BookedAppointments::where("unique_id",$request->input("eid"))->first();
+                $appointment = $object;
+                $booking_id = $object->unique_id;
+                $object->edit_counter = $object->edit_counter+1;
+            }else{
+                $appointment = array();
+                $booking_id = randomNumber();
+                $inv_unique_id = randomNumber();
+                $object = new BookedAppointments();
+                $object->unique_id = $booking_id;
+            }
+            
+            
+            $object->professional = $request->input("professional");
+            $object->location_id = $request->input("location_id");
+            $object->break_time = $request->input("break_time");
+            
+            $object->visa_service_id = $request->input("visa_service");
+            $object->appointment_date = $request->input("date");
+            $object->appointment_type_id = $request->input("appointment_type_id");
+            $object->status = 'awaiting';
+            if($request->input("price") > 0){
+                $object->payment_status = 'pending';
+            }else{
+                $object->payment_status = 'paid';
+            }
+            $object->schedule_id = $request->input("schedule_id");
+            $object->time_type = $request->input("time_type");
+            
+            $object->price = $request->input("price");
+            $object->meeting_duration = $request->input("interval");
+            $object->start_time = $duration[0];
+            $object->end_time = $duration[1];
+            if($request->input("action") == 'add'){
+                $object->invoice_id = $inv_unique_id;
+            }
+            $object->save();
+
+                    
+            if($request->input("action") == 'edit'){
+                $object2 = UserInvoices::where("link_id",$booking_id)->where("link_to","appointment")->first();
+                $inv_unique_id = $object2->unique_id;
+            }else{
+                $object2 = new UserInvoices();
+                $object2->unique_id = $inv_unique_id;
+            }
+            $object2->payment_status = "pending";
+            $object2->amount = $request->input("price");
+            $object2->link_to = 'appointment';
+            $object2->link_id = $booking_id;
+            $object2->invoice_date = date("Y-m-d"); 
+            $object2->save();
+
+            if($request->input("action") == 'edit'){
+                $object2 = InvoiceItems::where("invoice_id",$inv_unique_id)->first();
+            }else{
+                $object2 = new InvoiceItems();
+                $object2->invoice_id = $inv_unique_id;
+                $object2->unique_id = randomNumber();
+            }
+            
+            $object2->particular = "Appointment Fee";
+            $object2->amount = $request->input("price");
+            $object2->save();
+
+            $response['status'] = 'success';
+            $response['message'] = "Appointment reschedule successfully";
+            
+        } catch (Exception $e) {
+            $response['status'] = "error";
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response);
     }
 }
