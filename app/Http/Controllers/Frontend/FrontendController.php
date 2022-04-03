@@ -244,6 +244,11 @@ class FrontendController extends Controller
             $viewData['action'] = "edit";
             $viewData['eid'] = $eid;
             $appointment = BookedAppointments::where("unique_id",$eid)->first();
+            //redirect if edited 3 times
+            if($appointment->edit_counter > 2){
+                return redirect()->back()->with("error","You already edited 3 times.");
+            }
+            // end redirect
             $viewData['appointment'] = $appointment;
         }else{
             $viewData['action'] = "add";
@@ -551,6 +556,7 @@ class FrontendController extends Controller
         return $array_of_time;
 
     }
+
     public function placeBooking(Request $request){
 
         $validator = Validator::make($request->all(), [
@@ -576,7 +582,17 @@ class FrontendController extends Controller
             $object = BookedAppointments::where("unique_id",$request->input("eid"))->first();
             $appointment = $object;
             $booking_id = $object->unique_id;
-            $object->edit_counter = $object->edit_counter+1;
+            if($object->edit_counter > 2)
+            {
+                $response['status'] = true;
+                $response['message'] = "Your edit limit exceed.";
+                $response['redirect_back'] = baseUrl('booked-appointments');
+                return response()->json($response);    
+            }
+            else
+            {
+                $object->edit_counter = $object->edit_counter+1;
+            }
         }else{
             $appointment = array();
             $booking_id = randomNumber();
@@ -656,6 +672,28 @@ class FrontendController extends Controller
                 $response['redirect_back'] = baseUrl('booked-appointments');
             }
         }
+
+        //  try{
+        // //email code working temporary commented
+        //     $start_time = $duration[0]; 
+        //     $end_time = $duration[1];
+        //     $date = $request->input("date");
+        //     $email = \Auth::user()->email;
+        //     $mailData['mail_message'] = "Your appointment on ".$date." from ".$start_time." to ".$end_time." is under process. You will be notified by the professional."; 
+        //     $view = View::make('emails.notification',$mailData);
+        //     $message = $view->render();
+        //     $parameter['to'] = $email;
+        //     $parameter['to_name'] = '';
+        //     $parameter['message'] = $message;
+        //     $parameter['subject'] = "Appointment under review";
+        //     $parameter['view'] = "emails.notification";
+        //     $parameter['data'] = $mailData;
+        //     $mailRes = sendMail($parameter);
+        // }
+        // catch(Exception $e){
+        //     $response['message'] = $e->getMessage();
+        // }
+        //endmail
         return response()->json($response);
     }
 

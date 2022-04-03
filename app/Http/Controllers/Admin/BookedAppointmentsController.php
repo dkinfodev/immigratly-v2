@@ -91,7 +91,8 @@ class BookedAppointmentsController extends Controller
 
         $viewData['subdomain'] = $subdomain;
         return view(roleFolder().'.booked-appointments.reschedule',$viewData);
-    } 
+    }
+     
     public function fetchAppointments(Request $request){
         $month = $request->input("month");
         $year = $request->input("year");
