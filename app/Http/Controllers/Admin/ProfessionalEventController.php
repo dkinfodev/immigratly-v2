@@ -19,12 +19,12 @@ use View;
 class ProfessionalEventController extends Controller
 {
     
-	public function index(){
+    public function __construct()
+    {
+        $this->middleware('admin');
+    }
 
-        if(\Auth::user()->role != 'admin'){
-            return redirect(baseUrl('/'));
-        }
-        
+	public function index(){
         $viewData['pageTitle'] = "Event";
         $viewData['activeTab'] = "event";
         
@@ -54,9 +54,6 @@ class ProfessionalEventController extends Controller
 
     public function addEvent(){
 
-        if(\Auth::user()->role != 'admin'){
-            return redirect(baseUrl('/'));
-        }
         
         $viewData['pageTitle'] = "Add Event";
         $viewData['activeTab'] = "event";
@@ -68,10 +65,6 @@ class ProfessionalEventController extends Controller
 
     public function editEvent($id){
 
-        if(\Auth::user()->role != 'admin'){
-            return redirect(baseUrl('/'));
-        }
-        
         $id = base64_decode($id);
         $object = ProfessionalEvent::where('id',$id)->first();
 
@@ -126,16 +119,28 @@ class ProfessionalEventController extends Controller
 
 	        $event_name = $request->input("event_name");
 	        $event_link = $request->input("event_link");
-	        $event_from_time = $request->input("event_from_time");
-	        $event_to_time = $request->input("event_to_time");
+	        $event_from_time = date("H:i",strtotime($request->input("event_from_time")));
+	        $event_to_time = date("H:i",strtotime($request->input("event_to_time")));
 	        $description = $request->input("description");
-	        $event_date = $request->input("event_date");
-	        
+	        $event_date = date("Y-m-d",strtotime($request->input("event_date")));
+	        $check_event = \DB::table(MAIN_DATABASE.".booked_appointments")->where("professional",\Session::get("subdomain"))
+                            ->where("appointment_date",$event_date)
+                            ->where("start_time",">=",$event_from_time)
+                            ->where("end_time",">=",$event_from_time)
+                            ->where("location_id",$location)
+                            ->count();
+	       
+            if($check_event > 0){
+                $response['status'] = false;
+                $response['error_type'] = 'exist';
+	            $response['message'] = "Client having appointments on given date of event, Please reschedule the appointment of clients";
+                return response()->json($response);
+            }
 	        $object = new ProfessionalEvent;
 
 	        $object->name = $event_name;
 
-        	if($professionalLocations->type == "virtual")
+        	if($professionalLocations->type == "online")
         	{
         		$object->link = $event_link;
         		$object->event_type = "online";				
@@ -145,8 +150,8 @@ class ProfessionalEventController extends Controller
         		//$object->link = $event_link;
         		$object->event_type = "offline";				
         	}
-
-	        $object->unique_id = randomNumber();	            
+            $event_id = randomNumber();
+	        $object->unique_id = $event_id;	            
 	        $object->location_id = $location;    
 	        $object->from_time = $event_from_time;
 	        $object->to_time = $event_to_time;
@@ -158,7 +163,8 @@ class ProfessionalEventController extends Controller
 	        $object = new CustomTime;
 	        $object->unique_id = randomNumber();
 	        $object->location_id = $location;
-	        $object->date = $event_date;
+	        $object->custom_date = $event_date;
+            $object->custom_id = $event_id;
             $object->type = "event-time";
             
             //Need to set as per schedule - pod
@@ -171,6 +177,7 @@ class ProfessionalEventController extends Controller
 
 	        $response['status'] = true;
 	        $response['message'] = "Event added successfully";
+            $response['redirect_back'] = baseUrl('/event');
 	    }
 	    
 	    catch (Exception $e) {
@@ -187,6 +194,7 @@ class ProfessionalEventController extends Controller
     	$location = $request->input("location");
     	$object = ProfessionalEvent::where('id',$id)->first();
     	$old_location = $object->location_id;
+        $event_id = $object->unique_id;
         try{
             $valid = array(
                 'event_name'=>'required',
@@ -213,6 +221,7 @@ class ProfessionalEventController extends Controller
                     $errMsg[$key] = $err[0];
                 }
                 $response['message'] = $errMsg;
+                
                 return response()->json($response);
             }
         
@@ -220,16 +229,26 @@ class ProfessionalEventController extends Controller
 
 	        $event_name = $request->input("event_name");
 	        $event_link = $request->input("event_link");
-	        $event_from_time = $request->input("event_from_time");
-	        $event_to_time = $request->input("event_to_time");
+	        $event_from_time = date("H:i",strtotime($request->input("event_from_time")));
+	        $event_to_time = date("H:i",strtotime($request->input("event_to_time")));
 	        $description = $request->input("description");
-	        $event_date = $request->input("event_date");
-	        
-	        $object = new ProfessionalEvent;
-
+	        $event_date = date("Y-m-d",strtotime($request->input("event_date")));
+	        $check_event = \DB::table(MAIN_DATABASE.".booked_appointments")->where("professional",\Session::get("subdomain"))
+                            ->where("appointment_date",$event_date)
+                            ->where("start_time",">=",$event_from_time)
+                            ->where("end_time",">=",$event_from_time)
+                            ->where("location_id",$location)
+                            ->count();
+	       
+            if($check_event > 0){
+                $response['status'] = false;
+                $response['error_type'] = 'exist';
+	            $response['message'] = "Client having appointments on given date of event, Please reschedule the appointment of clients";
+                return response()->json($response);
+            }
 	        $object->name = $event_name;
 
-        	if($professionalLocations->type == "virtual")
+        	if($professionalLocations->type == "online")
         	{
         		$object->link = $event_link;
         		$object->event_type = "online";				
@@ -239,7 +258,6 @@ class ProfessionalEventController extends Controller
         		//$object->link = $event_link;
         		$object->event_type = "offline";				
         	}
-	        $object->unique_id = randomNumber();    
 	        $object->location_id = $location;    
 	        $object->from_time = $event_from_time;
 	        $object->to_time = $event_to_time;
@@ -248,9 +266,10 @@ class ProfessionalEventController extends Controller
 	        $object->save();
 
 	        //Entry in custom time
-	        $object = CustomTime::where('location_id',$old_location)->first();
+            
+	        $object = CustomTime::where('custom_id',$event_id)->first();
 	        $object->location_id = $location;
-	        $object->date = $event_date;
+	        $object->custom_date = $event_date;
             $object->type = "event-time";
             
             //Need to set as per schedule - pod
@@ -262,7 +281,8 @@ class ProfessionalEventController extends Controller
             $object->save();
 
 	        $response['status'] = true;
-	        $response['message'] = "Event added successfully";
+	        $response['message'] = "Event updated successfully";
+            $response['redirect_back'] = baseUrl('/event');
 	    }
 	    
 	    catch (Exception $e) {

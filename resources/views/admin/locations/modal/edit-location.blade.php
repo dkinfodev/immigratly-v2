@@ -38,8 +38,8 @@
               <option value="">Select</option>
               <option <?php if($record->type=="onsite")
               { echo "selected"; } ?> value="onsite">On-site</option>
-              <option <?php if($record->type=="virtual")
-              { echo "selected"; } ?> value="virtual">Virtual</option>
+              <option <?php if($record->type=="online")
+              { echo "selected"; } ?> value="online">Online</option>
             </select>
               @error('type')
               <span class="invalid-feedback" role="alert">

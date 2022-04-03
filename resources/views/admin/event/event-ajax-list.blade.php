@@ -14,7 +14,7 @@
 
   <td>
     <div class="d-flex">
-      {{$record->event_date}}
+      {{dateFormat($record->event_date)}}
     </div>
   </td>
 

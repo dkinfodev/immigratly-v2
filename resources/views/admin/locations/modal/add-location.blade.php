@@ -37,7 +37,7 @@
             <select class="form-control @error('type') is-invalid @enderror" name="type" id="type" placeholder="Enter type" aria-label="Enter type">
               <option value="">Select</option>
               <option value="onsite">On-site</option>
-              <option value="virtual">Virtual</option>
+              <option value="online">Online</option>
             </select>
               @error('type')
               <span class="invalid-feedback" role="alert">

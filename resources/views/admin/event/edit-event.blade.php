@@ -38,14 +38,7 @@
 
   <!-- Card -->
   <div class="card">
-    
-    <!-- Header -->
-    <div class="card-header">
-      <div class="row justify-content-between align-items-center flex-grow-1">   
-      </div>
-      <!-- End Row -->
-    </div>
-    <!-- End Header -->
+
     <div class="card-body">
         
     <form id="form" class="js-validate" action="{{ baseUrl('event/update/'.base64_encode($record->id)) }}" method="post">    
@@ -62,7 +55,7 @@
               <div class="col-md-6">
                   <div class="form-group js-form-message">
                       <label>Event Date</label>
-                      <input type="text" class="form-control @error('event_date') is-invalid @enderror" name="event_date" id="event_date" placeholder="Enter event date" aria-label="Enter Date" value="{{$record->event_date}}">
+                      <input type="text" class="form-control @error('event_date') is-invalid @enderror" name="event_date" id="event_date" placeholder="Enter event date" aria-label="Enter Date" value="{{dateFormat($record->event_date,'d-m-Y')}}">
                       @error('event_date')
                       <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -182,9 +175,9 @@ initEditor("description");
 $(document).on('ready', function () {
 
     $('#event_date').datepicker({
-      format: 'dd/mm/yyyy',
+      format: 'dd-mm-yyyy',
       autoclose: true,
-      maxDate:(new Date()).getDate(),
+      startDate: "dateToday",
       todayHighlight: true,
       orientation: "bottom auto"
     });
@@ -199,7 +192,7 @@ $(document).on('ready', function () {
 
     $("#location").change(function(){
         var tx = $(this).find(':selected').data('type');
-        if(tx == "virtual"){
+        if(tx == "online"){
           $(".event-link").removeClass('hidden');
         }
         else{
@@ -226,9 +219,12 @@ $(document).on('ready', function () {
           hideLoader();
           if(response.status == true){
             successMessage(response.message);
-            location.reload();
+            redirect(response.redirect_back);
           }else{
-            validation(response.message);
+            if(response.error_type == 'validation')
+              validation(response.message);
+            else
+              errorMessage(response.message);
           }
         },
         error:function(){
