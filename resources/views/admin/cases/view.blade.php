@@ -9,7 +9,7 @@
 </ol>
 <!-- End Content -->
 @endsection
-
+ 
 
 @section('content')
 <!-- Page Header -->
@@ -19,7 +19,7 @@
   <div class="card mb-3 mb-lg-5">
     <!-- Header -->
     <div class="card-header">
-      <h6 class="card-subtitle mb-0">Description</h6>
+      <h6 class="card-subtitle mb-0">Description test</h6>
 
     </div>
     <!-- End Header -->

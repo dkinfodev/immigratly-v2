@@ -8,9 +8,10 @@
       </div>
       <div class="col-md-3 float-right" style="float: right">
 
-        <a class="btn btn-primary btn-sm" onclick="showPopup('<?php echo baseUrl('cases/sub-stages/add/'.base64_encode($record->id)) ?>')" href="javascript:;">
+        <a class="btn btn-primary btn-sm" href="<?php echo baseUrl('cases/sub-stages/add/'.$record->unique_id) ?>" >
             Sub Stages
         </a>
+
 
         <div class="hs-unfold">
           <a class="js-hs-action btn btn-sm btn-white" href="javascript:;"
@@ -34,6 +35,13 @@
     </div>
 
     <p class="card-text mb-2">{{ $record->short_description }}</p>
+
+    <div class="card-footer">
+    @foreach($record->SubStages as $key=>$substage)
+    <i class="tio tio-circle"></i> {{$substage->name}} &nbsp;  <a href="<?php echo baseUrl('cases/sub-stages/edit/'.$record->unique_id.'/'.$substage->unique_id); ?>"><i class="tio-edit"></i></a> <a href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('cases/sub-stages/delete/'.base64_encode($substage->id))}}"><i class="tio-delete"></i> </a>
+  <br> 
+    @endforeach
+    </div>
     </div>
     
     @endforeach

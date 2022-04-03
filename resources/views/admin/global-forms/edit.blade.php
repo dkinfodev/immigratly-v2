@@ -3,7 +3,7 @@
 <!-- Content -->
 <ol class="breadcrumb breadcrumb-no-gutter">
   <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
-  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/assessments') }}">Assessments</a></li>
+   <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/global-forms') }}">Global Forms</a></li>
   <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
   
 </ol>
@@ -11,25 +11,24 @@
 @endsection
 
 @section('header-right')
- <a class="btn btn-primary" href="{{ baseUrl('assessments/forms/'.$assessment_id) }}">
+ <a class="btn btn-primary" href="{{ baseUrl('global-forms/') }}">
           <i class="tio mr-1"></i> Back 
         </a>
 @endsection
 
 @section('content')
 <!-- Content -->
-<div class="assessments">
+<div class="global-forms">
   
-
   <!-- Card -->
   <div class="card">
 
     <div class="card-body">
-      <form id="form" class="js-validate" action="{{ baseUrl('assessments/forms/'.$assessment_id.'/update/'.$record['unique_id']) }}" method="post">
+      <form id="form" class="js-validate" action="{{ baseUrl('global-forms/update/'.$record->unique_id) }}" method="post">
         @csrf
         <div class="form-group js-form-message">
           <label>Form Title</label>
-          <input type="text" class="form-control" value="{{ $record['form_title'] }}" data-msg="Please enter a title." name="form_title" id="form_title">
+          <input type="text" class="form-control" value="{{ $record->form_title }}" data-msg="Please enter a title." name="form_title" id="form_title">
         </div>
         <div id="build-wrap"></div>
         <div class="form-group js-form-message">
@@ -59,7 +58,7 @@
 <script>
 jQuery(($) => {
   const fbEditor = document.getElementById("build-wrap");
-  var form_json = '<?php echo $record['form_json'] ?>';
+  var form_json = '<?php echo $record->form_json ?>';
   // var form_json = '[{"type":"autocomplete","required":false,"label":"Autocomplete","className":"form-control","name":"autocomplete-1619541870313","access":false,"requireValidOption":false,"values":[{"label":"Option 1","value":"option-1","selected":true},{"label":"Option 2","value":"option-2","selected":false},{"label":"Option 3","value":"option-3","selected":false}]},{"type":"checkbox-group","required":false,"label":"Checkbox Group","toggle":false,"inline":false,"name":"checkbox-group-1619541873193","access":false,"other":false,"values":[{"label":"Option 1","value":"option-1","selected":true}]},{"type":"select","required":false,"label":"Select","className":"form-control","name":"select-1619541892553","access":false,"multiple":false,"values":[{"label":"Option 1","value":"option-1","selected":true},{"label":"Option 2","value":"option-2","selected":false},{"label":"Option 3","value":"option-3","selected":false}]}]';
   var datajson = JSON.parse(form_json);
   
