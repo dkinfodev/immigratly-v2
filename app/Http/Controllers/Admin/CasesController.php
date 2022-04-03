@@ -25,11 +25,12 @@ use App\Models\ChatRead;
 use App\Models\ProfessionalDetails;
 use App\Models\CaseTasks;
 use App\Models\CaseStages;
+use App\Models\CaseSubStages;
 use App\Models\CaseTaskComments;
 use App\Models\CaseTaskFiles;
 use App\Models\CaseActivityLogs;
 use App\Models\CaseDependents;
-
+use App\Models\GlobalForms;
 use File;
 
 class CasesController extends Controller
@@ -2100,14 +2101,28 @@ class CasesController extends Controller
     //ys 29-3-22
 
     public function stages($case_id,Request $request){
+
         $case_id = base64_decode($case_id);
+        $subdomain = \Session::get("subdomain");
+        $record = Cases::with(['AssingedMember','VisaService'])
+                    ->where("id",$case_id)
+                    ->first();
+        $temp = $record;
+        $temp->MainService = $record->Service($record->VisaService->service_id);
+        $data = $temp;
+            
+        $viewData['subdomain'] = $subdomain;
+        $viewData['pageTitle'] = "View Case";
+        $viewData['record'] = $data;
+        $viewData['case_id'] = $record->unique_id;
+        $viewData['active_nav'] = "stages";
+
         $case = Cases::where("id",$case_id)->first();
         $viewData['case'] = $case;
-
         
-        $viewData['pageTitle'] = "Stages List";
+        $viewData['pageTitle'] = "Case Stages";
         $viewData['activeTab'] = 'cases';
-        return view(roleFolder().'.cases.stages',$viewData);
+        return view(roleFolder().'.cases.stage.stages',$viewData);
     }
 
     public function getStagesList(Request $request)
@@ -2122,7 +2137,7 @@ class CasesController extends Controller
                         ->where("case_id",$request->input("case_id"))
                         ->paginate(5);
         $viewData['records'] = $records;
-        $view = View::make(roleFolder().'.cases.stages-list',$viewData);
+        $view = View::make(roleFolder().'.cases.stage.stages-list',$viewData);
         $contents = $view->render();
         $response['contents'] = $contents;
         $response['last_page'] = $records->lastPage();
@@ -2137,7 +2152,7 @@ class CasesController extends Controller
         $case_id = base64_decode($case_id);
         $case = Cases::where("id",$case_id)->first();
         $viewData['case'] = $case; 
-        return view(roleFolder().'.cases.add-stage',$viewData);
+        return view(roleFolder().'.cases.stage.add-stage',$viewData);
     }
 
     public function saveStage($case_id,Request $request){
@@ -2186,7 +2201,7 @@ class CasesController extends Controller
         
         $viewData['record'] = $record;
         $viewData['activeTab'] = 'cases';
-        return view(roleFolder().'.cases.edit-stage',$viewData);
+        return view(roleFolder().'.cases.stage.edit-stage',$viewData);
         // $view = View::make(roleFolder().'.cases.modal.edit-task',$viewData);
         // $contents = $view->render();
         // $response['contents'] = $contents;
@@ -2234,6 +2249,181 @@ class CasesController extends Controller
         CaseStages::deleteRecord($id);
         return redirect()->back()->with("success","Record has been deleted!");
     }
+
+    public function addNewSubStage($unique_id){
+
+        $viewData['pageTitle'] = "Add sub stage";
+        //$unique_id = base64_decode($unique_id);
+        $stage = CaseStages::where("unique_id",$unique_id)->first();
+
+        $case = Cases::where("unique_id",$stage->case_id)->first();
+        $caseTasks = CaseTasks::where("case_id",$stage->case_id)->get();
+        $globalForms = GlobalForms::get();
+        
+        $viewData['globalForms'] = $globalForms;
+        $viewData['caseTasks'] = $caseTasks;
+        $viewData['case'] = $case; 
+        $viewData['stage'] = $stage; 
+        return view(roleFolder().'.cases.stage.add-sub-stage',$viewData);
+    }
+
+    public function saveSubStage(Request $request){
+        try{
+            $valid = array(
+                'name' => 'required',
+                'stage_id' => 'required',
+                'stage_type' => 'required',
+            );
+
+            if($request->input("stage_type") == "fill-form"){
+                    $valid['form_id'] = 'required';
+                    $type_id = $request->input("form_id");
+            }
+
+
+            else if($request->input("stage_type") == "case-task"){
+                    $valid['case_task_id'] = 'required';
+                    $type_id = $request->input("case_task_id");
+            }
+
+            else{
+                    $type_id = null;
+            }
+
+            $validator = Validator::make($request->all(),$valid);
+
+            if ($validator->fails()) {
+                $response['status'] = false;
+                $response['error_type'] = 'validation';
+                $error = $validator->errors()->toArray();
+                $errMsg = array();
+                
+                foreach($error as $key => $err){
+                    $errMsg[$key] = $err[0];
+                }
+                $response['message'] = $errMsg;
+                return response()->json($response);
+            }
+            
+            $stage_id = $request->input("stage_id");
+            $stage = CaseStages::where("unique_id",$stage_id)->first();
+            $case_id = $stage->case_id;
+            $case = Cases::where("unique_id",$case_id)->first();
+            $unique_id = randomNumber();
+            $object = new CaseSubStages();
+            $object->case_id = $case_id;
+            $object->client_id = $case->client_id;
+            $object->unique_id = $unique_id;
+            $object->stage_id = $stage_id;
+            $object->name = $request->input("name");
+            $object->stage_type = $request->input("stage_type");
+            $object->type_id = $type_id;
+            $object->save();
+            
+            $response['status'] = true;
+            $response['message'] = "Sub Stage added successfully";
+            $response['redirect'] = baseUrl('cases/stages/list/'.base64_encode($case->id));
+        }
+        
+        catch (Exception $e) {
+            $response['status'] = false;
+            $response['message'] = $e->getMessage();
+        }    
+        return response()->json($response);
+        // 
+
+    }
+
+
+    public function editSubStage($stage_id,$unique_id){
+
+        $viewData['pageTitle'] = "Edit sub stage";
+        //$unique_id = base64_decode($unique_id);
+        $stage = CaseStages::where("unique_id",$stage_id)->first();
+        $record = CaseSubStages::where("unique_id",$unique_id)->first();
+
+        $case = Cases::where("unique_id",$stage->case_id)->first();
+        $caseTasks = CaseTasks::where("case_id",$stage->case_id)->get();
+        $globalForms = GlobalForms::get();
+        
+        $viewData['globalForms'] = $globalForms;
+        $viewData['caseTasks'] = $caseTasks;
+        $viewData['case'] = $case; 
+        $viewData['stage'] = $stage; 
+        $viewData['record'] = $record;
+        return view(roleFolder().'.cases.stage.edit-sub-stage',$viewData);
+    }
+
+    public function updateSubStage(Request $request){
+        try{
+            $valid = array(
+                'name' => 'required',
+                'stage_id' => 'required',
+                'sub_stage_id' => 'required',
+                'stage_type' => 'required',
+            );
+
+            if($request->input("stage_type") == "fill-form"){
+                    $valid['form_id'] = 'required';
+                    $type_id = $request->input("form_id");
+            }
+
+
+            else if($request->input("stage_type") == "case-task"){
+                    $valid['case_task_id'] = 'required';
+                    $type_id = $request->input("case_task_id");
+            }
+
+            else{
+                    $type_id = null;
+            }
+
+            $validator = Validator::make($request->all(),$valid);
+
+            if ($validator->fails()) {
+                $response['status'] = false;
+                $response['error_type'] = 'validation';
+                $error = $validator->errors()->toArray();
+                $errMsg = array();
+                
+                foreach($error as $key => $err){
+                    $errMsg[$key] = $err[0];
+                }
+                $response['message'] = $errMsg;
+                return response()->json($response);
+            }
+            
+            $stage_id = $request->input("stage_id");
+            $stage = CaseStages::where("unique_id",$stage_id)->first();
+            $case_id = $stage->case_id;
+            $case = Cases::where("unique_id",$case_id)->first();
+            
+            $object = CaseSubStages::where('unique_id',$request->input("sub_stage_id"))->first();
+            
+            $object->stage_id = $stage_id;
+            $object->name = $request->input("name");
+            $object->stage_type = $request->input("stage_type");
+            $object->type_id = $type_id;
+            $object->save();
+            
+            $response['status'] = true;
+            $response['message'] = "Sub Stage update successfully";
+            $response['redirect'] = baseUrl('cases/stages/list/'.base64_encode($case->id));
+        }
+        
+        catch (Exception $e) {
+            $response['status'] = false;
+            $response['message'] = $e->getMessage();
+        }    
+        return response()->json($response);   // 
+    }
+
+    public function deleteSingleSubStage($id){
+        $id = base64_decode($id);
+        CaseSubStages::deleteRecord($id);
+        return redirect()->back()->with("success","Record has been deleted!");
+    }
+
 
     // public function deleteMultipleTasks(Request $request){
     //     $ids = explode(",",$request->input("ids"));

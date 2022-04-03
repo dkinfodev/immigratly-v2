@@ -12,7 +12,7 @@
 @endsection
 
 @section('header-right')
- <a class="btn btn-primary" href="{{ baseUrl('/assessments/forms/'.$record['unique_id'].'/add') }}">
+ <a class="btn btn-primary" href="{{ baseUrl('/global-forms/add') }}">
           <i class="tio-add mr-1"></i> Add 
         </a>
 @endsection
@@ -51,7 +51,7 @@
                   <span id="datatableCounter">0</span>
                   Selected
                 </span>
-                <a class="btn btn-sm btn-outline-danger" data-href="{{ baseUrl('assessments/forms/'.$assessment_id.'/delete-multiple') }}" onclick="deleteMultiple(this)" href="javascript:;">
+                <a class="btn btn-sm btn-outline-danger" data-href="{{ baseUrl('global-forms/delete-multiple') }}" onclick="deleteMultiple(this)" href="javascript:;">
                   <i class="tio-delete-outlined"></i> Delete
                 </a>
               </div>
@@ -76,7 +76,6 @@
                 </div>
               </th>
               <th scope="col">Form Title</th>
-              <th scope="col">External Link</th>
               <th width="10%" scope="col">Action</th>
               <th scope="col">&nbsp;</th>
             </tr>
@@ -151,17 +150,17 @@ function loadData(page=1){
     var search = $("#datatableSearch").val();
     $.ajax({
         type: "POST",
-        url: BASEURL + '/assessments/forms/{{ $assessment_id }}/ajax-list?page='+page,
+        url: BASEURL + '/global-forms/ajax-list?page='+page,
         data:{
             _token:csrf_token,
-            search:search
+            search:search,
         },
         dataType:'json',
         beforeSend:function(){
-            showLoader();
+            //showLoader();
         },
         success: function (data) {
-            hideLoader();
+            //hideLoader();
             $("#tableList tbody").html(data.contents);
             initPagination(data);
         },

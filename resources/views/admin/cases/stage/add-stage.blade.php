@@ -4,6 +4,8 @@
 <!-- Content -->
 <ol class="breadcrumb breadcrumb-no-gutter">
   <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/cases') }}">Cases</a></li>
+  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/cases/stages/list/'.base64_encode($case->id)) }}">Stages</a></li>
   <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
 </ol>
 <!-- End Content -->
@@ -82,7 +84,7 @@
 @section('javascript')
 
 <script type="text/javascript">
-// initEditor("description");
+ //initEditor("short_description");
 
 $(document).on('ready', function () {    
     $("#form").submit(function(e){
@@ -104,7 +106,7 @@ $(document).on('ready', function () {
           hideLoader();
           if(response.status == true){
             successMessage(response.message);
-            location.reload();
+            redirect(response.redirect);
           }else{
             validation(response.message);
           }

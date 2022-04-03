@@ -5,6 +5,7 @@
 <ol class="breadcrumb breadcrumb-no-gutter">
   <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
    <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/cases') }}">Cases</a></li>
+   <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/cases/stages/list/'.base64_encode($case->id)) }}">Stages</a></li>
     <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
 </ol>
 <!-- End Content -->
@@ -54,7 +55,7 @@
                     <div class="col-sm-9">
                         <div class="input-group input-group-sm-down-break">
                             <textarea type="text"
-                                class="form-control ckeditor @error('short_description') is-invalid @enderror"
+                                class="form-control  @error('short_description') is-invalid @enderror"
                                 name="short_description" id="short_description" placeholder="Enter short description"
                                 aria-label="Enter short description"><?php echo $record->short_description ?></textarea>
                             @error('short_description')
@@ -80,7 +81,7 @@
 @section('javascript')
 
 <script type="text/javascript">
-// initEditor("description");
+
 
 $(document).on('ready', function () {    
     $("#form").submit(function(e){
@@ -102,7 +103,7 @@ $(document).on('ready', function () {
           hideLoader();
           if(response.status == true){
             successMessage(response.message);
-            location.reload();
+            redirect(response.redirect);
           }else{
             validation(response.message);
           }

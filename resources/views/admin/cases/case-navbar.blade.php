@@ -1,5 +1,17 @@
+<style>
+.media{
+  display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: start;
+    align-items: flex-start;
+}
+.media-body{
+  -ms-flex: 1;
+    flex: 1;
+}
+</style>
 <div class="page-header">
-    <div class="media mb-3">
+    <div class="media mb-2">
       <!-- Avatar -->
       <div class="avatar avatar-xl avatar-4by3 mr-2">
         <img class="avatar-img" src="assets/svg/brands/guideline.svg" alt="Image Description">
@@ -170,6 +182,12 @@
 
               <span class="badge badge-soft-dark rounded-circle ml-1"> {{ countUnreadDocChat($case_id,$subdomain,\Auth::user()->role) }}</span></a>
         </li>
+
+        <li class="nav-item">
+            <a class="nav-link {{isset($active_nav) && $active_nav == 'stages'?'active':'' }}" href="{{baseUrl('cases/stages/list/'.base64_encode($record->id))}}">Case Stages 
+            </a>
+        </li>
+
         <li class="nav-item">
             <a class="nav-link {{isset($active_nav) && $active_nav == 'activity'?'active':'' }}" href="{{ baseUrl('cases/activity-logs/'.base64_encode($record->id)) }}">Activity</a>
         </li>

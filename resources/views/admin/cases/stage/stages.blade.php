@@ -25,7 +25,7 @@
         <h6 class="card-subtitle pt-3 mb-0">Case stages</h6>
         </div>
         <div class="col-md-3 pl-3">
-        <a class="btn btn-primary float-right btn-sm" href="<?php echo baseUrl('cases/sub-stages/add/'.base64_encode($case->id)) ?>"><i class="tio-add mr-1"></i> Add New Stage </a>
+        <a class="btn btn-primary float-right btn-sm" href="<?php echo baseUrl('cases/stages/add/'.base64_encode($case->id)) ?>"><i class="tio-add mr-1"></i> Add New Stage </a>
         </div>
        </div> 
 

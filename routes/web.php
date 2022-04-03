@@ -1146,6 +1146,21 @@ Route::group(array('prefix' => 'admin'), function () {
                 Route::post('/send-form/{id}', [App\Http\Controllers\Admin\AssessmentsController::class, 'sendAssessmentLink']);
             });
         });
+
+         Route::group(array('prefix' => 'global-forms'), function () {
+                Route::get('/', [App\Http\Controllers\Admin\GlobalFormController::class, 'forms']);
+                Route::post('/ajax-list', [App\Http\Controllers\Admin\GlobalFormController::class, 'getFormList']);
+                Route::get('/add', [App\Http\Controllers\Admin\GlobalFormController::class, 'addForm']);
+                Route::post('/save', [App\Http\Controllers\Admin\GlobalFormController::class, 'saveForm']);
+                Route::get('/edit/{id}', [App\Http\Controllers\Admin\GlobalFormController::class, 'editForm']);
+                Route::post('/update/{id}', [App\Http\Controllers\Admin\GlobalFormController::class, 'updateForm']);
+                Route::get('/delete/{id}', [App\Http\Controllers\Admin\GlobalFormController::class, 'deleteFormSingle']);
+                Route::post('/delete-multiple', [App\Http\Controllers\Admin\GlobalFormController::class, 'deleteFormMultiple']);
+                Route::get('/view/{id}', [App\Http\Controllers\Admin\GlobalFormController::class, 'viewForm']);
+                //Route::get('/send-form/{id}', [App\Http\Controllers\Admin\GlobalFormController::class, 'sendAssessmentToMail']);
+                //Route::post('/send-form/{id}', [App\Http\Controllers\Admin\GlobalFormController::class, 'sendAssessmentLink']);
+            });
+
         Route::group(array('prefix' => 'articles'), function () {
             Route::get('/', [App\Http\Controllers\Admin\ArticlesController::class, 'publishArticles']);
             Route::get('/draft', [App\Http\Controllers\Admin\ArticlesController::class, 'draftArticles']);
@@ -1399,6 +1414,19 @@ Route::group(array('prefix' => 'admin'), function () {
                 Route::get('/edit/{id}', [App\Http\Controllers\Admin\CasesController::class, 'editStage']);
                 Route::post('/edit/{id}', [App\Http\Controllers\Admin\CasesController::class, 'updateStage']);
                 Route::get('/delete/{id}', [App\Http\Controllers\Admin\CasesController::class, 'deleteSingleStage']);
+                //Route::post('/delete-multiple', [App\Http\Controllers\Admin\CasesController::class, 'deleteMultipleStage']);
+                //Route::get('/view/{id}', [App\Http\Controllers\Admin\CasesController::class, 'viewStage']);
+                
+            });
+
+            Route::group(array('prefix' => 'sub-stages'), function () {
+                Route::get('/list/{id}', [App\Http\Controllers\Admin\CasesController::class, 'subStages']);
+                Route::post('/ajax-list', [App\Http\Controllers\Admin\CasesController::class, 'getSubStagesList']);
+                Route::get('/add/{id}', [App\Http\Controllers\Admin\CasesController::class, 'addNewSubStage']);
+                Route::post('/add', [App\Http\Controllers\Admin\CasesController::class, 'saveSubStage']);
+                Route::get('/edit/{stage_id}/{id}', [App\Http\Controllers\Admin\CasesController::class, 'editSubStage']);
+                Route::post('/edit', [App\Http\Controllers\Admin\CasesController::class, 'updateSubStage']);
+                Route::get('/delete/{id}', [App\Http\Controllers\Admin\CasesController::class, 'deleteSingleSubStage']);
                 //Route::post('/delete-multiple', [App\Http\Controllers\Admin\CasesController::class, 'deleteMultipleStage']);
                 //Route::get('/view/{id}', [App\Http\Controllers\Admin\CasesController::class, 'viewStage']);
                 
