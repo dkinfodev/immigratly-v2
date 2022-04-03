@@ -88,7 +88,7 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-  $('.js-nav-tooltip-link').tooltip({ boundary: 'window' })
+  $('.js-nav-tooltip-link').tooltip({ boundary: 'window' });
   $('.js-hs-action').each(function () {
     var unfold = new HSUnfold($(this)).init();
   });

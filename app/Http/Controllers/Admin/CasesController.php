@@ -2444,4 +2444,13 @@ class CasesController extends Controller
     //     return view(roleFolder().'.cases.view-task',$viewData);
 
     // }
+
+    public function changeSubStageStatus($status,$stage_id,$substage_id){
+        if($status == 'mark-as-complete'){
+            CaseSubStages::where("unique_id",$substage_id)->update(['status'=>1]);
+        }else{
+            CaseSubStages::where("unique_id",$substage_id)->update(['status'=>0]);
+        }
+        return redirect()->back()->with("success","Status has been updated!");
+    }
 }

@@ -352,7 +352,19 @@
   <script src="assets/js/theme-custom.js"></script>
 
   <!-- JS Plugins Init. -->
+  @if(Session::has('success'))
+    <script>
+        successMessage('{{ Session::get("success") }}');
+    </script>
+    @endif
+
+    @if(Session::has('error'))
+    <script>
+        errorMessage('{{ Session::get("error") }}');
+    </script>
+    @endif
   <script>
+    
     $(document).on('ready', function () {
 
       initSelect();

@@ -24,5 +24,10 @@ class CaseStages extends Model
         return $this->hasMany('App\Models\CaseSubStages','stage_id','unique_id');
     }
 
+    public function CompletedStages()
+    {
+        return $this->hasMany('App\Models\CaseSubStages','stage_id','unique_id')->where("status",1);
+    }
+
 
 }

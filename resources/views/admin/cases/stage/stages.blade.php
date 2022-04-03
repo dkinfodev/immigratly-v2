@@ -56,6 +56,8 @@
 <script src="assets/vendor/prism/prism.js"></script>
 <script src="assets/vendor/hs-step-form/dist/hs-step-form.min.js"></script>
 <script src="assets/vendor/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="assets/vendor/appear/dist/appear.min.js"></script>
+<script src="assets/vendor/circles.js/circles.min.js"></script>
 <!-- JS Front -->
 <script type="text/javascript">
 // initEditor("description"); 
@@ -93,6 +95,9 @@ function loadData(page=1){
             hideLoader();
             $("#tableList").html(data.contents);
             initPagination(data);
+            $('.js-circle').each(function () {
+              var circle = $.HSCore.components.HSCircles.init($(this));
+            });
             
         },
         error:function(){

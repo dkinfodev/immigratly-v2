@@ -7,7 +7,7 @@
                 <!-- Avatar -->
                 <div class="d-none d-lg-block text-center mb-5">
                     <div class="avatar avatar-xxl avatar-circle mb-3">
-
+                        <img class="avatar-img" src="{{ professionalProfile() }}" alt="Image Description">
                         <img class="avatar-status avatar-lg-status" src="assets/svg/illustrations/top-vendor.svg"
                         alt="Image Description" data-bs-toggle="tooltip" data-bs-placement="top"
                         title="Verified user">
@@ -101,26 +101,35 @@
 
 
          <ul class="nav nav-sm nav-tabs nav-vertical mb-4">
-         <span class="text-cap">Leads</span>   
-              <li class="navbar-vertical-aside-has-menu">
-                <a class="nav-link <?php if(isset($activeTab)){ if($activeTab == 'leads'){ echo "active"; } } ?>" href="{{ baseUrl('/leads') }}">
-                   <i class="tio-pages-outlined nav-icon"></i>
-                  <span class="text-truncate">New Leads</span>
-                </a>
-              </li>
-              <li class="navbar-vertical-aside-has-menu">
-                <a class="nav-link <?php if(isset($activeTab)){ if($activeTab == 'leads-as-clients'){ echo "active"; } } ?>" href="{{ baseUrl('/leads/clients') }}">
-                   <i class="tio-pages-outlined nav-icon"></i>
-                  <span class="text-truncate">Leads as client</span>
-                </a>
-              </li>
+            <span class="text-cap">Leads</span>   
+            <li class="navbar-vertical-aside-has-menu">
+              <a class="nav-link <?php if(isset($activeTab)){ if($activeTab == 'leads'){ echo "active"; } } ?>" href="{{ baseUrl('/leads') }}">
+                  <i class="tio-pages-outlined nav-icon"></i>
+                <span class="text-truncate">New Leads</span>
+              </a>
+            </li>
+            <li class="navbar-vertical-aside-has-menu">
+              <a class="nav-link <?php if(isset($activeTab)){ if($activeTab == 'leads-as-clients'){ echo "active"; } } ?>" href="{{ baseUrl('/leads/clients') }}">
+                  <i class="tio-pages-outlined nav-icon"></i>
+                <span class="text-truncate">Leads as client</span>
+              </a>
+            </li>
           
+            <span class="text-cap">Cases</span>   
+            
+            
           <li class="navbar-vertical-aside-has-menu">
             <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'cases'){ echo "active"; } } ?>" href="{{ baseUrl('/cases') }}">
               <i class="tio-book-opened nav-icon"></i>
               <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Cases</span>
             </a>
           </li>
+          <li class="navbar-vertical-aside-has-menu">
+              <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'global-forms'){ echo "active"; } } ?>" href="{{ baseUrl('/global-forms') }}">
+                <i class="tio-book-opened nav-icon"></i>
+                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Forms</span>
+              </a>
+            </li>
           <!-- <li class="navbar-vertical-aside-has-menu">
             <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ baseUrl('/articles') }}">
               <i class="tio-document-text nav-icon"></i>
