@@ -22,9 +22,9 @@
     {{ dateFormat($record->created_at) }}
   </td>
   <td scope="col">
-      <a href="<?php echo baseUrl('cases/tasks/edit/'.$record->unique_id) ?>" class="btn btn-warning btn-sm"><i class="tio-edit"></i> Edit </a>
-      <a href="<?php echo baseUrl('cases/tasks/view/'.$record->unique_id) ?>" class="btn btn-info btn-sm"><i class="fa fa-eye"></i> View </a>
-      <a  href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('cases/tasks/delete/'.base64_encode($record->id))}}" class="btn btn-danger btn-sm"><i class="tio-delete"></i> Delete </a>
+      <a href="<?php echo baseUrl('cases/tasks/edit/'.$record->unique_id) ?>" class="btn btn-warning btn-sm"><i class="tio-edit"></i></a>
+      <a href="<?php echo baseUrl('cases/tasks/view/'.$record->unique_id) ?>" class="btn btn-info btn-sm"><i class="tio-globe"></i></a>
+      <a  href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('cases/tasks/delete/'.base64_encode($record->id))}}" class="btn btn-danger btn-sm"><i class="tio-delete"></i>  </a>
    </td>
 </tr>
 @endforeach

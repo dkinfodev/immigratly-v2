@@ -19,5 +19,10 @@ class CaseSubStages extends Model
         return $this->belongsTo('App\Models\Cases','case_id','unique_id');
     }
 
+    public function CaseStage()
+    {
+        return $this->belongsTo('App\Models\CaseStages','stage_id','unique_id');
+    }
+
 
 }

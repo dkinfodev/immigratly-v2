@@ -1134,72 +1134,72 @@ class MasterApiController extends Controller
             BookedAppointments::where('unique_id',$id)->update(["status"=>$status]);
 
             $object = BookedAppointments::where('unique_id',$id)->first();
-        //     if($status == "approved")
-        //     {
-        //         try{
-        //         //email code working temporary commented
-        //             $start_time = $object->start_time; 
-        //             $end_time = $object->end_time;
-        //             $date = $object->appointment_date;
-        //             $user_id = $object->user_id;
-        //             $user = User::where('unique_id',$user_id)->first();
-        //             $email = "soni.yash7874@gmail.com";
-        //             $mailData['mail_message'] = "Your appointment is scheduled on ".$date." from ".$start_time." to ".$end_time; 
-        //             //$mailData['mail_message'] = "Your appointment is scheduled"; 
-        //             $view = View::make('emails.notification',$mailData);
-        //             $message = $view->render();
-        //             $parameter['to'] = $email;
-        //             $parameter['to_name'] = '';
-        //             $parameter['message'] = $message;
-        //             $parameter['subject'] = "Appointment Confirmed";
+            if($status == "approved")
+            {
+                try{
+                //email code working temporary commented
+                    $start_time = $object->start_time; 
+                    $end_time = $object->end_time;
+                    $date = $object->appointment_date;
+                    $user_id = $object->user_id;
+                    $user = User::where('unique_id',$user_id)->first();
+                    $email = "soni.yash7874@gmail.com";
+                    $mailData['mail_message'] = "Your appointment is scheduled on ".$date." from ".$start_time." to ".$end_time; 
+                    //$mailData['mail_message'] = "Your appointment is scheduled"; 
+                    $view = View::make('emails.notification',$mailData);
+                    $message = $view->render();
+                    $parameter['to'] = $email;
+                    $parameter['to_name'] = '';
+                    $parameter['message'] = $message;
+                    $parameter['subject'] = "Appointment Confirmed";
                     
-        //             $parameter['view'] = "emails.notification";
-        //             $parameter['data'] = $mailData;
-        //             $mailRes = sendMail($parameter);
-        //         //endmail
-        //         }
-        //         catch(Exception $e){
-        //             $response['status'] = "error";
-        //             $response['message'] = $e->getMessage();
-        //         }
-        //     }
-        //     else{
+                    $parameter['view'] = "emails.notification";
+                    $parameter['data'] = $mailData;
+                    $mailRes = sendMail($parameter);
+                //endmail
+                }
+                catch(Exception $e){
+                    $response['status'] = "error";
+                    $response['message'] = $e->getMessage();
+                }
+            }
+            else{
 
-        //         try{
-        //         //email code working temporary commented
-        //             $start_time = $object->start_time; 
-        //             $end_time = $object->end_time;
-        //             $date = $object->appointment_date;
-        //             $user_id = $object->user_id;
-        //             $user = User::where('unique_id',$user_id)->first();
-        //             $email = $user->email;
-        //             $mailData['mail_message'] = "Your appointment is rejected for ".$date." from ".$start_time." to ".$end_time; 
-        //             //$mailData['mail_message'] = "Your appointment is rejected by the professional"; 
-        //             $view = View::make('emails.notification',$mailData);
-        //             $message = $view->render();
-        //             $parameter['to'] = $email;
-        //             $parameter['to_name'] = '';
-        //             $parameter['message'] = $message;
-        //             $parameter['subject'] = "Appointment Rejected";
+                try{
+                //email code working temporary commented
+                    $start_time = $object->start_time; 
+                    $end_time = $object->end_time;
+                    $date = $object->appointment_date;
+                    $user_id = $object->user_id;
+                    $user = User::where('unique_id',$user_id)->first();
+                    $email = $user->email;
+                    $mailData['mail_message'] = "Your appointment is rejected for ".$date." from ".$start_time." to ".$end_time; 
+                    //$mailData['mail_message'] = "Your appointment is rejected by the professional"; 
+                    $view = View::make('emails.notification',$mailData);
+                    $message = $view->render();
+                    $parameter['to'] = $email;
+                    $parameter['to_name'] = '';
+                    $parameter['message'] = $message;
+                    $parameter['subject'] = "Appointment Rejected";
                     
-        //             $parameter['view'] = "emails.notification";
-        //             $parameter['data'] = $mailData;
-        //             $mailRes = sendMail($parameter);
-        //         //endmail
-        //         }
-        //         catch(Exception $e){
-        //             $response['status'] = "error";
-        //             $response['message'] = $e->getMessage();
-        //         }
+                    $parameter['view'] = "emails.notification";
+                    $parameter['data'] = $mailData;
+                    $mailRes = sendMail($parameter);
+                //endmail
+                }
+                catch(Exception $e){
+                    $response['status'] = "error";
+                    $response['message'] = $e->getMessage();
+                }
 
-        //     }
+            }
 
-        //     $response['status'] = "success";
-        //     $response['message'] = "Booking status changed";
-        // } catch (Exception $e) {
-        //     $response['status'] = "error";
-        //     $response['message'] = $e->getMessage();
-        // }
+            $response['status'] = "success";
+            $response['message'] = "Booking status changed";
+        } catch (Exception $e) {
+            $response['status'] = "error";
+            $response['message'] = $e->getMessage();
+        }
         return response()->json($response);
     }
 

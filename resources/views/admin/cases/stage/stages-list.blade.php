@@ -84,6 +84,7 @@
                     </td>
                     <td>
                       <a data-toggle="tooltip" data-html="true" title="Click to Edit" class="btn btn-sm btn-warning p-2 js-nav-tooltip-link" href="<?php echo baseUrl('cases/sub-stages/edit/'.$record->unique_id.'/'.$substage->unique_id); ?>"><i class="tio-edit"></i></a> 
+                      <a data-toggle="tooltip" data-html="true" title="Click to View" class="btn btn-sm btn-dark p-2 js-nav-tooltip-link" href="<?php echo baseUrl('cases/sub-stages/view/'.$substage->unique_id); ?>"><i class="tio-globe"></i></a> 
                       <a data-toggle="tooltip" data-html="true" title="Click to Delete" class="btn btn-sm btn-danger p-2 js-nav-tooltip-link" href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('cases/sub-stages/delete/'.base64_encode($substage->id))}}"><i class="tio-delete"></i> </a>
                       @if($substage->status == 0)
                         <a data-toggle="tooltip" data-html="true" title="Mark as Complete" onclick="return confirm('Are you sure to mark as complete')" class="btn btn-sm btn-success p-2 js-nav-tooltip-link" href="<?php echo baseUrl('cases/sub-stages/status/mark-as-complete/'.$record->unique_id.'/'.$substage->unique_id); ?>"><i class="tio-done"></i></a> 

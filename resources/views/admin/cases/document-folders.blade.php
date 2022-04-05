@@ -27,6 +27,12 @@ ul.nav.nav-tabs.dependents-list {
 }
 </style>
 @include(roleFolder().'.cases.case-navbar')
+<div class="float-right">
+   @if(isset($_GET['stage_id']))
+      <a class="btn btn-primary btn-sm" href="{{baseUrl('cases/stages/list/'.base64_encode($record->id))}}">Back to Stage</a>
+   @endif
+</div>
+<div class="clearfix"></div>
 @if($record->case_type == 'group')
 <div class="row">
    <div class="col-md-12">

@@ -621,16 +621,18 @@ class CasesController extends Controller
             $query_string = "?dependent_id=".$request->get("dependent_id")."&visa_service=".$request->get("visa_service");
             $dependent_id = $request->get("dependent_id");
             $doc_user_id = $dependent_id;
+            $service = ProfessionalServices::where("service_id",$visa_service_id)->first();
         }else{
             $query_string = '';
             $dependent_id = '';
             $user_type = "client";
             $visa_service_id = $record->visa_service_id;
             $doc_user_id = $record->client_id;
+            $service = ProfessionalServices::where("unique_id",$visa_service_id)->first();
         }
         
         $subdomain = \Session::get("subdomain");
-        $service = ProfessionalServices::where("unique_id",$visa_service_id)->first();
+       
         $documents = ServiceDocuments::where("service_id",$service->unique_id)->get();
         $case_folders = CaseFolders::where("case_id",$record->unique_id)->get();
         $pinned_folders = $record->pinned_folders;
@@ -666,6 +668,7 @@ class CasesController extends Controller
         $viewData['dependent_id'] = $dependent_id;
         $viewData['query_string'] = $query_string;
         return view(roleFolder().'.cases.document-folders',$viewData);
+        
     }
 
     public function defaultDocuments($case_id,$doc_id,Request $request){
@@ -2452,5 +2455,18 @@ class CasesController extends Controller
             CaseSubStages::where("unique_id",$substage_id)->update(['status'=>0]);
         }
         return redirect()->back()->with("success","Status has been updated!");
+    }
+    public function viewSubStage($id,Request $request){
+        $record = CaseSubStages::where("unique_id",$id)->first();
+
+        $viewData['pageTitle'] = $record->name;
+        $viewData['record'] = $record;
+        if($record->stage_type == 'case-document'){
+            $case_id = base64_encode($record->CaseStage->Case->id);
+            return redirect(baseUrl("cases/case-documents/documents/".$case_id."?stage_id=".$id));
+        }else{
+            $viewData['viewhtml'] = $viewhtml;
+            return view(roleFolder().'.cases.stage.view-substage',$viewData);
+        }
     }
 }

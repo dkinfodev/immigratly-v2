@@ -1431,6 +1431,7 @@ Route::group(array('prefix' => 'admin'), function () {
                 Route::get('/edit/{stage_id}/{id}', [App\Http\Controllers\Admin\CasesController::class, 'editSubStage']);
                 Route::post('/edit', [App\Http\Controllers\Admin\CasesController::class, 'updateSubStage']);
                 Route::get('/delete/{id}', [App\Http\Controllers\Admin\CasesController::class, 'deleteSingleSubStage']);
+                Route::get('/view/{substage_id}', [App\Http\Controllers\Admin\CasesController::class, 'viewSubStage']);
                 Route::get('/status/{status}/{stage_id}/{substage_id}', [App\Http\Controllers\Admin\CasesController::class, 'changeSubStageStatus']);
                 //Route::post('/delete-multiple', [App\Http\Controllers\Admin\CasesController::class, 'deleteMultipleStage']);
                 //Route::get('/view/{id}', [App\Http\Controllers\Admin\CasesController::class, 'viewStage']);
