@@ -114,7 +114,9 @@
                 <span class="text-truncate">Leads as client</span>
               </a>
             </li>
-          
+        </ul>
+
+        <ul class="nav nav-sm nav-tabs nav-vertical mb-4">
             <span class="text-cap">Cases</span>   
             
             

@@ -982,6 +982,8 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
         Route::get('/tasks/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'caseTasks']);
 
         Route::get('/view/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'view']);
+        Route::get('/stages/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'stages']);
+        Route::post('/stages/ajax-list', [App\Http\Controllers\User\ProfessionalCasesController::class, 'getStagesList']);
         Route::get('/activity/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'activityLog']);
         Route::get('/chats/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'chats']);
         Route::post('/fetch-chats', [App\Http\Controllers\User\ProfessionalCasesController::class, 'fetchChats']);
@@ -1432,6 +1434,8 @@ Route::group(array('prefix' => 'admin'), function () {
                 Route::post('/edit', [App\Http\Controllers\Admin\CasesController::class, 'updateSubStage']);
                 Route::get('/delete/{id}', [App\Http\Controllers\Admin\CasesController::class, 'deleteSingleSubStage']);
                 Route::get('/view/{substage_id}', [App\Http\Controllers\Admin\CasesController::class, 'viewSubStage']);
+                Route::get('/stage-form-reply/{substage_id}', [App\Http\Controllers\Admin\CasesController::class, 'viewStageFormReply']);
+                
                 Route::get('/status/{status}/{stage_id}/{substage_id}', [App\Http\Controllers\Admin\CasesController::class, 'changeSubStageStatus']);
                 //Route::post('/delete-multiple', [App\Http\Controllers\Admin\CasesController::class, 'deleteMultipleStage']);
                 //Route::get('/view/{id}', [App\Http\Controllers\Admin\CasesController::class, 'viewStage']);

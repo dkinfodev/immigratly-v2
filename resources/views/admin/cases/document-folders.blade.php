@@ -28,8 +28,14 @@ ul.nav.nav-tabs.dependents-list {
 </style>
 @include(roleFolder().'.cases.case-navbar')
 <div class="float-right">
+   @php
+      $qs = '';
+   @endphp
    @if(isset($_GET['stage_id']))
       <a class="btn btn-primary btn-sm" href="{{baseUrl('cases/stages/list/'.base64_encode($record->id))}}">Back to Stage</a>
+   @php 
+      $qs = '&stage_id='.$_GET['stage_id'];
+   @endphp
    @endif
 </div>
 <div class="clearfix"></div>
@@ -53,7 +59,7 @@ ul.nav.nav-tabs.dependents-list {
                   <?php 
                      $case_dependent = $dependent->Dependent($dependent->dependent_id);
                   ?>
-                  <a href="{{ baseUrl('cases/case-documents/documents/'.base64_encode($record->id)) }}?dependent_id={{$dependent->dependent_id}}&visa_service={{$dependent->visa_service_id}}" class="nav-link {{($dependent_id == $dependent->dependent_id)?'active':''}}">{{$case_dependent->given_name}}</a>
+                  <a href="{{ baseUrl('cases/case-documents/documents/'.base64_encode($record->id)) }}?dependent_id={{$dependent->dependent_id}}&visa_service={{$dependent->visa_service_id}}{{$qs}}" class="nav-link {{($dependent_id == $dependent->dependent_id)?'active':''}}">{{$case_dependent->given_name}}</a>
                </li>
                @endif
             @endforeach

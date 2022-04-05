@@ -1727,6 +1727,36 @@ class ProfessionalCasesController extends Controller
 
     }
 
+    public function stages($subdomain,$case_id){
+        $data['case_id'] = $case_id;
+        $data['client_id'] = \Auth::user()->unique_id;
+        $case = professionalCurl('cases/view',$subdomain,$data);
+        if(isset($case['status']) && $case['status'] == 'success'){
+            $record = $case['data'];
+        }else{
+            $record = array();
+        }
+
+        $api_response = professionalCurl('cases/case-stages',$subdomain,$data);
+        if(isset($api_response['status']) && $api_response['status'] == 'success'){
+            $activity_logs = $api_response['records'];
+        }else{
+            $activity_logs = array();
+        }
+        
+        $viewData['case_id'] = $case_id;
+        $viewData['subdomain'] = $subdomain;
+        $viewData['pageTitle'] = "View Case";
+        $viewData['record'] = $record;
+        $viewData['active_nav'] = "activity";
+        $viewData['activeTab'] = "cases";
+        $viewData['activity_logs'] = $activity_logs;
+        return view(roleFolder().'.cases.activity-logs',$viewData);
+    }
+
+    public function getStagesList($id,Request $request){
+
+    }
     public function activityLog($subdomain,$case_id){
         $data['case_id'] = $case_id;
         $data['client_id'] = \Auth::user()->unique_id;

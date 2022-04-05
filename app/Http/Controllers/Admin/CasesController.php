@@ -2115,7 +2115,6 @@ class CasesController extends Controller
         $data = $temp;
             
         $viewData['subdomain'] = $subdomain;
-        $viewData['pageTitle'] = "View Case";
         $viewData['record'] = $data;
         $viewData['case_id'] = $record->unique_id;
         $viewData['active_nav'] = "stages";
@@ -2456,6 +2455,61 @@ class CasesController extends Controller
         }
         return redirect()->back()->with("success","Status has been updated!");
     }
+
+    public function viewStageFormReply($id,Request $request){
+        $record = CaseSubStages::where("unique_id",$id)->first();
+        $form_json = json_decode($record->FillForm->form_json,true);
+        if($record->form_reply != ''){
+            $postData = json_decode($record->form_reply,true);
+            $form_reply = array();
+            foreach($form_json as $form){
+                $temp = array();
+                
+                if(isset($form['name']) && isset($postData[$form['name']])){
+                    if(isset($form['values'])){
+                        $values = $form['values'];
+                        $final_values = array();
+                        foreach($values as $value){
+                            $tempVal = $value;
+                            if(is_array($postData[$form['name']])){
+                                if(in_array($value['value'],$postData[$form['name']])){
+                                    $tempVal['selected'] = true;
+                                    
+                                }else{
+                                    $tempVal['selected'] = false;
+                                }
+                            }else{
+                                if($value['value'] == $postData[$form['name']]){
+                                    $tempVal['selected'] = true;
+                                    if($form['type'] == 'autocomplete'){
+                                        $temp['value'] = $value['label'];
+                                    }
+                                }else{
+                                    $tempVal['selected'] = false;
+                                }
+                            }
+                            $final_values[] = $tempVal;
+                        }
+                    }else{
+                        $temp['value'] = $postData[$form['name']];
+                    }
+                }
+                if(isset($temp['value'])){
+                    $temp['label'] = $form['label'];
+                    $form_reply[] = $temp;
+                }
+            }
+            $form_json = $form_reply;
+        }
+        $viewData['form_json'] = $form_json;
+        $viewData['pageTitle'] = "Reply by Client";
+        $view = View::make(roleFolder().'.cases.stages.modal.view-form-reply',$viewData);
+        $contents = $view->render();
+        $response['contents'] = $contents;
+        $response['status'] = true;
+        return response()->json($response);
+    }
+
     public function viewSubStage($id,Request $request){
         $record = CaseSubStages::where("unique_id",$id)->first();
 
@@ -2464,8 +2518,12 @@ class CasesController extends Controller
         if($record->stage_type == 'case-document'){
             $case_id = base64_encode($record->CaseStage->Case->id);
             return redirect(baseUrl("cases/case-documents/documents/".$case_id."?stage_id=".$id));
-        }else{
-            $viewData['viewhtml'] = $viewhtml;
+        }
+        elseif($record->stage_type == 'case-task'){
+            
+            return redirect(baseUrl("cases/tasks/view/".$record->type_id."?stage_id=".$id));
+        }
+        else{
             return view(roleFolder().'.cases.stage.view-substage',$viewData);
         }
     }

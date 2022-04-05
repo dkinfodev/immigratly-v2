@@ -129,7 +129,7 @@
                   <a class="nav-link" href="{{ url('/articles') }}">Articles</a>
                 </li>
                 <!-- Pages -->
-                <li class="hs-has-sub-menu navbar-nav-item">
+            {{--    <li class="hs-has-sub-menu navbar-nav-item">
                   <a id="pagesMegaMenu" class="hs-mega-menu-invoker nav-link nav-link-toggle " href="javascript:;" aria-haspopup="true" aria-expanded="false" aria-labelledby="pagesSubMenu">Visa Services</a>
 
                   <!-- Pages - Submenu -->
@@ -154,7 +154,7 @@
                     <!-- Specialty -->
                   </div>
                   <!-- End Pages - Submenu -->
-                </li>
+                </li> --}}
                 
 
                 <li class="p-2 navbar-nav-item">

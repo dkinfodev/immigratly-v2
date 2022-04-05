@@ -27,10 +27,26 @@
     
     <!-- Card -->
     <div class="card">
-        <div class="card-header">
-            {{$record->name}}
+        <div class="card-header p-4">
+            <h2>{{$record->name}}</h2>
         </div>
-        <div class="card-body">
+        <div class="card-body p-3">
+          @if($record->stage_type == 'fill-form')
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="float-right">
+                        <a data-toggle="tooltip" data-html="true" title="Click to Edit Form" href="{{baseUrl('global-forms/edit/'.$record->type_id)}}" class="btn btn-warning btn-sm"><i class="tio-edit"></i></a>
+                        @if($record->form_reply != '')
+                        <a data-toggle="tooltip" data-html="true" title="View Client Reply" href="{{baseUrl('global-forms/edit/'.$record->type_id)}}" class="btn btn-info btn-sm"><i class="tio-globe"></i></a>
+                        @endif
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <h3 class="page-title mt-3 mb-3">{{$record->FillForm->form_title}}</h3>
+                    <div class="render-wrap"></div>
+                 </div>
+            </div>
+          @endif
         </div>
         <!-- End Card -->
     </div>
@@ -38,9 +54,19 @@
 <!-- End Content -->
 @endsection
 @section('javascript')
-
+<script src="assets/vendor/formBuilder/dist/form-render.min.js"></script>
 <script type="text/javascript">
-
+jQuery(($) => {
+  @if($record->stage_type == 'fill-form')
+  var form_json = '<?php echo $record->FillForm->form_json ?>';
+  var formData = JSON.parse(form_json);
+  $('.render-wrap').formRender({
+      formData:form_json,
+      dataType: 'json',
+      render: true
+    });
+  @endif
+});
 
 $(document).on('ready', function () {    
     $("#form").submit(function(e){

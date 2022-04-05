@@ -87,6 +87,7 @@ Route::group(array('middleware' => 'professional_curl'), function () {
 			
 			Route::post('/remove-case-folder', [App\Http\Controllers\Api\ProfessionalApiController::class, 'removeCaseFolder']);
 			Route::post('/case-activity-logs', [App\Http\Controllers\Api\ProfessionalApiController::class, 'caseActivityLogs']);
+			Route::post('/case-stages', [App\Http\Controllers\Api\ProfessionalApiController::class, 'caseStages']);
 			Route::post('/default-documents', [App\Http\Controllers\Api\ProfessionalApiController::class, 'defaultDocuments']);
 			Route::post('/other-documents', [App\Http\Controllers\Api\ProfessionalApiController::class, 'otherDocuments']);
 			Route::post('/extra-documents', [App\Http\Controllers\Api\ProfessionalApiController::class, 'extraDocuments']);

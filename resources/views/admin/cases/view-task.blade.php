@@ -12,9 +12,15 @@
 @endsection
 
 @section('header-right')
+@if(isset($_GET['stage_id']))
+<a class="btn btn-primary btn-sm" href="{{baseUrl('cases/stages/list/'.base64_encode($record->Case->id))}}">Back to Stage</a>
+
+@else
 <a class="btn btn-primary" href="{{ baseUrl('/cases/tasks/list/'.base64_encode($record->Case->id)) }}">
           <i class="tio mr-1"></i> Back 
 </a>
+@endif
+
 @endsection
 
 @section('content')

@@ -1386,6 +1386,28 @@ class ProfessionalApiController extends Controller
         return response()->json($response); 
     }
     
+    public function caseStages(Request $request){
+        try{
+            $postData = $request->input();
+            $request->request->add($postData);
+            $case_id = $request->input("case_id");
+            $client_id = $request->input("client_id");
+            $records = CaseStages::with(['SubStages','Case','CompletedStages'])
+                        ->orderBy('id',"desc")
+                        ->where("client_id",$request->input("client_id"))
+                        ->where("case_id",$request->input("case_id"))
+                        ->paginate(5);
+            
+            $response['status'] = 'success';
+            $response['records'] = $records;
+
+        } catch (Exception $e) {
+            $response['status'] = "error";
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response); 
+    }
+
     public function updateFilename(Request $request){
         try{
             $postData = $request->input();

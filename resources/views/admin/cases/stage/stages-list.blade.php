@@ -66,7 +66,7 @@
           <table class="table table-bordered noborder">
               <thead>
                 <tr>
-                  <th colspan="3" class="bg-light">Stage Tasks</th>
+                  <th colspan="4" class="bg-light">Stage Tasks</th>
                 </tr>
               </thead>
               <tbody>
@@ -74,6 +74,17 @@
                   <tr>
                     <td>
                       <i class="tio tio-circle"></i> {{$substage->name}} &nbsp;  
+                    </td>
+                    <td>
+                      @if($substage->stage_type == "fill-form")
+                        Fill Form
+                      @elseif($substage->stage_type == 'case-task')
+                        Case Task
+                      @elseif($substage->stage_type == 'case-document')
+                        Case Document
+                      @elseif($substage->stage_type == 'case-task')
+                        Case Task
+                      @endif
                     </td>
                     <td>
                       @if($substage->status == '1')
