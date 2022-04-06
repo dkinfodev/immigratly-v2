@@ -30,6 +30,9 @@ use App\Models\CaseActivityLogs;
 use App\Models\AppointmentTypes;
 use App\Models\AppointmentSchedule;
 use App\Models\CustomTime;
+use App\Models\CaseStages;
+use App\Models\CaseSubStages;
+
 class ProfessionalApiController extends Controller
 {
     var $subdomain;
@@ -1397,9 +1400,12 @@ class ProfessionalApiController extends Controller
                         ->where("client_id",$request->input("client_id"))
                         ->where("case_id",$request->input("case_id"))
                         ->paginate(5);
-            
+            $data['records'] = $records->items();
+            $data['last_page'] = $records->lastPage();
+            $data['current_page'] = $records->currentPage();
+            $data['total_records'] = $records->total();
             $response['status'] = 'success';
-            $response['records'] = $records;
+            $response['data'] = $data;
 
         } catch (Exception $e) {
             $response['status'] = "error";

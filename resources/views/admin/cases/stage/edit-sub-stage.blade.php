@@ -106,7 +106,6 @@
                     </div>
                 </div>
 
-
                 <div class="row g-case-tasks <?php if($record->stage_type == "case-task"){ echo "active"; } else{ echo "hidden"; } ?>  form-group js-form-message">
                     <label class="col-sm-3 col-form-label input-label">Task</label>
                     <div class="col-sm-9">

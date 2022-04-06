@@ -1736,26 +1736,40 @@ class ProfessionalCasesController extends Controller
         }else{
             $record = array();
         }
-
-        $api_response = professionalCurl('cases/case-stages',$subdomain,$data);
-        if(isset($api_response['status']) && $api_response['status'] == 'success'){
-            $activity_logs = $api_response['records'];
-        }else{
-            $activity_logs = array();
-        }
-        
         $viewData['case_id'] = $case_id;
         $viewData['subdomain'] = $subdomain;
-        $viewData['pageTitle'] = "View Case";
+        $viewData['pageTitle'] = "Case Stages";
         $viewData['record'] = $record;
-        $viewData['active_nav'] = "activity";
+        $viewData['active_nav'] = "stages";
         $viewData['activeTab'] = "cases";
-        $viewData['activity_logs'] = $activity_logs;
-        return view(roleFolder().'.cases.activity-logs',$viewData);
+        return view(roleFolder().'.cases.stages',$viewData);
     }
 
-    public function getStagesList($id,Request $request){
-
+    public function getStagesList(Request $request){
+        $subdomain = $request->input("subdomain");
+        $case_id = $request->input("case_id");
+        $apiData['case_id'] = $case_id;
+        $apiData['subdomain'] = $subdomain;
+        $apiData['client_id'] = \Auth::user()->unique_id;
+        $api_response = professionalCurl('cases/case-stages',$subdomain,$apiData);
+        if(isset($api_response['status']) && $api_response['status'] == 'success'){
+            $data = $api_response['data'];
+            $records = $data['records'];
+        }else{
+            $response['status'] = false;
+            $response['message'] = "Stage not found, some issue while finding";
+            return response()->json($response);
+        }
+        $viewData['records'] = $records;
+        $viewData['professional'] = $subdomain;
+        $view = View::make(roleFolder().'.cases.stages-list',$viewData);
+        $contents = $view->render();
+        $response['status'] = true;
+        $response['contents'] = $contents;
+        $response['last_page'] = $data['last_page'];
+        $response['current_page'] = $data['current_page'];
+        $response['total_records'] = $data['total_records'];
+        return response()->json($response);
     }
     public function activityLog($subdomain,$case_id){
         $data['case_id'] = $case_id;

@@ -10,63 +10,22 @@
 @endsection
 
 @section('content')
-<!-- Page Header -->
-<!-- NAVBAR -->
-<div class="page-header">
-
-    <!-- Nav -->
-    <!-- Nav -->
-    <div class="js-nav-scroller hs-nav-scroller-horizontal">
-        <span class="hs-nav-scroller-arrow-prev" style="display: none;">
-            <a class="hs-nav-scroller-arrow-link" href="javascript:;">
-                <i class="tio-chevron-left"></i>
-            </a>
-        </span>
-
-        <span class="hs-nav-scroller-arrow-next" style="display: none;">
-            <a class="hs-nav-scroller-arrow-link" href="javascript:;">
-                <i class="tio-chevron-right"></i>
-            </a>
-        </span>
-
-        <div class="js-nav-scroller hs-nav-scroller-horizontal">
-            <span class="hs-nav-scroller-arrow-prev" style="display: none;">
-                <a class="hs-nav-scroller-arrow-link" href="javascript:;">
-                    <i class="tio-chevron-left"></i>
-                </a>
-            </span>
-
-            <span class="hs-nav-scroller-arrow-next" style="display: none;">
-                <a class="hs-nav-scroller-arrow-link" href="javascript:;">
-                    <i class="tio-chevron-right"></i>
-                </a>
-            </span>
-            <ul class="nav nav-tabs page-header-tabs" id="projectsTab" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link {{isset($active_nav) && $active_nav == 'cases'?'active':'' }}"
-                        href="{{baseUrl('cases')}}">Approved</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{isset($active_nav) && $active_nav == 'pending-approval'?'active':'' }}"
-                        href="{{baseUrl('cases/pending')}}">Pending Approval  <span class="text-danger">({{ $pendingApproval }})</span>
-                    </a>
-                </li>
-
-            </ul>
-        </div>
-
-    </div>
-    <!-- End Nav -->
-</div>
-<!-- End Page Header -->
-<!-- NAVBAR -->
 
 <!-- Card -->
 <div class="card mb-3 mb-lg-5">
     <!-- Header -->
-    <div class="card-header">
-        <h6 class="card-subtitle mb-0">{{$pageTitle}}</h6>
-
+    <div class="card-header pt-3 pb-3">
+        <ul class="nav nav-tabs page-header-tabs mb-0" id="projectsTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link {{isset($active_nav) && $active_nav == 'cases'?'active':'' }}"
+                    href="{{baseUrl('cases')}}">Approved</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{isset($active_nav) && $active_nav == 'pending-approval'?'active':'' }}"
+                    href="{{baseUrl('cases/pending')}}">Pending Approval  <span class="text-danger">({{ $pendingApproval }})</span>
+                </a>
+            </li>
+        </ul>
     </div>
     <!-- End Header -->
 
