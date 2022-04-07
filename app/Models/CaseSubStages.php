@@ -21,7 +21,7 @@ class CaseSubStages extends Model
 
     public function CaseStage()
     {
-        return $this->belongsTo('App\Models\CaseStages','stage_id','unique_id');
+        return $this->belongsTo('App\Models\CaseStages','stage_id','unique_id')->with("Case");
     }
 
     public function FillForm()

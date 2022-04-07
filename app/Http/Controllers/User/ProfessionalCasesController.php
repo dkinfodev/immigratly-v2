@@ -151,6 +151,7 @@ class ProfessionalCasesController extends Controller
         $pin_folders = PinCaseFolder::where("case_id",$case_id)->get();
         $user_file_url = userDirUrl()."/documents";
         $user_file_dir = userDir()."/documents";
+        
         $viewData['user_file_url'] = $user_file_url;
         $viewData['user_file_dir'] = $user_file_dir;
         $viewData['user_folders'] = $user_folders;
@@ -1762,6 +1763,8 @@ class ProfessionalCasesController extends Controller
         }
         $viewData['records'] = $records;
         $viewData['professional'] = $subdomain;
+        $viewData['case_id'] = $case_id;
+
         $view = View::make(roleFolder().'.cases.stages-list',$viewData);
         $contents = $view->render();
         $response['status'] = true;
@@ -1867,5 +1870,89 @@ class ProfessionalCasesController extends Controller
         $viewData['dependants'] = $dependants;
         $viewData['activeTab'] = "cases";
         return view(roleFolder().'.cases.dependants',$viewData);
+    }
+
+    public function viewSubStage($case_id,$subdomain,$sub_stage_id,Request $request){
+      
+        $apiData['sub_stage_id'] = $sub_stage_id;
+        $apiData['subdomain'] = $subdomain;
+        $apiData['client_id'] = \Auth::user()->unique_id;
+        $api_response = professionalCurl('cases/fetch-sub-stage',$subdomain,$apiData);
+       
+        if(isset($api_response['status']) && $api_response['status'] == 'success'){
+            $record = $api_response['data'];
+        }else{
+            return redirect()->back()->with("error","Sub stage not found");
+        }
+
+        $viewData['pageTitle'] = $record['name'];
+        $viewData['record'] = $record;
+        $viewData['case_id'] = $case_id;
+        $viewData['subdomain'] = $subdomain;
+        $viewData['sub_stage_id'] = $sub_stage_id;
+        if($record['stage_type'] == 'case-document'){
+            return redirect(baseUrl("cases/documents/".$subdomain."/".$case_id."?stage_id=".$sub_stage_id));
+        }
+        elseif($record['stage_type'] == 'case-task'){
+            
+            return redirect(baseUrl("cases/".$subdomain."/tasks/view/".$record['type_id']."?stage_id=".$sub_stage_id));
+        }
+        else{
+            return view(roleFolder().'.cases.view-substage',$viewData);
+        }
+    }
+
+    public function viewStageFormReply($id,Request $request){
+        $record = CaseSubStages::where("unique_id",$id)->first();
+        $form_json = json_decode($record->FillForm->form_json,true);
+        if($record->form_reply != ''){
+            $postData = json_decode($record->form_reply,true);
+            $form_reply = array();
+            foreach($form_json as $form){
+                $temp = array();
+                
+                if(isset($form['name']) && isset($postData[$form['name']])){
+                    if(isset($form['values'])){
+                        $values = $form['values'];
+                        $final_values = array();
+                        foreach($values as $value){
+                            $tempVal = $value;
+                            if(is_array($postData[$form['name']])){
+                                if(in_array($value['value'],$postData[$form['name']])){
+                                    $tempVal['selected'] = true;
+                                    
+                                }else{
+                                    $tempVal['selected'] = false;
+                                }
+                            }else{
+                                if($value['value'] == $postData[$form['name']]){
+                                    $tempVal['selected'] = true;
+                                    if($form['type'] == 'autocomplete'){
+                                        $temp['value'] = $value['label'];
+                                    }
+                                }else{
+                                    $tempVal['selected'] = false;
+                                }
+                            }
+                            $final_values[] = $tempVal;
+                        }
+                    }else{
+                        $temp['value'] = $postData[$form['name']];
+                    }
+                }
+                if(isset($temp['value'])){
+                    $temp['label'] = $form['label'];
+                    $form_reply[] = $temp;
+                }
+            }
+            $form_json = $form_reply;
+        }
+        $viewData['form_json'] = $form_json;
+        $viewData['pageTitle'] = "Reply by Client";
+        $view = View::make(roleFolder().'.cases.stages.modal.view-form-reply',$viewData);
+        $contents = $view->render();
+        $response['contents'] = $contents;
+        $response['status'] = true;
+        return response()->json($response);
     }
 }

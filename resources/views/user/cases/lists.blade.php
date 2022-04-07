@@ -50,7 +50,7 @@
                         <!--  </div>-->
                         <!--</th>-->
                         <th scope="col" class="">Case Title</th>
-                        <th>Professional</th>
+                        <th scope="col">Professional</th>
                         <th scope="col">Visa Service</th>
                         <th scope="col">Approval Status</th>
                         <th scope="col">Assigned</th>

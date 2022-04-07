@@ -66,7 +66,7 @@
                             Case Task
                             @endif
                         </td>
-                        <td>
+                        <td class="text-center">
                             @if($substage['status'] == '1')
                             <span class="badge badge-success">Completed</span>
                             @else
@@ -76,7 +76,7 @@
                         <td>
                             <a data-toggle="tooltip" data-html="true" title="Click to View"
                                 class="btn btn-sm btn-dark p-2 js-nav-tooltip-link"
-                                href="<?php echo baseUrl('cases/sub-stages/view/'.$substage['unique_id']); ?>"><i
+                                href="<?php echo baseUrl('cases/sub-stages/view/'.$case_id.'/'.$professional.'/'.$substage['unique_id']); ?>"><i
                                     class="tio-globe"></i></a>
 
                         </td>
