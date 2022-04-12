@@ -852,6 +852,12 @@ if(!function_exists("professionalUser")){
         return $user;
     }
 }
+if(!function_exists("locationHours")){
+    function locationHours($subdomain = '',$location_id){
+        $hours = \DB::table(PROFESSIONAL_DATABASE.$subdomain.".appointment_schedule")->where("location_id",$location_id)->get();
+        return $hours;
+    }
+}
 if(!function_exists("professionalDetail")){
     function professionalDetail($domain = ''){
         if($domain == ''){

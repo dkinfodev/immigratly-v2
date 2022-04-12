@@ -82,7 +82,7 @@
                     </div>
                 </div>
 
-                 <div class="row form-group global-form <?php if($record->stage_type == "fill-form"){ echo "active"; } else{ echo "hidden"; } ?>  js-form-message">
+                 <div class="row form-group custom-field global-form <?php if($record->stage_type == "fill-form"){ echo "active"; } else{ echo "hidden"; } ?>  js-form-message">
                     <label class="col-sm-3 col-form-label input-label">Form</label>
                     <div class="col-sm-9">
                        
@@ -106,7 +106,7 @@
                     </div>
                 </div>
 
-                <div class="row g-case-tasks <?php if($record->stage_type == "case-task"){ echo "active"; } else{ echo "hidden"; } ?>  form-group js-form-message">
+                <div class="row g-case-tasks custom-field <?php if($record->stage_type == "case-task"){ echo "active"; } else{ echo "hidden"; } ?>  form-group js-form-message">
                     <label class="col-sm-3 col-form-label input-label">Task</label>
                     <div class="col-sm-9">
                        
@@ -126,8 +126,53 @@
                         </div>
                     </div>
                 </div>
-    
-                
+
+                <div class="case-document custom-field <?php if($record->stage_type == "case-document"){ echo "active"; } else{ echo "hidden"; } ?>">
+                  <div class="row form-group js-form-message">
+                      <label class="col-sm-3 col-form-label input-label">Default Documents</label>
+                      <div class="col-sm-9">
+                        @php 
+                          $case_documents = array();
+
+                          if($record->case_documents != ''){
+                            $case_documents = json_decode($record->case_documents,true);
+                          }
+                        @endphp
+                        <select class="form-control @error('default_document') is-invalid @enderror" name="default_documents[]" multiple id="default_document">
+                          @foreach($default_documents as $key=>$document) 
+                              <option {{ (isset($case_documents['default_documents']) && in_array($document->unique_id,$case_documents['default_documents']))?'selected':'' }} value="{{$document->unique_id}}">{{$document->name}}</option>
+                          @endforeach
+                          </select> 
+                        
+                          <div class="input-group input-group-sm-down-break">
+                              @error('default_document')
+                              <span class="invalid-feedback" role="alert">
+                                  <strong>{{ $message }}</strong>
+                              </span>
+                              @enderror
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row form-group js-form-message">
+                      <label class="col-sm-3 col-form-label input-label">Custom Documents</label>
+                      <div class="col-sm-9">
+                        
+                        <select class="form-control @error('custom_documents') is-invalid @enderror" name="custom_documents[]" multiple id="custom_documents">
+                          @foreach($case_folders as $key=>$document) 
+                            <option {{ (isset($case_documents['custom_documents']) && in_array($document->unique_id,$case_documents['custom_documents']))?'selected':'' }} value="{{$document->unique_id}}">{{$document->name}}</option>
+                          @endforeach
+                          </select> 
+                        
+                          <div class="input-group input-group-sm-down-break">
+                              @error('custom_documents')
+                              <span class="invalid-feedback" role="alert">
+                                  <strong>{{ $message }}</strong>
+                              </span>
+                              @enderror
+                          </div>
+                      </div>
+                  </div>
+                </div>
                 <div class="form-group">
                     <button type="submit" class="btn add-btn btn-primary">Save</button>
                 </div>
@@ -147,17 +192,15 @@
 
      $("#stage_type").change(function(){
         var tx = $(this).find(':selected').data('type');
+        $(".custom-field").addClass('hidden');
         if(tx == "fill-form"){
           $(".global-form").removeClass('hidden');
-          $(".g-case-tasks").addClass('hidden');
         }
         else if(tx == "case-task"){
           $(".g-case-tasks").removeClass('hidden');  
-          $(".global-form").addClass('hidden');
         }
         else{
-         $(".global-form").addClass('hidden');
-         $(".g-case-tasks").addClass('hidden');
+         $(".case-document").removeClass('hidden');
         }
     });
 

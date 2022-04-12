@@ -985,7 +985,8 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
         Route::get('/stages/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'stages']);
         Route::post('/stages/ajax-list', [App\Http\Controllers\User\ProfessionalCasesController::class, 'getStagesList']);
         Route::get('/sub-stages/view/{case_id}/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'viewSubStage']);
-        Route::get('/stage-form-reply/{substage_id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'viewStageFormReply']);
+        Route::get('/stage-form-reply/{subdomain}/{substage_id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'viewStageFormReply']);
+        Route::post('/sub-stages/save-form-reply/{subdomain}/{substage_id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'saveStageFormReply']);
         Route::get('/activity/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'activityLog']);
         Route::get('/chats/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'chats']);
         Route::post('/fetch-chats', [App\Http\Controllers\User\ProfessionalCasesController::class, 'fetchChats']);

@@ -145,7 +145,6 @@ class ProfessionalCasesController extends Controller
             $documents = $case_data['documents'];
             $viewData['pageTitle'] = "Documents for ".$service['MainService']['name'];
         }
-  
         $user_id = \Auth::user()->unique_id;
         $user_folders = UserFolders::where("user_id",$user_id)->get();
         $pin_folders = PinCaseFolder::where("case_id",$case_id)->get();
@@ -1884,29 +1883,112 @@ class ProfessionalCasesController extends Controller
         }else{
             return redirect()->back()->with("error","Sub stage not found");
         }
+        $apiData = array();
+        $apiData['case_id'] = $case_id;
+        $case = professionalCurl('cases/documents',$subdomain,$apiData);
 
         $viewData['pageTitle'] = $record['name'];
+        $case_documents = array();
+        $form_json = array();
+        $custom_documents = array();
+        $default_documents = array();
+        if($record['stage_type'] == 'case-document'){
+           
+            if($record['case_documents'] != ''){
+                $case_documents =  json_decode($record['case_documents'],true);
+            }
+
+            if(isset($case['status']) && $case['status'] == 'success'){
+                $case_data = $case['data'];
+                $service = $case_data['service'];
+                $case_folders = $case_data['case_folders'];
+                $documents = $case_data['documents'];
+            }
+        }
+        if($record['stage_type'] == 'fill-form'){
+            $form_json = $record['fill_form']['form_json'];
+        
+            if($record['fill_form']['form_reply'] != ''){
+                $postData = json_decode($record['fill_form']['form_reply'],true);
+                
+                $form_reply = array();
+                foreach($form_json as $form){
+                    $temp = array();
+                    
+                    if(isset($form['name']) && isset($postData[$form['name']])){
+                        if(isset($form['values'])){
+                            $values = $form['values'];
+                            $final_values = array();
+                            foreach($values as $value){
+                                $tempVal = $value;
+                                if(is_array($postData[$form['name']])){
+                                    if(in_array($value['value'],$postData[$form['name']])){
+                                        $tempVal['selected'] = true;
+                                        
+                                    }else{
+                                        $tempVal['selected'] = false;
+                                    }
+                                }else{
+                                    if($value['value'] == $postData[$form['name']]){
+                                        $tempVal['selected'] = true;
+                                        if($form['type'] == 'autocomplete'){
+                                            $temp['value'] = $value['label'];
+                                        }
+                                    }else{
+                                        $tempVal['selected'] = false;
+                                    }
+                                }
+                                $final_values[] = $tempVal;
+                            }
+                        }else{
+                            $temp['value'] = $postData[$form['name']];
+                        }
+                    }
+                    if(isset($temp['value'])){
+                        $temp['label'] = $form['label'];
+                        $form_reply[] = $temp;
+                    }
+                }
+                $form_json = $form_reply;
+            }
+        }
+      
+        $viewData['service'] = $service;
+        $viewData['documents'] = $documents;
+        $viewData['case_folders'] = $case_folders;
+        $viewData['default_documents'] = $default_documents;
+        $viewData['form_json'] = $form_json;
         $viewData['record'] = $record;
         $viewData['case_id'] = $case_id;
         $viewData['subdomain'] = $subdomain;
         $viewData['sub_stage_id'] = $sub_stage_id;
-        if($record['stage_type'] == 'case-document'){
-            return redirect(baseUrl("cases/documents/".$subdomain."/".$case_id."?stage_id=".$sub_stage_id));
-        }
-        elseif($record['stage_type'] == 'case-task'){
+        // if($record['stage_type'] == 'case-document'){
+        //     return redirect(baseUrl("cases/documents/".$subdomain."/".$case_id."?stage_id=".$sub_stage_id));
+        // }
+        // elseif($record['stage_type'] == 'case-task'){
             
-            return redirect(baseUrl("cases/".$subdomain."/tasks/view/".$record['type_id']."?stage_id=".$sub_stage_id));
-        }
-        else{
+        //     return redirect(baseUrl("cases/".$subdomain."/tasks/view/".$record['type_id']."?stage_id=".$sub_stage_id));
+        // }
+        // else{
             return view(roleFolder().'.cases.view-substage',$viewData);
-        }
+        // }
     }
 
     public function viewStageFormReply($id,Request $request){
-        $record = CaseSubStages::where("unique_id",$id)->first();
-        $form_json = json_decode($record->FillForm->form_json,true);
-        if($record->form_reply != ''){
-            $postData = json_decode($record->form_reply,true);
+        $apiData['sub_stage_id'] = $sub_stage_id;
+        $apiData['subdomain'] = $subdomain;
+        $apiData['client_id'] = \Auth::user()->unique_id;
+        $api_response = professionalCurl('cases/fetch-sub-stage',$subdomain,$apiData);
+
+        if(isset($api_response['status']) && $api_response['status'] == 'success'){
+            $record = $api_response['data'];
+        }else{
+            return redirect()->back()->with("error","Sub stage not found");
+        }
+
+        $form_json = json_decode($record['fill_form']['form_json'],true);
+        if($record['fill_form']['form_reply'] != ''){
+            $postData = json_decode($record['fill_form']['form_reply'],true);
             $form_reply = array();
             foreach($form_json as $form){
                 $temp = array();
@@ -1953,6 +2035,73 @@ class ProfessionalCasesController extends Controller
         $contents = $view->render();
         $response['contents'] = $contents;
         $response['status'] = true;
+        return response()->json($response);
+    }
+
+    public function saveStageFormReply($subdomain,$sub_stage_id,Request $request){
+
+        $postData = $request->all();
+        
+        unset($postData['_token']);
+        $apiData['sub_stage_id'] = $sub_stage_id;
+        $apiData['subdomain'] = $subdomain;
+        $apiData['client_id'] = \Auth::user()->unique_id;
+        $api_response = professionalCurl('cases/fetch-sub-stage',$subdomain,$apiData);
+       
+        if(isset($api_response['status']) && $api_response['status'] == 'success'){
+            $record = $api_response['data'];
+        }else{
+            return redirect()->back()->with("error","Sub stage not found");
+        }
+        $form_json = json_decode($record['fill_form']['form_json'],true);
+        $form_reply = array();
+        foreach($form_json as $form){
+            $temp = array();
+            $temp = $form;
+            if(isset($form['name']) && isset($postData[$form['name']])){
+                if(isset($form['values'])){
+                    $values = $form['values'];
+                    $final_values = array();
+                    foreach($values as $value){
+                        $tempVal = $value;
+                        if(is_array($postData[$form['name']])){
+                            if(in_array($value['value'],$postData[$form['name']])){
+                                $tempVal['selected'] = 1;
+                            }else{
+                                $tempVal['selected'] = 0;
+                            }
+                        }else{
+                            if($value['value'] == $postData[$form['name']]){
+                                $tempVal['selected'] = 1;
+                                if($form['type'] == 'autocomplete'){
+                                    $temp['value'] = $value['label'];
+                                }
+                            }else{
+                                $tempVal['selected'] = 0;
+                            }
+                        }
+                        $final_values[] = $tempVal;
+                    }
+                    $temp['values'] = $final_values;
+                }else{
+                    $temp['value'] = $postData[$form['name']];
+                }
+            }
+            $form_reply[] = $temp;
+        }
+
+        $apiData = array();
+        $apiData['sub_stage_id'] = $sub_stage_id;
+        $apiData['subdomain'] = $subdomain;
+        $apiData['form_reply'] = $form_reply;
+        $api_response = professionalCurl('cases/save-sub-stage',$subdomain,$apiData);
+        if(isset($api_response['status']) && $api_response['status'] == 'success'){
+            $response['status'] = true;
+            $response['message'] = $api_response['message'];
+        }else{
+            $response['status'] = false;
+            $response['message'] = "Something went wrong";
+        }
         return response()->json($response);
     }
 }

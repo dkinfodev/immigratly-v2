@@ -8,7 +8,7 @@
       <div class="col-md-8">
         <div class="row">
           <div class="col-md-2 offset-md-4">
-              <div class="float-right">
+              <div class="float-right text-center">
                 @php
                   $total_stages = $record->SubStages->count();
                   $total_completed = $record->CompletedStages->count();
@@ -27,13 +27,14 @@
                     "isViewportInit": true,
                     "colors": ["rgba(55, 125, 255, 0.1)", "#377dff"],
                     "radius": 15,
-                    "width": 4,
-                    "textFontSize": 16,
+                    "width": 14,
+                    "textFontSize": 0,
                     "additionalText": "",
                     "textClass": "circle-custom-text",
                     "textColor": "#377dff"
                   }'>
                 </div>
+                {{round($percent,2)}}%
               </div>
           </div>
           <div class="col-md-6">

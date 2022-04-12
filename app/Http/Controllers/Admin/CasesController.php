@@ -778,6 +778,7 @@ class CasesController extends Controller
         return view(roleFolder().'.cases.document-files',$viewData);
     }
     public function extraDocuments($case_id,$doc_id,Request $request){
+        $record = Cases::where("unique_id",$case_id)->first();
         if($request->get("dependent_id")){
             $visa_service_id = $request->input("visa_service");
             $user_type = "dependent";
@@ -792,7 +793,7 @@ class CasesController extends Controller
             $doc_user_id = $record->client_id;
         }
         // $doc_id = base64_decode($doc_id);
-        $record = Cases::where("unique_id",$case_id)->first();
+        
         $document = CaseFolders::where("unique_id",$doc_id)->first();
         $folder_id = $document->unique_id;
         $service = ProfessionalServices::where("unique_id",$record->visa_service_id)->first();
@@ -2259,9 +2260,16 @@ class CasesController extends Controller
         $stage = CaseStages::where("unique_id",$unique_id)->first();
 
         $case = Cases::where("unique_id",$stage->case_id)->first();
+        $visa_service_id = $case->visa_service_id;
+        $service = ProfessionalServices::where("unique_id",$visa_service_id)->first();
+        $default_documents = $service->DefaultDocuments($service->service_id);
+        $case_folders = CaseFolders::where("case_id",$case->unique_id)->get();
+
         $caseTasks = CaseTasks::where("case_id",$stage->case_id)->get();
         $globalForms = GlobalForms::get();
         
+        $viewData['default_documents'] = $default_documents;
+        $viewData['case_folders'] = $case_folders;
         $viewData['globalForms'] = $globalForms;
         $viewData['caseTasks'] = $caseTasks;
         $viewData['case'] = $case; 
@@ -2319,6 +2327,18 @@ class CasesController extends Controller
             $object->stage_id = $stage_id;
             $object->name = $request->input("name");
             $object->stage_type = $request->input("stage_type");
+            if($request->input("stage_type") == 'case-document'){
+                $case_document = array();
+                if($request->input("default_documents")){
+                    $case_document['default_documents'] = $request->input("default_documents");
+                }
+                if($request->input("custom_documents")){
+                    $case_document['custom_documents'] = $request->input("custom_documents");
+                }
+                if(!empty($case_document)){
+                    $object->case_documents = json_encode($case_document);
+                }
+            }
             $object->type_id = $type_id;
             $object->save();
             
@@ -2345,11 +2365,18 @@ class CasesController extends Controller
         $record = CaseSubStages::where("unique_id",$unique_id)->first();
 
         $case = Cases::where("unique_id",$stage->case_id)->first();
+        $visa_service_id = $case->visa_service_id;
+        $service = ProfessionalServices::where("unique_id",$visa_service_id)->first();
+        $default_documents = $service->DefaultDocuments($service->service_id);
+        $case_folders = CaseFolders::where("case_id",$case->unique_id)->get();
+        
         $caseTasks = CaseTasks::where("case_id",$stage->case_id)->get();
         $globalForms = GlobalForms::get();
         
         $viewData['globalForms'] = $globalForms;
         $viewData['caseTasks'] = $caseTasks;
+        $viewData['case_folders'] = $case_folders;
+        $viewData['default_documents'] = $default_documents;
         $viewData['case'] = $case; 
         $viewData['stage'] = $stage; 
         $viewData['record'] = $record;
@@ -2396,6 +2423,7 @@ class CasesController extends Controller
             }
             
             $stage_id = $request->input("stage_id");
+            
             $stage = CaseStages::where("unique_id",$stage_id)->first();
             $case_id = $stage->case_id;
             $case = Cases::where("unique_id",$case_id)->first();
@@ -2405,6 +2433,20 @@ class CasesController extends Controller
             $object->stage_id = $stage_id;
             $object->name = $request->input("name");
             $object->stage_type = $request->input("stage_type");
+            if($request->input("stage_type") == 'case-document'){
+                $case_document = array();
+                if($request->input("default_documents")){
+                    $case_document['default_documents'] = $request->input("default_documents");
+                }
+                if($request->input("custom_documents")){
+                    $case_document['custom_documents'] = $request->input("custom_documents");
+                }
+                if(!empty($case_document)){
+                    $object->case_documents = json_encode($case_document);
+                }
+            }else{
+                $object->case_documents = '';
+            }
             $object->type_id = $type_id;
             $object->save();
             
@@ -2512,19 +2554,31 @@ class CasesController extends Controller
 
     public function viewSubStage($id,Request $request){
         $record = CaseSubStages::where("unique_id",$id)->first();
-
+        $case = Cases::where("unique_id",$record->case_id)->first();
+        $visa_service_id = $case->visa_service_id;
+        $service = ProfessionalServices::where("unique_id",$visa_service_id)->first();
+        $default_documents = $service->DefaultDocuments($service->service_id);
+        $case_folders = CaseFolders::where("case_id",$case->unique_id)->get();
+        $viewData['doc_user_id'] = $record->client_id;
         $viewData['pageTitle'] = $record->name;
+        $viewData['case_folders'] = $case_folders;
+        $viewData['default_documents'] = $default_documents;
+        $viewData['service'] = $service;
         $viewData['record'] = $record;
-        if($record->stage_type == 'case-document'){
-            $case_id = base64_encode($record->CaseStage->Case->id);
-            return redirect(baseUrl("cases/case-documents/documents/".$case_id."?stage_id=".$id));
-        }
-        elseif($record->stage_type == 'case-task'){
+        $viewData['case'] = $case;
+        $viewData['case_id'] = $case->unique_id;
+        $viewData['subdomain'] = \Session::get("subdomain");
+        return view(roleFolder().'.cases.stage.view-substage',$viewData);
+        // if($record->stage_type == 'case-document'){
+        //     $case_id = base64_encode($record->CaseStage->Case->id);
+        //     return redirect(baseUrl("cases/case-documents/documents/".$case_id."?stage_id=".$id));
+        // }
+        // elseif($record->stage_type == 'case-task'){
             
-            return redirect(baseUrl("cases/tasks/view/".$record->type_id."?stage_id=".$id));
-        }
-        else{
-            return view(roleFolder().'.cases.stage.view-substage',$viewData);
-        }
+        //     return redirect(baseUrl("cases/tasks/view/".$record->type_id."?stage_id=".$id));
+        // }
+        // else{
+        //     return view(roleFolder().'.cases.stage.view-substage',$viewData);
+        // }
     }
 }

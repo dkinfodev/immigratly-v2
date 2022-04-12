@@ -47,6 +47,123 @@
                  </div>
             </div>
           @endif
+          @if($record->stage_type == 'case-document')
+            <div class="row">
+              @php 
+                $case_documents = array();
+                if($record->case_documents != ''){
+                    $case_documents = json_decode($record->case_documents,true);
+                }
+              @endphp
+              @if(!empty($case_documents))
+                <div class="col-md-12">
+                  <h3>Stages required below documents</h3>
+                  <div class="tab-content" id="professionalTabContent">
+                      @if(isset($case_documents['default_documents']))
+                      <div class="tab-pane fade show active professional-request-folders" id="default_documents" role="tabpanel"
+                            aria-labelledby="list-tab">
+                            <span class="folder-label-professional">Default Folders</span>
+                            <ul class="list-group professional-request-folders-list droppable" id="accordionProfessionalDoc">
+                              <!-- List Item -->
+                              <?php
+                                  $default_documents = $service->DefaultDocuments($service->service_id);
+                              ?>
+                              @foreach($default_documents as $key => $document)
+                                  @if(in_array($document->unique_id,$case_documents['default_documents']))
+                                  <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-auto">
+                                          @if($case->caseDocuments($case->unique_id,$document->unique_id,$doc_user_id,'count') > 0)
+                                          <img class="avatar avatar-xs avatar-4by3" src="assets/svg/folder-files.svg" alt="Image Description">
+                                          @else
+                                          <img class="avatar avatar-xs avatar-4by3" src="assets/svg/folder.svg" alt="Image Description">
+                                          @endif
+                                        </div>
+
+                                        <div class="col" data-toggle="collapse" data-target="#collapseDefaultDoc-{{ $key }}"
+                                          aria-expanded="true" aria-controls="collapseDefaultDoc-{{ $key }}">
+                                          <a href="<?php echo baseUrl("cases/case-documents/default/".$case->unique_id."/".$document->unique_id) ?>" onclick="fetchFiles(this)" data-subdomain="{{$subdomain}}">
+                                                <h5 class="mb-0">
+                                                    {{$document->name}}
+                                                </h5>
+                                                <ul class="list-inline list-separator small">
+                                                    <li class="list-inline-item">{{$case->caseDocuments($case->unique_id,$document->unique_id,$doc_user_id,'count')}} Files</li>
+                                                    <?php
+                                                      $doc_chats = countUnreadDocChat($case_id,$subdomain,\Auth::user()->role,$document->unique_id);
+                                                      if($doc_chats > 0){
+                                                    ?>
+                                                      <li class="list-inline-item text-danger">{{$doc_chats}} chats</li>
+                                                    <?php } ?>
+                                                </ul>
+                                          </a>
+                                        </div>
+                                        <div class="col-auto">
+                                         
+                                        </div>
+                                    </div>
+                                    <!-- End Row -->
+                                  </li>
+                                  @endif
+                              <!-- End List Item -->
+                              @endforeach
+                            </ul>
+                      </div>
+                      @endif
+                                                      
+                      @if(isset($case_documents['custom_documents']))
+                      <div class="tab-pane fade show active professional-request-folders" id="custom_documents" role="tabpanel"
+                            aria-labelledby="list-tab">
+                            <span class="folder-label-professional">Other Requested Folders</span>
+                            <ul class="list-group professional-request-folders-list droppable" id="accordionProfessionalDoc">
+                                <!-- List Item -->
+                          
+                              @foreach($case_folders as $key => $document)
+                                @if(in_array($document->unique_id,$case_documents['custom_documents']))
+                                  <li class="list-group-item">
+                                      <div class="row">
+                                        <div class="col-auto">
+                                            @if($case->caseDocuments($case_folders->unique_id,$document->unique_id,$doc_user_id,'count') > 0)
+                                            <img class="avatar avatar-xs avatar-4by3" src="assets/svg/folder-files.svg" alt="Image Description">
+                                            @else
+                                            <img class="avatar avatar-xs avatar-4by3" src="assets/svg/folder.svg" alt="Image Description">
+                                            @endif
+                                        </div>
+
+                                        <div class="col" data-toggle="collapse" data-target="#collapseDefaultDoc-{{ $key }}"
+                                            aria-expanded="true" aria-controls="collapseDefaultDoc-{{ $key }}">
+                                            <a href="<?php echo baseUrl("cases/case-documents/extra/".$case_folders->unique_id."/".$document->unique_id) ?>" onclick="fetchFiles(this)" data-subdomain="{{$subdomain}}">
+                                                  <h5 class="mb-0">
+                                                    {{$document->name}}
+                                                  </h5>
+                                                  <ul class="list-inline list-separator small">
+                                                    <li class="list-inline-item">{{$record->caseDocuments($record->unique_id,$document->unique_id,$doc_user_id,'count')}} Files</li>
+                                                    <?php
+                                                        $doc_chats = countUnreadDocChat($case_id,$subdomain,\Auth::user()->role,$document->unique_id);
+                                                        if($doc_chats > 0){
+                                                    ?>
+                                                        <li class="list-inline-item text-danger">{{$doc_chats}} chats</li>
+                                                    <?php } ?>
+                                                  </ul>
+                                            </a>
+                                        </div>
+                                        <div class="col-auto">
+                                        
+                                        </div>
+                                      </div>
+                                      <!-- End Row -->
+                                    </li>
+                                  @endif
+                                <!-- End List Item -->
+                                @endforeach
+                            </ul>
+                      </div>
+                      @endif
+                      
+                  </div>
+                </div>
+              @endif
+            </div>
+          @endif
         </div>
         <!-- End Card -->
     </div>

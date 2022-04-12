@@ -225,14 +225,32 @@ class FrontendController extends Controller
     }
     
     public function bookAppointment(Request $request,$subdomain,$location_id){
-        $subdomain = $subdomain;
-
+        if(!$request->get("eid")){
+            $check_appointments = BookedAppointments::where("user_id",\Auth::user()->unique_id)
+                                                    ->where("appointment_date",">=",date("Y-m-d"))
+                                                    ->where("professional",$subdomain)
+                                                    ->count();
+            
+            if($check_appointments > 2){
+                return redirect(baseUrl('booked-appointments'))->with("error","You already having 3 bookings with the professional");
+            }
+        }
         $company_data = professionalDetail($subdomain);
         $professionalAdmin = professionalAdmin($subdomain);
         
         if($request->get("service_id")){
             $type = "book_appointment";
             $visa_service = professionalService($subdomain,$request->get("service_id"),'unique_id');
+            if(!$request->get("eid")){
+                $check_appointments = BookedAppointments::where("user_id",\Auth::user()->unique_id)
+                                                    ->where("appointment_date",">=",date("Y-m-d"))
+                                                    ->where("visa_service_id",$request->get("service_id"))
+                                                    ->where("professional",$subdomain)
+                                                    ->count();
+                if($check_appointments > 0){
+                    return redirect(baseUrl('booked-appointments'))->with("error","You already having booking with the professional for this service");
+                }
+            }
             
             $viewData['visa_service_id'] = $request->get("service_id");
             $viewData['service'] = $visa_service;
@@ -353,7 +371,7 @@ class FrontendController extends Controller
                     $temp['end'] = $dates[$d];
                     $temp['id'] = $custom_time->id;
                     $temp['time_type'] = 'day_off';
-                    $temp['title'] = $custom_time->description;
+                    $temp['title'] = strip_tags($custom_time->description);
                     $temp['className'] = 'text-danger day-off';
                     $day_schedules[] = $temp;
                 }
@@ -372,11 +390,11 @@ class FrontendController extends Controller
 
             $booked_appointment = BookedAppointments::where("user_id",\Auth::user()->unique_id)
                                                     ->where("appointment_date",$dates[$d])
+                                                    ->where("location_id",$location_id)
                                                     ->count();
             if($booked_appointment > 0){
                 $temp = array();
                 $temp['start'] = $dates[$d];
-                $temp['id'] = $hours->id;
                 $temp['title'] = $booked_appointment. " Appointment(s) booked";
                 $temp['className'] = 'text-primary booked-appointment';
                 $day_schedules[] = $temp;
@@ -475,7 +493,7 @@ class FrontendController extends Controller
             $temp = new \stdClass();
             $temp->from_time = $b_slot['start_time'];
        
-            $temp->to_time = date("H:i",strtotime($b_slot['end_time']." +".$b_slot['break_time']." minutes"));
+            $temp->to_time = date("h:i",strtotime($b_slot['end_time']." +".$b_slot['break_time']." minutes"));
             $book_slots[] = $temp;
         }
 
@@ -550,7 +568,7 @@ class FrontendController extends Controller
         $array_of_time = array();
         while ($start_time <= $end_time) // loop between time
         {
-           $array_of_time[] = date("H:i", $start_time);
+           $array_of_time[] = date("h:i", $start_time);
            $start_time += $add_mins; // to check endtie=me
         }
         return $array_of_time;

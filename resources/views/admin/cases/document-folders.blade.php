@@ -139,7 +139,7 @@ ul.nav.nav-tabs.dependents-list {
                <ul class="list-group professional-request-folders-list droppable" id="accordionProfessionalDoc">
                   <!-- List Item -->
                   <?php
-                  $default_documents = $service->DefaultDocuments($service->service_id);
+                     $default_documents = $service->DefaultDocuments($service->service_id);
                   ?>
                   @foreach($default_documents as $key => $document)
                      <li class="list-group-item">
@@ -184,7 +184,7 @@ ul.nav.nav-tabs.dependents-list {
                            </div>
                         </div>
                         <!-- End Row -->
-                  </li>
+                     </li>
                   <!-- End List Item -->
                   @endforeach
                </ul>

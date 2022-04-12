@@ -57,7 +57,7 @@ class Cases extends Model
                         ->where("user_id",$user_id)
                         ->get();
         if($return == 'count'){
-            return count($documents);
+            return $documents->count();
         }
         return $documents;
     }

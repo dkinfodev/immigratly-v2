@@ -184,8 +184,17 @@
                     <td>{{$location->address}}</td>
                     <td align="right">
                         @if(Auth::check())
+                        @php 
+                        $checkHours = locationHours($subdomain,$location->unique_id);
+                        
+                        @endphp
+                        @if(count($checkHours) > 0)
                         <a href="{{ baseUrl('professional/'.$subdomain.'/book-appointment/'.$location->unique_id) }}" class="btn btn-primary btn-sm">Book Appointment</a>
                         @else
+                        <span class="text-danger">No Schedule Available</span>
+                        @endif
+                        @else
+                        
                         <a href="{{ url('login') }}" class="text-primary">Login to Book Appointment</a>
                         @endif
                     </td>

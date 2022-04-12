@@ -125,7 +125,47 @@
                         </div>
                     </div>
                 </div>
-    
+
+                <div class="case-document custom-field hidden">
+                  <div class="row form-group js-form-message">
+                      <label class="col-sm-3 col-form-label input-label">Default Documents</label>
+                      <div class="col-sm-9">
+                       
+                        <select class="form-control @error('default_document') is-invalid @enderror" name="default_documents[]" multiple id="default_document">
+                          @foreach($default_documents as $key=>$document) 
+                              <option value="{{$document->unique_id}}">{{$document->name}}</option>
+                          @endforeach
+                          </select> 
+                        
+                          <div class="input-group input-group-sm-down-break">
+                              @error('default_document')
+                              <span class="invalid-feedback" role="alert">
+                                  <strong>{{ $message }}</strong>
+                              </span>
+                              @enderror
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row form-group js-form-message">
+                      <label class="col-sm-3 col-form-label input-label">Custom Documents</label>
+                      <div class="col-sm-9">
+                        
+                        <select class="form-control @error('custom_documents') is-invalid @enderror" name="custom_documents[]" multiple id="custom_documents">
+                          @foreach($case_folders as $key=>$document) 
+                            <option value="{{$document->unique_id}}">{{$document->name}}</option>
+                          @endforeach
+                          </select> 
+                        
+                          <div class="input-group input-group-sm-down-break">
+                              @error('custom_documents')
+                              <span class="invalid-feedback" role="alert">
+                                  <strong>{{ $message }}</strong>
+                              </span>
+                              @enderror
+                          </div>
+                      </div>
+                  </div>
+                </div>
                 
                 <div class="form-group">
                     <button type="submit" class="btn add-btn btn-primary">Save</button>
@@ -146,17 +186,15 @@
 
      $("#stage_type").change(function(){
         var tx = $(this).find(':selected').data('type');
+        $(".custom-field").addClass('hidden');
         if(tx == "fill-form"){
           $(".global-form").removeClass('hidden');
-          $(".g-case-tasks").addClass('hidden');
         }
         else if(tx == "case-task"){
           $(".g-case-tasks").removeClass('hidden');  
-          $(".global-form").addClass('hidden');
         }
         else{
-         $(".global-form").addClass('hidden');
-         $(".g-case-tasks").addClass('hidden');
+         $(".case-document").removeClass('hidden');
         }
     });
 

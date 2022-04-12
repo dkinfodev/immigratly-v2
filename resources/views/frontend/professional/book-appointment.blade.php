@@ -32,9 +32,42 @@
                   </div>
                   <div class="card-body">
                       <div class="form-group row">
-                          <label class="custom-label pt-2 col-md-2">Select Visa Service</label>
-                          <div class="col-md-10">
-                              <select onchange="selectService(this)" class="form-control" name="visa_service">
+                          <label class="custom-label mb-2 font-bold">
+                            <strong>Select Visa Service</strong>
+                          </label>
+                          <div class="col-md-12">
+                              <div class="visa-services">
+                                  <table class="table table-bordered">
+                                      <thead class="bg-light">
+                                          <th>&nbsp;</th>
+                                          <th>Visa Service</th>
+                                          <th>Price</th>
+                                      </thead>
+                                      <tbody>
+                                         @foreach($visa_services as $key => $service)
+                                            <tr>
+                                                <th width="5%" class="text-center">
+                                                  <div class="custom-control custom-radio">
+                                                      <input type="radio" id="vs-{{$key}}" class="custom-control-input" onchange="selectService(this)" name="visa_service" value="{{$service['unique_id']}}">
+                                                      <label class="custom-control-label" for="vs-{{$key}}">&nbsp;</label>
+                                                  </div>
+                                                </th>
+                                                <td>
+                                                {{ $service['visa_service']['name'] }}
+                                                </td>
+                                                <td>
+                                                @if($service['price'] == 0)
+                                                   <span class="text-danger"> (Free) </span>
+                                                @else
+                                                ({{currencyFormat().$service['price']}})
+                                                @endif
+                                                </td>
+                                            </tr>
+                                         @endforeach
+                                      </tbody>
+                                  </table>
+                              </div>
+                              {{-- <select onchange="selectService(this)" class="form-control" name="visa_service">
                                   <option value="">Select Service </option>
                                     @foreach($visa_services as $key => $service)
                                       <option value="{{$service['unique_id']}}">{{$service['visa_service']['name']}} 
@@ -46,7 +79,7 @@
                                       </option>
                                     @endforeach
                                     
-                              </select>
+                              </select> --}}
                           </div>
                       </div>
                     </div>

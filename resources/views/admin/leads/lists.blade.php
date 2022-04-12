@@ -58,7 +58,7 @@
           </form>
         </div>
 
-        <div class="col-sm-6">
+        <div class="col-sm-3">
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
             <!-- Datatable Info -->
             <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0" style="display: none;">
@@ -73,6 +73,11 @@
               </div>
             </div>
           </div>
+        </div>
+        <div class="col-sm-3">
+          <a class="btn btn-primary float-right" onclick="showPopup('<?php echo baseUrl('leads/quick-lead') ?>')" href="javascript:;">
+            <i class="tio-user-add mr-1"></i> Quick Lead
+          </a>
         </div>
       </div>
       <!-- End Row -->

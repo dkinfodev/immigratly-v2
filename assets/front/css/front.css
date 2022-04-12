@@ -134,3 +134,5 @@ span.select2-selection.custom-select {
   .bg-disabled{
     background-color: #e9ecef;
   }
+  
+#calendar td.fc-event-container {text-align: center;}

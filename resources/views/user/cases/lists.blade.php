@@ -180,14 +180,17 @@
                             </div>
                         </td>
                         <td>
+                            @php 
+                                $index = mt_rand(111,999);
+                            @endphp
                             <div class="hs-unfold">
                                 <a class="js-hs-action btn btn-sm btn-white" href="javascript:;" data-hs-unfold-options='{
-                                    "target": "#action-{{$key}}",
+                                    "target": "#action-{{$index}}",
                                     "type": "css-animation"
                                     }'>
                                     More <i class="tio-chevron-down ml-1"></i>
                                 </a>
-                                <div id="action-{{$key}}"
+                                <div id="action-{{$index}}"
                                     class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right">
                                     <a class="dropdown-item"
                                         href="{{baseUrl('cases/view/'.$professional->professional.'/'.$record['unique_id'])}}">
