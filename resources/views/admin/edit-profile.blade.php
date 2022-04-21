@@ -654,14 +654,20 @@
 
 <script>
 $(document).on('ready', function() {
-    $('#date_of_birth,#date_of_register').datepicker({
+    $('#date_of_birth').datepicker({
         format: 'dd/mm/yyyy',
         autoclose: true,
-        maxDate: (new Date()).getDate(),
+        endDate: "-16y",
         todayHighlight: true,
         orientation: "bottom auto"
     });
-
+    $('#date_of_register').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        endDate: new Date(),
+        todayHighlight: true,
+        orientation: "bottom auto"
+    });
     $('.js-validate').each(function() {
         $.HSCore.components.HSValidation.init($(this));
     });

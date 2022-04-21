@@ -122,7 +122,7 @@
                                   <li class="list-group-item">
                                       <div class="row">
                                         <div class="col-auto">
-                                            @if($case->caseDocuments($case_folders->unique_id,$document->unique_id,$doc_user_id,'count') > 0)
+                                            @if($case->caseDocuments($case->unique_id,$document->unique_id,$doc_user_id,'count') > 0)
                                             <img class="avatar avatar-xs avatar-4by3" src="assets/svg/folder-files.svg" alt="Image Description">
                                             @else
                                             <img class="avatar avatar-xs avatar-4by3" src="assets/svg/folder.svg" alt="Image Description">
@@ -131,12 +131,12 @@
 
                                         <div class="col" data-toggle="collapse" data-target="#collapseDefaultDoc-{{ $key }}"
                                             aria-expanded="true" aria-controls="collapseDefaultDoc-{{ $key }}">
-                                            <a href="<?php echo baseUrl("cases/case-documents/extra/".$case_folders->unique_id."/".$document->unique_id) ?>" onclick="fetchFiles(this)" data-subdomain="{{$subdomain}}">
+                                            <a href="<?php echo baseUrl("cases/case-documents/extra/".$case->unique_id."/".$document->unique_id) ?>" onclick="fetchFiles(this)" data-subdomain="{{$subdomain}}">
                                                   <h5 class="mb-0">
                                                     {{$document->name}}
                                                   </h5>
                                                   <ul class="list-inline list-separator small">
-                                                    <li class="list-inline-item">{{$record->caseDocuments($record->unique_id,$document->unique_id,$doc_user_id,'count')}} Files</li>
+                                                    <li class="list-inline-item">{{$case->caseDocuments($case->unique_id,$document->unique_id,$doc_user_id,'count')}} Files</li>
                                                     <?php
                                                         $doc_chats = countUnreadDocChat($case_id,$subdomain,\Auth::user()->role,$document->unique_id);
                                                         if($doc_chats > 0){

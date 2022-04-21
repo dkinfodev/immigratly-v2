@@ -23,7 +23,7 @@ class SuperAdmin
             else
                 return Redirect::to('/home');
         }else{
-            return Redirect::to('/login');
+            return Redirect::to('/super-admin/login');
         }
     }
 }

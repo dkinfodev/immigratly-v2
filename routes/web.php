@@ -65,6 +65,7 @@ Route::group(array('prefix' => 'quick-eligibility'), function () {
 Route::post('/assessment/u/{id}', [App\Http\Controllers\Frontend\FrontendController::class, 'saveExternalAssessment'])->name("save-external-assessment");
 Route::group(array('middleware' => 'frontend'), function () {
     Route::get('/', [App\Http\Controllers\Frontend\FrontendController::class, 'index']);
+    Route::get('/home', [App\Http\Controllers\Frontend\FrontendController::class, 'home'])->name('home');
     Route::get('/dbupdate', [App\Http\Controllers\Frontend\FrontendController::class, 'dbUpdate']);
     
     Route::get('/articles', [App\Http\Controllers\Frontend\FrontendController::class, 'articles']);
@@ -83,6 +84,8 @@ Route::group(array('middleware' => 'frontend'), function () {
     Route::get('/professionals/', [App\Http\Controllers\Frontend\FrontendController::class, 'professionals']);
     Route::post('/professionals-list/', [App\Http\Controllers\Frontend\FrontendController::class, 'professionalAjaxList']);
     Route::get('/professional/{subdomain}', [App\Http\Controllers\Frontend\FrontendController::class, 'professionalDetail']);
+    Route::get('/professional/{subdomain}/post-a-case', [App\Http\Controllers\Frontend\FrontendController::class, 'caseWithProfessional']);
+    Route::post('/professional/{subdomain}/post-a-case', [App\Http\Controllers\Frontend\FrontendController::class, 'saveCaseWithProfessional']);
     Route::get('/professional/write-review/{unique_id}', [App\Http\Controllers\Frontend\FrontendController::class, 'ReviewProfessional']);
     Route::post('/professional/send-review/{unique_id}', [App\Http\Controllers\Frontend\FrontendController::class, 'sendReviewProfessional']);
     
@@ -114,14 +117,23 @@ Route::group(array('middleware' => 'frontend'), function () {
     
 });
 // Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
 Route::get('/random_number', [App\Http\Controllers\HomeController::class, 'random_number']);
-Route::get('/welcome', [App\Http\Controllers\HomeController::class, 'welcome_page']);
+Route::get('/professional-registered-successfully', [App\Http\Controllers\HomeController::class, 'welcome_page']);
 Route::get('/dbupgrade', [App\Http\Controllers\HomeController::class, 'dbupgrade']);
 Route::get('/states', [App\Http\Controllers\CommonController::class, 'stateList']);
 Route::get('/cities', [App\Http\Controllers\CommonController::class, 'cityList']);
 
 Route::get('/licence-bodies', [App\Http\Controllers\CommonController::class, 'licenceBodies']);
+
+Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm']);
+Route::post('/user/login', [App\Http\Controllers\Auth\LoginController::class, 'loginAsUser'])->name("user.login");
+
+Route::get('/super-admin/login', [App\Http\Controllers\Auth\LoginController::class, 'showSuperAdminLogin']);
+Route::post('/super-admin/login', [App\Http\Controllers\Auth\LoginController::class, 'loginAsSuperAdmin'])->name("super-admin.login");
+
+Route::get('/login/professional', [App\Http\Controllers\Auth\LoginController::class, 'professionalLogin']);
+Route::post('/login/professional', [App\Http\Controllers\Auth\LoginController::class, 'loginAsProfessional'])->name("professional.login");
 
 Route::get('/signup/professional', [App\Http\Controllers\Auth\RegisterController::class, 'professionalSignup']);
 Route::post('/signup/professional', [App\Http\Controllers\Auth\RegisterController::class, 'registerProfessional']);
@@ -429,6 +441,8 @@ Route::group(array('prefix' => 'super-admin', 'middleware' => 'super_admin'), fu
         Route::post('/ajax-inactive', [App\Http\Controllers\SuperAdmin\ProfessionalController::class, 'getPendingList']);
         Route::get('/update-all-databases', [App\Http\Controllers\SuperAdmin\ProfessionalController::class, 'editAllDatabase']);
         Route::post('/update-all-databases', [App\Http\Controllers\SuperAdmin\ProfessionalController::class, 'updateAllDatabase']);
+        Route::post('/create-database', [App\Http\Controllers\SuperAdmin\ProfessionalController::class, 'createDatabase']);
+        Route::post('/delete-professional', [App\Http\Controllers\SuperAdmin\ProfessionalController::class, 'deleteProfessional']);
         
         Route::post('/status/{status}', [App\Http\Controllers\SuperAdmin\ProfessionalController::class, 'changeStatus']);
         Route::post('/profile-status/{status}', [App\Http\Controllers\SuperAdmin\ProfessionalController::class, 'profileStatus']);
@@ -981,6 +995,7 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
         Route::post('/approve-case', [App\Http\Controllers\User\ProfessionalCasesController::class, 'approveCase']);
         Route::get('/tasks/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'caseTasks']);
 
+        
         Route::get('/view/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'view']);
         Route::get('/stages/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'stages']);
         Route::post('/stages/ajax-list', [App\Http\Controllers\User\ProfessionalCasesController::class, 'getStagesList']);
@@ -993,6 +1008,7 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
         Route::post('/save-chat', [App\Http\Controllers\User\ProfessionalCasesController::class, 'saveChat']);
         Route::post('/save-chat-file', [App\Http\Controllers\User\ProfessionalCasesController::class, 'saveChatFile']);
         Route::get('/chat-demo', [App\Http\Controllers\User\ProfessionalCasesController::class, 'chatdemo']);
+        
         
        
         Route::group(array('prefix' => 'google-drive'), function () {
@@ -1081,11 +1097,11 @@ Route::group(array('prefix' => 'admin'), function () {
     Route::group(array('middleware' => 'auth'), function () {
         Route::get('/complete-profile', [App\Http\Controllers\Admin\ProfileController::class, 'completeProfile']);
         Route::post('/save-profile', [App\Http\Controllers\Admin\ProfileController::class, 'saveProfile']);
-        Route::post('/save-profile', [App\Http\Controllers\Admin\ProfileController::class, 'saveProfile']);
 
         Route::get('/edit-profile', [App\Http\Controllers\Admin\ProfileController::class, 'EditProfile']);
         Route::post('/update-profile', [App\Http\Controllers\Admin\ProfileController::class, 'updateProfile']);
         Route::post('/fetch-chats', [App\Http\Controllers\Admin\ProfileController::class, 'fetchSupportChats']);
+        Route::post('/fetch-messages', [App\Http\Controllers\Admin\ProfileController::class, 'fetchSupportChats']);
         Route::post('/send-message-to-support', [App\Http\Controllers\Admin\ProfileController::class, 'sendChatToSupport']);
         Route::post('/send-file-to-support', [App\Http\Controllers\Admin\ProfileController::class, 'saveDocumentChatFile']);
     }); 
@@ -1328,6 +1344,7 @@ Route::group(array('prefix' => 'admin'), function () {
             Route::get('/', [App\Http\Controllers\Admin\CasesController::class, 'cases']);
             Route::post('/ajax-list', [App\Http\Controllers\Admin\CasesController::class, 'getAjaxList']);
             Route::get('/add', [App\Http\Controllers\Admin\CasesController::class, 'add']);
+            Route::get('/posted-by-clients', [App\Http\Controllers\Admin\CasesController::class, 'casesByClient']);
             Route::post('/save', [App\Http\Controllers\Admin\CasesController::class, 'save']);
             Route::get('/add-group-case', [App\Http\Controllers\Admin\CasesController::class, 'addGroupCase']);
             Route::post('/add-group-case', [App\Http\Controllers\Admin\CasesController::class, 'saveGroupCase']);
@@ -1345,6 +1362,8 @@ Route::group(array('prefix' => 'admin'), function () {
             Route::get('/edit-group-case/{id}', [App\Http\Controllers\Admin\CasesController::class, 'editGroupCase']);
             Route::post('/update-group-case/{id}', [App\Http\Controllers\Admin\CasesController::class, 'updateGroupCase']);
             Route::get('/remove-assigned-user/{id}', [App\Http\Controllers\Admin\CasesController::class, 'removeAssignedUser']);
+
+            Route::post('/approve-case', [App\Http\Controllers\Admin\CasesController::class, 'approveCase']);
 
             Route::get('/view/{id}', [App\Http\Controllers\Admin\CasesController::class, 'view']);
             Route::get('/dependents/{id}', [App\Http\Controllers\Admin\CasesController::class, 'caseDependents']);

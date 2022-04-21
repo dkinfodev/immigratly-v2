@@ -176,7 +176,7 @@
                                         {{$document['name']}}
                                     </h5>
                                     <ul class="list-inline list-separator small">
-                                        <li class="list-inline-item">{{$document['files_count']}} Files</li>
+                                        <li class="list-inline-item">{{count($document['files_count'])}} Files</li>
                                         <?php
                                                 
                                                 $doc_chats = countUnreadDocChat($case_id,$subdomain,"client",$document['unique_id']);

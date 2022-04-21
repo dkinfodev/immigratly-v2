@@ -26,7 +26,14 @@ class SocialLoginController extends Controller
         if($users){
             if($users->role == 'user'){
                 Auth::loginUsingId($users->id);
-                return redirect(baseUrl('/')); 
+                if(\Session::get('redirect_back')){
+                    $redirect = \Session::get('redirect_back');
+                    \Session::forget('redirect_back');
+                    return redirect($redirect);
+                }
+                else{
+                     return redirect(baseUrl('/'));
+                }
             }else{
                 return redirect('/login')->with("error_message","Your account is registered as ".$users->role.". Please try to login with your credentails or contact the support team"); 
             }
@@ -58,7 +65,15 @@ class SocialLoginController extends Controller
             $object = new UserDetails();
             $object->user_id = $unique_id;
             $object->save();
-            return redirect('/home');
+            // return redirect('/home');
+            if(\Session::get('redirect_back')){
+                $redirect = \Session::get('redirect_back');
+                \Session::forget('redirect_back');
+                return redirect($redirect);
+            }
+            else{
+                 return redirect(baseUrl('/'));
+            }
         }
     }
 

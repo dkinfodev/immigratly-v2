@@ -70,18 +70,17 @@
                 @csrf
                 <div class="text-center mb-5">
                   <h1 class="display-4">Sign in</h1>
-                  @if(\Session::get('login_to') != 'professional_panel')
+                 
                   <p>Don't have an account yet? <br>
-                   <a href="{{ url('signup/professional') }}">Sign up as Professional</a> | 
-                   <a href="{{ url('signup/user') }}">Sign up as User</a>
+                   <a href="{{ url('signup/user') }}">Create your Account</a>
                   </p>
-                  @endif
+                
                 </div>
-                @if(\Session::get('login_to') != 'professional_panel')
-                <div class="mb-4">
+                
+                <div class="mb-4 text-center">
                   <a class="btn btn-lg btn-white btn-block" href="{{ url('login/google') }}">
-                    <span class="d-flex justify-content-center align-items-center">
-                      <img class="avatar avatar-xss mr-2" src="assets/svg/brands/google.svg" alt="Image Description">
+                    <span class="text-center">
+                      <!-- <img class="img-responsiv" src="assets/svg/brands/google.svg" alt="Image Description"> -->
                       Sign in with Google
                     </span>
                   </a>
@@ -90,7 +89,7 @@
                 <div class="text-center mb-4">
                   <span class="divider text-muted">OR</span>
                 </div>
-                @endif
+               
                 <!-- Form Group -->
                 <div class="js-form-message form-group">
                   <label class="input-label" for="signupSrEmail">Your email</label>
@@ -109,8 +108,7 @@
                   <label class="input-label" for="signupSrPassword" tabindex="0">
                     <span class="d-flex justify-content-between align-items-center">
                       Password
-                      <a class="input-label-secondary" href="{{ url('forgot-password') }}">Forgot Password?</a>
-                    </span>
+                      </span>
                   </label>
 
                   <div class="input-group input-group-merge">
@@ -128,6 +126,7 @@
                       </a>
                     </div>
                   </div>
+                  <a class="input-label-secondary float-right" href="{{ url('forgot-password') }}">Forgot Password?</a>
                   @error('password')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -151,9 +150,9 @@
                     <div class="alert alert-success"><i class="fa fa-check"></i> {{ Session::get("success_message") }}</div>
                 @endif
                 <button type="submit" class="btn btn-lg btn-block btn-primary">Sign in</button>
-                @if(\Session::get('login_to') != 'professional_panel')
+               
                 <a class="text-dark float-right" href="{{ url('/') }}"><i class="tio-home"></i> Back To Home</a>
-                @endif
+              
                 <div class="clearfix"></div>
               </form>
               <!-- End Form -->

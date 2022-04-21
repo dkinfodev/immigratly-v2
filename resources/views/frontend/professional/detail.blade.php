@@ -65,21 +65,26 @@
                   <a href="tel:{{$company_data->country_code}} {{$company_data->phone_no}}" class="btn btn-outline btn-primary btn-block"><i class="tio-call nav-icon"></i>{{$company_data->country_code}} {{$company_data->phone_no}}</a>   
                   
                   <hr>
-                  <div class="sharing-icons">
-                  <p><i class="fa fa-share"></i> Share this profile</p>
-                    <a class="btn btn-primary" href="www.facebook.com" style="margin-left: 10px;margin-right: 10px;"><i class="fa fa-facebook" style="font-size: 20px;padding-top:4px;"></i></a>
+                  <div class="sharing-icons text-center">
+                    @if(Auth::check())
+                    <a class="btn btn-warning" onclick="showPopup('<?php echo url('professional/'.$subdomain.'/post-a-case') ?>')"><i class="fa fa-plus" style="font-size: 20px;padding-top:4px;"></i> Start a Case With Professional</a>
+                     @else
+                     <a class="btn btn-warning" href="{{ url('login?redirect_back='.url()->current()) }}"><i class="fa fa-plus" style="font-size: 20px;padding-top:4px;"></i> Login Start a Case With Professional</a>
+                     @endif
+                  <!-- <p><i class="fa fa-share"></i> Share this profile</p>
+                    <a class="btn btn-primary" href="https://www.facebook.com" style="margin-left: 10px;margin-right: 10px;"><i class="fa fa-facebook" style="font-size: 20px;padding-top:4px;"></i></a>
 
 
-                    <a class="btn btn-info"  href="www.facebook.com" style="margin-left: 10px;margin-right: 10px;"><i class="fa fa-twitter" style="font-size: 20px;padding-top:4px;"></i></a>
+                    <a class="btn btn-info"  href="https://www.facebook.com" style="margin-left: 10px;margin-right: 10px;"><i class="fa fa-twitter" style="font-size: 20px;padding-top:4px;"></i></a>
 
                     
-                    <a class="btn btn-warning"  href="www.facebook.com" style="margin-left: 10px;margin-right: 10px;"><i class="fa fa-envelope" style="font-size: 20px;padding-top:4px;"></i></a>
+                    <a class="btn btn-warning"  href="https://www.facebook.com" style="margin-left: 10px;margin-right: 10px;"><i class="fa fa-envelope" style="font-size: 20px;padding-top:4px;"></i></a>
 
 
-                    <a class="btn btn-primary bg-navy"  href="www.facebook.com" style="margin-left: 10px;margin-right: 10px;"><i class="fa fa-linkedin" style="font-size: 20px;padding-top:4px;"></i></a>
+                    <a class="btn btn-primary bg-navy"  href="https://www.facebook.com" style="margin-left: 10px;margin-right: 10px;"><i class="fa fa-linkedin" style="font-size: 20px;padding-top:4px;"></i></a>
 
 
-                    <a class="btn btn-secondary"  href="www.facebook.com" style="margin-left: 10px;margin-right: 10px;"><i class="fa fa-link" style="font-size: 20px;padding-top:4px;"></i></a>
+                    <a class="btn btn-secondary"  href="https://www.facebook.com" style="margin-left: 10px;margin-right: 10px;"><i class="fa fa-link" style="font-size: 20px;padding-top:4px;"></i></a> -->
 
                   </div>
                 </div>
@@ -195,7 +200,7 @@
                         @endif
                         @else
                         
-                        <a href="{{ url('login') }}" class="text-primary">Login to Book Appointment</a>
+                        <a href="{{ url('login') }}?redirect_back={{ url()->current() }}" class="text-primary">Login to Book Appointment</a>
                         @endif
                     </td>
                   </tr>

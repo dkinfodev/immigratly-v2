@@ -1886,34 +1886,34 @@ class ProfessionalCasesController extends Controller
         $apiData = array();
         $apiData['case_id'] = $case_id;
         $case = professionalCurl('cases/documents',$subdomain,$apiData);
-
+        
         $viewData['pageTitle'] = $record['name'];
         $case_documents = array();
         $form_json = array();
         $custom_documents = array();
         $default_documents = array();
+        $service = array();
+        $documents = array();
+        if(isset($case['status']) && $case['status'] == 'success'){
+            $case_data = $case['data'];
+            $service = $case_data['service'];
+            $case_folders = $case_data['case_folders'];
+            $documents = $case_data['documents'];
+        }
         if($record['stage_type'] == 'case-document'){
            
             if($record['case_documents'] != ''){
                 $case_documents =  json_decode($record['case_documents'],true);
             }
-
-            if(isset($case['status']) && $case['status'] == 'success'){
-                $case_data = $case['data'];
-                $service = $case_data['service'];
-                $case_folders = $case_data['case_folders'];
-                $documents = $case_data['documents'];
-            }
         }
         if($record['stage_type'] == 'fill-form'){
-            $form_json = $record['fill_form']['form_json'];
-        
-            if($record['fill_form']['form_reply'] != ''){
-                $postData = json_decode($record['fill_form']['form_reply'],true);
-                
+            $form_json = json_decode($record['fill_form']['form_json'],true);
+            if($record['form_reply'] != ''){
+                $postData = json_decode($record['form_reply'],true);
+               
                 $form_reply = array();
                 foreach($form_json as $form){
-                    $temp = array();
+                    $temp = $form;
                     
                     if(isset($form['name']) && isset($postData[$form['name']])){
                         if(isset($form['values'])){
@@ -1949,15 +1949,14 @@ class ProfessionalCasesController extends Controller
                         $form_reply[] = $temp;
                     }
                 }
-                $form_json = $form_reply;
+                // $form_json = json_encode($form_reply);
             }
         }
-      
         $viewData['service'] = $service;
         $viewData['documents'] = $documents;
         $viewData['case_folders'] = $case_folders;
         $viewData['default_documents'] = $default_documents;
-        $viewData['form_json'] = $form_json;
+        $viewData['form_json'] = json_encode($form_json);
         $viewData['record'] = $record;
         $viewData['case_id'] = $case_id;
         $viewData['subdomain'] = $subdomain;
@@ -1974,64 +1973,68 @@ class ProfessionalCasesController extends Controller
         // }
     }
 
-    public function viewStageFormReply($id,Request $request){
+    public function viewStageFormReply($subdomain,$sub_stage_id,Request $request){
         $apiData['sub_stage_id'] = $sub_stage_id;
         $apiData['subdomain'] = $subdomain;
         $apiData['client_id'] = \Auth::user()->unique_id;
         $api_response = professionalCurl('cases/fetch-sub-stage',$subdomain,$apiData);
-
+        
         if(isset($api_response['status']) && $api_response['status'] == 'success'){
             $record = $api_response['data'];
         }else{
-            return redirect()->back()->with("error","Sub stage not found");
+            $response['message'] = "Something went wrong";
+            $response['status'] = false;
+            return response()->json($response);
         }
 
         $form_json = json_decode($record['fill_form']['form_json'],true);
-        if($record['fill_form']['form_reply'] != ''){
-            $postData = json_decode($record['fill_form']['form_reply'],true);
-            $form_reply = array();
-            foreach($form_json as $form){
-                $temp = array();
+        // pre($form_json);
+        if($record['form_reply'] != ''){
+            $postData = json_decode($record['form_reply'],true);
+            // $form_reply = array();
+            // foreach($form_json as $form){
+            //     $temp = array();
                 
-                if(isset($form['name']) && isset($postData[$form['name']])){
-                    if(isset($form['values'])){
-                        $values = $form['values'];
-                        $final_values = array();
-                        foreach($values as $value){
-                            $tempVal = $value;
-                            if(is_array($postData[$form['name']])){
-                                if(in_array($value['value'],$postData[$form['name']])){
-                                    $tempVal['selected'] = true;
+            //     if(isset($form['name']) && isset($postData[$form['name']])){
+            //         if(isset($form['values'])){
+            //             $values = $form['values'];
+            //             $final_values = array();
+            //             foreach($values as $value){
+            //                 $tempVal = $value;
+            //                 if(is_array($postData[$form['name']])){
+            //                     if(in_array($value['value'],$postData[$form['name']])){
+            //                         $tempVal['selected'] = true;
                                     
-                                }else{
-                                    $tempVal['selected'] = false;
-                                }
-                            }else{
-                                if($value['value'] == $postData[$form['name']]){
-                                    $tempVal['selected'] = true;
-                                    if($form['type'] == 'autocomplete'){
-                                        $temp['value'] = $value['label'];
-                                    }
-                                }else{
-                                    $tempVal['selected'] = false;
-                                }
-                            }
-                            $final_values[] = $tempVal;
-                        }
-                    }else{
-                        $temp['value'] = $postData[$form['name']];
-                    }
-                }
-                if(isset($temp['value'])){
-                    $temp['label'] = $form['label'];
-                    $form_reply[] = $temp;
-                }
-            }
-            $form_json = $form_reply;
+            //                     }else{
+            //                         $tempVal['selected'] = false;
+            //                     }
+            //                 }else{
+            //                     if($value['value'] == $postData[$form['name']]){
+            //                         $tempVal['selected'] = true;
+            //                         if($form['type'] == 'autocomplete'){
+            //                             $temp['value'] = $value['label'];
+            //                         }
+            //                     }else{
+            //                         $tempVal['selected'] = false;
+            //                     }
+            //                 }
+            //                 $final_values[] = $tempVal;
+            //             }
+            //         }else{
+            //             $temp['value'] = $postData[$form['name']];
+            //         }
+            //     }
+            //     if(isset($temp['value'])){
+            //         $temp['label'] = $form['label'];
+            //         $form_reply[] = $temp;
+            //     }
+            // }
+            $form_json = $postData;
         }
         $viewData['form_json'] = $form_json;
+        $viewData['record'] = $record;
         $viewData['pageTitle'] = "Reply by Client";
-        $view = View::make(roleFolder().'.cases.stages.modal.view-form-reply',$viewData);
+        $view = View::make(roleFolder().'.cases.modal.view-form-reply',$viewData);
         $contents = $view->render();
         $response['contents'] = $contents;
         $response['status'] = true;

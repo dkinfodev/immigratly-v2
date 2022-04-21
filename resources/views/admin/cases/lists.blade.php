@@ -10,41 +10,6 @@
 @endsection
 
 
-@section('pageheader')
-<!-- Content -->
-<div class="">
-    <div class="content container" style="height: 25rem;">
-        <!-- Page Header -->
-        <div class="page-header page-header-light page-header-reset">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h1 class="page-header-title">{{$pageTitle}}</h1>
-                </div>
-
-                <div class="col-auto">
-                  <!-- Dropdown -->
-                  <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Create Case
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <a class="dropdown-item" href="<?php echo baseUrl('cases/add') ?>">Single Case</a>
-                      <a class="dropdown-item" href="<?php echo baseUrl('cases/add-group-case') ?>">Group Case</a>
-                    </div>
-                  </div>
-                  <!-- End Dropdown -->
-                  <!-- <a class="btn btn-primary" href="<?php echo baseUrl('cases/add') ?>">
-                    <i class="tio-user-add mr-1"></i> Create Case
-                  </a> -->
-                </div>
-            </div>
-            <!-- End Row -->
-        </div>
-        <!-- End Page Header -->
-    </div>
-</div>
-<!-- End Content -->
-@endsection
 @section('content')
 
 <style>
@@ -62,7 +27,7 @@
     <!-- Header -->
     <div class="card-header">
       <div class="row justify-content-between align-items-center flex-grow-1">
-        <div class="col-sm-6 col-md-4 mb-3 mb-sm-0">
+        <div class="col-sm-4 col-md-4 mb-3 mb-sm-0">
           <form>
             <!-- Search -->
             <div class="input-group input-group-merge input-group-flush">
@@ -77,7 +42,7 @@
           </form>
         </div>
 
-        <div class="col-sm-4">
+        <div class="col-sm-2">
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
             <!-- Datatable Info -->
             <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0" style="display: none;">
@@ -94,8 +59,10 @@
           </div>
         </div>
 
-        <div class="col-sm-3">
+        <div class="col-sm-6">
+            
             <div class="dropdown float-right">
+              
               <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Create Case
               </button>
@@ -104,6 +71,12 @@
                 <a class="dropdown-item" href="<?php echo baseUrl('cases/add-group-case') ?>">Group Case</a>
               </div>
             </div>
+            
+            @if($case_by != 'client')
+              <a href="{{ baseUrl('/cases/posted-by-clients') }}" class="float-right mr-2 mt-2">{{$client_cases}} posted by clients</a>
+            @else  
+              <a href="{{ baseUrl('/cases') }}" class="float-right mr-2 mt-2">All Cases</a>
+            @endif
         </div>
       </div>
       <!-- End Row -->
@@ -202,7 +175,8 @@ function loadData(page=1){
       url: BASEURL + '/cases/ajax-list?page='+page,
       data:{
           _token:csrf_token,
-          search:search
+          search:search,
+          case_by:"{{$case_by}}"
       },
       dataType:'json',
       beforeSend:function(){
@@ -222,6 +196,56 @@ function loadData(page=1){
       }
   });
 }
+function caseApprovalStatus(case_id,client_id){
 
+    if($(this).is(":checked")){
+      $.ajax({
+          type: "POST",
+          url: BASEURL + '/cases/approve-case',
+          data:{
+              _token:csrf_token,
+              client_id:client_id,
+              case_id:case_id,
+          },
+          dataType:'json',
+          beforeSend:function(){
+            showLoader();
+          },
+          success: function (result) {
+              if(result.status == true){
+                  successMessage(result.message);
+                  location.reload();
+              }else{
+                  errorMessage(result.message);
+              }
+          },
+      });
+    }else{
+      $.ajax({
+          type: "POST",
+          url: BASEURL + '/cases/approve-case',
+          data:{
+              _token:csrf_token,
+              client_id:client_id,
+              case_id:case_id,
+          },
+          dataType:'json',
+          beforeSend:function(){
+            showLoader();
+          },
+          success: function (result) {
+              if(result.status == true){
+                  successMessage(result.message);
+                  location.reload();
+              }else{
+                  errorMessage(result.message);
+              }
+          },
+          error: function(){
+            internalError();
+          }
+      });
+    }
+}
 </script>
 @endsection

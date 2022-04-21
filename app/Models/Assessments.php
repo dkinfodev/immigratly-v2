@@ -14,7 +14,10 @@ class Assessments extends Model
     static function deleteRecord($id){
         $assessment = Assessments::where("id",$id)->first();
         Assessments::where("id",$id)->delete();
-        AssessmentDocuments::where("assessment_id",$id)->delete();
+        AssessmentForms::where("assessment_id",$assessment->unique_id)->delete();
+        AssessmentDocuments::where("assessment_id",$assessment->unique_id)->delete();
+        AssessmentNotes::where("assessment_id",$assessment->unique_id)->delete();
+        AssessmentReports::where("assessment_id",$assessment->unique_id)->delete();
         UserInvoices::deleteRecord($assessment->Invoice->id);
         
     }

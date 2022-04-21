@@ -25,8 +25,10 @@
       <?php
       $check_profile = checkProfileStatus($record->subdomain);
       $profile_checked = '';
+      $database_exists = 1;
       if($check_profile['status'] == 'success'){
         $professional_profile = $check_profile['professional'];
+
         if($professional_profile->profile_status == 0){
           echo '<span class="legend-indicator bg-danger"></span> Profile Pending';
         }else if($professional_profile->profile_status == 1){
@@ -36,9 +38,12 @@
           echo '<span class="legend-indicator bg-success"></span> Profile Verified';
         }
         else{
+          $database_exists = 0;
           echo '<span class="legend-indicator bg-info"></span> Profile data not found';
         }
-      }else{ ?>
+      }else{ 
+        $database_exists = 0;
+      ?>
         <span class="legend-indicator bg-warning"></span> Panel Not Exists
       <?php } ?>
 
@@ -91,8 +96,12 @@
   </td> -->
   <td>
     @if($check_profile['status'] == 'success')
-    <a href="{{baseUrl('/professionals/view/'.base64_encode($record->id))}}"><i class="tio-visible"></i> Details</a>
+    <div><a href="{{baseUrl('/professionals/view/'.base64_encode($record->id))}}" class="btn btn-outline-info btn-sm w-100 mb-3"><i class="tio-visible"></i> Details</a></div>
     @endif
+    @if($database_exists == 0)
+    <div><a href="javascript:;" onclick="createDatabase('{{$record->subdomain}}')" class="btn btn-outline-warning btn-sm w-100 mb-3"><i class="fa fa-database"></i> Create Database</a></div>
+    @endif
+    <div><a href="javascript:;" onclick="confirmProfessional('{{$record->unique_id}}')" class="btn btn-outline-danger btn-sm w-100 mb-3"><i class="fa fa-database"></i> Delete Professional</a></div>
   </td>
 </tr>
 @endforeach

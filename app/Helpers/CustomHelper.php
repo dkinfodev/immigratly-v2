@@ -507,6 +507,27 @@ if(!function_exists("generateString")){
         return $randomString; 
     } 
 }
+if(!function_exists("generatePassword")){
+    function generatePassword($n=8) { 
+        // $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
+        $number = "1234567890";
+        $upper_case = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        $lower_case = "abcdefghijklmnopqrstuvwxyz";
+        $special_char = "@#$%^&*()+_";
+        $randomString = randomChars($lower_case, mt_rand(0,2)); 
+        $randomString .= randomChars($upper_case, mt_rand(0,2)); 
+        $randomString .= randomChars($special_char, mt_rand(0,2)); 
+        $randomString .= randomChars($number, mt_rand(0,2)); 
+        
+        $randomString = str_shuffle($randomString);
+        // for ($i = 0; $i < $n; $i++) { 
+        //     $index = rand(0, strlen($characters) - 1); 
+        //     $randomString .= $characters[$index]; 
+        // } 
+      
+        return $randomString; 
+    } 
+}
 if(!function_exists("randomNumber")){
     function randomNumber($n=10) { 
         $characters = '1123456789'; 
@@ -543,60 +564,172 @@ if(!function_exists("findInitial")){
 }
 if(!function_exists("createSubDomain")){
     function createSubDomain($subdomain,$dbname){
-        $rootdomain = Settings::where("meta_key",'rootdomain')->first();
-        $rootdomain = $rootdomain->meta_value;
+        try{
 
-        $root_dir = Settings::where("meta_key",'root_dir')->first();
-        $root_dir = $root_dir->meta_value;
+            
+            $rootdomain = Settings::where("meta_key",'rootdomain')->first();
+            $rootdomain = $rootdomain->meta_value;
 
-        $db_username = Settings::where("meta_key",'db_username')->first();
-        $db_username = $db_username->meta_value;
+            $root_dir = Settings::where("meta_key",'root_dir')->first();
+            $root_dir = $root_dir->meta_value;
 
-        $parameters = [
-            'domain' => $subdomain,
-            'rootdomain' => $rootdomain,
-            'dir' => $root_dir,
-            'disallowdot' => 1,
-        ];
+            $db_username = Settings::where("meta_key",'db_username')->first();
+            $db_username = $db_username->meta_value;
 
-        $cpanel_user = Settings::where("meta_key",'cpanel_user')->first();
-        $cpanel_user = $cpanel_user->meta_value;
+            $parameters = [
+                'domain' => $subdomain,
+                'rootdomain' => $rootdomain,
+                'dir' => $root_dir,
+                'disallowdot' => 1,
+            ];
 
-        $cpanel_pass = Settings::where("meta_key",'cpanel_pass')->first();
-        $cpanel_pass = $cpanel_pass->meta_value;
+            $cpanel_user = Settings::where("meta_key",'cpanel_user')->first();
+            $cpanel_user = $cpanel_user->meta_value;
 
-        $cpanel_ip = Settings::where("meta_key",'cpanel_ip')->first();
-        $cpanel_ip = $cpanel_ip->meta_value;
+            $cpanel_pass = Settings::where("meta_key",'cpanel_pass')->first();
+            $cpanel_pass = $cpanel_pass->meta_value;
 
-        $cPanel = new cPanel($cpanel_user, $cpanel_pass, $cpanel_ip);
-        $result = $cPanel->execute('api2',"SubDomain", "addsubdomain" , $parameters);
-        if (isset($result->cpanelresult->error)) {
-            $response['status'] = "error";
-            $message = "Cannot add sub domain : {$result->cpanelresult->error}";
-            $response['message'] = $message;
-            return $response;
-        }else{
-            $response['status'] = "success";
-            $message = "Subdomain created successfully";
+            $cpanel_ip = Settings::where("meta_key",'cpanel_ip')->first();
+            $cpanel_ip = $cpanel_ip->meta_value;
+
+            $cPanel = new cPanel($cpanel_user, $cpanel_pass, $cpanel_ip);
+            $result = $cPanel->execute('api2',"SubDomain", "addsubdomain" , $parameters);
+            if (isset($result->cpanelresult->error)) {
+                $response['status'] = "error";
+                $message = "Cannot add sub domain : {$result->cpanelresult->error}";
+                $response['message'] = $message;
+                return $response;
+            }else{
+                $response['status'] = "success";
+                $message = "Subdomain created successfully";
+            }
+            $parameter = array();
+            $parameter = [ 'name' => $dbname];
+            $result = $cPanel->execute('uapi', 'Mysql', 'create_database', $parameter);
+            if (!$result->status == 1) {
+                $message = "Cannot create database : {$result->errors[0]}";
+                $response['message'] = $message;
+                return $response;
+            }
+            
+            $set_dbuser_privs = $cPanel->execute('uapi',
+                'Mysql', 'set_privileges_on_database',
+                array(
+                    'user'       => $db_username,
+                    'database'   => $dbname,
+                    'privileges' => 'ALL PRIVILEGES',
+                )
+            );
+            $response['message'] = "Panel create successfully";
+        } catch (Exception $e) {
+            $response['status'] = 'error';
+            $response['message'] = $e->getMessage();
         }
-        $parameter = array();
-        $parameter = [ 'name' => $dbname];
-        $result = $cPanel->execute('uapi', 'Mysql', 'create_database', $parameter);
-        if (!$result->status == 1) {
-            $message = "Cannot create database : {$result->errors[0]}";
-            $response['message'] = $message;
-            return $response;
+        return $response;
+    }
+}
+if(!function_exists("createDatabase")){
+    function createDatabase($dbname){
+        try{
+
+            
+            $rootdomain = Settings::where("meta_key",'rootdomain')->first();
+            $rootdomain = $rootdomain->meta_value;
+
+            $root_dir = Settings::where("meta_key",'root_dir')->first();
+            $root_dir = $root_dir->meta_value;
+
+            $db_username = Settings::where("meta_key",'db_username')->first();
+            $db_username = $db_username->meta_value;
+
+            $cpanel_user = Settings::where("meta_key",'cpanel_user')->first();
+            $cpanel_user = $cpanel_user->meta_value;
+
+            $cpanel_pass = Settings::where("meta_key",'cpanel_pass')->first();
+            $cpanel_pass = $cpanel_pass->meta_value;
+
+            $cpanel_ip = Settings::where("meta_key",'cpanel_ip')->first();
+            $cpanel_ip = $cpanel_ip->meta_value;
+
+            $cPanel = new cPanel($cpanel_user, $cpanel_pass, $cpanel_ip);
+            
+            $parameter = array();
+            $parameter = [ 'name' => $dbname];
+            $result = $cPanel->execute('uapi', 'Mysql', 'create_database', $parameter);
+            if (!$result->status == 1) {
+                $response['status'] = false;
+                $message = "Cannot create database : {$result->errors[0]}";
+                $response['message'] = $message;
+                return $response;
+            }
+            
+            $set_dbuser_privs = $cPanel->execute('uapi',
+                'Mysql', 'set_privileges_on_database',
+                array(
+                    'user'       => $db_username,
+                    'database'   => $dbname,
+                    'privileges' => 'ALL PRIVILEGES',
+                )
+            );
+            $response['status'] = true;
+            $response['message'] = "Panel create successfully";
+        } catch (Exception $e) {
+            $response['status'] = false;
+            $response['message'] = $e->getMessage();
         }
-        
-        $set_dbuser_privs = $cPanel->execute('uapi',
-            'Mysql', 'set_privileges_on_database',
-            array(
-                'user'       => $db_username,
-                'database'   => $dbname,
-                'privileges' => 'ALL PRIVILEGES',
-            )
-        );
-        $response['message'] = "Panel create successfully";
+        return $response;
+    }
+}
+
+if(!function_exists("deleteDatabase")){
+    function deleteDatabase($dbname,$subdomain){
+        try{
+
+            $rootdomain = Settings::where("meta_key",'rootdomain')->first();
+            $rootdomain = $rootdomain->meta_value;
+
+            $root_dir = Settings::where("meta_key",'root_dir')->first();
+            $root_dir = $root_dir->meta_value;
+
+            $db_username = Settings::where("meta_key",'db_username')->first();
+            $db_username = $db_username->meta_value;
+
+            $cpanel_user = Settings::where("meta_key",'cpanel_user')->first();
+            $cpanel_user = $cpanel_user->meta_value;
+
+            $cpanel_pass = Settings::where("meta_key",'cpanel_pass')->first();
+            $cpanel_pass = $cpanel_pass->meta_value;
+
+            $cpanel_ip = Settings::where("meta_key",'cpanel_ip')->first();
+            $cpanel_ip = $cpanel_ip->meta_value;
+
+            $cPanel = new cPanel($cpanel_user, $cpanel_pass, $cpanel_ip);
+            
+            $parameter = array();
+            $parameter = [ 'name' => $dbname];
+            $result = $cPanel->execute('uapi', 'Mysql', 'delete_database', $parameter);
+            if ($result->status == 1) {
+
+                $parameters = [
+                    'domain' => $subdomain
+                ];
+                $result = $cPanel->execute('api2',"SubDomain", "delsubdomain" , $parameters);
+                if (isset($result->cpanelresult->error)) {
+                    $response['status'] = false;
+                    $message = "Cannot delete sub domain : {$result->cpanelresult->error}";
+                    $response['message'] = $message;
+                }else{
+                    $response['status'] = true;
+                    $response['message'] = "Subdomain deleted successfully";
+                }
+            }else{
+                $response['status'] = false;
+                $response['message'] = "Database deleting error";
+            }
+        } catch (Exception $e) {
+            $response['status'] = false;
+            $response['message'] = $e->getMessage();
+        }
         return $response;
     }
 }

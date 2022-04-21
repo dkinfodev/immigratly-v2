@@ -13,16 +13,23 @@
 <!-- End Content -->
 @endsection
 
-
 @section('content')
 <style>
+.select2-selection__rendered {
+  
+    padding: 0px 10px!important;
+}
 span.select2-selection.select2-selection--single {
     height: 51px;
 }
 li.select2-selection__choice {
-    padding: 9px !important;
+    padding:10px 24px 10px 14px !important;
+}
+.select2-container--default .select2-selection--multiple {
+    padding: 0px;
 }
 </style>
+
 <div class="row">
     <div class="col-lg-6 col-xl-4  d-lg-flex justify-content-center position-relative offset-xl-2 offset-md-0" style="">
         <div class="flex-grow-1 p-5">
@@ -78,8 +85,46 @@ li.select2-selection__choice {
     </div>
 
     <div class="col-lg-6 col-xl-4 justify-content-center align-items-center min-vh-lg-100 ">
+        <div class="chat-area">
+            <div class="chat-box">
+                <div class="chat-header">
+                    <button onclick="fetchMessages()" type="button" class="btn btn-primary btn-icon btn-sm" data-toggle="collapse" href="#chatCollapse" role="button" aria-expanded="false" aria-controls="chatCollapse">
+                        <i class="fas fa-comment"></i>
+                    </button>
+                </div>
+                <div class="collapse" id="chatCollapse">
+                    <div class="chat-body">
+                        <div class="chat-messages-list">
+                            
+                        </div>
+                        <div class="chat-footer">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="p-2">
+                                            <input type="text" class="form-control" id="message_input" placeholder="Enter you message here!" />
+                                            <input type="file" name="chat_file" id="chat-attachment" style="display:none" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 p-0">
+                                        <div class="mt-2 btn-group">
+                                            <button type="button" class="btn btn-primary btn-sm btn-pill send-message">
+                                                <i class="tio-send"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-info btn-pill send-attachment">
+                                                <i class="tio-attachment"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         @if($profile_status == 2)
-        <!-- <div class="col-sm-auto text-right">
+        <div class="col-sm-auto text-right">
         <a onclick="fetchChats()" class="btn btn-primary js-hs-unfold-invoker" href="javascript:;"
                     data-hs-unfold-options='{
                     "target": "#activitySidebar",
@@ -94,7 +139,7 @@ li.select2-selection__choice {
                 <span class="badge badge-danger">{{$unread_chats}}</span>
           @endif
         </a>
-    </div> -->
+    </div>
         <div class="card mb-3 mb-lg-5">
             <div class="card-body">
 
@@ -146,6 +191,9 @@ li.select2-selection__choice {
                         <div class="mb-4">
                             <h2>Awaiting Verification!</h2>
                             <p>Your profile have been successfully saved. Waiting for admin approval!!</p>
+                            <div class="text-center">
+                                <a href="{{ baseUrl('/complete-profile?action=edit') }}">Edit Profile</a>
+                            </div>
                         </div>
                         @endif
                     </div>
@@ -187,10 +235,10 @@ li.select2-selection__choice {
                 <!-- Date -->
                 <div class="mb-3">
                     <label for="DateLabel" class="form-label">Date of Birth</label>
-                    <input type="text" class="js-input-mask form-control" id="date_of_birth" name="date_of_birth"
+                    <input type="text" autocomplete="off" class="js-input-mask form-control" id="date_of_birth" name="date_of_birth"
                         value="{{ $user->date_of_birth }}" placeholder="xx/xx/xxxx" data-hs-mask-options='{
-        "mask": "00/00/0000"
-      }'>
+                                                                                                            "mask": "00/00/0000"
+                                                                                                        }'>
                 </div>
 
                 <!-- Form -->
@@ -329,7 +377,7 @@ li.select2-selection__choice {
         <div class="mb-3">
             <label class="form-label" for="fullNameSrEmail">Company Name</label>
             <!-- Form Group -->
-            <div class="form-row">
+            <div class="row">
                 <div class="col-sm-12 col-xs-12">
                     <div class="js-form-message form-group">
                         <input type="text" class="form-control form-control-lg" name="company_name" id="company_name"
@@ -345,11 +393,11 @@ li.select2-selection__choice {
         <!-- Date -->
         <div class="mb-3 js-form-message">
             <label for="DateLabel" class="form-label">Date of formation</label>
-            <input type="text" name="date_of_register" id="date_of_register" class="js-input-mask form-control"
+            <input type="text" autocomplete="off" name="date_of_register" id="date_of_register" class="js-input-mask form-control"
                 id="DateLabel" value="{{ $company_details->date_of_register }}" placeholder="xx/xx/xxxx"
                 data-hs-mask-options='{
-          "mask": "00/00/0000"
-        }'>
+                "mask": "00/00/0000"
+                }'>
         </div>
         <!-- End Date -->
 
@@ -366,14 +414,14 @@ li.select2-selection__choice {
         <div class="mb-3 js-form-message">
             <label class="form-label" for="fullNameSrEmail">Company's phone number</label>
             <!-- Form Group -->
-            <div class="form-row">
+            <div class="row">
                 <!-- Select -->
                 <div class="col-sm-5 col-xs-6">
                     <select name="cp_country_code" id="cp_country_code" class="form-control js-select">
                         <option>Select</option>
                         @foreach($countries as $country)
                         <option {{$company_details->country_code == $country->phonecode?"selected":""}}
-                            value="+{{$country->phonecode}}">+{{$country->phonecode}} ({{$country->sortname}})</option>
+                            value="+{{$country->phonecode}}">+{{$country->phonecode}} ({{$country->name}})</option>
                         @endforeach
                     </select>
                     <!-- End Select -->
@@ -400,11 +448,20 @@ li.select2-selection__choice {
             </div>
         </div>
         <!-- End Form Group -->
-
-        <h5 class="mb-3 mt-3 js-form-message">Company Address</h5> <!-- Form -->
+        <div class="row">
+            <div class="col-md-8">
+                <h5 class="mb-3 mt-3 js-form-message pull-left">Company Address</h5> <!-- Form -->
+            </div>
+            <div class="col-md-4">
+                <div class="pull-right mt-3">
+                    <label for="same_as_above"><input type="checkbox" class="form-check-input" id="same_as_above" onclick="sameAsAbove(this)" > Same as Above</label>
+                </div>
+            </div>
+        </div>
+            <div class="clearfix"></div>
         <div class="row g-3">
 
-            <div class="col-12">
+            <div class="col-12 js-form-message">
                 <label for="addressShopCheckout" class="form-label">Address</label>
                 <input type="text" name="cp_address" id="cp_address" class="form-control form-control-lg"
                     placeholder="1234 Main St" value="{{ $company_details->address }}" required>
@@ -415,7 +472,7 @@ li.select2-selection__choice {
             <div class="col-md-6 js-form-message">
                 <label for="countryShopCheckout" class="form-label">Country</label>
                 <select name="cp_country_id" id="cp_country_id"
-                    onchange="stateList(this.value,'cp_state_id'),licenceBodies(this.value)" class="form-control">
+                    onchange="stateList(this.value,'cp_state_id')" class="form-control">
                     <option value="">Choose...</option>
                     @foreach($countries as $country)
                     <option {{$user->country_id == $country->id?"selected":""}} value="{{$country->id}}">
@@ -516,11 +573,22 @@ li.select2-selection__choice {
 
             <!-- End Select -->
         </div>
-
+        <div class="mb-3 js-form-message">
+                <label for="countryShopCheckout" class="form-label">Licensing Country</label>
+                <select name="licensing_country" id="licensing_country"
+                    onchange="licenceBodies(this.value)" class="form-control">
+                    <option value="">Choose...</option>
+                    @foreach($countries as $country)
+                    <option {{$company_details->licensing_country == $country->id?"selected":""}} value="{{$country->id}}">
+                        {{$country->name}}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
         <div class="mb-3 js-form-message">
             <label for="addressShopCheckout" class="form-label">Licencing Body</label>
 
-            <select class="js-select2-custom form-select" autocomplete="off">
+            <select id="license_body" class="js-select2-custom form-select license_body" autocomplete="off">
                 <?php
               if($company_details->license_body != ''){
                 $license_body = json_decode($company_details->license_body,true);
@@ -690,16 +758,18 @@ li.select2-selection__choice {
 // initSelect();
 $(document).ready(function() {
     $("select").select2();
+    
     $('#date_of_birth').datepicker({
         format: 'dd/mm/yyyy',
         autoclose: true,
-        maxDate: (new Date()).getDate(),
+        endDate: "-16y",
         todayHighlight: true,
         orientation: "bottom auto"
     });
     $('#date_of_register').datepicker({
         format: 'dd/mm/yyyy',
         autoclose: true,
+        endDate: new Date(),
         todayHighlight: true,
         orientation: "bottom auto"
     });
@@ -720,21 +790,20 @@ $(document).ready(function() {
                 beforeSend: function() {
                     // var html = '<div class="text-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
                     // $("#activitySidebar .messages").html(html);
-                    $("#message_input,.send-message,.send-attachment").attr('disabled',
-                        'disabled');
+                    $("#message_input,.send-message,.send-attachment").attr('disabled','disabled');
                 },
                 success: function(response) {
                     if (response.status == true) {
                         $("#message_input,.send-message,.send-attachment").removeAttr(
                             'disabled');
                         $("#message_input").val('');
-                        $("#activitySidebar .messages").html(response.html);
-                        $(".messages").mCustomScrollbar();
-                        $(".messages").animate({
-                            scrollTop: $(".messages")[0].scrollHeight
+                        // $("#activitySidebar .messages").html(response.html);
+                        // $(".messages").mCustomScrollbar();
+                        $(".chat-messages-list").animate({
+                            scrollTop: $(".chat-messages-list")[0].scrollHeight
                         }, 1000);
-                        $(".doc_chat_input").show();
-                        fetchChats();
+                        // $(".doc_chat_input").show();
+                        fetchMessages();
                     } else {
                         errorMessage(response.message);
                     }
@@ -771,16 +840,15 @@ $(document).ready(function() {
             },
             success: function(response) {
                 if (response.status == true) {
-                    $("#message_input,.send-message,.send-attachment").removeAttr(
-                        'disabled');
-                    $("#chat-attachment").val('');
-                    $("#activitySidebar .messages").html(response.html);
-                    $(".messages").mCustomScrollbar();
-                    $(".messages").animate({
-                        scrollTop: $(".messages")[0].scrollHeight
+                    $("#message_input,.send-message,.send-attachment").removeAttr('disabled');
+                    $("#message_input").val('');
+                    // $("#activitySidebar .messages").html(response.html);
+                    // $(".messages").mCustomScrollbar();
+                    $(".chat-messages-list").animate({
+                        scrollTop: $(".chat-messages-list")[0].scrollHeight
                     }, 1000);
-                    $(".doc_chat_input").show();
-                    fetchChats();
+                    // $(".doc_chat_input").show();
+                    fetchMessages();
                 } else {
                     errorMessage(response.message);
                 }
@@ -856,7 +924,7 @@ function licenceBodies(country_id) {
     });
 }
 
-function stateList(country_id, id) {
+function stateList(country_id, id,selected_id = '') {
     $.ajax({
         url: "{{ url('states') }}",
         data: {
@@ -869,6 +937,7 @@ function stateList(country_id, id) {
         success: function(response) {
             if (response.status == true) {
                 $("#" + id).html(response.options);
+                $("#"+id).val(selected_id);
             }
 
 
@@ -879,7 +948,7 @@ function stateList(country_id, id) {
     });
 }
 
-function cityList(state_id, id) {
+function cityList(state_id, id,selected_id = '') {
     $.ajax({
         url: "{{ url('cities') }}",
         data: {
@@ -892,6 +961,7 @@ function cityList(state_id, id) {
         success: function(response) {
             if (response.status == true) {
                 $("#" + id).html(response.options);
+                $("#"+id).val(selected_id);
             }
         },
         error: function() {
@@ -901,7 +971,7 @@ function cityList(state_id, id) {
 }
 
 function fetchChats() {
-    alert("Tet");
+    
     $.ajax({
         type: "POST",
         url: "{{ baseUrl('fetch-chats') }}",
@@ -925,6 +995,52 @@ function fetchChats() {
                 }, 800);
 
                 $(".doc_chat_input").show();
+            } else {
+                errorMessage(response.message);
+            }
+        },
+        error: function() {
+            $("#activitySidebar .messages").html('');
+            internalError();
+        }
+    });
+}
+function sameAsAbove(e){
+    if($(e).is(":checked")){
+        var address = $("#address").val();
+        var country_id = $("#country_id").val();
+        var state_id = $("#state_id").val();
+        var city_id = $("#city_id").val();
+        var zip_code = $("#zip_code").val();
+
+        $("#cp_address").val(address);
+        $("#cp_country_id").val(country_id).trigger("change");
+        stateList(country_id,'cp_state_id',state_id);
+        cityList(state_id,"cp_city_id",city_id);
+        $("#cp_zip_code").val(zip_code);
+        
+        
+    }
+}
+
+function fetchMessages(){
+    $.ajax({
+        type: "POST",
+        url: "{{ baseUrl('fetch-messages') }}",
+        data: {
+            _token: csrf_token
+        },
+        dataType: 'json',
+        beforeSend: function() {
+            $("#message_input").val('');
+            $("#message_input,.send-message,.send-attachment").attr('disabled', 'disabled');
+            var html = "<div class='text-center mt-4 text-danger'><i class='fa fa-spin fa-spinner'></i><br>Please wait we are fetching...</div>";
+            $(".chat-messages-list").html(html);
+        },
+        success: function(response) {
+            $("#message_input,.send-message,.send-attachment").removeAttr('disabled');
+            if (response.status == true) {
+                $(".chat-messages-list").html(response.html);
             } else {
                 errorMessage(response.message);
             }

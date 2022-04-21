@@ -14,15 +14,18 @@
     </div>
     <div class="modal-body imm-education-modal-body">
         <div class="form-group js-form-message">
-              <h>Form Title:<b> {{$record->FillForm->form_title}}</b></h3>
+              <h>Form Title:<b> {{$record['fill_form']['form_title']}}</b></h3>
             </div>
+            
             <div class="table-responsive">
                 <table class="table table-bordered">
                   @foreach($form_json as $form)
+                  @if(isset($form['value']))
                   <tr>
                     <th>{{$form['label']}}</th>
                     <td>{{$form['value']}}</td>
                   </tr>
+                  @endif
                   @endforeach
                 </table>
             </div>

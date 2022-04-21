@@ -97,9 +97,9 @@
               <!--</th>-->
               <th scope="col" class="">Case Title</th>
               <th>Professional</th>
-              <th scope="col" >Visa Service</th>
+              <!-- <th scope="col" >Visa Service</th> -->
               <th scope="col" >Approval Status</th>
-              <th scope="col" >Assigned</th>
+              <!-- <th scope="col" >Assigned</th> -->
               <th scope="col"><i class="tio-chat-outlined"></i></td>
               <th></th>
             </tr>
@@ -162,18 +162,19 @@
                 @else
                 <span class="text-danger h4">Professional not found</span>
                 @endif
-              </td>
-
-              <td>
+                <div>
                 @if(!empty($record['MainService']))
                 <span class="badge badge-soft-info p-2">{{$record['MainService']['name']}}</span>
                 @else
                 <span class="badge badge-soft-info p-2">Service not found</span>
                 @endif
+              </div>
               </td>
+
 
               <td>
                 @if($record['approve_status'] == "0")
+                  @if($record['added_by'] != 'client')
                 <label class="toggle-switch mx-2" for="$record['unique_id']">
                   <input type="checkbox" data-id="{{ $record['unique_id'] }}" onchange="caseApprovalStatus('<?php echo $record['unique_id']; ?>','<?php echo $professional->professional; ?>')" class="js-toggle-switch toggle-switch-input" id="$record['unique_id']" >
                   <span class="toggle-switch-label">
@@ -181,6 +182,7 @@
                   </span>
                 </label>  
                 <br>
+                  @endif
                 <span class="badge badge-soft-warning p-2">Awaiting Approve</span>
                 @endif
                 @if($record['approve_status'] == "1")
@@ -188,7 +190,7 @@
                 @endif
               </td>
 
-              <td>
+              {{--<td>
                 <!-- Avatar Group -->
                 <div class="avatar-group avatar-group-xs avatar-circle">
                   <?php 
@@ -213,7 +215,7 @@
                   @endif
                 </div>
                 <!-- End Avatar Group -->
-              </td>
+              </td> --}}
               <td width="10%">
                 <div class="hs-unfold">
                     <a href="{{ baseUrl('cases/chats/'.$professional->professional.'/'.$record['unique_id']) }}" class="js-hs-unfold-invoker text-body">

@@ -33,6 +33,8 @@ use App\Models\AppointmentTypes;
 use App\Models\BookedAppointments;
 use App\Models\UserInvoices;
 use App\Models\InvoiceItems;
+use App\Models\UserWithProfessional;
+
 class FrontendController extends Controller
 {
     /**
@@ -44,7 +46,13 @@ class FrontendController extends Controller
     {
        
     }
-
+    public function home(){
+        if(\Auth::check()){
+            return redirect(baseUrl('/'));
+        }else{
+            return redirect('/');
+        }
+    }
     public function index(){
         //return redirect("signup/user");
         // $data['database'] = base64_encode("immigrat_main_immigratly");
@@ -1250,5 +1258,68 @@ class FrontendController extends Controller
         return response()->json($response);
 
     }
-    // ************* END 28-8-update by y    
+    
+    public function caseWithProfessional($subdomain,Request $request){
+
+        $data = array();
+        $apiData = professionalCurl('services',$subdomain);
+        if(isset($apiData['status']) && $apiData['status'] == 'success'){
+            $visa_services = $apiData['data'];
+        }else{
+            $visa_services = array();
+        }
+        $viewData['visa_services'] = $visa_services;
+        $viewData['subdomain'] = $subdomain;
+        $viewData['pageTitle'] = "Post a Case";
+        $view = View::make('user.cases.modal.create-case',$viewData);
+        $contents = $view->render();
+        $response['contents'] = $contents;
+        $response['status'] = true;
+        return response()->json($response);
+    }
+    public function saveCaseWithProfessional($subdomain,Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'case_title' => 'required',
+            'description' => 'required',
+            'visa_service_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $response['status'] = false;
+            $response['error_type'] = 'validation';
+            $error = $validator->errors()->toArray();
+            $errMsg = array();
+            
+            foreach($error as $key => $err){
+                $errMsg[$key] = $err[0];
+            }
+            $response['message'] = $errMsg;
+            return response()->json($response);
+        }
+
+        $apiData = $request->all();
+        
+        unset($apiData['_token']);
+        $apiData['subdomain'] = $subdomain;
+        $apiData['client_id'] = \Auth::user()->unique_id;
+        $api_response = professionalCurl('cases/create-case',$subdomain,$apiData);
+       
+        if(isset($api_response['status']) && $api_response['status'] == 'success'){
+            $check = UserWithProfessional::where("professional",$subdomain)->where("user_id",\Auth::user()->unique_id)->count();
+            // $user = UserWithProfessional::firstOrNew(array('professional' => $subdomain,"user_id"=>\Auth::user()->unique_id));
+            if($check == 0){
+                $object = new UserWithProfessional();
+                $object->professional = $subdomain;
+                $object->user_id = \Auth::user()->unique_id;
+                $object->save();
+            }
+            $response['status'] = true;
+            $response['message'] = "Case posted successfully";
+        }else{
+            $response['status'] = false;
+            $response['message'] = "Something went wrong while posting case. Try again";
+        }
+        return response()->json($response);
+    }
 }

@@ -36,7 +36,7 @@
                 <div class="col-md-12">
                     <div class="float-right">
                        @if($record['form_reply'] != '')
-                        <a data-toggle="tooltip" data-html="true" title="View Client Reply" href="{{baseUrl('global-forms/edit/'.$record['type_id'])}}" class="btn btn-info btn-sm"><i class="tio-globe"></i></a>
+                        <a data-toggle="tooltip" data-html="true" title="View Client Reply" onclick="showPopup('<?php echo baseUrl('cases/stage-form-reply/'.$subdomain.'/'.$record['unique_id']) ?>')" href="javascript:;" class="btn btn-info btn-sm"><i class="tio-globe"></i></a>
                         @endif
                     </div>
                 </div>
@@ -45,9 +45,9 @@
                     <form id="form" action="{{ baseUrl('/cases/sub-stages/save-form-reply/'.$subdomain.'/'.$record['unique_id']) }}" class="js-validate" method="post">
                     @csrf  
                       <div class="render-wrap"></div>
-                      <div class="form-group text-center">
+                      <!-- <div class="form-group text-center">
                         <button type="submit" class="btn add-btn btn-primary">Save</button>
-                      </div>
+                      </div> -->
                       <!-- End Input Group -->
                     </form>
                  </div>
@@ -99,12 +99,11 @@
                                                   {{$document['name']}}
                                               </h5>
                                               <ul class="list-inline list-separator small">
-                                                  <li class="list-inline-item">{{$document['files_count']}} Files</li>
-                                                  <?php
-                                                          
-                                                          $doc_chats = countUnreadDocChat($case_id,$subdomain,"client",$document['unique_id']);
-                                                          if($doc_chats > 0){
-                                                      ?>
+                                                  <li class="list-inline-item">{{count($document['files_count'])}} Files</li>
+                                                    <?php
+                                                        $doc_chats = countUnreadDocChat($case_id,$subdomain,"client",$document['unique_id']);
+                                                        if($doc_chats > 0){
+                                                    ?>
                                                   <li class="list-inline-item text-danger">{{$doc_chats}} chats</li>
                                                   <?php }else{
                                                           $doc_chats = countReadDocChat($case_id,$subdomain,"client",$document['unique_id']);
@@ -174,23 +173,7 @@
                                       </a>
                                   </div>
                                   <div class="col-auto">
-                                      <?php
-                                          $checkPin = pinCaseFolder($case_id,$document['unique_id'],'default');
-                                          
-                                          if(!empty($checkPin)){
-                                      ?>
-                                      <a title="Unpin Folder" href="javascript:;" onclick="unpinFolder(this)"
-                                          data-foldertype="default" data-folderid="{{$document['unique_id']}}"
-                                          data-pinid="{{$checkPin->id}}" class="btn btn-sm btn-info js-nav-tooltip-link"><i
-                                              class="tio-pin"></i></a>
-                                      <?php }else{ ?>
-                                      <a title="Pin Folder" href="javascript:;" onclick="pinFolder(this)"
-                                          data-foldertype="default" data-folderid="{{$document['unique_id']}}"
-                                          class="btn btn-sm btn-primary js-nav-tooltip-link"><i class="tio-pin"></i></a>
-                                      <?php } ?>
-                                      <!-- <a href="<?php echo baseUrl("cases/documents/default/".$subdomain."/".$case_id."/".$document['unique_id']) ?>" 
-                                              class="btn btn-sm btn-warning js-nav-tooltip-link" data-toggle="tooltip"
-                                              data-html="true" title="View Documents"><i class="tio-documents"></i></a> -->
+                                      
 
                                   </div>
                                   <div id="collapseDefaultDoc-{{$key}}" class="collapse files-collapse"
@@ -203,63 +186,7 @@
                           @endif
                           <!-- End List Item -->
                           @endforeach
-                          {{--@foreach($documents as $key => $document)
-                        
-                          <!-- List Item -->
-                          <li class="list-group-item" data-foldername="{{$document['name']}}"
-                              data-folder="{{$document['name']}}" data-doctype="other"
-                              data-docid="{{ $document['unique_id'] }}">
-                              <div class="row align-items-center gx-2">
-                                  <div class="col-auto">
-                                      @if($document['files_count'] > 0)
-                                      <img class="avatar avatar-xs avatar-4by3" src="assets/svg/folder-files.svg"
-                                          alt="Image Description">
-                                      @else
-                                      <img class="avatar avatar-xs avatar-4by3" src="assets/svg/folder.svg"
-                                          alt="Image Description">
-                                      @endif
-                                  </div>
-
-                                  <div class="col" data-toggle="collapse" data-target="#collapseDefaultDoc-{{ $key }}"
-                                      aria-expanded="true" aria-controls="collapseOtherDoc-{{ $key }}">
-                                      <a href="<?php echo baseUrl("cases/documents/other/".$subdomain."/".$case_id."/".$document['unique_id']) ?>"
-                                          data-subdomain="{{$subdomain}}" data-doctype="other" data-caseid="{{$case_id}}"
-                                          data-docid="{{ $document['unique_id'] }}">
-                                          <h5 class="mb-0">
-                                              {{$document['name']}}
-                                          </h5>
-                                          <ul class="list-inline list-separator small">
-                                              <li class="list-inline-item">{{count($document['files_count'])}} Files</li>
-                                          </ul>
-                                      </a>
-                                  </div>
-                                  <div class="col-auto">
-                                      <?php
-                                          $checkPin = pinCaseFolder($case_id,$document['unique_id'],'other');
-                                          
-                                          if(!empty($checkPin)){
-                                      ?>
-                                      <a title="Unpin Folder" href="javascript:;" onclick="unpinFolder(this)"
-                                          data-foldertype="other" data-folderid="{{$document['unique_id']}}"
-                                          data-pinid="{{$checkPin->id}}" class="btn btn-sm btn-info js-nav-tooltip-link"><i
-                                              class="tio-pin"></i></a>
-                                      <?php }else{ ?>
-                                      <a title="Pin Folder" href="javascript:;" onclick="pinFolder(this)"
-                                          data-foldertype="other" data-folderid="{{$document['unique_id']}}"
-                                          class="btn btn-sm btn-primary js-nav-tooltip-link"><i class="tio-pin"></i></a>
-                                      <?php } ?>
-                                      <!-- <a href="<?php echo baseUrl("cases/documents/other/".$subdomain."/".$case_id."/".$document['unique_id']) ?>" 
-                                              class="btn btn-sm btn-warning js-nav-tooltip-link" data-toggle="tooltip"
-                                              data-html="true" title="View Documents"><i class="tio-documents"></i></a> -->
-
-                                  </div>
-                                  <div id="collapseOtherDoc-{{$key}}" class="collapse files-collapse"
-                                      aria-labelledby="headingOther-{{$key}}" data-parent="#accordionProfessionalDoc"></div>
-                              </div>
-                              <!-- End Row -->
-                          </li>
-                          <!-- End List Item -->
-                          @endforeach--}}
+                          
                       </ul>
                   </div>
                 </div>

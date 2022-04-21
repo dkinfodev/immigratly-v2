@@ -345,6 +345,7 @@
   <script src="assets/vendor/datatables.net-buttons/js/buttons.colVis.min.js"></script>
   <script src="assets/vendor/toastr/toastr.min.js"></script>
   <script src="assets/vendor/ckeditor/ckeditor.js"></script>
+  <script src="assets/vendor/moment/moment.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
   <script src="assets/vendor/sweetalert2/sweetalert2.all.min.js"></script>
   <!-- JS Front -->

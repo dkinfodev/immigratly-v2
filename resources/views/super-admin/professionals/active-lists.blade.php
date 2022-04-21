@@ -219,6 +219,49 @@ $(document).ready(function(){
   });
 })
 loadData();
+
+function createDatabase(subdomain){
+  Swal.fire({
+      title: 'Are you sure?',
+      text: "Are you sure to create the database for this professional",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes',
+      confirmButtonClass: 'btn btn-primary',
+      cancelButtonClass: 'btn btn-danger ml-1',
+      buttonsStyling: false,
+    }).then(function(result) {
+      if (result.value) {
+        $.ajax({
+            type: "POST",
+            url: BASEURL + '/professionals/create-database',
+            data:{
+                _token:csrf_token,
+                subdomain:subdomain,
+            },
+            dataType:'json',
+            beforeSend:function(){
+              showLoader();
+            },
+            success: function (result) {
+                hideLoader();
+                if(result.status == true){
+                    successMessage(result.message);
+                    location.reload();
+                }else{
+                    errorMessage(result.message);
+                }
+            },
+            error:function(){
+              hideLoader();
+              errorMessage('Something went wrong try again!');
+            }
+        });
+      }
+    })
+}
 function loadData(page=1){
     $.ajax({
         type: "POST",
@@ -285,10 +328,10 @@ function changePage(action){
   }
   
 }
-function confirmDelete(id){
+function confirmProfessional(id){
     Swal.fire({
       title: 'Are you sure?',
-      text: "You won't be able to revert this!",
+      text: "All data from database linked with professional will also get deleted and wont be revert back!",
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -301,7 +344,7 @@ function confirmDelete(id){
       if (result.value) {
         $.ajax({
             type: "POST",
-            url: BASEURL + '/professionals/delete-user',
+            url: BASEURL + '/professionals/delete-professional',
             data:{
                 _token:csrf_token,
                 user_id:id,
@@ -309,15 +352,8 @@ function confirmDelete(id){
             dataType:'json',
             success: function (result) {
                 if(result.status == true){
-                    Swal.fire({
-                        type: "success",
-                        title: 'Deleted!',
-                        text: 'Your file has been deleted.',
-                        confirmButtonClass: 'btn btn-success',
-                    }).then(function () {
-
-                        window.location.href= result.redirect;
-                    });
+                    successMessage(result.message);
+                    loadData();
                 }else{
                     Swal.fire({
                         title: "Error!",

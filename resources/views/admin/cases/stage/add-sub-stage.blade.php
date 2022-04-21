@@ -80,7 +80,7 @@
                     </div>
                 </div>
 
-                 <div class="row form-group global-form hidden js-form-message">
+                 <div class="row form-group custom-field global-form hidden js-form-message">
                     <label class="col-sm-3 col-form-label input-label">Form</label>
                     <div class="col-sm-9">
                        
@@ -105,7 +105,7 @@
                 </div>
 
 
-                <div class="row g-case-tasks hidden form-group js-form-message">
+                <div class="row g-case-tasks custom-field hidden form-group js-form-message">
                     <label class="col-sm-3 col-form-label input-label">Task</label>
                     <div class="col-sm-9">
                        

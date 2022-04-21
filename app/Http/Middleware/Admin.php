@@ -49,7 +49,7 @@ class Admin
                 return Redirect::to('/home');
             }
         }else{
-            return Redirect::to('/login');
+            return Redirect::to('/professional/login');
         }
     }
 }

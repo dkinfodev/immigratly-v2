@@ -22,7 +22,10 @@
       @endif
       <!-- <img class="avatar" src="assets/svg/brands/capsule.svg" alt="Image Description"> -->
       <div class="ml-1">
-        <span class="d-block h5 text-hover-primary mb-0">{{ $record->case_title }}</span>
+        <span class="h5 text-hover-primary mb-0">{{ $record->case_title }}</span>
+        @if($record->added_by == 'client')
+          <span class="badge badge-warning">Posted By Client</span>
+        @endif
         <span class="d-block font-size-sm text-body">Created on {{ dateFormat($record->created_at) }}</span>
         <ul class="list-inline list-separator small file-specs">
             <li class="list-inline-item"> 
@@ -52,10 +55,20 @@
     <br>
     @if($record->approve_status == "0")
     <span class="badge badge-soft-warning">Awaiting Approve</span>
+    @if($record->added_by == 'client')
+    <label class="toggle-switch mx-2" for="$record['unique_id']">
+      <input type="checkbox" data-id="{{ $record['unique_id'] }}" onchange="caseApprovalStatus('<?php echo $record->unique_id; ?>','<?php echo $record->client_id; ?>')" class="js-toggle-switch toggle-switch-input" id="$record['unique_id']" >
+      <span class="toggle-switch-label">
+        <span class="toggle-switch-indicator"></span>
+      </span>
+    </label>  
+    <br>
+    @endif
     @endif
     @if($record->approve_status == "1")
     <span class="badge badge-soft-info">Approved</span>
     @endif
+    
   </td>
   <!-- <td>
     @if(!empty(!empty($record->VisaService) && $record->Service($record->VisaService->service_id)))
@@ -181,4 +194,5 @@ $(document).ready(function(){
     var unfold = new HSUnfold($(this)).init();
   });
 })
+
 </script>

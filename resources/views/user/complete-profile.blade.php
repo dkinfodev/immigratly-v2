@@ -182,10 +182,12 @@ li.select2-selection__choice {
 <script>
 $(document).ready(function(){
     $("select").select2();
+    var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    
     $('#date_of_birth').datepicker({
         format: 'dd/mm/yyyy',
         autoclose: true,
-        maxDate: (new Date()).getDate(),
+        endDate: new Date(),
         todayHighlight: true,
         orientation: "bottom auto"
     });

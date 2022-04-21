@@ -28,26 +28,32 @@
               
               @if(Auth::check())
               <li class="nav-item">
-               <a class="btn text-primary" target="_blank" href="{{ baseUrl('/') }}">Dashboard</a>
+               <a class="btn text-primary" href="{{ baseUrl('/') }}">Dashboard</a>
+              </li>
+              <li class="nav-item">
+               <a class="btn text-primary" href="{{ url('/logout') }}">Logout</a>
               </li>
               @else
+                @if(\Session::get("login_to") == 'admin_panel')
               <!-- Button -->
               <li class="nav-item">
-               <a class="btn text-primary" target="_blank" href="{{ url('/signup/user') }}">User Signup</a>
+               <a class="btn text-primary" href="{{ url('/signup/user') }}">User Signup</a>
               </li>
 
               <li class="nav-item">
-                <a class="btn text-primary" href="{{ url('/signup/professional') }}" target="_blank">Professional Signup</a>
+                <a class="btn text-primary" href="{{ url('/signup/professional') }}">Professional Signup</a>
               </li>
 
               <li class="nav-item">
-                <a class="btn btn-primary btn-transition" href="{{ url('/login') }}" target="_blank">Login</a>
+                <a class="btn btn-primary btn-transition" href="{{ url('/login') }}">Login</a>
               </li>
+                @endif
               @endif
-
+              @if(\Session::get("login_to") == 'admin_panel')
               <li class="nav-item">
                 <a class="btn btn-dark" href="{{ url('/quick-eligibility') }}" target="_blank">Click for Quick Eligibility</a>
               </li>
+              @endif
 
               
               

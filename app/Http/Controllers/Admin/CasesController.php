@@ -43,17 +43,25 @@ class CasesController extends Controller
     public function cases(Request $request){
         $viewData['pageTitle'] = "Cases";
         $viewData['activeTab'] = 'cases';
+        $client_cases = Cases::where("added_by","client")->where("approve_status","0")->count();
+        $viewData['case_by'] = 'professional';
+        $viewData['client_cases'] = $client_cases;
         return view(roleFolder().'.cases.lists',$viewData);
     }
 
     public function getAjaxList(Request $request)
     {
         $search = $request->input("search");
+        $case_by = $request->input("case_by");
         $records = Cases::withCount(['Chats','Documents'])
                         ->orderBy('id',"desc")
-                        ->where(function($query) use($search){
+                        ->where(function($query) use($search,$case_by){
                             if($search != ''){
                                 $query->where("case_title","LIKE","%$search%");
+                            }
+                            if($case_by == 'client'){
+                                $query->where("added_by","client");
+                                $query->where("approve_status",0);
                             }
                         })
                         ->paginate(5);
@@ -67,6 +75,16 @@ class CasesController extends Controller
         $response['total_records'] = $records->total();
         return response()->json($response);
     }
+
+    public function casesByClient(Request $request){
+        $viewData['pageTitle'] = "Cases";
+        $viewData['activeTab'] = 'cases';
+        $viewData['case_by'] = 'client';
+        $client_cases = Cases::where("added_by","client")->where("status","0")->count();
+        $viewData['client_cases'] = $client_cases;
+        return view(roleFolder().'.cases.lists',$viewData);
+    }
+
 
     public function createClient(Request $request){
        
@@ -2580,5 +2598,50 @@ class CasesController extends Controller
         // else{
         //     return view(roleFolder().'.cases.stage.view-substage',$viewData);
         // }
+    }
+
+    public function approveCase(Request $request)
+    {
+         
+        try{
+            $client_id = $request->input("client_id");
+            $record = Cases::where("unique_id",$request->input("case_id"))
+                            ->where("client_id",$client_id)
+                            ->first();
+            if(!empty($record)){
+                $record->approve_status = 1;
+                $record->save();
+                //Email notification to professional
+                $mailData = array();
+
+                $uuid = $request->input("client_id");
+                $professional = User::where('role','admin')->first();
+
+                $user = DB::table(MAIN_DATABASE.".users")->where("unique_id",$uuid)->first();
+                $professionalDetail = ProfessionalDetails::first();
+                $mail_message = "Hello ".$user->first_name." ".$user->last_name.",<br> Case has been approved by Professional";
+                //$mail_message = "Hello Case approved";
+                $parameter['subject'] = "Case Approved";
+                $mailData['mail_message'] = $mail_message;
+                $view = View::make('emails.notification',$mailData);
+                $message = $view->render();
+                $parameter['to'] = $user->email;
+                $parameter['to_name'] = $user->first_name." ".$user->last_name;
+                $parameter['message'] = $message;
+                $parameter['view'] = "emails.notification";
+                $parameter['data'] = $mailData;
+                $mailRes = sendMail($parameter);
+                //End Email notification    
+                $response['status'] = true;
+                $response['message'] = "Case approved successfully";
+            }else{
+                $response['status'] = false;
+                $response['message'] = "Case not found";
+            }
+        } catch (Exception $e) {
+            $response['status'] = false;
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response);
     }
 }

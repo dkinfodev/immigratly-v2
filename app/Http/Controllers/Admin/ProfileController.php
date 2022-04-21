@@ -20,7 +20,7 @@ class ProfileController extends Controller
         $this->middleware('auth');
     }
     
-    public function completeProfile()
+    public function completeProfile(Request $request)
     {
         if(\Auth::user()->role != 'admin'){
             return redirect(baseUrl('/'));
@@ -31,7 +31,12 @@ class ProfileController extends Controller
         if($setting->profile_status == 2){
             return redirect(baseUrl('/'));
         }
-        $viewData['profile_status'] = $setting->profile_status;
+        if($setting->profile_status == 1 && $request->get("action") == 'edit'){
+            $viewData['profile_status'] = 0;
+        }else{
+            $viewData['profile_status'] = $setting->profile_status;
+        }
+        
         $viewData['pageTitle'] = "Complete Profile";
         $viewData['active_tab'] = "personal_tab";
         $viewData['admin_notes'] = $setting->admin_notes;
@@ -170,6 +175,7 @@ class ProfileController extends Controller
         $object2->zip_code = $request->input("cp_zip_code");
         $object2->address = $request->input("cp_address");
         $object2->date_of_register = $request->input("date_of_register");
+        $object2->licensing_country = $request->input("licensing_country");
         $object2->license_body = $request->input("license_body");
         $object2->member_of_good_standing = $request->input("member_of_good_standing");
         $object2->licence_number = $request->input("licence_number");
@@ -487,7 +493,9 @@ class ProfileController extends Controller
                 ->where("professional_read",0)
                 ->update(['professional_read'=>1]);
         $viewData['chats'] = $chats;
-        $view = View::make(roleFolder().'.support-chats',$viewData);
+       
+        // $view = View::make(roleFolder().'.support-chats',$viewData);
+        $view = View::make(roleFolder().'.chatbox',$viewData);
         $contents = $view->render();
 
         $response['status'] = true;

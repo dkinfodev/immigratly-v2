@@ -12,7 +12,7 @@ use App\Models\Professionals;
 use App\Models\Countries;
 use App\Models\States;
 use App\Models\Cities;
-
+use App\Models\Settings;
 class ProfessionalController extends Controller
 {
     public function __construct()
@@ -51,7 +51,142 @@ class ProfessionalController extends Controller
         $viewData['activeTab'] = "professionals";
         return view(roleFolder().'.professionals.inactive-lists',$viewData);
     }
+    public function createDatabase(Request $request){
+        $subdomain = $request->input("subdomain");
+        $db_prefix = Settings::where("meta_key","database_prefix")->first();
+        $db_prefix = $db_prefix->meta_value;
+        $sample_db = Settings::where("meta_key","sample_database")->first();
+        $sample_db = $sample_db->meta_value;
+        $professional = Professionals::where('subdomain',$subdomain)->first();
+        $user_id = $professional->id;
+       
+        $database_name = $db_prefix.$subdomain;
 
+        if($_SERVER['SERVER_NAME'] != 'localhost'){
+            $response = createDatabase($database_name);
+            if($response['status'] == false){
+                return response()->json($response);
+            }
+        }else{
+            $sql = "CREATE DATABASE IF NOT EXISTS `$database_name` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;";
+            DB::statement($sql);
+        }
+        $sql = "SHOW TABLES FROM ".$sample_db;
+        $sample_tables = DB::select($sql);
+        
+        for($i=0;$i < count($sample_tables);$i++){
+            $sdb = "Tables_in_".$sample_db;
+            $table = $sample_tables[$i]->$sdb;
+            
+
+            DB::statement('CREATE TABLE IF NOT EXISTS '.$database_name.'.'.$table.' LIKE '.$sample_db.'.'.$table.';');
+        }
+        $now = \Carbon\Carbon::now();
+        
+        $checkUser = \DB::table($database_name.".users")->where("email",$professional->email)->first();
+        $password = generatePassword();
+        $user_data = array(
+            "unique_id"=> randomNumber(),
+            "first_name"=>$professional->first_name,
+            "last_name"=>$professional->last_name,
+            "email"=>$professional->email,
+            "country_code"=>$professional->country_code,
+            "phone_no"=>$professional->phone_no,
+            "role"=>"admin",
+            "is_active"=>"1",
+            "is_verified"=>"1",
+            "password"=>bcrypt($password),
+            "created_at"=>$now,
+            "updated_at"=>$now
+        );
+        if(empty($checkUser)){
+            \DB::table($database_name.'.users')->insert($user_data);
+        }else{
+            \DB::table($database_name.'.users')->where("id",$checkUser->id)->update($user_data);
+        }
+        $professional_detail = \DB::table($database_name.".professional_details")->where("company_name",$professional->company_name)->first();
+        if(empty($professional_detail)){
+            $company_name = array(
+                    "company_name"=>$professional->company_name,
+                    "created_at"=>$now,
+                    "updated_at"=>$now
+            );
+            DB::table($database_name.'.professional_details')->insert($company_name);
+        }
+        
+        $domain_details = \DB::table($database_name.".domain_details")->where("subdomain",$professional->subdomain)->first();
+        if(empty($domain_details)){
+            $api_keys = array(
+                    "client_secret"=>$professional->client_secret,
+                    "subdomain"=>$professional->subdomain,
+                    "master_id"=>$user_id,
+                    "created_at"=>$now,
+                    "updated_at"=>$now
+            );
+            DB::table($database_name.'.domain_details')->insert($api_keys);
+        }
+        $rootdomain = DB::table(MAIN_DATABASE.".settings")->where("meta_key",'rootdomain')->first();
+        $rootdomain = $rootdomain->meta_value;
+        $portal_url = "http://".$subdomain.".".$rootdomain."/";
+        // $portal_url = url("signup/professional");
+        if($_SERVER['SERVER_NAME'] == 'localhost'){
+            $response['status'] = true;
+            $response['redirect_back'] = url('welcome');
+            // $response['message'] = "Your panel has been created successfully";
+            $response['message'] = "Professional Database has been created successfully.";
+            // \Session::flash('success_message', "Your panel has been created successfully. You can login to your panel with the access you entered."); 
+            // \Session::put('professional_register', true); 
+            // \Session::put('portal_url', $portal_url); 
+        }else{
+            $response['status'] = true;
+            
+            $url = url('welcome');
+            // $url = url("signup/professional");
+            $response['redirect_back'] = $url;
+            $response['message'] = "Professional Database has been created successfully.";
+            // $response['message'] = "Your panel has been created successfully. Mail has been sent to your emailm please check it.";
+            // \Session::flash('success_message', "Your panel has been created successfully. You can login to your panel with the access you entered."); 
+            // \Session::put('professional_register', true); 
+            // \Session::put('portal_url', $portal_url); 
+        }
+        
+        // Professional Mail
+
+        $mailData['first_name'] = $professional->first_name;
+        $mailData['last_name'] = $professional->last_name;
+        $mailData['subdomain'] = $professional->subdomain;
+        $mailData['portal_url'] = $portal_url;
+        $mailData['password'] = $password;
+        $mailData['email']  = $professional->email;
+        $view = View::make('emails.panel-notification',$mailData);
+        $message = $view->render();
+        $parameter['to'] = $professional->email;
+        $parameter['to_name'] = $professional->first_name." ". $professional->last_name;
+        $parameter['message'] = $message;
+        $parameter['subject'] = companyName()." Welcome Mail";
+        // echo $message;
+        // exit;
+        $parameter['view'] = "emails.panel-notification";
+        $parameter['data'] = $mailData;
+        $mailRes = sendMail($parameter);
+
+
+        // Admin Mail
+
+        $mailData = array();
+        $mailData['mail_message'] = "Hello Admin,<Br> New professional ".$professional->company_name." has been registered to our panel.";
+        $view = View::make('emails.notification',$mailData);
+        $message = $view->render();
+        $parameter['to'] = adminInfo('email');
+        $parameter['to_name'] = adminInfo('name');
+        $parameter['message'] = $message;
+        $parameter['subject'] = "New Professional Signup";
+        $parameter['view'] = "emails.notification";
+        $parameter['data'] = $mailData;
+        $mailRes = sendMail($parameter);
+        
+        return response()->json($response);
+    }
     public function getPendingList(Request $request)
     {
         $records = Professionals::orderBy('id',"desc")->where('panel_status',0)->paginate();
@@ -330,7 +465,7 @@ class ProfessionalController extends Controller
                 ->get();
         
         $viewData['chats'] = $chats;
-        $view = View::make(roleFolder().'.professionals.support-chats',$viewData);
+        $view = View::make(roleFolder().'.professionals.chatbox',$viewData);
         $contents = $view->render();
 
         $response['status'] = true;
@@ -410,4 +545,18 @@ class ProfessionalController extends Controller
 
     //     }
     // }
+
+    public function deleteProfessional(Request $request){
+        try{
+            $professional = Professionals::where("unique_id",$request->input("user_id"))->first();
+            Professionals::deleteRecord($professional->id);
+            $response['status'] = true;
+            $response['message'] = "Professional deleted successfully";
+        } catch (Exception $e) {
+            $response['status'] = false;
+            $response['message'] = $e->getMessage();
+        }
+        
+        return response()->json($response);
+    }
 }

@@ -105,7 +105,7 @@ $(document).on('ready', function() {
     $('#date_of_birth').datepicker({
         format: 'dd/mm/yyyy',
         autoclose: true,
-        maxDate: (new Date()).getDate(),
+        endDate: new Date(),
         todayHighlight: true,
         orientation: "bottom auto"
     });

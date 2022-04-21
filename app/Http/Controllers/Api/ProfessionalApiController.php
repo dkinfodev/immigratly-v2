@@ -51,6 +51,7 @@ class ProfessionalApiController extends Controller
 
             $cases = Cases::with(['AssingedMember','VisaService','Chats','Documents'])
                         ->where("client_id",$request->input("client_id"))
+                        ->whereHas("VisaService")
                         ->orderBy("id","desc")
                         ->get();
             $data = array();
@@ -1419,7 +1420,9 @@ class ProfessionalApiController extends Controller
             $postData = $request->input();
             $request->request->add($postData);
             $sub_stage_id = $request->input("sub_stage_id");
-            $record = CaseSubStages::with(['CaseStage','FillForm'])->where("unique_id",$sub_stage_id)->first();
+            $record = CaseSubStages::with(['CaseStage','FillForm'])
+                        ->where("unique_id",$sub_stage_id)
+                        ->first();
 
             $response['status'] = "success";
             $response['data'] = $record;
@@ -1915,5 +1918,57 @@ class ProfessionalApiController extends Controller
             $response['message'] = $e->getMessage();
         }
         return response()->json($response); 
+    }
+
+    public function createCase(Request $request){
+       
+        try{
+            $case_unique_id = randomNumber();
+            $object = new Cases();
+            $object->client_id = $request->input("client_id");
+            $object->case_title = $request->input("case_title");
+            $object->start_date = date("d/m/Y");
+            $object->unique_id = $case_unique_id;
+           
+            if($request->input("description")){
+                $object->description = $request->input("description");
+            }
+            $object->visa_service_id = $request->input("visa_service_id");
+            $object->created_by =  $request->input("client_id");
+            $object->added_by = 'client';
+            $object->save();
+
+            $case_id = $case_unique_id;
+            
+
+            //Email NOTIFICATION FOR CASE
+            $mailData = array();
+            $uuid = $request->input("client_id");
+            $user = DB::table(MAIN_DATABASE.".users")->where("unique_id",$uuid)->first();
+            $professional = ProfessionalDetails::first();
+            $mail_message = "Hello ".$user->first_name." ".$user->last_name.",<br>".$professional->company_name." has created the case. You can approve the case by login to website.";
+            $parameter['subject'] = "New case added to your profile. ";
+            $mailData['mail_message'] = $mail_message;
+            $view = View::make('emails.notification',$mailData);
+            $message = $view->render();
+            $parameter['to'] = $user->email;
+            $parameter['to_name'] = $user->first_name." ".$user->last_name;
+            $parameter['message'] = $message;
+            $parameter['view'] = "emails.notification";
+            $parameter['data'] = $mailData;
+            $mailRes = sendMail($parameter);
+            //End Email NOTIFICATION FOR CASE
+
+            $response['status'] = "success";
+            $response['message'] = "Case created successfully";
+            $response['redirect_back'] = baseUrl('cases');
+        } catch (Exception $e) {
+            $response['status'] = "error";
+            $response['message'] = $e->getMessage();
+        }
+        return response()->json($response); 
+        
+        
+        return response()->json($response);
     }
 }

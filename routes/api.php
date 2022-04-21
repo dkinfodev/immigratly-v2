@@ -79,6 +79,7 @@ Route::group(array('middleware' => 'professional_curl'), function () {
 		Route::post('/locations', [App\Http\Controllers\Api\ProfessionalApiController::class, 'professionalLocations']);
 		Route::group(array('prefix' => 'cases'), function () {
 			Route::post('/', [App\Http\Controllers\Api\ProfessionalApiController::class, 'clientCases']);
+			Route::post('/create-case', [App\Http\Controllers\Api\ProfessionalApiController::class, 'createCase']);
 			Route::post('/view', [App\Http\Controllers\Api\ProfessionalApiController::class, 'caseDetail']);
 			Route::post('/approval', [App\Http\Controllers\Api\ProfessionalApiController::class, 'caseApproval']);
 			Route::post('/documents', [App\Http\Controllers\Api\ProfessionalApiController::class, 'caseDocuments']);
@@ -88,6 +89,7 @@ Route::group(array('middleware' => 'professional_curl'), function () {
 			Route::post('/remove-case-folder', [App\Http\Controllers\Api\ProfessionalApiController::class, 'removeCaseFolder']);
 			Route::post('/case-activity-logs', [App\Http\Controllers\Api\ProfessionalApiController::class, 'caseActivityLogs']);
 			Route::post('/case-stages', [App\Http\Controllers\Api\ProfessionalApiController::class, 'caseStages']);
+			
 			
 			Route::post('/save-sub-stage', [App\Http\Controllers\Api\ProfessionalApiController::class, 'saveSubStage']);
 			Route::post('/fetch-sub-stage', [App\Http\Controllers\Api\ProfessionalApiController::class, 'fetchSubStage']);

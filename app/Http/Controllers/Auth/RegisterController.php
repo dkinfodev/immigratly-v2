@@ -382,11 +382,11 @@ class RegisterController extends Controller
             DB::table($database_name.'.domain_details')->insert($api_keys);
             $rootdomain = DB::table(MAIN_DATABASE.".settings")->where("meta_key",'rootdomain')->first();
             $rootdomain = $rootdomain->meta_value;
-            $portal_url = "http://".$subdomain.".".$rootdomain."/";
+            $portal_url = "https://".$subdomain.".".$rootdomain."/";
             // $portal_url = url("signup/professional");
             if($_SERVER['SERVER_NAME'] == 'localhost'){
                 $response['status'] = true;
-                $response['redirect_back'] = url('welcome');
+                $response['redirect_back'] = url('professional-registered-successfully');
                 // $response['message'] = "Your panel has been created successfully";
                 $response['message'] = "Your panel has been created successfully. Mail has been sent to your emailm please check it.";
                 \Session::flash('success_message', "Your panel has been created successfully. You can login to your panel with the access you entered."); 
@@ -395,7 +395,7 @@ class RegisterController extends Controller
             }else{
                 $response['status'] = true;
                 
-                $url = url('welcome');
+                $url = url('professional-registered-successfully');
                 // $url = url("signup/professional");
                 $response['redirect_back'] = $url;
                 $response['message'] = "Your panel has been created successfully. Mail has been sent to your emailm please check it.";
@@ -410,12 +410,14 @@ class RegisterController extends Controller
             $mailData['last_name'] = $request->input('last_name');
             $mailData['subdomain'] = $request->input('subdomain');
             $mailData['portal_url'] = $portal_url;
+            $mailData['password'] = $password;
             $mailData['email']  = $request->input('email');
             $view = View::make('emails.panel-notification',$mailData);
             $message = $view->render();
             $parameter['to'] = $request->input('email');
             $parameter['to_name'] = $request->input('first_name')." ". $request->input('last_name');
             $parameter['message'] = $message;
+            $parameter['password'] = $password;
             $parameter['subject'] = companyName()." Welcome Mail";
             // echo $message;
             // exit;

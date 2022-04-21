@@ -20,7 +20,7 @@
 							</tr>
 							<tr>
 								<th align="left">Password:</th>
-								<td class="text-danger">You enter while signup</td>
+								<td class="text-danger">{{$password}}</td>
 							</tr>
 						</table>
 					</div>

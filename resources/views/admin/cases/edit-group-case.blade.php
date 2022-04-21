@@ -711,7 +711,7 @@ $(document).on('ready', function() {
     $('#start_date').datepicker({
         format: 'dd/mm/yyyy',
         autoclose: true,
-        maxDate: (new Date()).getDate(),
+        endDate: new Date(),
         todayHighlight: true,
         orientation: "bottom auto"
     })
@@ -723,7 +723,7 @@ $(document).on('ready', function() {
     $('#end_date').datepicker({
         format: 'dd/mm/yyyy',
         autoclose: true,
-        maxDate: (new Date()).getDate(),
+        endDate: new Date(),
         todayHighlight: true,
         orientation: "bottom auto"
     });
