@@ -41,6 +41,10 @@
               </li>
 
               <li class="nav-item">
+               <a class="btn text-primary" href="{{ url('/signup/agent') }}">Agent Signup</a>
+              </li>
+
+              <li class="nav-item">
                 <a class="btn text-primary" href="{{ url('/signup/professional') }}">Professional Signup</a>
               </li>
 

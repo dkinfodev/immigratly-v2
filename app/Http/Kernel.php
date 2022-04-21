@@ -73,5 +73,6 @@ class Kernel extends HttpKernel
         'curl_api' => \App\Http\Middleware\CurlApi::class,
         'professional_curl' => \App\Http\Middleware\ProfessionalCurl::class,
         'frontend' => \App\Http\Middleware\Frontend::class,
+        'agent' => \App\Http\Middleware\Agent::class,
     ];
 }

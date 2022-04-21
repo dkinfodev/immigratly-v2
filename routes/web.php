@@ -30,6 +30,7 @@ Route::group(array('prefix' => 'cron'), function () {
     Route::get('/scrape', [App\Http\Controllers\CronController::class, 'scrape']);
 });
 
+Route::get('/test-db', [App\Http\Controllers\Frontend\FrontendController::class, 'testSubdomain']);
 
 Route::get('/assessment/u/{id}', [App\Http\Controllers\Frontend\FrontendController::class, 'externalAssessment'])->name("external-assessment");
 
@@ -140,6 +141,10 @@ Route::post('/signup/professional', [App\Http\Controllers\Auth\RegisterControlle
 
 Route::get('/signup/user', [App\Http\Controllers\Auth\RegisterController::class, 'userSignup']);
 Route::post('/signup/user', [App\Http\Controllers\Auth\RegisterController::class, 'registerUser']);
+
+Route::get('/signup/agent', [App\Http\Controllers\Auth\RegisterController::class, 'agentSignup']);
+Route::post('/signup/agent', [App\Http\Controllers\Auth\RegisterController::class, 'registerAgent']);
+
 Route::post("send-verify-code",[App\Http\Controllers\Frontend\FrontendController::class, 'sendVerifyCode']);
 Route::post("verify-code",[App\Http\Controllers\Auth\RegisterController::class, 'verifyOtp']);
 
@@ -741,6 +746,18 @@ Route::group(array('prefix' => 'executive'), function () {
         });
     });
 });
+
+// Executive
+Route::group(array('prefix' => 'agent'), function () {
+    Route::group(array('middleware' => 'agent'), function () {
+        Route::get('/', [App\Http\Controllers\Agent\DashboardController::class, 'dashboard']);
+        Route::get('/edit-profile', [App\Http\Controllers\Agent\DashboardController::class, 'editProfile']);
+        Route::post('/update-profile', [App\Http\Controllers\Agent\DashboardController::class, 'updateProfile']);
+        Route::get('/change-password', [App\Http\Controllers\Agent\DashboardController::class, 'changePassword']);
+        Route::post('/update-password', [App\Http\Controllers\Agent\DashboardController::class, 'updatePassword']);
+    });
+});
+
 // User
 Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
 

@@ -51,7 +51,7 @@ li.select2-selection__choice {
         <div class="flex-grow-1 margin-auto-sm">
 
             <!-- Form -->
-            <form id="signup-form" class="js-validate  needs-validation" action="{{ url('signup/professional') }}"
+            <form id="signup-form" class="js-validate  needs-validation" action="{{ url('signup/agent') }}"
                 method="post" novalidate>
                 @csrf
                 <div class="step active step-1">
@@ -63,16 +63,6 @@ li.select2-selection__choice {
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="mb-3 mt-5 js-form-message">
-                        <label class="form-label" for="fullsubdomain name">Choose your unique subdomain name</label>
-                        <div class="input-group">
-                            <input type="text" name="subdomain" id="subdomain" class="form-control"
-                                placeholder="Choose between 6 to 14 characters"
-                                aria-label="Choose between 6 to 14 characters" aria-describedby="basic-addon2">
-                            <span class="input-group-text" id="basic-addon2">.immigratly.com</span>
-                        </div>
-                        <div class="clearfix"></div>
                     </div>
 
                     <div class="mb-3">
@@ -348,7 +338,7 @@ $(document).ready(function() {
             formData += "&verify_status=" + verify_status;
         }
         $.ajax({
-            url: "{{ url('signup/professional') }}",
+            url: "{{ url('signup/agent') }}",
             type: "post",
             data: formData,
             dataType: "json",

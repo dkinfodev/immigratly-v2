@@ -23,15 +23,16 @@
       <!-- <img class="avatar" src="assets/svg/brands/capsule.svg" alt="Image Description"> -->
       <div class="ml-1">
         <span class="h5 text-hover-primary mb-0">{{ $record->case_title }}</span>
-        @if($record->added_by == 'client')
-          <span class="badge badge-warning">Posted By Client</span>
-        @endif
+       
         <span class="d-block font-size-sm text-body">Created on {{ dateFormat($record->created_at) }}</span>
         <ul class="list-inline list-separator small file-specs">
             <li class="list-inline-item"> 
               <i class="tio-attachment-diagonal"></i> {{count($record->Documents)}}
             </li>
             <li class="list-inline-item"> <i class="tio-comment-text-outlined"></i>  {{count($record->Chats)}}</li>
+            @if($record->added_by == 'client')
+            <li class="list-inline-item"> <span class="badge badge-warning">Posted By Client</span></li>
+            @endif
         </ul>
 
         @if(!empty(!empty($record->VisaService) && $record->Service($record->VisaService->service_id)))

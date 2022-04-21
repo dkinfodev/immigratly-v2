@@ -4,16 +4,16 @@
 @section('breadcrumb')
 <!-- Content -->
 <ol class="breadcrumb breadcrumb-no-gutter">
-  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
-  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/staff') }}">Staff</a></li>
-  <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
+    <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/staff') }}">Staff</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
 </ol>
 <!-- End Content -->
 @endsection
 
 @section('header-right')
 <a class="btn btn-primary" href="{{baseUrl('staff')}}">
-  <i class="tio mr-1"></i> Back 
+    <i class="tio mr-1"></i> Back
 </a>
 @endsection
 
@@ -22,113 +22,127 @@
 <!-- Content -->
 <div class="staff">
 
-  <!-- Card -->
-  <div class="card">
+    <!-- Card -->
+    <div class="card">
 
-    <div class="card-body">
-      <form id="form" class="js-validate" action="{{ baseUrl('staff/update/'.base64_encode($record->id)) }}" method="post">
+        <div class="card-body">
+            <form id="form" class="js-validate" action="{{ baseUrl('staff/update/'.base64_encode($record->id)) }}"
+                method="post">
 
-        @csrf
-        
-        <div class="row">
+                @csrf
 
-          <div class="col-md-6">
+                <div class="row">
 
-            <div class="form-group">
-              <label for="validationFormUsernameLabel" class="col-form-label input-label">First name</label>
+                    <div class="col-md-6">
 
-              <div class="js-form-message">
-                <input type="text" class="form-control" name="first_name" id="validationFormFirstnameLabel" placeholder="Firstname" aria-label="Firstname" required data-msg="Please enter your first name." value="{{ $record->first_name }}">
-              </div>
+                        <div class="form-group">
+                            <label for="validationFormUsernameLabel" class="col-form-label input-label">First
+                                name</label>
 
-            </div>
-            <!-- End Form Group -->
-          </div>
+                            <div class="js-form-message">
+                                <input type="text" class="form-control" name="first_name"
+                                    id="validationFormFirstnameLabel" placeholder="Firstname" aria-label="Firstname"
+                                    required data-msg="Please enter your first name." value="{{ $record->first_name }}">
+                            </div>
 
-          <div class="col-6">
-            <div class="form-group">
-              <label for="validationFormUsernameLabel" class="col-form-label input-label">Last name</label>
+                        </div>
+                        <!-- End Form Group -->
+                    </div>
 
-              <div class="js-form-message">
-                <input type="text" class="form-control" name="last_name" id="validationFormLastnameLabel" placeholder="Lastname" aria-label="Lastname" required data-msg="Please enter your last name." value="{{ $record->last_name }}">
-              </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="validationFormUsernameLabel" class="col-form-label input-label">Last
+                                name</label>
 
-            </div>
-            <!-- End Form Group -->
-          </div>
-        </div>
+                            <div class="js-form-message">
+                                <input type="text" class="form-control" name="last_name"
+                                    id="validationFormLastnameLabel" placeholder="Lastname" aria-label="Lastname"
+                                    required data-msg="Please enter your last name." value="{{ $record->last_name }}">
+                            </div>
 
-        <div class="row justify-content-md-between">
-          <div class="col-md-6">
-            <!-- Form Group -->
-            <div class="row form-group">
-              <label class="col-sm-12 col-form-label input-label">Email</label>
-
-              <div class="col-sm-12">
-                <div class="js-form-message">
-                  <input type="email" class="form-control" name="email" id="validationFormEmailLabel" placeholder="Email" aria-label="Email" required data-msg="Please enter your email." value="{{ $record->email }}">
+                        </div>
+                        <!-- End Form Group -->
+                    </div>
                 </div>
-              </div>
-            </div>
-            <!-- End Form Group --> 
-          </div> <!-- div end -->
 
-          <div class="col-md-6">
+                <div class="row justify-content-md-between">
+                    <div class="col-md-6">
+                        <!-- Form Group -->
+                        <div class="row form-group">
+                            <label class="col-sm-12 col-form-label input-label">Email</label>
 
-           <!-- Form Group -->
-           <div class="row form-group">
-            <label class="col-sm-12 col-form-label input-label">Phone Number</label>
+                            <div class="col-sm-12">
+                                <div class="js-form-message">
+                                    <input type="email" class="form-control" name="email" id="validationFormEmailLabel"
+                                        placeholder="Email" aria-label="Email" required
+                                        data-msg="Please enter your email." value="{{ $record->email }}">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Group -->
+                    </div> <!-- div end -->
 
-            <div class="col-sm-5">
-              <div class="js-form-message">
-                <select name="country_code" id="country_code" class="form-control">
-                  <option value="">Select Code</option>
-                  @foreach($countries as $country)
-                  <option {{$record->country_code == $country->phonecode?"selected":""}} value="+{{$country->phonecode}}">+{{$country->phonecode}}</option>
-                  @endforeach
-                </select>
-              </div>
-            </div>
-            <div class="col-sm-7">
-              <div class="js-form-message">
-                <input type="text" class="form-control" name="phone_no" id="phone_no" placeholder="Phone number" aria-label="phone no" required data-msg="Please enter your phone number." value="{{$record->phone_no}}">
-              </div>
-            </div>
-          </div>
-          <!-- End Form Group -->
-          
-        </div>
+                    <div class="col-md-6">
+
+                        <!-- Form Group -->
+                        <div class="row form-group">
+                            <label class="col-sm-12 col-form-label input-label">Phone Number</label>
+
+                            <div class="col-sm-5">
+                                <div class="js-form-message">
+                                    <select name="country_code" id="country_code" class="form-control">
+                                        <option value="">Select Code</option>
+                                        @foreach($countries as $country)
+                                        <option {{$record->country_code == $country->phonecode?"selected":""}}
+                                            value="+{{$country->phonecode}}">+{{$country->phonecode}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-7">
+                                <div class="js-form-message">
+                                    <input type="text" class="form-control" name="phone_no" id="phone_no"
+                                        placeholder="Phone number" aria-label="phone no" required
+                                        data-msg="Please enter your phone number." value="{{$record->phone_no}}">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Group -->
+
+                    </div>
 
 
-          <div class="col-md-6">
-            <!-- Form Group -->
-            <div class="row form-group">
-              <label class="col-sm-12 col-form-label input-label">Status</label>
+                    <div class="col-md-6">
+                        <!-- Form Group -->
+                        <div class="row form-group">
+                            <label class="col-sm-12 col-form-label input-label">Status</label>
 
-              <div class="col-sm-12">
-                <div class="js-form-message">
-                  <select name="status" class="form-control">
-                  <option {{($record->is_active == '1')?'selected':''}} value="1">Active</option>
-                  <option {{($record->is_active == '0')?'selected':''}} value="0">Inactive</option>
-                  <option {{($record->is_active == '2')?'selected':''}} value="2">Suspended</option>
-                </select>
+                            <div class="col-sm-12">
+                                <div class="js-form-message">
+                                    <select name="status" class="form-control">
+                                        <option {{($record->is_active == '1')?'selected':''}} value="1">Active</option>
+                                        <option {{($record->is_active == '0')?'selected':''}} value="0">Inactive
+                                        </option>
+                                        <option {{($record->is_active == '2')?'selected':''}} value="2">Suspended
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Group -->
+                    </div>
+
+                    <!-- End Form Group -->
                 </div>
-              </div>
-            </div>
-            <!-- End Form Group --> 
-          </div>
 
-        <!-- End Form Group -->    
-      </div>
+                <div class="form-group">
+                    <button type="submit" class="btn add-btn btn-primary">Save</button>
+                </div>
+                <!-- End Input Group -->
 
-      <div class="form-group">
-        <button type="submit" class="btn add-btn btn-primary">Save</button>
-      </div>
-      <!-- End Input Group -->
-
-    </div><!-- End Card body-->
-  </div>
-  <!-- End Card -->
+        </div><!-- End Card body-->
+    </div>
+    <!-- End Card -->
 </div>
 <!-- End Content -->
 @endsection
@@ -154,38 +168,36 @@
 <script src="assets/vendor/quill/dist/quill.min.js"></script>
 
 <script>
-    
-    $("#form").submit(function(e){
-      e.preventDefault();
-      
-      var formData = new FormData($(this)[0]);
-      var url  = $("#form").attr('action');
-      $.ajax({
-        url:url,
-        type:"post",
-        data:formData,
+$("#form").submit(function(e) {
+    e.preventDefault();
+
+    var formData = new FormData($(this)[0]);
+    var url = $("#form").attr('action');
+    $.ajax({
+        url: url,
+        type: "post",
+        data: formData,
         cache: false,
         contentType: false,
         processData: false,
-        dataType:"json",
-        beforeSend:function(){
-          showLoader();
+        dataType: "json",
+        beforeSend: function() {
+            showLoader();
         },
-        success:function(response){
-          hideLoader();
-          if(response.status == true){
-            successMessage(response.message);
-            redirect(response.redirect_back);
-          }else{
-            validation(response.message);
+        success: function(response) {
+            hideLoader();
+            if (response.status == true) {
+                successMessage(response.message);
+                redirect(response.redirect_back);
+            } else {
+                validation(response.message);
             }
-          },
-          error:function(){
+        },
+        error: function() {
             internalError();
-          }
-        });    
+        }
     });
-  
+});
 </script>
 
 @endsection

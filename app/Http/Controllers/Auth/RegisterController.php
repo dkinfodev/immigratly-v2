@@ -500,4 +500,146 @@ class RegisterController extends Controller
             return response()->json($response);
         }
     }
+
+    public function agentSignup(Request $request){
+        if(\Auth::check()){
+            return Redirect::to(baseUrl('/'));
+        }
+
+        $viewData['pageTitle'] = 'Sign Up as Agent';
+        $viewData['countries'] = Countries::get();
+        return view('auth.agent-signup',$viewData);   
+    }
+    public function registerAgent(Request $request){
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|unique:users',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'password' => 'required|confirmed|min:6',
+            'password_confirmation' => 'required|min:6',
+            'country_code' => 'required',
+            'phone_no' => 'required',
+            'termsAndConditions'=>'required'
+            // 'verify_by'=>'required',
+            // 'verification_code'=>'required',
+        ]);
+        if ($validator->fails()) {
+            $response['status'] = false;
+            $response['error_type'] = 'validation';
+            $error = $validator->errors()->toArray();
+            $errMsg = array();
+
+            foreach($error as $key => $err){
+                $errMsg[$key] = $err[0];
+            }
+            $response['message'] = $errMsg;
+            return response()->json($response);
+        }
+        $phone = $request->input("country_code").$request->input("phone_no");
+        if($request->input("verify_status") != 'true'){
+            if($request->input("verify_by")){
+                $verify_code = $request->input("verify_type");
+                if(\Session::get('verify_by') == 'email'){
+                    if(\Session::get('verify_code') != $verify_code){
+                        $response['status'] = false;
+                        $response['error_type'] = 'verify_failed';
+                        $response['message'] = 'Verification code mismatch';
+                        return response()->json($response);
+                    }
+                }
+            }else{
+                $response['status'] = false;
+                $response['error_type'] = 'not_verified';
+                $response['email'] = $request->input("email");
+                $response['mobile_no'] = $phone;
+                return response()->json($response);
+            }
+        }
+
+        
+        if($request->input("verify_status") == 'true'){
+            $object = new User();
+            $unique_id = randomNumber();
+            $object->unique_id = $unique_id ;
+            $object->first_name = $request->input("first_name");
+            $object->last_name = $request->input("last_name");
+            $object->email = $request->input("email");
+            $object->password = bcrypt($request->input("password"));
+            $object->country_code = $request->input("country_code");
+            $object->phone_no = $request->input("phone_no");
+            $object->role = "agent";
+            $object->is_active = 1;
+            $object->is_verified = 1;
+
+            $object->save();
+            $user_id = $object->id;
+
+
+            $object2 = new UserDetails();
+            $object2->user_id = $unique_id;
+            $object2->save();
+
+            
+            \Auth::loginUsingId($user_id);
+            \Session::forget("verify_code");
+            $response['status'] = true;
+            if(!empty($request->input('redirect_back'))){
+                $response['redirect_back']= $request->input('redirect_back');    
+            }else{
+                $response['redirect_back'] = url('home');  
+            }
+            if($request->get('assessment')){
+                $assessment_form = AssessmentForms::with('Assessment')
+                                        ->where("uuid",$request->get("assessment"))
+                                        ->whereHas("Assessment")
+                                        ->first();
+                if(!empty($assessment_form)){
+                    $uspr_object = new UserWithProfessional();
+                    $uspr_object->user_id = $unique_id;
+                    $uspr_object->professional = $assessment_form->Assessment->professional;
+                    $uspr_object->status = 1;
+                    $uspr_object->save();
+                }
+                $response['redirect_back'] = url('assessment/u/'.$request->get('assessment')); 
+            }
+             // Professional Mail
+
+             $name = $request->input('first_name')." ".$request->input('last_name');
+            
+
+             $mailData = array();
+             $mailData['mail_message'] = "Hello ".$name.",<Br> Welcome to ".companyName().". We are happy to have you with us.";
+             $view = View::make('emails.notification',$mailData);
+             
+             $message = $view->render();
+             $parameter['to'] = $request->input('email');
+             $parameter['to_name'] = $request->input('first_name')." ". $request->input('last_name');
+             $parameter['message'] = $message;
+             $parameter['subject'] = companyName()." Welcome Mail";
+             $parameter['view'] = "emails.notification";
+             $parameter['data'] = $mailData;
+             $mailRes = sendMail($parameter);
+ 
+            
+             // Admin Mail
+ 
+             $mailData = array();
+             $mailData['mail_message'] = "Hello Admin,<Br> New user ".$name." has been registered to our panel.";
+             $view = View::make('emails.notification',$mailData);
+             $message = $view->render();
+             $parameter['to'] = adminInfo('email');
+             $parameter['to_name'] = adminInfo('name');
+             $parameter['message'] = $message;
+             $parameter['subject'] = companyName()." Welcome Mail";
+             $parameter['view'] = "emails.notification";
+             $parameter['data'] = $mailData;
+             $mailRes = sendMail($parameter);
+
+        }else{
+            $response['status'] = false;
+            $response['error_type'] = "verification_pending";
+            $response['message'] = "OTP verification pending";
+        }
+        return response()->json($response);
+    }
 }

@@ -61,7 +61,12 @@ class CasesController extends Controller
                             }
                             if($case_by == 'client'){
                                 $query->where("added_by","client");
-                                $query->where("approve_status",0);
+                            }else{
+                                $query->orWhere("added_by","professional");
+                                $query->orWhere(function($query3){
+                                    $query3->where("approve_status","1");
+                                    $query3->where("added_by","client");
+                                });
                             }
                         })
                         ->paginate(5);
