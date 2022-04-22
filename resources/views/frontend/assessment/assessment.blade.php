@@ -1,31 +1,33 @@
 @extends('frontend.layouts.master')
 
+@section('breadcrumb')
+<!-- Content -->
+<!-- <ol class="breadcrumb breadcrumb-no-gutter">
+
+  <li class="breadcrumb-item active" aria-current="page">{{$pageTitle}}</li>
+</ol> -->
+<!-- End Content -->
+@endsection
+
 @section('content')
 <!-- Content -->
 <!-- Search Section -->
-<div class="bg-dark">
-  <div class="bg-img-hero-center" style="background-image: url({{asset('assets/frontend/svg/components/abstract-shapes-19.svg')}});padding-top: 94px;">
-    <div class="container space-1">
-      <div class="w-lg-90 mx-lg-auto">
-        
-        <h4 class="h4 text-white mb-4">{{$record->form_title}}</h4>
-        
-      </div>
-    </div>
-  </div>
-</div>
-<div class="container space-top-1 space-bottom-2 space-top-lg-2">
-  <div class="w-lg-90 mx-lg-auto text-justify">
-      <!-- Card -->
-  <div class="card">
 
-<div class="card-body">
-  @if(Auth::check())
-    @if($already_filled == 0)
-      <form id="form" class="js-validate" method="post">
-        @csrf  
-        <!-- Form Group -->
-        <div class="row form-group">
+<div class="container space-top-1 pb-5 mb-5 space-bottom-2 space-top-lg-2">
+  <div class="w-lg-90 mx-lg-auto text-justify">
+    <!-- Card -->
+    <div class="card">
+
+      <div class="card-body">
+
+        <h4>{{$record->form_title}}</h4>
+        <br>
+        @if(Auth::check())
+        @if($already_filled == 0)
+        <form id="form" class="js-validate" method="post">
+          @csrf  
+          <!-- Form Group -->
+          <div class="row form-group">
             <label class="col-sm-3 col-form-label input-label">Full name <i class="tio-help-outlined text-body ml-1" data-toggle="tooltip" data-placement="top" title="Name for quick lead"></i></label>
 
             <div class="col-sm-9">
@@ -39,7 +41,7 @@
                 </span>
                 @enderror
                 <span class="js-form-message w-50">
-                <input type="text" class="form-control @error('last_name') is-invalid @enderror" name="last_name" id="last_name" value="{{ \Auth::user()->last_name }}" placeholder="Your last name" aria-label="Your last name">
+                  <input type="text" class="form-control @error('last_name') is-invalid @enderror" name="last_name" id="last_name" value="{{ \Auth::user()->last_name }}" placeholder="Your last name" aria-label="Your last name">
                 </span>
                 @error('last_name')
                 <span class="invalid-feedback" role="alert">
@@ -87,36 +89,36 @@
             </div>
           </div>      
           <!-- End Form Group -->
-        <div class="render-wrap"></div>
-        <div class="form-group text-center">
-          <button type="submit" class="btn add-btn btn-primary">Save</button>
-        </div>
-        <!-- End Input Group -->
-      </form>
-    @else
-    <div class="row">
-        <div class="col-md-12">
-          <div class="text-center">
-                <h3 class="font-bold text-danger">You already filled the asssessment form</h3>
+          <div class="render-wrap"></div>
+          <div class="form-group text-center">
+            <button type="submit" class="btn add-btn btn-primary">Save</button>
+          </div>
+          <!-- End Input Group -->
+        </form>
+        @else
+        <div class="row">
+          <div class="col-md-12">
+            <div class="text-center">
+              <h3 class="font-bold text-danger">You already filled the asssessment form</h3>
+            </div>
           </div>
         </div>
-    </div>
-    @endif
-  @else
-  <div class="row">
-      <div class="col-md-12">
-        <div class="text-center">
+        @endif
+        @else
+        <div class="row">
+          <div class="col-md-12">
+            <div class="text-center">
               <p class="font-bold">Please signup to see the assessment form</p>
               <div>
                 <a href="{{ url('signup/user?assessment='.$assessment_id) }}" target="_blank" class="text-primary">Create an Account</a> Or <a target="_blank" href="{{ url('login?assessment='.$assessment_id) }}">Already have an Account</a>
               </div>
+            </div>
+          </div>
         </div>
-      </div>
-  </div>
-  @endif
-</div><!-- End Card body-->
-</div>
-<!-- End Card -->
+        @endif
+      </div><!-- End Card body-->
+    </div>
+    <!-- End Card -->
   </div>
 </div>
 
@@ -130,42 +132,42 @@
 <script src="assets/vendor/formBuilder/dist/form-render.min.js"></script>
 <script src="assets/vendor/jquery-ui/jquery-ui.js"></script>
 <script>
-jQuery(($) => {
-  var form_json = '<?php echo $form_json ?>';
-  var formData = JSON.parse(form_json);
-  $('.render-wrap').formRender({
+  jQuery(($) => {
+    var form_json = '<?php echo $form_json ?>';
+    var formData = JSON.parse(form_json);
+    $('.render-wrap').formRender({
       formData:form_json,
       dataType: 'json',
       render: true
     });
-});
-$(document).ready(function(){
-  $("#form").submit(function(e){
-    e.preventDefault();
-    var url  = $("#form").attr('action');
-    $.ajax({
-      url:url,
-      type:"post",
-      data:$("#form").serialize(),
-      dataType:"json",
-      beforeSend:function(){
-        showLoader();
-      },
-      success:function(response){
-        hideLoader();
-        if(response.status == true){
-          successMessage(response.message);
-          location.reload();
-        }else{
-          validation(response.message);
-        }
-      },
-      error:function(){
+  });
+  $(document).ready(function(){
+    $("#form").submit(function(e){
+      e.preventDefault();
+      var url  = $("#form").attr('action');
+      $.ajax({
+        url:url,
+        type:"post",
+        data:$("#form").serialize(),
+        dataType:"json",
+        beforeSend:function(){
+          showLoader();
+        },
+        success:function(response){
+          hideLoader();
+          if(response.status == true){
+            successMessage(response.message);
+            location.reload();
+          }else{
+            validation(response.message);
+          }
+        },
+        error:function(){
           internalError();
-      }
-    });
+        }
+      });
+    })
   })
-})
 
 </script>
 

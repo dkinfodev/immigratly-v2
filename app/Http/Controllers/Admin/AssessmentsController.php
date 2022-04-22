@@ -694,7 +694,78 @@ class AssessmentsController extends Controller
             $response['error_type'] = 'invalid_data';
             return response()->json($response);
         }
+    
+    }
 
+
+    public function downloadForm($assessment_id,$id,Request $request){
+
+        $apiData['subdomain'] = \Session::get("subdomain");
+        $apiData['form_id'] = $id;
+        $result = curlRequest("assessments/fetch-form",$apiData);
+        $viewData = array();
+        $form_json = array();
+        if($result['status'] == 'success'){
+            $record = $result['data'];
+            $viewData['record'] = $record;
+            $form_json = json_decode($record['form_json'],true);
+            if($record['form_reply'] != ''){
+                $postData = json_decode($record['form_reply'],true);
+                $form_reply = array();
+                foreach($form_json as $form){
+                    $temp = array();
+                   
+                    if(isset($form['name']) && isset($postData[$form['name']])){
+                        if(isset($form['values'])){
+                            $values = $form['values'];
+                            $final_values = array();
+                            foreach($values as $value){
+                                $tempVal = $value;
+                                if(is_array($postData[$form['name']])){
+                                    if(in_array($value['value'],$postData[$form['name']])){
+                                        $tempVal['selected'] = true;
+                                        
+                                    }else{
+                                        $tempVal['selected'] = false;
+                                    }
+                                }else{
+                                    if($value['value'] == $postData[$form['name']]){
+                                        $tempVal['selected'] = true;
+                                        if($form['type'] == 'autocomplete'){
+                                            $temp['value'] = $value['label'];
+                                        }
+                                    }else{
+                                        $tempVal['selected'] = false;
+                                    }
+                                }
+                                $final_values[] = $tempVal;
+                            }
+                        }else{
+                            $temp['value'] = $postData[$form['name']];
+                        }
+                    }
+                    if(isset($temp['value'])){
+                        $temp['label'] = $form['label'];
+                        $form_reply[] = $temp;
+                    }
+                }
+                $form_json = $form_reply;
+            }
+            $viewData['assessment_id'] = $assessment_id;
+            $viewData['form_json'] = $form_json;
+            
+        }else{
+            return redirect()->back()->with("error","Invalid assessment");
+        }
         
+        $viewData['pageTitle'] = "Assessment Reply";
+        $viewData['activeTab'] = 'assessments';
+
+        //return view(roleFolder().'.assessments.view-documents',$viewData);
+
+        $pdf_doc = \PDF::loadView(roleFolder().'.assessments.forms.download-form', $viewData);
+        return $pdf_doc->download('assessment-form.pdf');
+
     }
 }
+ 
