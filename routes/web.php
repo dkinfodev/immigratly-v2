@@ -1163,6 +1163,7 @@ Route::group(array('prefix' => 'admin'), function () {
                 Route::get('/delete/{id}', [App\Http\Controllers\Admin\AssessmentsController::class, 'deleteFormSingle']);
                 Route::post('/delete-multiple', [App\Http\Controllers\Admin\AssessmentsController::class, 'deleteMultiple']);
                 Route::get('/view/{id}', [App\Http\Controllers\Admin\AssessmentsController::class, 'viewForm']);
+                Route::get('/download/{id}', [App\Http\Controllers\Admin\AssessmentsController::class, 'downloadForm']);
                 Route::get('/send-form/{id}', [App\Http\Controllers\Admin\AssessmentsController::class, 'sendAssessmentToMail']);
                 Route::post('/send-form/{id}', [App\Http\Controllers\Admin\AssessmentsController::class, 'sendAssessmentLink']);
             });

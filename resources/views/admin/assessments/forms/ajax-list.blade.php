@@ -27,9 +27,17 @@
           Edit
           </a>
           <a class="dropdown-item" href="javascript:;" onclick="showPopup('<?php echo baseUrl('assessments/forms/'.$assessment_id.'/send-form/'.$record['unique_id']) ?>')">
-          <i class="tio-envelope dropdown-item-icon"></i>
+          <i class="tio-share dropdown-item-icon"></i>
           Send Assessment Link
           </a>
+
+          @if($record['form_reply'] != '')
+          <a class="dropdown-item" href="{{baseUrl('assessments/forms/'.$assessment_id.'/download/'.$record['unique_id'])}}">
+          <i class="tio-download dropdown-item-icon"></i>
+          Download
+          </a>
+          @endif
+          
           <div class="dropdown-divider"></div>
           <a class="dropdown-item text-danger" href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('assessments/forms/'.$assessment_id.'/delete/'.$record['unique_id'])}}">
           <i class="tio-delete-outlined dropdown-item-icon"></i>
