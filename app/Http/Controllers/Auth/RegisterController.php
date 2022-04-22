@@ -20,6 +20,7 @@ use App\Models\Settings;
 use App\Models\Assessments;
 use App\Models\AssessmentForms;
 use App\Models\UserWithProfessional;
+use App\Models\Agents;
 
 class RegisterController extends Controller
 {
@@ -85,7 +86,7 @@ class RegisterController extends Controller
 
     public function userSignup(Request $request){
         if(\Auth::check()){
-            return Redirect::to(baseUrl('/'));
+            return redirect(baseUrl('/'));
         }
         $viewData['pageTitle'] = 'Sign Up as User';
         $viewData['countries'] = DB::table(MAIN_DATABASE.".countries")->get();
@@ -99,7 +100,7 @@ class RegisterController extends Controller
 
     public function professionalSignup(Request $request){
         if(\Auth::check()){
-            return Redirect::to(baseUrl('/'));
+            return redirect(baseUrl('/'));
         }
         $subdomain = "dkdev";
         $rootdomain = DB::table(MAIN_DATABASE.".settings")->where("meta_key",'rootdomain')->first();
@@ -503,7 +504,7 @@ class RegisterController extends Controller
 
     public function agentSignup(Request $request){
         if(\Auth::check()){
-            return Redirect::to(baseUrl('/'));
+            return redirect(baseUrl('/'));
         }
 
         $viewData['pageTitle'] = 'Sign Up as Agent';
@@ -512,7 +513,7 @@ class RegisterController extends Controller
     }
     public function registerAgent(Request $request){
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email|unique:agents',
             'first_name' => 'required',
             'last_name' => 'required',
             'password' => 'required|confirmed|min:6',
@@ -558,7 +559,7 @@ class RegisterController extends Controller
 
         
         if($request->input("verify_status") == 'true'){
-            $object = new User();
+            $object = new Agents();
             $unique_id = randomNumber();
             $object->unique_id = $unique_id ;
             $object->first_name = $request->input("first_name");
@@ -580,7 +581,7 @@ class RegisterController extends Controller
             $object2->save();
 
             
-            \Auth::loginUsingId($user_id);
+            \Auth::guard('agents')->loginUsingId($user_id);
             \Session::forget("verify_code");
             $response['status'] = true;
             if(!empty($request->input('redirect_back'))){

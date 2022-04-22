@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 
 use DB;
 
-use App\Models\User;
+use App\Models\Agents;
 use App\Models\Countries;
 
 class DashboardController extends Controller
@@ -29,7 +29,7 @@ class DashboardController extends Controller
         $id = \Auth::user()->id;
 
         $viewData['pageTitle'] = "Edit Profile";
-        $record = User::where("id",$id)->first();
+        $record = Agents::where("id",$id)->first();
 
         $countries = DB::table(MAIN_DATABASE.".countries")->get();
         $viewData['countries'] = $countries;
@@ -49,22 +49,22 @@ class DashboardController extends Controller
     public function updateProfile(Request $request){
         // pre($request->all());
         $id = \Auth::user()->id;
-        $object =  User::find($id);
+        $object =  Agents::find($id);
 
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email|unique:users,email,'.$object->id,
+            'email' => 'required|email|unique:agents,email,'.$object->id,
             'first_name' => 'required',
             'last_name' => 'required',
             'country_code' => 'required',
-            'phone_no' => 'required|unique:users,phone_no,'.$object->id,
-            'gender'=>'required',
-            'date_of_birth'=>'required',
-            'languages_known'=>'required',
-            'country_id'=>'required',
-            'state_id'=>'required',
-            'city_id'=>'required',
-            'address'=>'required',
-            'zip_code'=>'required',
+            'phone_no' => 'required|unique:agents,phone_no,'.$object->id,
+            // 'gender'=>'required',
+            // 'date_of_birth'=>'required',
+            // 'languages_known'=>'required',
+            // 'country_id'=>'required',
+            // 'state_id'=>'required',
+            // 'city_id'=>'required',
+            // 'address'=>'required',
+            // 'zip_code'=>'required',
         ]);
 
         if ($validator->fails()) {
@@ -83,15 +83,15 @@ class DashboardController extends Controller
         $object->email = $request->input("email");
         $object->country_code = $request->input("country_code");
         $object->phone_no = $request->input("phone_no");
-        $object->date_of_birth = $request->input("date_of_birth");
-        $object->gender = $request->input("gender");
-        $object->country_id = $request->input("country_id");
-        $object->state_id = $request->input("state_id");
-        $object->city_id = $request->input("city_id");
-        $object->address = $request->input("address");
-        $object->zip_code = $request->input("zip_code");
+        // $object->date_of_birth = $request->input("date_of_birth");
+        // $object->gender = $request->input("gender");
+        // $object->country_id = $request->input("country_id");
+        // $object->state_id = $request->input("state_id");
+        // $object->city_id = $request->input("city_id");
+        // $object->address = $request->input("address");
+        // $object->zip_code = $request->input("zip_code");
         
-        $object->languages_known = json_encode($request->input("languages_known"));
+        // $object->languages_known = json_encode($request->input("languages_known"));
         if ($file = $request->file('profile_image')){
                 
             $fileName        = $file->getClientOriginalName();
@@ -117,7 +117,7 @@ class DashboardController extends Controller
     public function changePassword()
     {
         $id = \Auth::user()->id;
-        $record = User::where("id",$id)->first();
+        $record = Agents::where("id",$id)->first();
         $viewData['record'] = $record;
         $viewData['pageTitle'] = "Change Password";
         $viewData['activeTab'] = "dashboard";
@@ -127,7 +127,7 @@ class DashboardController extends Controller
     public function updatePassword(Request $request)
     {
         $id = \Auth::user()->id;
-        $object =  User::find($id);
+        $object =  Agents::find($id);
 
         $validator = Validator::make($request->all(), [
             'password' => 'required|confirmed|min:4',

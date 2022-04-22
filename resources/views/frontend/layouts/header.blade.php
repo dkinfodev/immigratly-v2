@@ -23,9 +23,7 @@
 
           <!-- Collapse -->
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
-              
-              
+            <ul class="navbar-nav js-mega-menu">
               @if(Auth::check())
               <li class="nav-item">
                <a class="btn text-primary" href="{{ baseUrl('/') }}">Dashboard</a>
@@ -36,7 +34,7 @@
               @else
                 @if(\Session::get("login_to") == 'admin_panel')
               <!-- Button -->
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                <a class="btn text-primary" href="{{ url('/signup/user') }}">User Signup</a>
               </li>
 
@@ -46,11 +44,26 @@
 
               <li class="nav-item">
                 <a class="btn text-primary" href="{{ url('/signup/professional') }}">Professional Signup</a>
-              </li>
+              </li> -->
+              <li class="nav-item hs-has-sub-menu navbar-nav-item">
+                  <a id="signupMegaMenu" class="btn hs-mega-menu-invoker nav-link nav-link-toggle " href="javascript:;" aria-haspopup="true" aria-expanded="false" aria-labelledby="signupSubMenu">Signup <i class="fas fa-chevron-down"></i></a>
 
-              <li class="nav-item">
-                <a class="btn btn-primary btn-transition" href="{{ url('/login') }}">Login</a>
-              </li>
+                    <ul id="signupSubMenu" class="hs-sub-menu dropdown-menu hs-sub-menu-desktop-lg animated" aria-labelledby="signupMegaMenu" style="min-width: 230px; animation-duration: 300ms; display: none;">
+                      <li class="nav-item"><a href="{{ url('/signup/user') }}" class="text-dark"><i class="fa fa-angle-right"></i> Signup as User</a></li>
+                      <li class="nav-item"><a href="{{ url('/signup/agent') }}" class="text-dark"><i class="fa fa-angle-right"></i> Signup as Agent</a></li>
+                      <li class="nav-item"><a href="{{ url('/signup/professional') }}" class="text-dark"><i class="fa fa-angle-right"></i> Signup as Professional</a></li>
+                    </ul>
+                  <!-- End Submenu -->
+                </li>
+                <li class="nav-item hs-has-sub-menu navbar-nav-item">
+                  <a id="loginMegaMenu" class="btn hs-mega-menu-invoker nav-link nav-link-toggle " href="javascript:;" aria-haspopup="true" aria-expanded="false" aria-labelledby="loginSubMenu">Login <i class="fas fa-chevron-down"></i></a>
+
+                    <ul id="loginSubMenu" class="hs-sub-menu dropdown-menu hs-sub-menu-desktop-lg animated" aria-labelledby="loginMegaMenu" style="min-width: 230px; animation-duration: 300ms; display: none;">
+                      <li class="nav-item"><a href="{{ url('/login') }}" class="text-dark"><i class="fa fa-angle-right"></i> Login as User</a></li>
+                      <li class="nav-item"><a href="{{ url('/agent/login') }}" class="text-dark"><i class="fa fa-angle-right"></i> Login as Agent</a></li>
+                    </ul>
+                  <!-- End Submenu -->
+                </li>
                 @endif
               @endif
               @if(\Session::get("login_to") == 'admin_panel')

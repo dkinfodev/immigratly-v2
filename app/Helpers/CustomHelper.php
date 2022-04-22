@@ -781,7 +781,7 @@ if(!function_exists("curlRequest")){
     }
 }
 if(!function_exists("professionalCurl")){
-    function professionalCurl($url,$subdomain,$data=array(),$return=''){
+    function professionalCurl($url,$subdomain,$data=array(),$return=false){
        
         $professional = DB::table(MAIN_DATABASE.".professionals")->where("subdomain",$subdomain)->first();
         
@@ -816,7 +816,7 @@ if(!function_exists("professionalCurl")){
         $info = curl_getinfo($ch);
         curl_close($ch);
         $curl_response = json_decode($response,true);
-        if($return == 'print'){
+        if($return == true){
             echo $response;
         }
         return $curl_response;
@@ -1131,6 +1131,56 @@ if(!function_exists("userProfile")){
             $url = $original;
         }
         return $url;
+    }
+}
+if(!function_exists("agentProfile")){
+    function agentProfile($unique_id = '',$size='r'){
+        
+        if($unique_id == ''){
+           $unique_id = \Auth::user()->unique_id;
+        }
+        $user = DB::table(MAIN_DATABASE.".agents")
+                ->where("unique_id",$unique_id)
+                ->first();
+        $profile_image = $user->profile_image;
+        $profile_dir = agentDir($unique_id)."/profile/".$profile_image;
+        if($profile_image == '' || !file_exists($profile_dir)){
+            $url = asset("public/uploads/agent/default.jpg?u=".$unique_id);
+            return $url;
+        }
+        $original = asset("public/uploads/agent/".$unique_id."/profile/".$profile_image);
+        $url = '';
+        if($size == 'r'){
+            $url = asset("public/uploads/agent/".$unique_id."/profile/".$profile_image);
+        }
+        if($size == 'm'){
+            if(file_exists(agentDir($unique_id)."/profile/medium/".$profile_image)){
+                $url = asset("public/uploads/agent/".$unique_id."/profile/medium/".$profile_image);
+            }else{
+                $url = $original;
+            }
+        }
+        if($size == 't'){
+            if(file_exists(agentDir($unique_id)."/profile/thumb/".$profile_image)){
+                $url = asset("public/uploads/agent/".$unique_id."/profile/thumb/".$profile_image);
+            }else{
+                $url = $original;
+            }
+        }
+        if($url == ''){
+            $url = $original;
+        }
+        return $url;
+    }
+}
+if(!function_exists("agentDir")){
+    function agentDir($unique_id = ''){
+        if($unique_id == ''){
+            $unique_id = \Auth::user()->unique_id;
+        }
+        $dir = public_path("uploads/agent/".$unique_id);
+
+        return $dir;
     }
 }
 if(!function_exists("superAdminDir")){
@@ -2834,5 +2884,16 @@ if(!function_exists("professionalLocation")){
         $location = \DB::table(PROFESSIONAL_DATABASE.$subdomain.".professional_locations")->where("unique_id",$location_id)->first();
         // pre($location);
         return $location;
+    }
+}
+if(!function_exists("activeGuard")){
+    function activeGuard(){
+
+        foreach(array_keys(config('auth.guards')) as $guard){
+            if(auth()->guard($guard)->check()) {
+                return $guard;
+            }
+        }
+        return '';
     }
 }

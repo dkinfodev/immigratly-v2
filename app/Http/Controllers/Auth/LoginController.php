@@ -44,6 +44,9 @@ class LoginController extends Controller
     {
         // echo $this->redirectTo;
         // exit;
+        if(\Auth::check()){
+            return redirect(baseUrl('/'));
+        }
         $viewData['pageTitle'] = "Login";
        
         if(\Session::get("login_to") == 'professional_panel'){
@@ -67,7 +70,10 @@ class LoginController extends Controller
     {
         // echo $this->redirectTo;
         // exit;
-        $viewData['pageTitle'] = "Login";
+        if(\Auth::check()){
+            return redirect(baseUrl('/'));
+        }
+        $viewData['pageTitle'] = "Admin Login";
        
         if(\Session::get("login_to") == 'professional_panel'){
             return redirect("/login/professional");
@@ -79,7 +85,7 @@ class LoginController extends Controller
 
     public function loginAsUser(Request $request)
     {
-        if (\Auth::attempt(['email' => $request->email, 'password' => $request->password,'role'=>"user"]))
+        if (\Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password,'role'=>"user"]))
         {
            
             if(\Session::get('redirect_back')){
@@ -98,7 +104,7 @@ class LoginController extends Controller
 
     public function loginAsSuperAdmin(Request $request)
     {
-        if (\Auth::attempt(['email' => $request->email, 'password' => $request->password,'role'=>"super_admin"]))
+        if (\Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password,'role'=>"super_admin"]))
         {
             return redirect(baseUrl('/'));
         }else{
@@ -109,11 +115,14 @@ class LoginController extends Controller
 
     public function professionalLogin(Request $request)
     {
+        if(\Auth::check()){
+            return redirect(baseUrl('/'));
+        }
        
         if(\Session::get("login_to") != 'professional_panel'){
             return redirect("/login");
         }
-        $viewData['pageTitle'] = "Login";
+        $viewData['pageTitle'] = "Professional Login";
 
         if(isset($_GET['assessment']) && $_GET['assessment'] != ''){
              $url = url('assessment/u/'.$_GET['assessment']);
@@ -138,13 +147,42 @@ class LoginController extends Controller
         }
         // \Config::set('database.connections.mysql.database', 'immigrat_'.\Session::get("subdomain"));
         // \DB::purge('mysql');
-        if (\Auth::attempt(['email' => $request->email, 'password' => $request->password]))
+        if (\Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password]))
         {
             return redirect(baseUrl('/'));
         }else{
             return redirect()->back()->with("error_message","Invalid Email or Password");
         }
     }
+
+    public function showAgentLogin(Request $request)
+    {
+        // echo $this->redirectTo;
+        // exit;
+        if(\Auth::guard('agents')->check()){
+            return redirect(baseUrl('/'));
+        }
+        $viewData['pageTitle'] = "Agent Login";
+       
+        if(\Session::get("login_to") == 'professional_panel'){
+            return redirect("/login/professional");
+        }
+        
+        return view('auth.agent-login',$viewData);
+    }
+
+    public function loginAsAgent(Request $request){
+        if(\Session::get("login_to") == 'professional_panel'){
+            return redirect("/professional/login");
+        }
+        if (\Auth::guard('agents')->attempt(['email' => $request->email, 'password' => $request->password]))
+        {
+            return redirect(baseUrl('/'));
+        }else{
+            return redirect()->back()->with("error_message","Invalid Email or Password");
+        }
+    }
+
     public function redirectTo()
     {
         return \Session::get('redirect_back') ? \Session::get('redirect_back') :   $this->redirectTo;

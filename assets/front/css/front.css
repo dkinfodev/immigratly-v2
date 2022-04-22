@@ -176,3 +176,6 @@ span.select2-selection.custom-select {
 .message-time {
     margin-top: 7px;
 }
+.hs-has-sub-menu li.nav-item {
+    padding: 8px 10px;
+}

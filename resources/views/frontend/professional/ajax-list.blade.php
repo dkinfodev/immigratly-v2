@@ -13,7 +13,7 @@
       <div class="col-md-12">
         <div class="row">
           <div class="col-md-2 text-center">
-            <img class="img-fluid w-100 rounded-lg" src="{{professionalLogo('m','fastzone')}}" alt="Image Description">
+            <img class="img-fluid w-100 rounded-lg" src="{{professionalLogo('m',$prof->subdomain)}}" alt="Image Description">
              <div><span class="text-center mt-2"><b>{{ucwords($prof->company_name)}}</b></span> </div>
              
            

@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 Route::get('/logout', function () {
-    Auth::logout();
+    Auth::guard(activeGuard())->logout();
     return redirect('/login');
 });
 
@@ -130,11 +130,17 @@ Route::get('/licence-bodies', [App\Http\Controllers\CommonController::class, 'li
 Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm']);
 Route::post('/user/login', [App\Http\Controllers\Auth\LoginController::class, 'loginAsUser'])->name("user.login");
 
+Route::get('/agent/login', [App\Http\Controllers\Auth\LoginController::class, 'showAgentLogin']);
+Route::post('/agent/login', [App\Http\Controllers\Auth\LoginController::class, 'loginAsAgent'])->name("agent.login");
+
 Route::get('/super-admin/login', [App\Http\Controllers\Auth\LoginController::class, 'showSuperAdminLogin']);
 Route::post('/super-admin/login', [App\Http\Controllers\Auth\LoginController::class, 'loginAsSuperAdmin'])->name("super-admin.login");
 
 Route::get('/login/professional', [App\Http\Controllers\Auth\LoginController::class, 'professionalLogin']);
 Route::post('/login/professional', [App\Http\Controllers\Auth\LoginController::class, 'loginAsProfessional'])->name("professional.login");
+
+Route::get('/login/agent', [App\Http\Controllers\Auth\LoginController::class, 'professionalLogin']);
+Route::post('/login/agent', [App\Http\Controllers\Auth\LoginController::class, 'loginAsAgent'])->name("agent.login");
 
 Route::get('/signup/professional', [App\Http\Controllers\Auth\RegisterController::class, 'professionalSignup']);
 Route::post('/signup/professional', [App\Http\Controllers\Auth\RegisterController::class, 'registerProfessional']);
@@ -755,6 +761,19 @@ Route::group(array('prefix' => 'agent'), function () {
         Route::post('/update-profile', [App\Http\Controllers\Agent\DashboardController::class, 'updateProfile']);
         Route::get('/change-password', [App\Http\Controllers\Agent\DashboardController::class, 'changePassword']);
         Route::post('/update-password', [App\Http\Controllers\Agent\DashboardController::class, 'updatePassword']);
+
+        Route::group(array('prefix' => 'staff'), function () {
+            Route::get('/', [App\Http\Controllers\Agent\StaffController::class, 'index']);
+            Route::post('/ajax-list', [App\Http\Controllers\Agent\StaffController::class, 'getAjaxList']);
+            Route::get('/add', [App\Http\Controllers\Agent\StaffController::class, 'add']);
+            Route::post('/save', [App\Http\Controllers\Agent\StaffController::class, 'save']);
+            Route::get('/edit/{id}', [App\Http\Controllers\Agent\StaffController::class, 'edit']);
+            Route::post('/update/{id}', [App\Http\Controllers\Agent\StaffController::class, 'update']);
+            Route::get('/delete/{id}', [App\Http\Controllers\Agent\StaffController::class, 'deleteSingle']);
+            Route::post('/delete-multiple', [App\Http\Controllers\Agent\StaffController::class, 'deleteMultiple']);
+            Route::get('/change-password/{id}', [App\Http\Controllers\Agent\StaffController::class, 'changePassword']);
+            Route::post('/update-password/{id}', [App\Http\Controllers\Agent\StaffController::class, 'updatePassword']);
+        });
     });
 });
 
