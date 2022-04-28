@@ -1,3 +1,61 @@
+<div class="mb-3 mb-lg-5">
+  <div class="card" role="document">
+    <div class="card-header">
+        <h3 class="modal-title">{{$pageTitle}}</h3>
+      </div>
+      <div class="card-body">
+        <form method="post" id="popup-form"  action="{{ baseUrl('/booked-appointments/update-appointment') }}">
+          @csrf
+          <input type="hidden" name="professional" value="{{$professional}}" />
+          <input type="hidden" name="location_id" value="{{$location_id}}" />
+          <input type="hidden" name="interval" value="{{$interval}}" />          
+          <input type="hidden" name="schedule_id" value="{{$schedule_id}}" />
+          <input type="hidden" name="time_type" value="{{$time_type}}" />
+          <input type="hidden" name="date" value="{{$date}}" />
+          <input type="hidden" name="visa_service" value="{{$visa_service->unique_id}}" />
+          <input type="hidden" name="price" class="price" value="{{$visa_service->price}}" />
+          <input type="hidden" name="break_time" value="{{$break_time}}" />
+          <input type="hidden" name="appointment_type_id" value="{{$appointment_type_id}}" />
+          @if($action == 'edit')
+            <input type="hidden" name="eid" value="{{$eid}}" />
+          @endif
+          <input type="hidden" name="action" value="{{$action}}" />
+          <div class="imm-education-add-inner">
+              <h3>Available time slot for {{dateFormat($date)}}</h3>
+              <div class="row js-form-message">
+              @foreach($time_slots as $key => $slot)
+              <div class="col-3">
+                  <div class="card text-center bg-light mb-3">
+                      <div class="card-body p-3">
+                          <h4>{{$slot['start_time']}} to {{$slot['end_time']}}</h4>
+                      </div>
+                      <div class="card-footer js-form-message p-0">
+                              <div class="form-group">
+                              <!-- Checkbox -->
+                                  <div class="custom-control custom-radio">
+                                      <input type="radio" id="duration-{{$key}}" class="custom-control-input" name="duration" value="{{$slot['start_time'].'-'.$slot['end_time']}}">
+                                      <label class="custom-control-label" for="duration-{{$key}}">Select Duration</label>
+                                  </div>
+                                  <!-- End Checkbox -->
+                              </div>
+                      </div>
+                  </div>
+              </div>
+              @endforeach
+            </div>
+          </div>
+          <div class="clearfix"></div>
+          
+      </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-white" onclick="backToCalendar()">Back</button>
+        <button form="popup-form" class="btn btn-primary">Book Slot</button>
+      </div>
+  </div>
+</div>
+{{--
 <div class="modal-dialog modal-xl" role="document">
   <div class="modal-content">
     <div class="modal-header">
@@ -65,9 +123,12 @@
 
   </div>
 </div>
-
+--}}
 <script type="text/javascript">
-
+function backToCalendar(){
+  $(".book-steps").hide();
+  $(".bs-step-1").show();
+}
 $(document).ready(function(){
     initSelect('#popup-form ');
     // initialization of form validation

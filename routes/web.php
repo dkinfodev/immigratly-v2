@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 Route::get('/logout', function () {
-    Auth::guard(activeGuard())->logout();
+    Auth::logout();
     return redirect('/login');
 });
 
@@ -779,7 +779,7 @@ Route::group(array('prefix' => 'agent'), function () {
 
 // User
 Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
-
+    Route::get('/professional/{subdomain}/appointment-services/{location}', [App\Http\Controllers\Frontend\FrontendController::class, 'bookAppointmentServices']);
     Route::get('/professional/{subdomain}/book-appointment/{location}', [App\Http\Controllers\Frontend\FrontendController::class, 'bookAppointment']);
 
     Route::post('/professional/fetch-hours', [App\Http\Controllers\Frontend\FrontendController::class, 'fetchHours']);
@@ -803,6 +803,7 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
         Route::get('/', [App\Http\Controllers\User\BookedAppointmentsController::class, 'index']);
         Route::post('/ajax-list', [App\Http\Controllers\User\BookedAppointmentsController::class, 'getAjaxList']);
         Route::get('/delete/{id}', [App\Http\Controllers\User\BookedAppointmentsController::class, 'delete']);
+        Route::get('/view/{id}', [App\Http\Controllers\User\BookedAppointmentsController::class, 'viewAppointment']);
         Route::post('/payment-success', [App\Http\Controllers\User\TransactionController::class, 'appointmentPaymentSuccess']);
         Route::post('/payment-failed', [App\Http\Controllers\User\TransactionController::class, 'appointmentPaymentFailed']);
     });
@@ -1025,6 +1026,8 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
     Route::group(array('prefix' => 'cases'), function () {
         Route::get('/', [App\Http\Controllers\User\ProfessionalCasesController::class, 'cases']);
         Route::get('/pending', [App\Http\Controllers\User\ProfessionalCasesController::class, 'pendingCases']);
+        Route::get('/start-case/{subdomain}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'startCase']);
+        Route::post('/start-case/{subdomain}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'saveCaseWithProfessional']);
         
         Route::get('/dependants/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'caseDependants']);
         
@@ -1199,7 +1202,6 @@ Route::group(array('prefix' => 'admin'), function () {
                 Route::get('/delete/{id}', [App\Http\Controllers\Admin\AssessmentsController::class, 'deleteFormSingle']);
                 Route::post('/delete-multiple', [App\Http\Controllers\Admin\AssessmentsController::class, 'deleteMultiple']);
                 Route::get('/view/{id}', [App\Http\Controllers\Admin\AssessmentsController::class, 'viewForm']);
-                Route::get('/download/{id}', [App\Http\Controllers\Admin\AssessmentsController::class, 'downloadForm']);
                 Route::get('/send-form/{id}', [App\Http\Controllers\Admin\AssessmentsController::class, 'sendAssessmentToMail']);
                 Route::post('/send-form/{id}', [App\Http\Controllers\Admin\AssessmentsController::class, 'sendAssessmentLink']);
             });
@@ -1286,6 +1288,8 @@ Route::group(array('prefix' => 'admin'), function () {
             Route::post('/update/{id}', [App\Http\Controllers\Admin\AppointmentTypesController::class, 'update']);
             Route::get('/delete/{id}', [App\Http\Controllers\Admin\AppointmentTypesController::class, 'deleteSingle']);
             Route::post('/delete-multiple', [App\Http\Controllers\Admin\AppointmentTypesController::class, 'deleteMultiple']);
+            Route::get('/service-price/{id}', [App\Http\Controllers\Admin\AppointmentTypesController::class, 'appointmentServicePrice']);
+            Route::post('/service-price/{id}', [App\Http\Controllers\Admin\AppointmentTypesController::class, 'saveAppointmentServicePrice']);
         });
 
 
@@ -1360,11 +1364,16 @@ Route::group(array('prefix' => 'admin'), function () {
 
         Route::group(array('prefix' => 'booked-appointments'), function () {
             Route::get('/', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'index']);
+            Route::get('/add', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'addAppointment']);
+            Route::post('/save', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'saveAppointment']);
+            Route::post('/fetch-appointment-types', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'fetchServiceAppointmentTypes']);
+            
             Route::get('/reschedule-appointment/{id}', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'rescheduleAppointment']);
             Route::get('/calendar', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'viewCalendar']);
             Route::post('/fetch-appointments', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'fetchAppointments']);
             Route::post('/ajax-list', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'getAjaxList']);
             Route::get('/status/{id}/{status}', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'changeStatus']);
+            Route::get('/view/{id}', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'viewAppointment']);
             Route::post('/fetch-hours', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'fetchHours']);
             Route::post('/fetch-available-slots', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'fetchAvailabilityHours']);
             Route::post('/update-appointment', [App\Http\Controllers\Admin\BookedAppointmentsController::class, 'updateAppointment']);

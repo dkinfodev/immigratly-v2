@@ -1838,7 +1838,7 @@ class ProfessionalApiController extends Controller
         try{
             $result = ProfessionalLocations::with('AppointmentSchedules')->whereHas('AppointmentSchedules')->get();
 
-            $response['status'] = true;
+            $response['status'] = "success";
             $response['data'] = $result;
         } catch (Exception $e) {
             $response['status'] = "error";
@@ -1852,15 +1852,30 @@ class ProfessionalApiController extends Controller
             
             $postData = $request->input();
             $request->request->add($postData);
+            $is_price_avaiable = 0;
             if($request->input('return') == 'single'){
                 $result = AppointmentTypes::with('timeDuration')->where('unique_id',$request->input('id'))->first();
+             
             }else{
                 $result = AppointmentTypes::with('timeDuration')->get();
+               
+                foreach($result as $type){
+                    if($request->input("service_id")){
+                        $service_prices = $type->getServicePrices($type->unique_id,$request->input("service_id"));
+                    }else{
+                        $service_prices = $type->getServicePrices($type->unique_id);
+                    }
+                    if(!empty($service_prices)){
+                        $is_price_avaiable = 1;
+                    }
+                    $type->service_prices = $service_prices;
+                }
             }
             
 
-            $response['status'] = true;
+            $response['status'] = "success";
             $response['data'] = $result;
+            $response['service_price_avaiable'] = $is_price_avaiable;
         } catch (Exception $e) {
             $response['status'] = "error";
             $response['message'] = $e->getMessage();
@@ -1901,8 +1916,12 @@ class ProfessionalApiController extends Controller
 
             $postData = $request->input();
             $request->request->add($postData);
-
-            $services = ProfessionalServices::get();
+            
+            $services = ProfessionalServices::where(function($query) use($request){
+                if($request->get_service_price){
+                    $query->whereHas("AppointmentPrice");
+                }
+            })->get();
             $visa_services = array();
             foreach($services as $service){
                 if(!empty($service->Service($service->service_id))){
@@ -1911,7 +1930,7 @@ class ProfessionalApiController extends Controller
                     $visa_services[] = $temp;
                 }
             }           
-            $response['status'] = true;
+            $response['status'] = "success";
             $response['data'] = $visa_services;
         } catch (Exception $e) {
             $response['status'] = "error";

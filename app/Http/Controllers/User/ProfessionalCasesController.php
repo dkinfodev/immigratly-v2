@@ -96,7 +96,68 @@ class ProfessionalCasesController extends Controller
             return response()->json($response);
         }   
     }
-    
+
+    public function startCase($subdomain){
+        $viewData['pageTitle'] = "Start a Cases";
+        $viewData['activeTab'] = "cases";
+
+        $apiData = professionalCurl('services',$subdomain);
+        if(isset($apiData['status']) && $apiData['status'] == 'success'){
+            $visa_services = $apiData['data'];
+        }else{
+            $visa_services = array();
+        }
+        
+        $viewData['visa_services'] = $visa_services;
+        
+        return view(roleFolder().'.cases.add',$viewData);
+    }
+    public function saveCaseWithProfessional($subdomain,Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'case_title' => 'required',
+            'description' => 'required',
+            'visa_service_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $response['status'] = false;
+            $response['error_type'] = 'validation';
+            $error = $validator->errors()->toArray();
+            $errMsg = array();
+            
+            foreach($error as $key => $err){
+                $errMsg[$key] = $err[0];
+            }
+            $response['message'] = $errMsg;
+            return response()->json($response);
+        }
+
+        $apiData = $request->all();
+        
+        unset($apiData['_token']);
+        $apiData['subdomain'] = $subdomain;
+        $apiData['client_id'] = \Auth::user()->unique_id;
+        $api_response = professionalCurl('cases/create-case',$subdomain,$apiData);
+       
+        if(isset($api_response['status']) && $api_response['status'] == 'success'){
+            $check = UserWithProfessional::where("professional",$subdomain)->where("user_id",\Auth::user()->unique_id)->count();
+            // $user = UserWithProfessional::firstOrNew(array('professional' => $subdomain,"user_id"=>\Auth::user()->unique_id));
+            if($check == 0){
+                $object = new UserWithProfessional();
+                $object->professional = $subdomain;
+                $object->user_id = \Auth::user()->unique_id;
+                $object->save();
+            }
+            $response['status'] = true;
+            $response['redirect_back'] = baseUrl('cases/pending');
+            $response['message'] = "Case posted successfully";
+        }else{
+            $response['status'] = false;
+            $response['message'] = "Something went wrong while posting case. Try again";
+        }
+        return response()->json($response);
+    }
     public function view($subdomain,$case_id){
         $data['case_id'] = $case_id;
         $data['client_id'] = \Auth::user()->unique_id;

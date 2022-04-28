@@ -67,7 +67,8 @@
                   <hr>
                   <div class="sharing-icons text-center">
                     @if(Auth::check())
-                    <a class="btn btn-warning" onclick="showPopup('<?php echo url('professional/'.$subdomain.'/post-a-case') ?>')"><i class="fa fa-plus" style="font-size: 20px;padding-top:4px;"></i> Start a Case With Professional</a>
+                    <!-- <a class="btn btn-warning" onclick="showPopup('<?php echo url('professional/'.$subdomain.'/post-a-case') ?>')"><i class="fa fa-plus" style="font-size: 20px;padding-top:4px;"></i> Start a Case With Professional</a> -->
+                    <a class="btn btn-warning" href="{{ baseUrl('cases/start-case/'.$subdomain) }}"><i class="fa fa-plus" style="font-size: 20px;padding-top:4px;"></i> Start a Case With Professional</a> 
                      @else
                      <a class="btn btn-warning" href="{{ url('login?redirect_back='.url()->current()) }}"><i class="fa fa-plus" style="font-size: 20px;padding-top:4px;"></i> Login Start a Case With Professional</a>
                      @endif
@@ -194,7 +195,7 @@
                         
                         @endphp
                         @if(count($checkHours) > 0)
-                        <a href="{{ baseUrl('professional/'.$subdomain.'/book-appointment/'.$location->unique_id) }}" class="btn btn-primary btn-sm">Book Appointment</a>
+                        <a href="{{ baseUrl('professional/'.$subdomain.'/appointment-services/'.$location->unique_id) }}" class="btn btn-primary btn-sm">Book Appointment</a>
                         @else
                         <span class="text-danger">No Schedule Available</span>
                         @endif

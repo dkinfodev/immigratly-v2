@@ -9,8 +9,15 @@ class BookedAppointments extends Model
 {
     use HasFactory;
 
-    public function Client()
+    public function Client($client_id)
     {
-        return $this->belongsTo('App\Models\User','user_id','unique_id');
+        $user = \DB::table(MAIN_DATABASE.".users")->where("unique_id",$client_id)->first();
+        return $user;
+    }
+
+    public function Lead($lead_id)
+    {
+        $user = Leads::where("unique_id",$lead_id)->first();
+        return $user;
     }
 }

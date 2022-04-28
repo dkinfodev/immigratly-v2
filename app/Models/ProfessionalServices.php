@@ -35,7 +35,9 @@ class ProfessionalServices extends Model
     	$is_exists = ProfessionalServices::where("service_id",$service_id)->count();
     	return $is_exists;
     }
-    
+    public function AppointmentPrice(){
+        return $this->hasMany('App\Models\AppointmentServicePrice','visa_service_id','unique_id');
+    }
     static function deleteRecord($id){
         ServiceDocuments::where("service_id",$id);
         ProfessionalServices::where("id",$id)->delete();

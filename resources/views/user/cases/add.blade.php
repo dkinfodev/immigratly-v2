@@ -26,7 +26,7 @@
 
     <div class="card-body">
      <!-- Step Form -->
-      <form id="form" action="{{ baseUrl('cases/save') }}" class="js-validate js-step-form"
+      <form id="form" class="js-validate js-step-form"
          data-hs-step-form-options='{
          "progressSelector": "#createProjectStepFormProgress",
          "stepsSelector": "#createProjectStepFormContent",
@@ -54,7 +54,7 @@
                   }'>
                   <span class="step-icon step-icon-soft-dark">2</span>
                   <div class="step-content">
-                     <span class="step-title">Assigned Staff</span>
+                     <span class="step-title">Visa Services</span>
                   </div>
                </a>
             </li>
@@ -65,7 +65,7 @@
                   }'>
                   <span class="step-icon step-icon-soft-dark">3</span>
                   <div class="step-content">
-                     <span class="step-title">Confirmation
+                     <span class="step-title">Pay & Post
                      </span>
                   </div>
                </a>
@@ -75,40 +75,7 @@
          <!-- Content Step Form -->
          <div id="createProjectStepFormContent">
             <div id="createProjectStepDetails" class="active">
-              
-               <!-- Form Group -->
-               <div class="form-group">
-                  <label for="clientNewProjectLabel" class="input-label">Client</label>
-                  <div class="form-row align-items-center">
-                     <div class="col-12 col-md-7 mb-3 js-form-message">
-                        <div class="form-group mb-0">
-                            <!-- Select -->
-                            <div class="select2-custom">
-                               <select class="js-select2-custom custom-select" required name="client_id" id="client_id"
-                                data-hs-select2-options='{
-                                  "placeholder": "Select Client"
-                                }'
-                               >
-                                  <option value="">Select Client</option>
-                                  @foreach($clients as $client)
-                                  <option value="{{$client->unique_id}}">
-                                    {{$client->first_name." ".$client->last_name}} ({{$client->email}})
-                                  </option>
-                                  @endforeach
-                               </select>
-                            </div>
-                            <!-- End Select -->
-                         </div>
-                     </div>
-                     <span class="col-auto">or</span>
-                     <div class="col-md mb-md-3">
-                        <a class="btn btn-white" onclick="showPopup('<?php echo baseUrl('cases/create-client') ?>')" href="javascript:;">
-                        <i class="tio-add mr-1"></i>New client
-                        </a>
-                     </div>
-                  </div>
-               </div>
-               <!-- End Form Group -->
+             
                <!-- Form Group -->
                <div class="form-group js-form-message">
                   <label class="input-label">Case Title</label>
@@ -122,55 +89,7 @@
                   </div>
                </div>
                <!-- End Form Group -->
-               <div class="row">
-                  <div class="col-sm-4">
-                     <!-- Form Group -->
-                     <div class="form-group js-form-message">
-                        <label class="input-label">Start date</label>
-                        <div class="js-flatpickr flatpickr-custom input-group input-group-merge">
-                           <div class="input-group-prepend" data-toggle>
-                              <div class="input-group-text">
-                                 <i class="tio-date-range"></i>
-                              </div>
-                           </div>
-                           <input required data-msg="Please select start date" type="text" name="start_date" class="flatpickr-custom-form-control form-control" id="start_date" placeholder="Select Start Date" data-input value="">
-                        </div>
-                     </div>
-                     <!-- End Form Group -->
-                  </div>
-                  <div class="col-sm-4">
-                     <!-- Form Group -->
-                     <div class="form-group js-form-message">
-                        <label class="input-label">End date</label>
-                        <div class="js-flatpickr flatpickr-custom input-group input-group-merge">
-                           <div class="input-group-prepend" data-toggle>
-                              <div class="input-group-text">
-                                 <i class="tio-date-range"></i>
-                              </div>
-                           </div>
-                           <input type="text" data-msg="Please select end date" name="end_date" class="flatpickr-custom-form-control form-control" id="end_date" placeholder="Select End Date" data-input value="">
-                        </div>
-                     </div>
-                     <!-- End Form Group -->
-                  </div>
-                  <div class="col-sm-4">
-                     <div class="js-form-message form-group">
-                        <label class="input-label font-weight-bold">Visa Service</label>
-                        <select name="visa_service_id" required data-msg="Please select visa service" id="visa_service_id" class="custom-select"
-                          data-hs-select2-options='{
-                            "placeholder": "Select Visa Service"
-                          }'
-                        >
-                          <option value="">Select Service</option>
-                          @foreach($visa_services as $service)
-                            @if(!empty($service->Service($service->service_id)))
-                              <option value="{{$service->unique_id}}">{{$service->Service($service->service_id)->name}} </option>
-                            @endif
-                          @endforeach
-                        </select>
-                      </div>
-                  </div>
-               </div>
+          
                <div class="form-group js-form-message">
                   <label class="input-label">Description <span class="input-label-secondary">(Optional)</span></label>
                   <textarea class="form-control" id="description" name="description"></textarea>
@@ -194,23 +113,27 @@
                <!-- Form Row -->
                <div class="row">
                   <div class="col-sm-6">
-                      <!-- Form Group -->
-                      <div class="js-form-message form-group">
-                        <label class="input-label font-weight-bold">Assign Staffs</label>
-                        <select name="assign_teams[]" id="assign_teams" multiple class="custom-select"
-                          data-hs-select2-options='{
-                            "minimumResultsForSearch": "Infinity",
-                            "singleMultiple": true,
-                            "placeholder": "Select Team members"
-                          }'
-                        >
-                          <option value="" disabled>Select Team</option>
-                          @foreach($staffs as $staff)
-                            <option data-name="{{$staff->first_name.' '.$staff->last_name}}" data-role="{{ $staff->role }}" value="{{$staff->unique_id}}">{{$staff->first_name.' '.$staff->last_name}} ({{$staff->role}})</option>
-                          @endforeach
-                        </select>
+                     <div class="js-form-message form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                               <label class="input-label font-weight-bold mt-2">Visa Service</label>
+                            </div>
+                            <div class="col-md-8">
+                              <select name="visa_service_id" required data-msg="Please select visa service" id="visa_service_id" class="custom-select"
+                                  data-hs-select2-options='{
+                                    "placeholder": "Select Visa Service"
+                                  }'
+                                >
+                                <option value="">Select Service</option>
+                                @foreach($visa_services as $service)
+                                  @if(!empty($service['visa_service']))
+                                    <option data-price="{{$service['price']}}" value="{{$service['unique_id']}}">{{$service['visa_service']['name']}}</option>
+                                  @endif
+                                @endforeach
+                              </select>
+                            </div>
+                        </div>
                       </div>
-                     <!-- End Form Group -->
                   </div>
                </div>
                <!-- End Form Row -->
@@ -243,49 +166,28 @@
                   <div class="col-lg-12 text-center">
                      <h2>Confirm Details</h2>
                      <div class="confirm-details row">
-                        <div class="col-md-6 text-left">
+                        <div class="col-md-12 mt-3 text-left">
                           <ul class="list-unstyled list-unstyled-py-3 text-dark mb-3">
                             <li class="py-0">
                               <small class="card-subtitle">Case Details</small>
                             </li>
-                            <li>
-                              <i class="tio-user-outlined nav-icon"></i>
-                              Client: <span id="client_name_text"></span> 
-                            </li>
+                            
                             <li>
                               <i class="tio-briefcase-outlined nav-icon"></i>
                               Case Title: <span id="case_title_text"></span>
                             </li>
-                            <li>
-                              <i class="tio-date-range nav-icon"></i>
-                              Start Date: <span id="start_date_text"></span>
-                            </li>
-                            <li>
-                              <i class="tio-date-range nav-icon"></i>
-                              End Date: <span id="end_date_text"></span>
-                            </li>
+                            
                             <li>
                               <i class="tio-layers-outlined  nav-icon"></i> 
                               Visa Service: <span id="visa_service_text"></span>
                             </li>
+                            <li>
+                              <i class="tio-layers-outlined  nav-icon"></i> 
+                              Service Charge: <span id="service_charge"></span>
+                            </li>
                           </ul>
                         </div>
-                        <div class="col-md-6 text-left" id="assign_staff_list" style="display:none">
-                          <ul class="nav card-nav card-nav-vertical nav-pills">
-                              <li class="py-0 text-left">
-                                <small class="card-subtitle">Team Members</small>
-                              </li>
-                              <!-- <li class="text-left">
-                                <a class="nav-link media" href="#">
-                                  <i class="tio-group-senior nav-icon text-dark"></i>
-                                  <span class="media-body">
-                                    <span class="d-block text-dark">#digitalmarketing</span>
-                                    <small class="d-block text-muted">8 members</small>
-                                  </span>
-                                </a>
-                              </li> -->
-                          </ul>
-                        </div>
+                        
                      </div>
                   </div>
                </div>
@@ -331,14 +233,7 @@
 <script type="text/javascript">
 initEditor("description"); 
 $(document).on('ready', function () {
-  $("#client_id").change(function(){
-    if($(this).val() != ''){
-      var text = $("#client_id").find("option:selected").text();
-      $("#client_name_text").html(text.trim());
-    }else{
-      $("#client_name_text").html('');
-    }
-  });
+  
   $("[name=case_title]").change(function(){
     if($(this).val() != ''){
       $("#case_title_text").html($(this).val());
@@ -363,53 +258,19 @@ $(document).on('ready', function () {
   $("#visa_service_id").change(function(){
     if($(this).val() != ''){
       var text = $("#visa_service_id").find("option:selected").text();
+      var price = $("#visa_service_id").find("option:selected").attr("data-price")
       $("#visa_service_text").html(text.trim());
+      if(price == 0){
+        $("#service_charge").html("Free");
+      }else{
+        $("#service_charge").html("{{ currencyFormat()}}"+price);
+      }
+     
     }else{
       $("#visa_service_text").html('');
     }
   });
-  $("#assign_teams").change(function(){
-    if($("#assign_teams").val() != ''){
-      var html = '';
-      $("#assign_staff_list").show();
-      $(".staff").remove();
-      $("#assign_teams").find("option:selected").each(function(){
-          var text = $(this).attr('data-name');
-          var role = $(this).attr('data-role');
-
-          html +='<li class="text-left staff">';
-          html +='<a class="nav-link media" href="javascript:;">';
-          html +='<i class="tio-group-senior nav-icon text-dark"></i>';
-          html +='<span class="media-body">';
-          html +='<span class="d-block text-dark">'+text.trim()+'</span>';
-          html +='<small class="d-block text-muted">'+role+'</small>';
-          html +='</span></a></li>';
-      });
-      $("#assign_staff_list ul").append(html);
-    }else{
-      $("#assign_staff_list").hide();
-      $("#assign_staff_list .staff").remove();
-    }
-  });
-  $('#start_date').datepicker({
-      format: 'dd/mm/yyyy',
-      autoclose: true,
-      maxDate:(new Date()).getDate(),
-      todayHighlight: true,
-      orientation: "bottom auto"
-  })
-  .on('changeDate', function (selected) {
-      startDate = new Date(selected.date.valueOf());
-      startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
-      $('#end_date').datepicker('setStartDate', startDate);
-  });
-  $('#end_date').datepicker({
-      format: 'dd/mm/yyyy',
-      autoclose: true,
-      maxDate:(new Date()).getDate(),
-      todayHighlight: true,
-      orientation: "bottom auto"
-  });
+  
   $('.js-validate').each(function() {
       $.HSCore.components.HSValidation.init($(this));
     });
@@ -447,7 +308,7 @@ $(document).on('ready', function () {
         });
        }
      }).init();
-  });
+   });
   $("#form").submit(function(e){
       e.preventDefault();
       var formData = $("#form").serialize();

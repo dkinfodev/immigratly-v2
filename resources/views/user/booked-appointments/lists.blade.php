@@ -22,6 +22,9 @@
   <div class="card">
     <!-- Header -->
     <div class="card-header">
+      @if(Session::has('error_message'))
+          <div class="alert alert-warning text-center"><i class="fa fa-warning"></i> {{ Session::get("error_message") }}</div>
+      @endif
       <div class="row justify-content-between align-items-center flex-grow-1">
         <div class="col-sm-6 col-md-4 mb-3 mb-sm-0">
           <h5 class="card-header-title">Appointments with Professionals</h5>

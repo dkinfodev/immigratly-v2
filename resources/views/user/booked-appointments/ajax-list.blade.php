@@ -16,6 +16,7 @@
           }
         ?>
     </a>
+    <div class="d-block text-danger">ID: {{$record->unique_id}}</div>
     @php 
     $location = professionalLocation($record->location_id,$record->professional);
     @endphp
@@ -48,17 +49,20 @@
       <span class="badge badge-danger">{{$record->status}}</span>
       @endif
   </td>
-  <td class="table-column-pl-0">
+  <td class="table-column-pl-0 text-center">
       @if($record->payment_status == 'pending')
       <span class="badge badge-warning">{{$record->payment_status}}</span>
-      @if($record->payment_status != 'paid')
+        @if($record->payment_status != 'paid')
           <!-- <a class="text-primary" href="{{baseUrl('appointment-payment/'.$record->unique_id)}}"><i class="tio-dollar"></i> Click to Pay</a> -->
         @endif
       @elseif($record->payment_status == 'paid')
-      <span class="badge badge-success">{{$record->payment_status}}</span>
+          @if($record->price != 0)
+            <span class="badge badge-success">{{$record->payment_status}}</span>
+          @else
+            <span class="badge badge-info">Free</span>
+          @endif
       @else
-      <span class="badge badge-danger">{{$record->payment_status}}</span>
-     
+        <span class="badge badge-danger">{{$record->payment_status}}</span>
       @endif
   </td>
   <td class="table-column-pl-0">
@@ -73,7 +77,8 @@
       </a>
       
       <div id="action-{{$key}}" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm dropdown-menu-right">
-        <a class="dropdown-item" href="{{baseUrl('professional/'.$record->professional.'/book-appointment/'.$record->location_id)}}?service_id={{ $record->visa_service_id }}&action=edit&eid={{ $record->unique_id }}">Edit</a>
+        <a class="dropdown-item" href="{{baseUrl('professional/'.$record->professional.'/book-appointment/'.$record->location_id)}}?service_id={{ $record->visa_service_id }}&action=edit&eid={{ $record->unique_id }}"><i class="tio-edit"></i> Edit</a>
+        <a class="dropdown-item" href="{{baseUrl('booked-appointments/view/'.$record->unique_id) }}"><i class="tio-globe"></i> View Appointment</a>
         @if($record->payment_status != 'paid')
         <a class="dropdown-item" href="{{baseUrl('appointment-payment/'.$record->unique_id)}}">Pay Now</a>
         @endif

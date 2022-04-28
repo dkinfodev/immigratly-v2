@@ -19,151 +19,99 @@
 
 @section('content')
 <!-- Search Section -->
-
+<style>
+  .book-steps{
+    display:none;
+  }
+</style>
 
 <div class="container space-bottom-2 ">
   <div class="w-lg-100 ">
       <div class="row">
-        @if($type == 'services')
-            <div class="col-md-12">
-                <div class="card mb-3">
-                  <div class="card-header">
-                      <h3 class="card-title">Choose Visa Service for Booking Appointment</h3>
-                  </div>
-                  <div class="card-body">
-                      <div class="form-group row">
-                          <label class="custom-label mb-2 font-bold">
-                            <strong>Select Visa Service</strong>
-                          </label>
-                          <div class="col-md-12">
-                              <div class="visa-services">
-                                  <table class="table table-bordered">
-                                      <thead class="bg-light">
-                                          <th>&nbsp;</th>
-                                          <th>Visa Service</th>
-                                          <th>Price</th>
-                                      </thead>
-                                      <tbody>
-                                         @foreach($visa_services as $key => $service)
-                                            <tr>
-                                                <th width="5%" class="text-center">
-                                                  <div class="custom-control custom-radio">
-                                                      <input type="radio" id="vs-{{$key}}" class="custom-control-input" onchange="selectService(this)" name="visa_service" value="{{$service['unique_id']}}">
-                                                      <label class="custom-control-label" for="vs-{{$key}}">&nbsp;</label>
-                                                  </div>
-                                                </th>
-                                                <td>
-                                                {{ $service['visa_service']['name'] }}
-                                                </td>
-                                                <td>
-                                                @if($service['price'] == 0)
-                                                   <span class="text-danger"> (Free) </span>
-                                                @else
-                                                ({{currencyFormat().$service['price']}})
-                                                @endif
-                                                </td>
-                                            </tr>
-                                         @endforeach
-                                      </tbody>
-                                  </table>
-                              </div>
-                              {{-- <select onchange="selectService(this)" class="form-control" name="visa_service">
-                                  <option value="">Select Service </option>
-                                    @foreach($visa_services as $key => $service)
-                                      <option value="{{$service['unique_id']}}">{{$service['visa_service']['name']}} 
-                                        @if($service['price'] == 0)
-                                            (Free)
-                                        @else
-                                        ({{currencyFormat().$service['price']}})
-                                        @endif
-                                      </option>
-                                    @endforeach
-                                    
-                              </select> --}}
+       
+        <div class="col-lg-12">
+          <!-- Card -->
+          <div class="float-right mb-3">
+            <div class="mb-3">
+                  <h3 class="text-danger">Charge:<span class="service_price">N/A</span></h3>
+            </div>
+          </div>
+          <div class="clearfix"></div>
+          <div class="book-steps bs-step-1" style="display:block">
+              <div class="card mb-3 mb-lg-5">
+                @if($action != 'edit')
+                <div class="d-block mt-2" style="margin-left:10px">
+                  <a href="{{ baseUrl('/professional/'.$subdomain.'/appointment-services/'.$location_id) }}" class="text-danger"><i class="fa fa-angle-left"></i> Back To Service</a>
+                </div>
+                @endif
+                <div class="card-header">
+                  <h5 class="card-header-title float-left">
+                    @if($action == 'edit')
+                      Edit your appointment for {{$service->visa_service->name}} dated on {{dateFormat($appointment->appointment_date)}}
+                      <div class="mt-2">
+                        <span class="text-danger"><b>Duration:</b>{{$appointment->meeting_duration}} Minutes</span>
+                        <span class="text-danger"> | <b>Time:</b>{{$appointment->start_time}} to {{$appointment->end_time}}</span>
+                      </div>
+                    @else
+                    Book your appointment for {{$service->visa_service->name}}
+                    @endif
+                  </h5>
+                  
+                  <div class="clearfix"></div>
+                </div>
+                <div class="card-body">
+                  <div class="row w-100">
+                    @foreach($appointment_types as $key => $type)
+                    @if(isset($type['service_prices']) && !empty($type['service_prices']))
+                    <div class="col-sm-4 appointment_types">
+                      <div class="card text-center">
+                          <div class="card-body p-2">
+                              <h3>{{$type['name']}}</h3>
+                           
+                              <h4>{{$type['time_duration']['name']}}</h4>
+                              <h5 class="text-danger">
+                                @if($type['service_prices']['price'] != 0)
+                                  {{currencyFormat($type['service_prices']['price'])}}
+                                @else
+                                  Free
+                                  @endif
+                              </h5>
+                          </div>
+                          <div class="card-footer p-2">
+                                <div class="form-group">
+                                <!-- Checkbox -->
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="customRadio-{{$key}}" class="custom-control-input" onchange="selectDuration(this)" name="appointment_type" value="{{$type['unique_id']}}">
+                                        <label class="custom-control-label" for="customRadio-{{$key}}">Select Type</label>
+                                    </div>
+                                    <input type="radio" style="display:none" name="break_time" class="break_time" value="{{$type['time_duration']['break_time'] }}" />
+                                    <input type="radio" style="display:none" name="price" class="price" value="{{$type['service_prices']['price'] }}" />
+                                    <!-- End Checkbox -->
+                                </div>
                           </div>
                       </div>
                     </div>
-                </div>
-            </div>
-        @else
-        <div class="col-lg-12">
-          <!-- Card -->
-          <div class="card mb-3 mb-lg-5">
-            <!-- Header -->
-            <div class="card-header">
-              <h5 class="card-header-title float-left">
-                @if($action == 'edit')
-                  Edit your appointment for {{$service->visa_service->name}} dated on {{dateFormat($appointment->appointment_date)}}
-                  <div class="mt-2">
-                    <span class="text-danger"><b>Duration:</b>{{$appointment->meeting_duration}} Minutes</span>
-                    <span class="text-danger"> | <b>Time:</b>{{$appointment->start_time}} to {{$appointment->end_time}}</span>
+                    @endif
+                    @endforeach
+                    <hr>
+                    <div class="col-sm-12 mb-5">
+                    <!-- Fullcalendar-->
+                    @if(!empty($appointment_types))
+                        <div id="calendar"></div>
+                    @else
+                      <div class="text-center h3">No Booking Slots Available</div>
+                    @endif
+                    </div>
                   </div>
-                @else
-                Book your appointment for {{$service->visa_service->name}}
-                @endif
-              </h5>
-              <h3 class="float-right text-danger">Charge:
-                @if($service->price == 0)
-                  Free
-                @else
-                {{currencyFormat().$service->price}}
-                @endif
-              </h3>
-              <div class="clearfix"></div>
-            </div>
-            <!-- End Header -->
-
-            <!-- Body -->
-            <div class="card-body">
-              <div class="row">
-                 @foreach($appointment_types as $key => $type)
-                <div class="col-sm-4 appointment_types">
-                  <div class="card text-center">
-                      <div class="card-body">
-                          <h3>{{$type['name']}}</h3>
-                          <h4>{{$type['time_duration']['name']}}</h4>
-                      </div>
-                      <div class="card-footer">
-                            <div class="form-group">
-                            <!-- Checkbox -->
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" id="customRadio-{{$key}}" class="custom-control-input" onchange="selectDuration(this)" name="appointment_type" value="{{$type['unique_id']}}">
-                                    <label class="custom-control-label" for="customRadio-{{$key}}">Select Type</label>
-                                </div>
-                                <input type="radio" style="display:none" name="break_time" class="break_time" value="{{$type['time_duration']['break_time'] }}" />
-                                <!-- End Checkbox -->
-                            </div>
-                      </div>
                   </div>
+                  <!-- End Row -->
                 </div>
-                @endforeach
-
-                <hr>
-
-                <div class="col-sm-12 mb-5">
-                 <!-- Fullcalendar-->
-                 @if(!empty($appointment_types))
-                 <div id="calendar"></div>
-                 @else
-                  <div class="text-center h3">No Booking Slots Available</div>
-                 @endif
-                    <!-- <div class="js-fullcalendar fullcalendar-custom" data-hs-fullscreen-options='{
-                    "initialDate": "2020-09-10"
-                    }'></div> -->
-                    <!-- End Fullcalendar -->
-                </div>
-
-
               </div>
-              <!-- End Row -->
-
-            </div>
-            <!-- End Body -->
           </div>
-          <!-- End Card -->
-
+          <div class="book-steps bs-step-2">
+                <div class="booking-slots"></div>
+          </div>
         </div>
-        @endif
       </div>
     <!-- End Content Section -->
   </div>
@@ -178,6 +126,9 @@
 @if($type != 'services')
 $(document).ready(function() {
   loadCalendar();
+  $("input[name=visa_service]").change(function(){
+    $(".continuebtn").removeAttr("disabled");
+  });
 });
 function loadCalendar() {
 
@@ -237,12 +188,14 @@ function loadCalendar() {
       }
       var appointment_type = $("input[name=appointment_type]:checked").val();
       var break_time = $("input[name=break_time]:checked").val();
+      var price = $("input[name=price]:checked").val();
       if(appointment_type == undefined){
         alert("Select meeting duration first");
       }else{
         
         var url = "{{ baseUrl('professional/fetch-available-slots') }}";
         var param = {
+            _token:"{{csrf_token()}}",
             location_id: "{{$location_id}}",
             professional:"{{$subdomain}}",
             date:info.start.format('YYYY-MM-DD'),
@@ -251,45 +204,56 @@ function loadCalendar() {
             service_id:"{{ $service->unique_id}}",
             appointment_type_id:appointment_type,
             break_time:break_time,
+            price:price,
             action:"{{$action}}",
             eid:"{{$eid}}",
           };
-        showPopup(url,"post",param);
-        // $.ajax({
-        //   url: "{{ url('professional/fetch-available-slots') }}",
-        //   dataType: 'json',
-        //   type: 'POST',
-        //   data:{
-        //     _token:csrf_token,
-        //     location_id: "{{$location_id}}",
-        //     professional:"{{$subdomain}}",
-        //     date:info.start.format('YYYY-MM-DD'),
-        //     schedule_id:info.id,
-        //     appointment_type_id:appointment_type
-        //   },
-        //   success: function(response) {
-        //    schedule = response.schedule;
-        //     callback(schedule);
-        //   }
-        // });
+          // showPopup(url,"post",param);
+          $.ajax({
+          url: url,
+          dataType: 'json',
+          type: 'POST',
+          beforeSend:function(){
+            showLoader();
+          },
+          data:param,
+          success: function(response) {
+            hideLoader();
+            $(".book-steps").hide();
+            $(".bs-step-2").show();
+            $(".booking-slots").html(response.contents);
+          }
+        });
       }
     }
   });
   
 }
+@else
+$(document).ready(function() {
+  $("input[name=visa_service]").change(function(){
+    $(".continuebtn").removeAttr("disabled");
+  });
+});
 @endif
-function selectService(e){
+
+function selectService(){
   var current_url = "{{ URL::current() }}";
-  if($(e).val() != ''){
-    window.location.href = current_url+"?service_id="+$(e).val();
+  var service_id = $("input[name=visa_service]:checked").val();
+  if(service_id != '' && service_id != undefined){
+    window.location.href = current_url+"?service_id="+service_id;
   }else{
-    window.location.href = current_url;
+    errorMessage("Select service to continue");
   }
 }
 
 function selectDuration(e){
   // $(".break_time").attr("disabled","disabled");
-  $(e).parents(".card-footer").find(".break_time").prop("checked",true)
+  $(e).parents(".card-footer").find(".break_time").prop("checked",true);
+  $(e).parents(".card-footer").find(".price").prop("checked",true)
+  var price = $(e).parents(".card-footer").find(".price").val();
+  $(".service_price").html("{{currencyFormat()}}"+price);
+  
 }
 </script>
 

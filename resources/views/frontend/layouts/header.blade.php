@@ -50,7 +50,7 @@
 
                     <ul id="signupSubMenu" class="hs-sub-menu dropdown-menu hs-sub-menu-desktop-lg animated" aria-labelledby="signupMegaMenu" style="min-width: 230px; animation-duration: 300ms; display: none;">
                       <li class="nav-item"><a href="{{ url('/signup/user') }}" class="text-dark"><i class="fa fa-angle-right"></i> Signup as User</a></li>
-                      <li class="nav-item"><a href="{{ url('/signup/agent') }}" class="text-dark"><i class="fa fa-angle-right"></i> Signup as Agent</a></li>
+                      <!-- <li class="nav-item"><a href="{{ url('/signup/agent') }}" class="text-dark"><i class="fa fa-angle-right"></i> Signup as Agent</a></li> -->
                       <li class="nav-item"><a href="{{ url('/signup/professional') }}" class="text-dark"><i class="fa fa-angle-right"></i> Signup as Professional</a></li>
                     </ul>
                   <!-- End Submenu -->
@@ -60,7 +60,7 @@
 
                     <ul id="loginSubMenu" class="hs-sub-menu dropdown-menu hs-sub-menu-desktop-lg animated" aria-labelledby="loginMegaMenu" style="min-width: 230px; animation-duration: 300ms; display: none;">
                       <li class="nav-item"><a href="{{ url('/login') }}" class="text-dark"><i class="fa fa-angle-right"></i> Login as User</a></li>
-                      <li class="nav-item"><a href="{{ url('/agent/login') }}" class="text-dark"><i class="fa fa-angle-right"></i> Login as Agent</a></li>
+                      <!-- <li class="nav-item"><a href="{{ url('/agent/login') }}" class="text-dark"><i class="fa fa-angle-right"></i> Login as Agent</a></li> -->
                     </ul>
                   <!-- End Submenu -->
                 </li>

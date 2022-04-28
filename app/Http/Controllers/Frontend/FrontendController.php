@@ -232,6 +232,40 @@ class FrontendController extends Controller
         }
     }
     
+    public function bookAppointmentServices(Request $request,$subdomain,$location_id){
+        
+        $company_data = professionalDetail($subdomain);
+        $professionalAdmin = professionalAdmin($subdomain);
+        
+        $type = 'services';
+        $viewData['type'] = $type;
+        $professional_location = DB::table(PROFESSIONAL_DATABASE.$subdomain.".professional_locations")->where('unique_id',$location_id)->first();
+        $professional = Professionals::where('subdomain',$subdomain)->first();
+        $viewData['location_id'] = $location_id;
+        $viewData['professional_location'] = $professional_location;
+        if(!empty($company_data)){    
+            
+            $data = array();
+            $data['get_service_price'] = "1";
+            $apiData = professionalCurl('services',$subdomain,$data);
+            if(isset($apiData['status']) && $apiData['status'] == 'success'){
+                $visa_services = $apiData['data'];
+            }else{
+                $visa_services = array();
+            }
+            // pre($visa_services);
+            $viewData['visa_services'] = $visa_services;
+            $viewData['company_data'] = $company_data;
+            $viewData['professional'] = $professional;
+            $viewData['professionalAdmin'] = $professionalAdmin;
+            $viewData['pageTitle'] = "Book Appointment with ".$company_data->company_name." <small>(".$professional_location->address.")</small>";   
+            $viewData['subdomain'] = $subdomain;
+            return view('frontend.professional.book-services',$viewData);
+        }
+        else{
+            return redirect()->back()->with("error","Professional Details found");
+        }
+    }
     public function bookAppointment(Request $request,$subdomain,$location_id){
         if(!$request->get("eid")){
             $check_appointments = BookedAppointments::where("user_id",\Auth::user()->unique_id)
@@ -240,7 +274,7 @@ class FrontendController extends Controller
                                                     ->count();
             
             if($check_appointments > 2){
-                return redirect(baseUrl('booked-appointments'))->with("error","You already having 3 bookings with the professional");
+                return redirect(baseUrl('booked-appointments'))->with("error_message","You already had 3 bookings with the professional");
             }
         }
         $company_data = professionalDetail($subdomain);
@@ -254,16 +288,17 @@ class FrontendController extends Controller
                                                     ->where("appointment_date",">=",date("Y-m-d"))
                                                     ->where("visa_service_id",$request->get("service_id"))
                                                     ->where("professional",$subdomain)
-                                                    ->count();
-                if($check_appointments > 0){
-                    return redirect(baseUrl('booked-appointments'))->with("error","You already having booking with the professional for this service");
+                                                    ->first();
+           
+                if(!empty($check_appointments)){
+                    return redirect()->back()->with("error_message","You already had booked appointment with the professional for this service dated on ".dateFormat($check_appointments->appointment_date)." at ".$check_appointments->start_time." to ".$check_appointments->end_time."!");
                 }
             }
             
             $viewData['visa_service_id'] = $request->get("service_id");
             $viewData['service'] = $visa_service;
         }else{
-            $type = 'services';
+            return redirect()->back()->with("error","Service not selected");
         }
         if($request->get("action") == 'edit' && $request->get("eid")){
             $eid = $request->get("eid");
@@ -272,7 +307,7 @@ class FrontendController extends Controller
             $appointment = BookedAppointments::where("unique_id",$eid)->first();
             //redirect if edited 3 times
             if($appointment->edit_counter > 2){
-                return redirect()->back()->with("error","You already edited 3 times.");
+                return redirect()->back()->with("error_message","You already edited this appointment 3 times.");
             }
             // end redirect
             $viewData['appointment'] = $appointment;
@@ -281,8 +316,10 @@ class FrontendController extends Controller
             $viewData['eid'] = '';
         }
         $viewData['type'] = $type;
-
-        $apiData = professionalCurl('appointment-types',$subdomain);
+        $data = array();
+        $data['service_id'] = $request->get("service_id");
+        $apiData = professionalCurl('appointment-types',$subdomain,$data);
+        
         
         if(isset($apiData['status']) && $apiData['status'] == 'success'){
             $appointment_types = $apiData['data'];
@@ -425,7 +462,7 @@ class FrontendController extends Controller
         $schedule_id = $request->input("schedule_id");
         $service_id = $request->input("service_id");
         $break_time = $request->input("break_time");
-       
+        $price = $request->input("price");
         if($request->input("time_type")){
             $time_type = $request->input("time_type");
         }else{
@@ -553,6 +590,7 @@ class FrontendController extends Controller
         
         $time_slots = array_values($time_slots);
         // pre($time_slots);
+        $viewData['price'] = $price;
         $viewData['break_time'] = $break_time;
         $viewData['date'] = date("F d, Y",strtotime($date));
         $viewData['time_slots'] = $time_slots;
@@ -698,28 +736,24 @@ class FrontendController extends Controller
                 $response['redirect_back'] = baseUrl('booked-appointments');
             }
         }
-
-        //  try{
-        // //email code working temporary commented
-        //     $start_time = $duration[0]; 
-        //     $end_time = $duration[1];
-        //     $date = $request->input("date");
-        //     $email = \Auth::user()->email;
-        //     $mailData['mail_message'] = "Your appointment on ".$date." from ".$start_time." to ".$end_time." is under process. You will be notified by the professional."; 
-        //     $view = View::make('emails.notification',$mailData);
-        //     $message = $view->render();
-        //     $parameter['to'] = $email;
-        //     $parameter['to_name'] = '';
-        //     $parameter['message'] = $message;
-        //     $parameter['subject'] = "Appointment under review";
-        //     $parameter['view'] = "emails.notification";
-        //     $parameter['data'] = $mailData;
-        //     $mailRes = sendMail($parameter);
-        // }
-        // catch(Exception $e){
-        //     $response['message'] = $e->getMessage();
-        // }
-        //endmail
+        $subdomain =  $request->input("professional");
+        $company_data = professionalDetail($subdomain);
+        $professionalAdmin = professionalAdmin($subdomain);
+        
+        $start_time = $duration[0]; 
+        $end_time = $duration[1];
+        $date = $request->input("date");
+        $email = \Auth::user()->email;
+        $mailData['mail_message'] = "You booked an appointment for ".$date." from ".$start_time." to ".$end_time." with professional ".$company_data->company_name.". Professional  will confirm and reply you soon You will be notified by the professional."; 
+        $view = View::make('emails.notification',$mailData);
+        $message = $view->render();
+        $parameter['to'] = $email;
+        $parameter['to_name'] = '';
+        $parameter['message'] = $message;
+        $parameter['subject'] = "Appointment booked with Professional from Immigratly";
+        $parameter['view'] = "emails.notification";
+        $parameter['data'] = $mailData;
+        $mailRes = sendMail($parameter);
         return response()->json($response);
     }
 

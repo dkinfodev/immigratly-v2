@@ -10,9 +10,12 @@
 <!-- End Content -->
 @endsection
 
-
-
 @section('content')
+<style>
+  .book-steps{
+    display:none;
+  }
+</style>
 <!-- Content -->
 <div class="assessments">
   <!-- Page Header -->
@@ -27,11 +30,14 @@
         <div class="col-sm-8 col-md-8 mb-3 mb-sm-0">
           <h5 class="card-header-title">Reschedule Client's Appointment</h5>
           <div class="mt-2">
-            <span class="text-danger"><b>Duration:</b>{{$record['meeting_duration']}} Minutes</span>
+            <span class="text-danger"><b>Date:</b>{{dateFormat($record['appointment_date'])}}</span>
+            <span class="text-danger"> | <b>Duration:</b>{{$record['meeting_duration']}} Minutes</span>
             <span class="text-danger"> | <b>Time:</b>{{$record['start_time']}} to {{$record['end_time']}}</span>
           </div>
         </div>
         <div class="col-sm-4 col-md-4">
+          <div class="d-block text-danger float-right">ID: {{$record['unique_id']}}</div>
+          <div class="clearfix"></div>
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
               <a href="{{ baseUrl('/booked-appointments') }}"><i class="fa fa-th"></i> View Appointments in Grid</a>
           </div>
@@ -42,34 +48,38 @@
     <!-- End Header -->
 
     <!-- Table -->
-    <div class="row p-3 mb-3">
-    @foreach($appointment_types as $key => $type)
-        <div class="col-sm-4 appointment_types">
-          <div class="card text-center">
-              <div class="card-body">
-                  <h3>{{$type['name']}}</h3>
-                  <h4>{{$type['time_duration']['name']}}</h4>
-              </div>
-              <div class="card-footer">
-                    <div class="form-group">
-                    <!-- Checkbox -->
-                        <div class="custom-control custom-radio">
-                            <input type="radio" id="customRadio-{{$key}}" class="custom-control-input" onchange="selectDuration(this)" name="appointment_type" {{ ($record['appointment_type_id'] == $type['unique_id'])?'checked':'' }} value="{{$type['unique_id']}}">
-                            <label class="custom-control-label" for="customRadio-{{$key}}">Select Type</label>
-                        </div>
-                        <input type="radio" style="display:none" name="break_time" class="break_time" value="{{$type['time_duration']['break_time'] }}" {{ ($record['break_time'] == $type['time_duration']['break_time'])?'checked':'' }} />
-                        <!-- End Checkbox -->
-                    </div>
-              </div>
+    <div class="book-steps bs-step-1" style="display:block">
+      <div class="row p-3 mb-3">
+        @foreach($appointment_types as $key => $type)
+          <div class="col-sm-4 appointment_types">
+            <div class="card text-center">
+                <div class="card-body p-0">
+                    <h3>{{$type['name']}}</h3>
+                    <h4>{{$type['time_duration']['name']}}</h4>
+                </div>
+                <div class="card-footer p-0">
+                      <div class="form-group">
+                      <!-- Checkbox -->
+                          <div class="custom-control custom-radio">
+                              <input type="radio" id="customRadio-{{$key}}" class="custom-control-input" onchange="selectDuration(this)" name="appointment_type" {{ ($record['appointment_type_id'] == $type['unique_id'])?'checked':'' }} value="{{$type['unique_id']}}">
+                              <label class="custom-control-label" for="customRadio-{{$key}}">Select Type</label>
+                          </div>
+                          <input type="radio" style="display:none" name="break_time" class="break_time" value="{{$type['time_duration']['break_time'] }}" {{ ($record['break_time'] == $type['time_duration']['break_time'])?'checked':'' }} />
+                          <!-- End Checkbox -->
+                      </div>
+                </div>
+            </div>
           </div>
-        </div>
         @endforeach
-
-    </div>
-    <div class="row p-3">
-      <div class="col-sm-12">
-        <div id="calendar"></div>
       </div>
+      <div class="row p-3">
+        <div class="col-sm-12">
+          <div id="calendar"></div>
+        </div>
+      </div>
+    </div>
+    <div class="book-steps bs-step-2">
+        <div class="booking-slots"></div>
     </div>
   </div>
   <!-- End Card -->
@@ -149,6 +159,7 @@ eventClick: function(info, jsEvent, view) {
     
     var url = "{{ baseUrl('booked-appointments/fetch-available-slots') }}";
     var param = {
+        _token:"{{ csrf_token() }}",
         location_id: "{{$location_id}}",
         professional:"{{$subdomain}}",
         date:info.start.format('YYYY-MM-DD'),
@@ -160,7 +171,22 @@ eventClick: function(info, jsEvent, view) {
         action:"{{$action}}",
         eid:"{{$eid}}",
       };
-    showPopup(url,"post",param);
+      // showPopup(url,"post",param);
+      $.ajax({
+          url: url,
+          dataType: 'json',
+          type: 'POST',
+          beforeSend:function(){
+            showLoader();
+          },
+          data:param,
+          success: function(response) {
+            hideLoader();
+            $(".book-steps").hide();
+            $(".bs-step-2").show();
+            $(".booking-slots").html(response.contents);
+          }
+        });
   }
 }
 });

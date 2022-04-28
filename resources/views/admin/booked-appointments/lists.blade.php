@@ -9,8 +9,11 @@
 </ol>
 <!-- End Content -->
 @endsection
-
-
+@section('header-right')
+  <div class="float-right">
+      <a href="{{ baseUrl('booked-appointments/add') }}" class="btn btn-primary"><i class="tio-calendar"></i> Add Appointment</a>
+  </div>
+@endsection
 
 @section('content')
 <!-- Content -->

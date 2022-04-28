@@ -31,7 +31,7 @@
 
       <div id="action-{{$key}}" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm dropdown-menu-right">
         <a class="dropdown-item" href="javascript:;" onclick="showPopup('<?php echo baseUrl('appointment-types/edit/'.base64_encode($record->id)) ?>')">Edit</a>
-        
+        <a class="dropdown-item" href="{{ baseUrl('/appointment-types/service-price/'.$record->unique_id) }}">Visa Services</a>
         <a class="dropdown-item text-danger" href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('appointment-types/delete/'.base64_encode($record->id))}}">Delete</a> 
       </div>
     </div>

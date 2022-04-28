@@ -10,6 +10,8 @@ use DB;
 
 use App\Models\ProfessionalServices;
 use App\Models\AppointmentTypes;
+use App\Models\AppointmentServicePrice;
+
 
 class AppointmentTypesController extends Controller
 {
@@ -152,5 +154,47 @@ class AppointmentTypesController extends Controller
         return response()->json($response);
     }
 
+
+    public function appointmentServicePrice($appointment_type_id){
+        $appointment_type =  AppointmentTypes::where("unique_id",$appointment_type_id)->first();
+        $services = ProfessionalServices::orderBy('id',"desc")->get();
+        $service_prices = AppointmentServicePrice::where("appointment_type_id",$appointment_type_id)->pluck("price","visa_service_id");
+        if(!empty($service_prices)){
+            $service_prices = $service_prices->toArray();
+        }else{
+            $service_prices = array();
+        }
+        $viewData['pageTitle'] = "Set Price for Visa Services";
+        $viewData['activeTab'] = 'appointment-types';
+        $viewData['services'] = $services;
+        $viewData['service_prices'] = $service_prices;
+        $viewData['appointment_type'] = $appointment_type;
+        return view(roleFolder().'.appointment-types.appointment-service-price',$viewData);
+    }
+
+    public function saveAppointmentServicePrice($appointment_type_id, Request $request){
+        $services = $request->input("service_price");
+        $ids = array();
+        foreach($services as $key => $value){
+            $object = AppointmentServicePrice::updateOrCreate(['appointment_type_id'=>$appointment_type_id,'visa_service_id'=>$key],
+                                                              [
+                                                                  'appointment_type_id'=>$appointment_type_id,'visa_service_id'=>$key,
+                                                                   "price"=>$value,"created_at"=>date("Y-m-d H:i:s"),"updated_at"=>date("Y-m-d H:i:s")
+                                                              ]);
+            $ids[] = $object->id;
+        }
+        if(!empty($ids)){
+            AppointmentServicePrice::where("appointment_type_id",$appointment_type_id)->whereNotIn("id",$ids)->delete();
+        }else{
+            AppointmentServicePrice::where("appointment_type_id",$appointment_type_id)->delete();
+        }
+        
+
+        $response['status'] = true;
+        $response['redirect_back'] = baseUrl('appointment-types');
+        $response['message'] = "Price saved successfully";
+
+        return response()->json($response);
+    }
 
 }

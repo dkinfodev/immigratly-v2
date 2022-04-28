@@ -17,8 +17,6 @@
             <span class="d-block font-size-sm text-body">Created on {{ dateFormat($record->created_at) }}</span>
             <span class="d-block font-size-sm text-body"><i class="tio-email"></i> {{$record->email}}</span>
             <span class="d-block font-size-sm text-body"><i class="tio-android-phone"></i> {{$record->country_code.$record->phone_no}}</span>
-            
-
          </div>
          
       </a>
@@ -91,6 +89,10 @@
             Delete
           </a> 
           @endif
+          <a class="dropdown-item" href="{{baseUrl('booked-appointments/add/'.$record->unique_id)}}">
+            <i class="tio-calendar dropdown-item-icon"></i>
+            Schedule Appointment
+          </a>
           <a class="dropdown-item" href="{{ baseUrl('leads/dependants/'.$record->master_id) }}">
             <i class="tio-user dropdown-item-icon"></i> Dependants
           </a>
