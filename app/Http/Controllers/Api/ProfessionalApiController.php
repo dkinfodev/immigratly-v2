@@ -32,7 +32,8 @@ use App\Models\AppointmentSchedule;
 use App\Models\CustomTime;
 use App\Models\CaseStages;
 use App\Models\CaseSubStages;
-
+use App\Models\BookedAppointments;
+use App\Models\InvoiceItems;
 class ProfessionalApiController extends Controller
 {
     var $subdomain;
@@ -1396,10 +1397,18 @@ class ProfessionalApiController extends Controller
             $request->request->add($postData);
             $case_id = $request->input("case_id");
             $client_id = $request->input("client_id");
+            $case = Cases::where("unique_id",$case_id)->first();
             $records = CaseStages::with(['SubStages','Case','CompletedStages'])
                         ->orderBy('id',"desc")
                         ->where("client_id",$request->input("client_id"))
                         ->where("case_id",$request->input("case_id"))
+                        ->where(function($query) use($case){
+                            if($case->stage_type == 'default'){
+                                $query->where("stage_type",'default');
+                            }else{
+                                $query->where("unique_id",$case->stage_profile_id);
+                            }
+                        })
                         ->paginate(5);
             $data['records'] = $records->items();
             $data['last_page'] = $records->lastPage();
@@ -1988,6 +1997,84 @@ class ProfessionalApiController extends Controller
         return response()->json($response); 
         
         
+        return response()->json($response);
+    }
+    public function saveAppointment(Request $request){
+        try{
+            $postData = $request->input();
+                $request->request->add($postData);
+                $appointment = array();
+                $duration = explode("-",$request->input("duration"));
+            if($request->input("eid")){
+                $object = BookedAppointments::where("unique_id",$request->input("eid"))->first();
+                $booking_id = $object->unique_id;
+                $inv_unique_id = $object->invoice_id;
+            }else{
+                $object = new BookedAppointments();
+                $booking_id = randomNumber();
+                $inv_unique_id = randomNumber();
+                $object->invoice_id = $inv_unique_id;
+            }
+    
+            $object->unique_id = $booking_id;
+            $object->location_id = $request->input("location_id");
+            $object->break_time = $request->input("break_time");
+            $object->visa_service_id = $request->input("visa_service");
+            $object->appointment_date = $request->input("date");
+            $object->appointment_type_id = $request->input("appointment_type_id");
+            $object->client_id = $request->input("user_id");
+    
+            $object->status = 'awaiting';
+            if($request->input("price") > 0){
+                $object->payment_status = 'pending';
+            }else{
+                $object->payment_status = 'paid';
+            }
+            $object->schedule_id = $request->input("schedule_id");
+            $object->time_type = $request->input("time_type");
+    
+            $object->price = $request->input("price");
+            $object->meeting_duration = $request->input("interval");
+            $object->start_time = $duration[0];
+            $object->end_time = $duration[1];
+    
+    
+            $object->save();
+    
+            if($request->input("eid")){
+                $object2 = Invoices::where("unique_id",$inv_unique_id)->first();
+            }else{
+                $object2 = new Invoices();
+                $object2->unique_id = $inv_unique_id;
+                $object2->payment_status = "pending";
+                $object2->invoice_date = date("Y-m-d");
+            }
+            $object2->client_id = $request->input("user_id");
+    
+            $object2->amount = $request->input("price");
+            $object2->link_to = 'appointment';
+            $object2->link_id = $booking_id;
+            $object2->created_by = 'client';
+            $object2->save();
+    
+            if($request->input("eid")){
+                $object2 = InvoiceItems::where("invoice_id",$inv_unique_id)->first();
+            }else{
+                $object2 = new InvoiceItems();
+                $object2->invoice_id = $inv_unique_id;
+                $object2->unique_id = randomNumber();
+            }
+            $object2->particular = "Appointment Fee";
+            $object2->amount = $request->input("price");
+            $object2->save();
+    
+            $response['status'] = "success";
+            $response['booking_id'] = $booking_id;
+            $response['message'] = "Appointment booked successfully. Waiting for approval";
+        } catch (Exception $e) {
+            $response['status'] = "error";
+            $response['message'] = $e->getMessage();
+        }
         return response()->json($response);
     }
 }

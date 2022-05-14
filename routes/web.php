@@ -64,6 +64,8 @@ Route::group(array('prefix' => 'quick-eligibility'), function () {
 
 });
 Route::post('/assessment/u/{id}', [App\Http\Controllers\Frontend\FrontendController::class, 'saveExternalAssessment'])->name("save-external-assessment");
+Route::get('/pay-for-appointment/{domain}/{id}', [App\Http\Controllers\Frontend\FrontendController::class, 'appointmentPayment']);
+
 Route::group(array('middleware' => 'frontend'), function () {
     Route::get('/', [App\Http\Controllers\Frontend\FrontendController::class, 'index']);
     Route::get('/home', [App\Http\Controllers\Frontend\FrontendController::class, 'home'])->name('home');
@@ -1035,7 +1037,7 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
         Route::get('/tasks/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'caseTasks']);
 
         
-        Route::get('/view/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'view']);
+        Route::get('/view/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'stages']);
         Route::get('/stages/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'stages']);
         Route::post('/stages/ajax-list', [App\Http\Controllers\User\ProfessionalCasesController::class, 'getStagesList']);
         Route::get('/sub-stages/view/{case_id}/{subdomain}/{id}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'viewSubStage']);
@@ -1489,8 +1491,8 @@ Route::group(array('prefix' => 'admin'), function () {
                 Route::post('/edit/{id}', [App\Http\Controllers\Admin\CasesController::class, 'updateStage']);
                 Route::get('/delete/{id}', [App\Http\Controllers\Admin\CasesController::class, 'deleteSingleStage']);
                 //Route::post('/delete-multiple', [App\Http\Controllers\Admin\CasesController::class, 'deleteMultipleStage']);
-                //Route::get('/view/{id}', [App\Http\Controllers\Admin\CasesController::class, 'viewStage']);
-                
+                Route::get('/view/{id}', [App\Http\Controllers\Admin\CasesController::class, 'viewStage']);
+                Route::post('/save-stage-profile', [App\Http\Controllers\Admin\CasesController::class, 'saveStageProfile']);
             });
 
             Route::group(array('prefix' => 'sub-stages'), function () {

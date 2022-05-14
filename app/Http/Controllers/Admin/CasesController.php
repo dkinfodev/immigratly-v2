@@ -202,6 +202,11 @@ class CasesController extends Controller
         $object->save();
 
         $case_id = $case_unique_id;
+        $checkDefaultStages = CaseStages::where("stage_type","default")->count();
+       
+        if($checkDefaultStages == 0){
+            createDefaultStages($case_id,$request->input("client_id"));
+        }
         $assign_teams = $request->input("assign_teams");
         if(!empty($assign_teams)){
             for($i=0;$i < count($assign_teams);$i++){
@@ -2134,10 +2139,16 @@ class CasesController extends Controller
         $record = Cases::with(['AssingedMember','VisaService'])
                     ->where("id",$case_id)
                     ->first();
+        $checkDefaultStages = CaseStages::where("stage_type","default")->count();
+       
+        if($checkDefaultStages == 0){
+            createDefaultStages($record->unique_id,$record->client_id);
+        }
         $temp = $record;
         $temp->MainService = $record->Service($record->VisaService->service_id);
         $data = $temp;
             
+        $viewData['custom_stages'] = CaseStages::where("stage_type","custom")->get();
         $viewData['subdomain'] = $subdomain;
         $viewData['record'] = $data;
         $viewData['case_id'] = $record->unique_id;
@@ -2162,6 +2173,8 @@ class CasesController extends Controller
                         })
                         ->where("case_id",$request->input("case_id"))
                         ->paginate(5);
+        $case = Cases::where("unique_id",$request->input("case_id"))->first();
+        $viewData['case'] = $case;
         $viewData['records'] = $records;
         $view = View::make(roleFolder().'.cases.stage.stages-list',$viewData);
         $contents = $view->render();
@@ -2207,6 +2220,7 @@ class CasesController extends Controller
         $object->client_id = $case->client_id;
         $object->unique_id = $task_unique_id;
         $object->name = $request->input("name");
+        $object->stage_type = 'custom';
         $object->short_description = $request->input("short_description");
         $object->save();
         
@@ -2269,7 +2283,38 @@ class CasesController extends Controller
         return response()->json($response);
     }
 
-    
+    public function saveStageProfile(Request $request){
+        $validator = Validator::make($request->all(), [
+            'stage_profile' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $response['status'] = false;
+            $response['error_type'] = 'validation';
+            $error = $validator->errors()->toArray();
+            $errMsg = array();
+            
+            foreach($error as $key => $err){
+                $errMsg[$key] = $err[0];
+            }
+            $response['message'] = $errMsg;
+            return response()->json($response);
+        }
+        $case_id = $request->input("case_id");
+        $object = Cases::where("unique_id",$case_id)->first();
+        if($request->input("stage_profile") == 'default'){
+            $object->stage_profile = 'default';
+            $object->stage_profile_id = 0;
+        }else{
+            $object->stage_profile = 'custom';
+            $object->stage_profile_id = $request->input("stage_profile");
+        }
+        $object->save();
+        
+        $response['status'] = true;
+        $response['message'] = "Stage profile edited successfully";
+        return response()->json($response);
+    }
     public function deleteSingleStage($id){
         $id = base64_decode($id);
         CaseStages::deleteRecord($id);

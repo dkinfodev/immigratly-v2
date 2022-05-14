@@ -168,3 +168,18 @@ span.select2-selection.custom-select {
     margin-left: 21px;
     margin-bottom: 32px;
 }
+.stage_percent {
+    width: 200px;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0px 0px 2px #ddd;
+    margin-top: 10px;
+    display: flex;
+}
+.percent_bg{
+    width:150px;
+    margin: 0px 10px;
+}
+.stage-header {
+    background-color: #cad8f4;
+}

@@ -12,7 +12,7 @@
           <input type="hidden" name="schedule_id" value="{{$schedule_id}}" />
           <input type="hidden" name="time_type" value="{{$time_type}}" />
           <input type="hidden" name="date" value="{{$date}}" />
-          <input type="hidden" name="visa_service" value="{{$visa_service->unique_id}}" />
+          <input type="hidden" name="visa_service_id" value="{{$visa_service->unique_id}}" />
           <input type="hidden" name="price" class="price" value="{{$visa_service->price}}" />
           <input type="hidden" name="break_time" value="{{$break_time}}" />
           <input type="hidden" name="appointment_type_id" value="{{$appointment_type_id}}" />
@@ -164,7 +164,6 @@ $(document).ready(function(){
               hideLoader();
               if(response.status == true){
                 successMessage(response.message);
-                closeModal();
                 // location.reload();
                 redirect(response.redirect_back);
               }else{

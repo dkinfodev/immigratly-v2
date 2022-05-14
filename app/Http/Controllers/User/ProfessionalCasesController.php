@@ -1801,7 +1801,7 @@ class ProfessionalCasesController extends Controller
         $viewData['subdomain'] = $subdomain;
         $viewData['pageTitle'] = "Case Stages";
         $viewData['record'] = $record;
-        $viewData['active_nav'] = "stages";
+        $viewData['active_nav'] = "overview";
         $viewData['activeTab'] = "cases";
         return view(roleFolder().'.cases.stages',$viewData);
     }

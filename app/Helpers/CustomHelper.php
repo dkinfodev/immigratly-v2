@@ -40,6 +40,7 @@ use App\Models\MultipleOptionsGroups;
 use App\Models\QuestionOptions;
 use App\Models\ComponentQuestionIds;
 use App\Models\ProfessionalReview;
+use App\Models\CaseStages;
 
 if (! function_exists('getFileType')) {
     function getFileType($ext) {
@@ -2895,5 +2896,19 @@ if(!function_exists("activeGuard")){
             }
         }
         return '';
+    }
+}
+if(!function_exists("createDefaultStages")){
+    function createDefaultStages($case_id,$client_id){
+        $default_stages = \DB::table(MAIN_DATABASE.".default_case_stages")->get();
+        foreach($default_stages as $stage){
+            $object = new CaseStages();
+            $object->unique_id = randomNumber();
+            $object->client_id = $client_id;
+            $object->case_id = $case_id;
+            $object->name = $stage->name;
+            $object->stage_type = 'default';
+            $object->save();
+        }
     }
 }

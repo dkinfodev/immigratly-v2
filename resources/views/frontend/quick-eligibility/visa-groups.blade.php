@@ -141,7 +141,7 @@ function loadData(page=1){
     var program_types = $(".program_types:checked").val();
     $.ajax({
         type: "POST",
-        url: BASEURL + '/quick-eligibility/group-ajax-list?page='+page,
+        url: SITEURL + '/quick-eligibility/group-ajax-list?page='+page,
         data:$("#form-search").serialize(),
         dataType:'json',
         beforeSend:function(){

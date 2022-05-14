@@ -10,7 +10,6 @@
 <!-- Content -->
 <ol class="breadcrumb breadcrumb-no-gutter">
   <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ url('/') }}">Home</a></li>
-  <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ url('/professionals') }}">Professional</a></li>
 
   <li class="breadcrumb-item active" aria-current="page">{{$subdomain}}</li>
 </ol>
@@ -47,6 +46,7 @@
 
             <!-- Body -->
             <div class="card-body pt-0">
+                @if(Auth::check())
                 <div class="row">
                     <div class="col-3">
                         <div class="card mb-3 mb-lg-5">
@@ -98,7 +98,7 @@
                                                 <label for="email" class="input-label">Email</label>
                                                 <input type="email" data-msg="Please enter email" class="form-control"
                                                     id="email" name="email" placeholder="Email" aria-label="Email"
-                                                    value="{{Auth::user()->email}}">
+                                                    value="">
                                             </div>
 
                                             <div class="form-group js-form-message">
@@ -106,7 +106,7 @@
                                                 <input type="text" data-msg="Please enter mobile number"
                                                     class="form-control" id="mobile_no" name="mobile_no"
                                                     placeholder="Mobile No." aria-label="Mobile No."
-                                                    value="{{Auth::user()->phone_no}}">
+                                                    value="">
                                             </div>
 
                                             <div class="form-group js-form-message">
@@ -171,7 +171,7 @@
                                                 <label for="email" class="input-label">Email</label>
                                                 <input type="email" data-msg="Please enter email" class="form-control"
                                                     id="nb_email" name="email" placeholder="Email" aria-label="Email"
-                                                    value="{{Auth::user()->email}}">
+                                                    value="">
                                             </div>
 
                                             <div class="form-group js-form-message">
@@ -179,7 +179,7 @@
                                                 <input type="text" data-msg="Please enter mobile number"
                                                     class="form-control" id="nb_mobile_no" name="mobile_no"
                                                     placeholder="Mobile No." aria-label="Mobile No."
-                                                    value="{{Auth::user()->phone_no}}">
+                                                    value="">
                                             </div>
 
                                             <div class="form-group js-form-message">
@@ -214,7 +214,7 @@
                                                 <label for="wl_email" class="input-label">Email</label>
                                                 <input type="email" data-msg="Please enter email" class="form-control"
                                                     id="wl_email" name="email" placeholder="Email" aria-label="Email"
-                                                    value="{{Auth::user()->email}}">
+                                                    value="">
                                             </div>
 
                                             <div class="form-group js-form-message">
@@ -222,7 +222,7 @@
                                                 <input type="text" data-msg="Please enter mobile number"
                                                     class="form-control" id="wl_mobile_no" name="mobile_no"
                                                     placeholder="Mobile No." aria-label="Mobile No."
-                                                    value="{{Auth::user()->phone_no}}">
+                                                    value="">
                                             </div>
 
                                             <div class="form-group js-form-message">
@@ -246,6 +246,13 @@
                         </div>
                     </div>
                 </div>
+                @else
+                    <div class="text-center">
+                       <div class="mb-3"> <a href="{{ url('login?redirect_back='.url()->current()) }}" class="btn btn-outline-primary">Click to Login</a> </div>
+                       <div class="mb-3">  <span class="font-weight">OR</span> </div>
+                       <div class="mb-3"> <a href="{{ url('signup/user?redirect_back='.url()->current()) }}" class="btn btn-outline-warning">Create an Account</a> </div>
+                    </div>
+                @endif
             </div>
             <!-- End Body -->
           </div>
@@ -546,7 +553,7 @@ function paymentSuccess(resp) {
             amount: "{{ $pay_amount }}",
             invoice_id: "{{$invoice_id}}",
             appointment_id:"{{$appointment->unique_id}}",
-            professional:"{{$appointment->professional}}"
+            professional:"{{$subdomain}}"
             
         },
         beforeSend: function() {

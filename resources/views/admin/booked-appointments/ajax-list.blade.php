@@ -22,8 +22,7 @@
         <!-- <img class="avatar" src="./assets/svg/brands/guideline.svg" alt="Image Description"> -->
         <div class="ml-3">
           <span class="d-block h5 text-hover-primary mb-0">{{$client->first_name." ".$client->last_name }}</span>
-          <span class="d-block font-size-sm text-body">Created on {{ dateFormat($record->created_at) }}</span>
-          <div class="d-block text-danger">ID: {{$record->unique_id}}</div>
+          <div class="d-block text-danger">Appointment ID: {{$record->unique_id}}</div>
         </div>
     </a>
   </td>
@@ -40,8 +39,8 @@
   </td>
   <td class="table-column-pl-0">
     @php 
-    $visa_service = professionalService($record->professional,$record->visa_service_id,'unique_id');
-
+    $visa_service = professionalService(\Session::get('subdomain'),$record->visa_service_id,'unique_id');
+   
     @endphp
     @if(!empty($visa_service->visa_service))
       {{$visa_service->visa_service->name}}

@@ -134,7 +134,7 @@
                           <select name="user_id" required disabled>
                               <option value="">Select Client</option>
                               @foreach($clients as $client)
-                              <option value="{{$client->unique_id}}">{{$client->first_name." ".$client->last_name}}</option>
+                              <option value="{{$client->master_id}}">{{$client->first_name." ".$client->last_name}}</option>
                               @endforeach
                           </select>
                         </div>
@@ -176,7 +176,9 @@
                     <select name="visa_service_id" id="visa_service_id" required onchange="appointmentType(this.value)">
                         <option value="">Select Visa Service</option>
                         @foreach($visa_services as $service)
+                            @if(!empty($service->Service($service->service_id)))
                         <option value="{{$service->unique_id}}">{{$service->Service($service->service_id)->name}}</option>
+                            @endif
                         @endforeach
                     </select>
                   </div>
@@ -247,7 +249,7 @@
                   <i class="tio-chevron-left"></i> Previous step
                   </button>
                   <div class="d-flex justify-content-end ml-auto">
-                     <button id="createAppointmentBtn" type="button" class="btn btn-primary">Create Case</button>
+                     <button id="createAppointmentBtn" type="button" class="btn btn-primary">Create Appointment</button>
                   </div>
                </div>
                <!-- End Footer -->
@@ -503,6 +505,8 @@ eventClick: function(info, jsEvent, view) {
             hideLoader();
             $("#book_slot_btn").trigger("click");
             $(".book-slots").html(response.contents);
+          }error:function(){
+            internalError();
           }
         });
   }

@@ -1,14 +1,14 @@
 @foreach($records as $key => $record)
 <div class="card mb-3" >
-  <div class="card-header p-4">
+  <div class="card-header stage-header p-2 {{($case->stage_profile == 'custom' && $case->stage_profile_id == $record->unique_id)?'bg-success':''}} {{($case->stage_profile == 'default' && $record->stage_type == 'default')?'bg-success':''}}">
     <div class="row" >
       <div class="col-md-4" >
-        <h5 class="cards-title pt-3 pb-2">{{ ucwords($record->name) }}</h5>
+        <h5 class="cards-title pt-3 pb-2 mb-0">{{ ucwords($record->name) }}</h5>
+        
       </div>
       <div class="col-md-8">
         <div class="row">
-          <div class="col-md-2 offset-md-4">
-              <div class="float-right text-center">
+          <div class="col-md-7">
                 @php
                   $total_stages = $record->SubStages->count();
                   $total_completed = $record->CompletedStages->count();
@@ -17,9 +17,25 @@
                   }else{
                     $percent = 0;
                   }
-
+                  if($percent == 100){
+                    $percent_class = 'bg-success';
+                    $percent_text = 'Completed';
+                  }elseif($percent > 0){
+                    $percent_class = 'bg-warning';
+                    $percent_text = 'Working';
+                  }else{
+                    $percent_class = 'bg-white';
+                    $percent_text = 'Not Started';
+                  }
                 @endphp
-                <div class="js-circle"
+                <div class="stage_percent">
+                  <div class="col-auto percent_text">
+                    {{$percent_text}}
+                  </div>
+                  <div class="col-auto percent_bg {{ $percent_class }}">&nbsp;</div>
+                  <div class="col-auto percent">{{round($percent,2)}}%</div>
+                </div>
+                <!-- <div class="js-circle"
                   data-hs-circles-options='{
                     "value": "{{$percent}}",
                     "maxValue": 100,
@@ -33,34 +49,37 @@
                     "textClass": "circle-custom-text",
                     "textColor": "#377dff"
                   }'>
-                </div>
-                {{round($percent,2)}}%
-              </div>
+                </div> -->
           </div>
-          <div class="col-md-6">
-            <a class="btn btn-primary btn-sm" href="<?php echo baseUrl('cases/sub-stages/add/'.$record->unique_id) ?>" >
-                Sub Stages
-            </a>
-            <div class="hs-unfold">
-              <a class="js-hs-action btn btn-sm btn-white" href="javascript:;"
-                data-hs-unfold-options='{
-                  "target": "#action-{{$record->unique_id}}",
-                  "type": "css-animation"
-                }'>More  <i class="tio-chevron-down ml-1"></i>
+          <div class="col-md-5">
+            <div class="float-right">
+               
+              <a class="btn btn-primary btn-sm" href="<?php echo baseUrl('cases/sub-stages/add/'.$record->unique_id) ?>" >
+                  Sub Stages
               </a>
-              <div id="action-{{$record->unique_id}}" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right">
-                <a href="<?php echo baseUrl('cases/stages/edit/'.$record->unique_id) ?>" class="dropdown-item"><i class="tio-edit"></i> Edit </a>
-                <a href="<?php echo baseUrl('cases/stages/view/'.$record->unique_id) ?>" class="dropdown-item"><i class="tio-globe"></i> View </a>
-                <div class="dropdown-divider"></div>
-                <a  href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('cases/stages/delete/'.base64_encode($record->id))}}" class="dropdown-item"><i class="tio-delete"></i> Delete </a>
+              @if($record->stage_type == 'custom')
+              <div class="hs-unfold">
+                <a class="js-hs-action btn btn-sm btn-white" href="javascript:;"
+                  data-hs-unfold-options='{
+                    "target": "#action-{{$record->unique_id}}",
+                    "type": "css-animation"
+                  }'>More  <i class="tio-chevron-down ml-1"></i>
+                </a>
+                <div id="action-{{$record->unique_id}}" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right">
+                 
+                  <a href="<?php echo baseUrl('cases/stages/edit/'.$record->unique_id) ?>" class="dropdown-item"><i class="tio-edit"></i> Edit </a>
+                  <a  href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('cases/stages/delete/'.base64_encode($record->id))}}" class="dropdown-item"><i class="tio-delete"></i> Delete </a>
+                  <!-- <a href="<?php echo baseUrl('cases/stages/view/'.$record->unique_id) ?>" class="dropdown-item"><i class="tio-globe"></i> View </a> -->
+                 </div>
               </div>
+              @endif
             </div>
           </div>
         </div>
+      </div>
     </div>
   </div>
-
-  <div class="card-body p-4">
+  <div class="card-body stage-body p-2">
       <p class="card-text">{{ $record->short_description }}</p>
       @if(count($record->SubStages) > 0)
       <div class="substagelists">

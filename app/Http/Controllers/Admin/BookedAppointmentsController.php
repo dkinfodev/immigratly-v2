@@ -166,7 +166,7 @@ class BookedAppointmentsController extends Controller
         if($request->input("appointment_for") == 'leads'){
             $user = Leads::where("unique_id",$request->input("user_id"))->first();
         }else{
-            $user = Leads::where("unique_id",$request->input("user_id"))->first();
+            $user = Leads::where("master_id",$request->input("user_id"))->first();
         }
         $subdomain =  \Session::get("subdomain");
         $company_data = professionalDetail($subdomain);
@@ -180,8 +180,9 @@ class BookedAppointmentsController extends Controller
         
         $message = "<p>Professional ".$company_data->company_name." booked an appointment for ".$date." from ".$start_time." to ".$end_time."</p>"; 
         if($request->input("price") > 0){
+            $domain = domain();
             $message .= "<p>To confirm booking you will have to pay ".currencyFormat($request->input("price")).". Click below link and pay and confirm</p>";
-            $message .= "<p><a href='#'>Click here to Pay</a></p>";
+            $message .= "<p><a href='".$domain."pay-for-appointment/".$subdomain.'/'.$booking_id."'>Click here to Pay</a></p>";
         }
         $mailData['mail_message'] = $message;
 
@@ -194,6 +195,8 @@ class BookedAppointmentsController extends Controller
         $parameter['view'] = "emails.notification";
         $parameter['data'] = $mailData;
         $mailRes = sendMail($parameter);
+
+        $response['redirect_back'] = baseUrl('/booked-appointments');
         return response()->json($response);
     }
     public function rescheduleAppointment($appointment_id)
@@ -201,11 +204,13 @@ class BookedAppointmentsController extends Controller
         $subdomain = \Session::get("subdomain");
         $apiData['appointment_id'] = $appointment_id;
         $result = curlRequest("booked-appointments/single",$apiData);
-        if($result['status'] == 'success'){
-            $record = $result['data'];
+        $record = BookedAppointments::where("unique_id",$appointment_id)->first();
+        if(!empty($record)){
+            $record = $record->toArray();
         }else{
             return redirect()->back()->with("error","Invalid appointment access");
         }
+        
         $viewData['pageTitle'] = "Booked Appointments";
         $viewData['record'] = $record;
         
@@ -261,20 +266,24 @@ class BookedAppointmentsController extends Controller
         $apiData['end_date'] = $end_date;
         $apiData['response_type'] = "date_counter";
         $result = curlRequest("booked-appointments/fetch-appointments",$apiData);
-        if($result['status'] == 'success'){
-            $appointments = $result['data'];
+        $appointments = BookedAppointments::where("status",'!=','reject')->get();
+        if(!empty($appointments)){
+            $appointments = $appointments->toArray();
+            
         }else{
             $appointments = array();
         }
+       
         $dates = getBetweenDates($start_date,$end_date);
         
         for($d=0;$d < count($dates);$d++){
             $day = date("l",strtotime($dates[$d]));
             foreach($appointments as $appointment){
                 if($appointment['appointment_date'] == $dates[$d]){
+                    $total_appointment =  BookedAppointments::where("appointment_date",$dates[$d])->count();
                     $temp = array();
                     $temp['start'] = $dates[$d];
-                    $temp['title'] = $appointment['total_appointment']. " Appointment(s) \n are booked";
+                    $temp['title'] = $total_appointment. " Appointment(s) \n are booked";
                     $temp['className'] = 'text-primary booked-appointment';
                     $day_schedules[] = $temp;
                 }
@@ -347,7 +356,7 @@ class BookedAppointmentsController extends Controller
                 }
             }
 
-            $booked_appointment = BookedAppointments::where("appointment_date",$dates[$d])->count();
+            $booked_appointment = BookedAppointments::where("appointment_date",$dates[$d])->where('location_id',$location_id)->count();
             if($booked_appointment > 0){
                 $temp = array();
                 $temp['start'] = $dates[$d];
@@ -425,10 +434,9 @@ class BookedAppointmentsController extends Controller
         $to_time = $appointment_schedule['to_time'];
         $booked_slots = BookedAppointments::where("location_id",$location_id)
                         ->whereDate("appointment_date",$date)
+                        ->where("status","!=","reject")
                         ->get();
-        if(!empty($booked_slots)){
-            $booked_slots = $booked_slots->toArray();
-        }else{
+        if(empty($booked_slots)){
             $booked_slots = array();
         }
         $book_slots = array();
@@ -525,7 +533,7 @@ class BookedAppointmentsController extends Controller
 
         $validator = Validator::make($request->all(), [
             'duration' => 'required',
-            'visa_service' => 'required',
+            'visa_service_id' => 'required',
         ]);
         if ($validator->fails()) {
             $response['status'] = false;
@@ -539,37 +547,73 @@ class BookedAppointmentsController extends Controller
             $response['message'] = $errMsg;
             return response()->json($response);
         }
-        $apiData = $request->all();
-        $result = curlRequest("booked-appointments/update-appointment",$apiData);
-        if($result['status'] == 'success'){
-            $response['status'] = true;
-            $response['message'] = $result['message'];
-            $response['redirect_back'] = baseUrl("booked-appointments");
+        
+        $duration = explode("-",$request->input("duration"));
+
+        $object = BookedAppointments::where("unique_id",$request->input("eid"))->first();
+      
+        $booking_id = $object->unique_id;
+        $checkInvoice = Invoices::where("link_id",$booking_id)->where("link_to","appointment")->first();    
+        if(!empty($checkInvoice)){
+            $inv_unique_id = $checkInvoice->unique_id;
         }else{
-            $response['status'] = false;
-            $response['message'] = $result['message'];
+            $inv_unique_id = randomNumber();
         }
+        $object->location_id = $request->input("location_id");
+        $object->break_time = $request->input("break_time");
+        $object->visa_service_id = $request->input("visa_service_id");
+        $object->appointment_date = $request->input("date");
+        $object->appointment_type_id = $request->input("appointment_type_id");
+        $object->status = 'awaiting';
+        $object->schedule_id = $request->input("schedule_id");
+        $object->time_type = $request->input("time_type");
+        $object->meeting_duration = $request->input("interval");
+        $object->start_time = $duration[0];
+        $object->end_time = $duration[1];
+        $object->invoice_id = $inv_unique_id;
+        $object->save();
+
+        $checkInvoice = Invoices::where("link_id",$booking_id)->where("link_to","appointment")->first();    
+        if(!empty($checkInvoice)){
+            $object2 = Invoices::find($checkInvoice->id);
+        }else{
+            $object2 = new Invoices();
+            $object2->unique_id = $inv_unique_id;
+        }
+        $object2->client_id = $request->input("user_id");
+        $object2->payment_status = "pending";
+        $object2->amount = $request->input("price");
+        $object2->link_to = 'appointment';
+        $object2->link_id = $booking_id;
+        $object2->invoice_date = date("Y-m-d"); 
+        $object2->created_by = \Auth::user()->unique_id;
+        $object2->save();
+
+        $checkInvoiceItem = InvoiceItems::where("invoice_id",$inv_unique_id)->first();    
+        if(!empty($checkInvoiceItem)){
+            $object2 = InvoiceItems::find($checkInvoiceItem->id);
+        }else{
+            $object2 = new InvoiceItems();
+            $object2->invoice_id = $inv_unique_id;
+            $object2->unique_id = randomNumber();
+        }
+        $object2->particular = "Appointment Fee";
+        $object2->amount = $object->price;
+        $object2->save();
+
+        $response['status'] = true;
+        $response['message'] = "Appointment reschedule successfully";
+        $response['redirect_back'] = baseUrl("booked-appointments");
         return response()->json($response);
     }
 
     public function changeStatus($id,$status){
-        $apiData['subdomain'] = \Session::get("subdomain");
-        $apiData['id'] = $id;
-        $apiData['status'] = $status;
-        $result = curlRequest("booked-appointments/change-status",$apiData);
-        
-        $viewData = array();
-        if($result['status'] == 'success'){
-            return redirect()->back()->with("success","Booking status changed successfully");
-        }else{
-            return redirect()->back()->with("error","Something wents wrong");
-        }        
+        BookedAppointments::where("unique_id",$id)->update(['status'=>$status]);
+        return redirect()->back()->with("success","Booking status changed successfully");        
     }
     
     public function viewAppointment($appointment_id){
-        $appointment = \DB::table(MAIN_DATABASE.".booked_appointments")
-                            ->where("unique_id",$appointment_id)
-                            ->first();
+        $appointment = BookedAppointments::where("unique_id",$appointment_id)->first();
         $subdomain = \Session::get("subdomain");
         $visa_service = professionalService($subdomain,$appointment->visa_service_id,'unique_id');
         $company_data = professionalDetail($subdomain);

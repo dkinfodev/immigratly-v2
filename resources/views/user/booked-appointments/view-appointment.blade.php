@@ -51,6 +51,12 @@
               </td>
           </tr>
           <tr>
+              <th>Appointment Time</th>
+              <td>
+                {{dateFormat($appointment->start_time,"h:i A")." to ".dateFormat($appointment->end_time,"h:i A")}}
+              </td>
+          </tr>
+          <tr>
               <th>Duration</th>
               <td>
                 {{$appointment->meeting_duration}} Minutes

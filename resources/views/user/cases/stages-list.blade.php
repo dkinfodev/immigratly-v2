@@ -1,6 +1,6 @@
 @foreach($records as $key => $record)
 <div class="card mb-3">
-    <div class="card-header p-0">
+    <div class="card-header stage-header p-2">
         <div class="row">
             <div class="col-md-4">
                 <h5 class="cards-title pt-3 pb-2">{{ ucwords($record['name']) }}</h5>
@@ -39,7 +39,7 @@
             </div>
         </div>
     </div>
-    <div class="card-body p-">
+    <div class="card-body stage-body">
         <p class="card-text">{{ $record['short_description'] }}</p>
         @if(count($record['sub_stages']) > 0)
         <div class="substagelists">

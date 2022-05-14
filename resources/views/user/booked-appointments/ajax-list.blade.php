@@ -1,4 +1,8 @@
-@foreach($records as $key => $record)
+@foreach($records as $key => $appointment)
+@php
+$record = $appointment->bookingDetail($appointment->professional,$appointment->booking_id);
+@endphp
+@if(!empty($record))
 <tr>
   <!-- <td class="table-column-pr-0">
     <div class="custom-control custom-checkbox">
@@ -9,7 +13,7 @@
   <td>
     <a class="d-flex align-items-center" href="javascript:;">
         <?php
-          $company_data = professionalDetail($record->professional);
+          $company_data = professionalDetail($appointment->professional);
           // $company_data = array();
           if(!empty($company_data)){
             echo "<div class='text-danger'>".$company_data->company_name."</div>";
@@ -18,7 +22,7 @@
     </a>
     <div class="d-block text-danger">ID: {{$record->unique_id}}</div>
     @php 
-    $location = professionalLocation($record->location_id,$record->professional);
+    $location = professionalLocation($record->location_id,$appointment->professional);
     @endphp
     @if(!empty($location))
     <i class='tio-globe'></i> {{$location->address}}
@@ -26,7 +30,7 @@
   </td>
   <td class="table-column-pl-0">
     @php 
-    $visa_service = professionalService($record->professional,$record->visa_service_id,'unique_id');
+    $visa_service = professionalService($appointment->professional,$record->visa_service_id,'unique_id');
 
     @endphp
     @if(!empty($visa_service->visa_service))
@@ -77,10 +81,10 @@
       </a>
       
       <div id="action-{{$key}}" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm dropdown-menu-right">
-        <a class="dropdown-item" href="{{baseUrl('professional/'.$record->professional.'/book-appointment/'.$record->location_id)}}?service_id={{ $record->visa_service_id }}&action=edit&eid={{ $record->unique_id }}"><i class="tio-edit"></i> Edit</a>
-        <a class="dropdown-item" href="{{baseUrl('booked-appointments/view/'.$record->unique_id) }}"><i class="tio-globe"></i> View Appointment</a>
+        <a class="dropdown-item" href="{{baseUrl('professional/'.$appointment->professional.'/book-appointment/'.$record->location_id)}}?service_id={{ $record->visa_service_id }}&action=edit&eid={{ $appointment->unique_id }}"><i class="tio-edit"></i> Edit</a>
+        <a class="dropdown-item" href="{{baseUrl('booked-appointments/view/'.$appointment->unique_id) }}"><i class="tio-globe"></i> View Appointment</a>
         @if($record->payment_status != 'paid')
-        <a class="dropdown-item" href="{{baseUrl('appointment-payment/'.$record->unique_id)}}">Pay Now</a>
+        <a class="dropdown-item" href="{{url('pay-for-appointment/'.$appointment->professional.'/'.$record->unique_id)}}"><i class="tio-dollar"></i> Pay Now</a>
         @endif
         {{-- <a class="dropdown-item text-danger" href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('booked-appointments/delete/'.base64_encode($record->id))}}">Delete</a> --}}
         
@@ -91,6 +95,11 @@
     @endif
   </td>
 </tr>
+@else
+<tr>
+  <td colspan="7">Booking Details Not Available</td>
+</tr>
+@endif
 @endforeach
 
 

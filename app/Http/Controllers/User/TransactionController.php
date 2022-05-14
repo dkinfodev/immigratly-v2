@@ -314,10 +314,11 @@ class TransactionController extends Controller
     public function appointmentPaymentSuccess(Request $request){
 
         try {
+            $professional = $request->input("professional");
             $invoice_id = $request->input("invoice_id");
             $appointment_id = $request->input("appointment_id");
-            $appointment = BookedAppointments::where("unique_id",$appointment_id)->first();
-            $professional = $request->input("professional");
+            $appointment = \DB::table(PROFESSIONAL_DATABASE.$professional.".booked_appointments")->where("unique_id",$appointment_id)->first();
+       
             $razorpay_payment_id = $request->input("razorpay_payment_id");
             $razorpay_order_id = $request->input("razorpay_order_id");
             $razorpay_signature = $request->input("razorpay_signature");
@@ -326,26 +327,29 @@ class TransactionController extends Controller
             $result = $api->payment->fetch($razorpay_payment_id)
                     ->capture(array('amount'=>$payment['amount'])); 
             $result = $result->toArray();
+            $data = array();
             $data['payment_method'] = $payment->method;
             $data['paid_amount'] = $payment->amount / 100;
             $transaction_response = array("razorpay_order_id"=>$razorpay_order_id,"razorpay_payment_id"=>$razorpay_payment_id,"razorpay_signature"=>$razorpay_signature);
             $data['transaction_response'] = json_encode($result);
             $data['paid_by'] = \Auth::user()->unique_id;
             $data['payment_status'] = "paid";
+            
             $data['paid_date'] = date("Y-m-d H:i:s");
-            UserInvoices::where("unique_id",$invoice_id)->update($data);
+            \DB::table(PROFESSIONAL_DATABASE.$professional.".invoices")->where("unique_id",$invoice_id)->update($data);
 
             $data = array();
             $data['invoice_id'] = $invoice_id;
             $data['payment_status'] = "paid";
             $data['paid_date'] = date("Y-m-d H:i:s");
-            BookedAppointments::where("unique_id",$appointment_id)->update($data);
+            $data['status'] = 'approved';
+            \DB::table(PROFESSIONAL_DATABASE.$professional.".booked_appointments")->where("unique_id",$appointment_id)->update($data);
             // $api_response = professionalCurl('cases/send-invoice-data',$subdomain,$data);
             $response['status'] = true;
             $response['message'] = "Payment paid successfully";
             $response['redirect_back'] = baseUrl("booked-appointments");
             $mailData = array();
-            $mail_message = "Hello Admin,<Br> ".\Auth::user()->first_name." ".\Auth::user()->last_name." has booked an appointment. Please check the panel";
+            $mail_message = "Hello Admin,<Br> ".\Auth::user()->first_name." ".\Auth::user()->last_name." has made payment for an Appointment ID ".$appointment->unique_id." dated on ".$appointment->appointment_date." from ".$appointment->start_time." to ".$appointment->end_time.". Please check the panel";
             
             $mailData['mail_message'] = $mail_message;
             $view = View::make('emails.notification',$mailData);

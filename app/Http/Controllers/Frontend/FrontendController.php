@@ -34,7 +34,7 @@ use App\Models\BookedAppointments;
 use App\Models\UserInvoices;
 use App\Models\InvoiceItems;
 use App\Models\UserWithProfessional;
-
+use App\Models\ClientAppointments;
 class FrontendController extends Controller
 {
     /**
@@ -268,7 +268,7 @@ class FrontendController extends Controller
     }
     public function bookAppointment(Request $request,$subdomain,$location_id){
         if(!$request->get("eid")){
-            $check_appointments = BookedAppointments::where("user_id",\Auth::user()->unique_id)
+            $check_appointments = ClientAppointments::where("client_id",\Auth::user()->unique_id)
                                                     ->where("appointment_date",">=",date("Y-m-d"))
                                                     ->where("professional",$subdomain)
                                                     ->count();
@@ -284,13 +284,14 @@ class FrontendController extends Controller
             $type = "book_appointment";
             $visa_service = professionalService($subdomain,$request->get("service_id"),'unique_id');
             if(!$request->get("eid")){
-                $check_appointments = BookedAppointments::where("user_id",\Auth::user()->unique_id)
+            
+                $check_appointments = \DB::table(PROFESSIONAL_DATABASE.$subdomain.".booked_appointments")
+                                                    ->where("client_id",\Auth::user()->unique_id)
                                                     ->where("appointment_date",">=",date("Y-m-d"))
+                                                    ->where("location_id",$location_id)
                                                     ->where("visa_service_id",$request->get("service_id"))
-                                                    ->where("professional",$subdomain)
                                                     ->first();
-           
-                if(!empty($check_appointments)){
+                 if(!empty($check_appointments)){
                     return redirect()->back()->with("error_message","You already had booked appointment with the professional for this service dated on ".dateFormat($check_appointments->appointment_date)." at ".$check_appointments->start_time." to ".$check_appointments->end_time."!");
                 }
             }
@@ -304,7 +305,8 @@ class FrontendController extends Controller
             $eid = $request->get("eid");
             $viewData['action'] = "edit";
             $viewData['eid'] = $eid;
-            $appointment = BookedAppointments::where("unique_id",$eid)->first();
+            $client_appointment = ClientAppointments::where("unique_id",$eid)->first();
+            $appointment = $client_appointment->bookingDetail($client_appointment->professional,$client_appointment->booking_id);
             //redirect if edited 3 times
             if($appointment->edit_counter > 2){
                 return redirect()->back()->with("error_message","You already edited this appointment 3 times.");
@@ -384,7 +386,8 @@ class FrontendController extends Controller
         // $end_date = date("Y-m-t",strtotime($date));
         if($request->action == 'edit' && $request->eid != ''){
             $eid = $request->eid;
-            $appointment = BookedAppointments::where("unique_id",$eid)->first();
+            $client_appointment = ClientAppointments::where("unique_id",$eid)->first();
+            $appointment = \DB::table(PROFESSIONAL_DATABASE.$professional.".booked_appointments")->where("unique_id",$client_appointment->booking_id)->first();
             $appointment_date = $appointment->appointment_date;
         }else{
             $appointment_date = '';
@@ -433,7 +436,7 @@ class FrontendController extends Controller
                 }
             }
 
-            $booked_appointment = BookedAppointments::where("user_id",\Auth::user()->unique_id)
+            $booked_appointment = \DB::table(PROFESSIONAL_DATABASE.$professional.".booked_appointments")
                                                     ->where("appointment_date",$dates[$d])
                                                     ->where("location_id",$location_id)
                                                     ->count();
@@ -463,6 +466,7 @@ class FrontendController extends Controller
         $service_id = $request->input("service_id");
         $break_time = $request->input("break_time");
         $price = $request->input("price");
+        $professional = $request->input("professional");
         if($request->input("time_type")){
             $time_type = $request->input("time_type");
         }else{
@@ -473,14 +477,16 @@ class FrontendController extends Controller
             $eid = $request->get("eid");
             $viewData['action'] = "edit";
             $viewData['eid'] = $eid;
-            $appointment = BookedAppointments::where("unique_id",$eid)->first();
+            $client_appointment = ClientAppointments::where("unique_id",$eid)->first();
+            $appointment = \DB::table(PROFESSIONAL_DATABASE.$professional.".booked_appointments")->where("unique_id",$client_appointment->booking_id)->first();
+            // $appointment = BookedAppointments::where("unique_id",$eid)->first();
             $viewData['appointment'] = $appointment;
         }else{
             $viewData['action'] = "add";
             $viewData['eid'] = '';
         }
 
-        $professional = $request->input("professional");
+        
         $date = $request->input("date");
         $location_id = $request->input("location_id");
         $appointment_type_id = $request->input("appointment_type_id");
@@ -524,21 +530,21 @@ class FrontendController extends Controller
         
         $from_time = $appointment_schedule['from_time'];
         $to_time = $appointment_schedule['to_time'];
-        $booked_slots = BookedAppointments::where("professional",$professional)
+        $booked_slots = \DB::table(PROFESSIONAL_DATABASE.$professional.".booked_appointments")
                                         ->where("location_id",$location_id)
                                         ->whereDate("appointment_date",$date)
                                         ->get();
-        if(!empty($booked_slots)){
-            $booked_slots = $booked_slots->toArray();
-        }else{
-            $booked_slots = array();
-        }
+        // if(!empty($booked_slots)){
+        //     $booked_slots = $booked_slots->toArray();
+        // }else{
+        //     $booked_slots = array();
+        // }
         $book_slots = array();
         foreach($booked_slots as $b_slot){
             $temp = new \stdClass();
-            $temp->from_time = $b_slot['start_time'];
+            $temp->from_time = $b_slot->start_time;
        
-            $temp->to_time = date("h:i",strtotime($b_slot['end_time']." +".$b_slot['break_time']." minutes"));
+            $temp->to_time = date("h:i",strtotime($b_slot->end_time." +".$b_slot->break_time." minutes"));
             $book_slots[] = $temp;
         }
 
@@ -641,135 +647,213 @@ class FrontendController extends Controller
         }
         $duration = explode("-",$request->input("duration"));
         
-        
+        $apiData = $request->all();
+        $professional = $request->input("professional");
         if($request->input("action") == 'edit'){
-            $object = BookedAppointments::where("unique_id",$request->input("eid"))->first();
+            $eid = $request->input("eid");
+            $client_appointment = ClientAppointments::where("unique_id",$eid)->first();
+            $object = \DB::table(PROFESSIONAL_DATABASE.$professional.".booked_appointments")->where("unique_id",$client_appointment->booking_id)->first();
             $appointment = $object;
             $booking_id = $object->unique_id;
             if($object->edit_counter > 2)
             {
                 $response['status'] = true;
-                $response['message'] = "Your edit limit exceed.";
+                $response['message'] = "Your edit limit exceed. You cannot edit appointment any more";
                 $response['redirect_back'] = baseUrl('booked-appointments');
                 return response()->json($response);    
             }
             else
-            {
-                $object->edit_counter = $object->edit_counter+1;
+            {   
+                \DB::table(PROFESSIONAL_DATABASE.$professional.".booked_appointments")->where("unique_id",$client_appointment->booking_id)->update(['edit_counter'=>$object->edit_counter+1]);
+                
             }
-        }else{
-            $appointment = array();
-            $booking_id = randomNumber();
-            $inv_unique_id = randomNumber();
-            $object = new BookedAppointments();
-            $object->unique_id = $booking_id;
+            $apiData['eid'] = $booking_id;
         }
         
+        unset($apiData['_token']);
+        $apiData['user_id'] = \Auth::user()->unique_id;
+        $api_response = professionalCurl('save-appointment',$professional,$apiData);
         
-        $object->professional = $request->input("professional");
-        $object->location_id = $request->input("location_id");
-        $object->break_time = $request->input("break_time");
+        // else{
+        //     $appointment = array();
+        //     $booking_id = randomNumber();
+        //     $inv_unique_id = randomNumber();
+        //     $object = new BookedAppointments();
+        //     $object->unique_id = $booking_id;
+        // }
         
-        $object->visa_service_id = $request->input("visa_service");
-        $object->appointment_date = $request->input("date");
-        $object->appointment_type_id = $request->input("appointment_type_id");
-        $object->user_id = \Auth::user()->unique_id;
-        $object->status = 'awaiting';
-        if($request->input("price") > 0){
-            $object->payment_status = 'pending';
-        }else{
-            $object->payment_status = 'paid';
-        }
-        $object->schedule_id = $request->input("schedule_id");
-        $object->time_type = $request->input("time_type");
         
-        $object->price = $request->input("price");
-        $object->meeting_duration = $request->input("interval");
-        $object->start_time = $duration[0];
-        $object->end_time = $duration[1];
-        if($request->input("action") == 'add'){
-            $object->invoice_id = $inv_unique_id;
-        }
-        $object->save();
+        // $object->professional = $request->input("professional");
+        // $object->location_id = $request->input("location_id");
+        // $object->break_time = $request->input("break_time");
+        
+        // $object->visa_service_id = $request->input("visa_service");
+        // $object->appointment_date = $request->input("date");
+        // $object->appointment_type_id = $request->input("appointment_type_id");
+        // $object->user_id = \Auth::user()->unique_id;
+        // $object->status = 'awaiting';
+        // if($request->input("price") > 0){
+        //     $object->payment_status = 'pending';
+        // }else{
+        //     $object->payment_status = 'paid';
+        // }
+        // $object->schedule_id = $request->input("schedule_id");
+        // $object->time_type = $request->input("time_type");
+        
+        // $object->price = $request->input("price");
+        // $object->meeting_duration = $request->input("interval");
+        // $object->start_time = $duration[0];
+        // $object->end_time = $duration[1];
+        // if($request->input("action") == 'add'){
+        //     $object->invoice_id = $inv_unique_id;
+        // }
+        // $object->save();
 
                 
-        if($request->input("action") == 'edit'){
-            $object2 = UserInvoices::where("link_id",$booking_id)->where("link_to","appointment")->first();
-            $inv_unique_id = $object2->unique_id;
-        }else{
-            $object2 = new UserInvoices();
-            $object2->unique_id = $inv_unique_id;
-        }
-        $object2->client_id = \Auth::user()->unique_id;
-        $object2->payment_status = "pending";
-        $object2->amount = $request->input("price");
-        $object2->link_to = 'appointment';
-        $object2->link_id = $booking_id;
-        $object2->invoice_date = date("Y-m-d"); 
-        $object2->created_by = \Auth::user()->unique_id;
-        $object2->save();
+        // if($request->input("action") == 'edit'){
+        //     $object2 = UserInvoices::where("link_id",$booking_id)->where("link_to","appointment")->first();
+        //     $inv_unique_id = $object2->unique_id;
+        // }else{
+        //     $object2 = new UserInvoices();
+        //     $object2->unique_id = $inv_unique_id;
+        // }
+        // $object2->client_id = \Auth::user()->unique_id;
+        // $object2->payment_status = "pending";
+        // $object2->amount = $request->input("price");
+        // $object2->link_to = 'appointment';
+        // $object2->link_id = $booking_id;
+        // $object2->invoice_date = date("Y-m-d"); 
+        // $object2->created_by = \Auth::user()->unique_id;
+        // $object2->save();
 
-        if($request->input("action") == 'edit'){
-            $object2 = InvoiceItems::where("invoice_id",$inv_unique_id)->first();
-        }else{
-            $object2 = new InvoiceItems();
-            $object2->invoice_id = $inv_unique_id;
-            $object2->unique_id = randomNumber();
-        }
+        // if($request->input("action") == 'edit'){
+        //     $object2 = InvoiceItems::where("invoice_id",$inv_unique_id)->first();
+        // }else{
+        //     $object2 = new InvoiceItems();
+        //     $object2->invoice_id = $inv_unique_id;
+        //     $object2->unique_id = randomNumber();
+        // }
         
-        $object2->particular = "Appointment Fee";
-        $object2->amount = $request->input("price");
-        $object2->save();
+        // $object2->particular = "Appointment Fee";
+        // $object2->amount = $request->input("price");
+        // $object2->save();
 
-        $response['status'] = true;
-        $response['message'] = "Your time slot is booked successfully. Team will contact you soon!";
-        if($request->input("action") == 'edit'){
-            if($appointment->price == 0 &&  $request->input("price") > 0){
-                $response['redirect_back'] = baseUrl('appointment-payment/'.$booking_id);
+        if(isset($api_response['status']) && $api_response['status'] == 'success'){
+            $booking_id = $api_response['booking_id'];
+            $response['status'] = true;
+            $response['message'] = "Your time slot is booked successfully. Team will contact you soon!";
+            \Session::flash("success_message", "Your time slot is booked successfully. Team will contact you soon!");
+
+            if($request->input("action") == 'edit'){
+                if($appointment->price == 0 &&  $request->input("price") > 0){
+                    $response['redirect_back'] = url('pay-for-appointment/'.$professional.'/'.$booking_id);
+                }else{
+                    $response['redirect_back'] = baseUrl('booked-appointments');
+                }
             }else{
-                $response['redirect_back'] = baseUrl('booked-appointments');
+                if($request->input("price") > 0){
+                    $response['redirect_back'] = url('pay-for-appointment/'.$professional.'/'.$booking_id);
+                }else{
+                    $response['redirect_back'] = baseUrl('booked-appointments');
+                }
             }
+            $subdomain =  $request->input("professional");
+            $company_data = professionalDetail($subdomain);
+            $professionalAdmin = professionalAdmin($subdomain);
+            
+            $start_time = $duration[0]; 
+            $end_time = $duration[1];
+            $date = $request->input("date");
+            $email = \Auth::user()->email;
+            $mailData['mail_message'] = "You booked an appointment for ".$date." from ".$start_time." to ".$end_time." with professional ".$company_data->company_name.". Professional  will confirm and reply you soon You will be notified by the professional."; 
+            $view = View::make('emails.notification',$mailData);
+            $message = $view->render();
+            $parameter['to'] = $email;
+            $parameter['to_name'] = '';
+            $parameter['message'] = $message;
+            if($request->input("action") == 'edit'){
+                $parameter['subject'] = "Appointment reschedule with Professional from Immigratly";
+            }else{
+                $parameter['subject'] = "Appointment booked with Professional from Immigratly";
+            }
+            $parameter['view'] = "emails.notification";
+            $parameter['data'] = $mailData;
+           
+            $mailRes = sendMail($parameter);
+
+            $parameter = array();
+            $mailData = array();
+            if($request->input("action") == 'edit'){
+                $mailData['mail_message'] = "Client ".\Auth::user()->first_name." ".\Auth::user()->last_name." has reschedule an appointment for ".$date." from ".$start_time." to ".$end_time.". Appointment ID is ".$booking_id;
+
+            }else{
+                $mailData['mail_message'] = "Client ".\Auth::user()->first_name." ".\Auth::user()->last_name." booked an appointment for ".$date." from ".$start_time." to ".$end_time.". Appointment ID is ".$booking_id;
+            }
+            $view = View::make('emails.notification',$mailData);
+            $message = $view->render();
+            $parameter['to'] = $professionalAdmin->email;
+            $parameter['to_name'] = '';
+            $parameter['message'] = $message;
+            if($request->input("action") == 'edit'){
+                $parameter['subject'] = "Appointment reschedule by Client from Immigratly";
+            }else{
+                $parameter['subject'] = "Appointment booked by Client from Immigratly";
+            }
+            $parameter['view'] = "emails.notification";
+            $parameter['data'] = $mailData;
+           
+            $mailRes = sendMail($parameter);
         }else{
-            if($request->input("price") > 0){
-                $response['redirect_back'] = baseUrl('appointment-payment/'.$booking_id);
-            }else{
-                $response['redirect_back'] = baseUrl('booked-appointments');
-            }
+            $response['status'] = false;
+            $response['message'] = "Issue while booking appointment.";
         }
-        $subdomain =  $request->input("professional");
-        $company_data = professionalDetail($subdomain);
-        $professionalAdmin = professionalAdmin($subdomain);
-        
-        $start_time = $duration[0]; 
-        $end_time = $duration[1];
-        $date = $request->input("date");
-        $email = \Auth::user()->email;
-        $mailData['mail_message'] = "You booked an appointment for ".$date." from ".$start_time." to ".$end_time." with professional ".$company_data->company_name.". Professional  will confirm and reply you soon You will be notified by the professional."; 
-        $view = View::make('emails.notification',$mailData);
-        $message = $view->render();
-        $parameter['to'] = $email;
-        $parameter['to_name'] = '';
-        $parameter['message'] = $message;
-        $parameter['subject'] = "Appointment booked with Professional from Immigratly";
-        $parameter['view'] = "emails.notification";
-        $parameter['data'] = $mailData;
-        $mailRes = sendMail($parameter);
         return response()->json($response);
     }
 
-    public function appointmentPayment($id){
-        $appointment = BookedAppointments::where("unique_id",$id)->first();
-      
-        $invoice = UserInvoices::where("unique_id",$appointment->invoice_id)->first();
+    public function appointmentPayment($subdomain,$booking_id){
+        $appointment = \DB::table(PROFESSIONAL_DATABASE.$subdomain.".booked_appointments")->where("unique_id",$booking_id)->first();
+        
+        $invoice =  \DB::table(PROFESSIONAL_DATABASE.$subdomain.".invoices")->where("unique_id",$appointment->invoice_id)->first();
         if(empty($appointment)){
             return redirect()->back()->with("error","Invalid Appointment");
         }
-        $subdomain = $appointment->professional;
+        $user = array();
+        $user_type = '';
+        if($appointment->lead_id != ''){
+            $user = \DB::table(PROFESSIONAL_DATABASE.$subdomain.".leads")->where("unique_id",$appointment->lead_id)->first();
+            $user_type = 'lead';
+        }
+        if($appointment->client_id != ''){
+            $user = User::where("unique_id",$appointment->client_id)->first();
+            $user_type = 'client';
+        }
+        
+        if(Auth::check()){
+            if(!empty($invoice) && $invoice->payment_status == 'paid'){
+                return redirect(baseUrl('booked-appointments'));
+            }
+            $checkAppointment = ClientAppointments::where("professional",$subdomain)->where("booking_id",$booking_id)->first();
+            if(empty($checkAppointment)){
+                $client_appointment = new ClientAppointments();
+                $client_appointment->unique_id = randomNumber();
+            }else{
+                $client_appointment = ClientAppointments::find($checkAppointment->id);
+            }
+            $client_appointment->professional = $subdomain;
+            $client_appointment->booking_id = $booking_id;
+            $client_appointment->appointment_date = $appointment->appointment_date;
+            $client_appointment->start_time = $appointment->start_time;
+            $client_appointment->end_time = $appointment->end_time;
+            $client_appointment->status = "pending";
+            $client_appointment->client_id = \Auth::user()->unique_id;
+            $client_appointment->save();
+
+            \DB::table(PROFESSIONAL_DATABASE.$subdomain.".booked_appointments")->where("unique_id",$booking_id)->update(['client_id'=>\Auth::user()->unique_id]);
+        }
         $pay_amount = $appointment->price;  
-        // pre($appointment->toArray());
-        // exit;
         $viewData['pageTitle'] = "Pay for appointment";
         // $pay_amount = 0;
+        $viewData['user_type'] = $user_type;
         $viewData['appointment'] = $appointment;
         $viewData['pay_amount'] = $pay_amount;
         $viewData['subdomain'] = $subdomain;

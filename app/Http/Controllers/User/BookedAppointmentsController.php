@@ -8,8 +8,9 @@ use Illuminate\Support\Facades\Validator;
 use View;
 use DB;
 
-use App\Models\BookedAppointments;
+use App\Models\ClientAppointments;
 use App\Models\Professionals;
+
 class BookedAppointmentsController extends Controller
 {
     public function __construct()
@@ -27,8 +28,8 @@ class BookedAppointmentsController extends Controller
     public function getAjaxList(Request $request)
     {
         $search = $request->input("search");
-        $records = BookedAppointments::orderBy('id',"desc")
-                        ->where("user_id",\Auth::user()->unique_id)
+        $records = ClientAppointments::orderBy('id',"desc")
+                        ->where("client_id",\Auth::user()->unique_id)
                         ->paginate(5);
 
         $viewData['records'] = $records;
@@ -43,13 +44,15 @@ class BookedAppointmentsController extends Controller
     
     
     public function delete($id){
-        BookedAppointments::where("unique_id",$id)->delete();
+        ClientAppointments::where("unique_id",$id)->delete();
         return redirect()->back()->with("success","Appointment deleted successfully");     
     }
 
     public function viewAppointment($appointment_id){
-        $appointment = BookedAppointments::where("unique_id",$appointment_id)->first();
-        $subdomain = $appointment->professional;
+        $client_appointment = ClientAppointments::where("unique_id",$appointment_id)->first();
+      
+        $appointment = $client_appointment->bookingDetail($client_appointment->professional,$client_appointment->booking_id);
+        $subdomain = $client_appointment->professional;
         $visa_service = professionalService($subdomain,$appointment->visa_service_id,'unique_id');
         $company_data = professionalDetail($subdomain);
         $professionalAdmin = professionalAdmin($subdomain);

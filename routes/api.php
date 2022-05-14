@@ -77,6 +77,7 @@ Route::group(array('middleware' => 'professional_curl'), function () {
 		Route::post('/appointment-types', [App\Http\Controllers\Api\ProfessionalApiController::class, 'appointmentTypes']);
 		Route::post('/appointment-schedules', [App\Http\Controllers\Api\ProfessionalApiController::class, 'appointmentSchedules']);
 		Route::post('/locations', [App\Http\Controllers\Api\ProfessionalApiController::class, 'professionalLocations']);
+		Route::post('/save-appointment', [App\Http\Controllers\Api\ProfessionalApiController::class, 'saveAppointment']);
 		Route::group(array('prefix' => 'cases'), function () {
 			Route::post('/', [App\Http\Controllers\Api\ProfessionalApiController::class, 'clientCases']);
 			Route::post('/create-case', [App\Http\Controllers\Api\ProfessionalApiController::class, 'createCase']);

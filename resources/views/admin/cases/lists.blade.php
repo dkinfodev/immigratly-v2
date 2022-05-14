@@ -73,7 +73,7 @@
             </div>
             
             @if($case_by != 'client')
-              <a href="{{ baseUrl('/cases/posted-by-clients') }}" class="float-right mr-2 mt-2">{{$client_cases}} posted by clients</a>
+              <a href="{{ baseUrl('/cases/posted-by-clients') }}" class="float-right mr-2 mt-2">{{$client_cases}} case(s) posted by client(s)</a>
             @else  
               <a href="{{ baseUrl('/cases') }}" class="float-right mr-2 mt-2">All Cases</a>
             @endif

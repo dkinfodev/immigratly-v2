@@ -21,12 +21,35 @@
     <div class="card-header">
       
       <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-4">
         <h6 class="card-subtitle pt-3 mb-0">Case stages</h6>
         </div>
-        <div class="col-md-3 pl-3">
-        <a class="btn btn-primary float-right btn-sm" href="<?php echo baseUrl('cases/stages/add/'.base64_encode($case->id)) ?>"><i class="tio-add mr-1"></i> Add New Stage </a>
-        </div>
+        <div class="col-md-8 pl-3">
+          <div class="row">
+              <div class="col-md-8">
+                  <div class="row">
+                    <div class="col-md-4 pt-2">
+                        <label>Stage Profile</label>
+                    </div>
+                    <div class="col-md-6">
+                      <select class="form-control" name="stage_profile" id="stage_profile">
+                          <option value="">Select Stage Profile</option>
+                          <option {{$case->stage_profile == 'default'?'selected':'' }} value="default">Default</option>
+                          @foreach($custom_stages as $stage)
+                            <option {{$case->stage_profile_id == $stage->unique_id?'selected':'' }} value="{{$stage->unique_id}}">{{$stage->name}}</option>
+                          @endforeach
+                      </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" onclick="saveStageProfile()" class="btn btn-warning btn-sm p-2"><i class="tio-save"></i></button>
+                    </div>
+                  </div>
+              </div>
+              <div class="col-md-4">
+              <a class="btn btn-primary float-right btn-sm" href="<?php echo baseUrl('cases/stages/add/'.base64_encode($case->id)) ?>"><i class="tio-add mr-1"></i> Add New Stage </a>
+              </div>
+          </div>
+          </div>
        </div> 
 
     </div>
@@ -106,6 +129,39 @@ function loadData(page=1){
     });
 }
 
+
+function saveStageProfile(){
+  var stage_profile = $("#stage_profile").val();
+  if(stage_profile == ''){
+    errorMessage("Select Stage Profile");
+    return false;
+  }
+    $.ajax({
+        type: "POST",
+        url: BASEURL + '/cases/stages/save-stage-profile',
+        data:{
+            _token:csrf_token,
+            case_id:"{{$case->unique_id}}",
+            stage_profile:stage_profile
+        },
+        dataType:'json',
+        beforeSend:function(){
+            showLoader();
+        },
+        success: function (response) {
+            hideLoader();
+            if(response.status == true){
+              successMessage("Profile saved successfully");
+              location.reload();
+            }else{
+              errorMessage("Something went wrong");
+            }
+        },
+        error:function(){
+          internalError();
+        }
+    });
+}
 </script>
 
 @endsection

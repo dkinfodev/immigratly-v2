@@ -138,9 +138,9 @@
             <span class="badge badge-soft-dark rounded-circle ml-1"> {{ countUnreadDocChat($case_id,$subdomain,"client") }} </span>
             </a>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
             <a class="nav-link {{isset($active_nav) && $active_nav == 'stages'?'active':'' }}" href="{{baseUrl('cases/stages/'.$subdomain.'/'.$record['unique_id'])}}">Stages </a>
-        </li>
+        </li> -->
         <li class="nav-item">
             <a class="nav-link {{isset($active_nav) && $active_nav == 'activity'?'active':'' }} " href="{{baseUrl('cases/activity/'.$subdomain.'/'.$record['unique_id'])}}">Activity</a>
         </li>
