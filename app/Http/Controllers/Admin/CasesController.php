@@ -31,6 +31,8 @@ use App\Models\CaseTaskFiles;
 use App\Models\CaseActivityLogs;
 use App\Models\CaseDependents;
 use App\Models\GlobalForms;
+use App\Models\GlobalStageProfile;
+
 use File;
 
 class CasesController extends Controller
@@ -2156,7 +2158,8 @@ class CasesController extends Controller
 
         $case = Cases::where("id",$case_id)->first();
         $viewData['case'] = $case;
-        
+        $stage_profiles = GlobalStageProfile::get();
+        $viewData['stage_profiles'] = $stage_profiles;
         $viewData['pageTitle'] = "Case Stages";
         $viewData['activeTab'] = 'cases';
         return view(roleFolder().'.cases.stage.stages',$viewData);
@@ -2283,6 +2286,11 @@ class CasesController extends Controller
         return response()->json($response);
     }
 
+    public function stageStart($case_id){
+        $case_id = base64_decode($case_id);
+        Cases::where("id",$case_id)->update(['stage_start'=>1]);
+        return redirect()->back()->with("success","Case Stage Started");
+    }
     public function saveStageProfile(Request $request){
         $validator = Validator::make($request->all(), [
             'stage_profile' => 'required',
@@ -2302,12 +2310,20 @@ class CasesController extends Controller
         }
         $case_id = $request->input("case_id");
         $object = Cases::where("unique_id",$case_id)->first();
+        CaseStages::where("case_id",$case_id)->delete();
+        CaseSubStages::where("case_id",$case_id)->delete();
         if($request->input("stage_profile") == 'default'){
             $object->stage_profile = 'default';
             $object->stage_profile_id = 0;
+            $checkDefaultStages = CaseStages::where("stage_type","default")->count();
+       
+                if($checkDefaultStages == 0){
+                    createDefaultStages($object->unique_id,$object->client_id);
+                }
         }else{
             $object->stage_profile = 'custom';
             $object->stage_profile_id = $request->input("stage_profile");
+            createStages($object->unique_id,$object->client_id,$request->input("stage_profile")); 
         }
         $object->save();
         

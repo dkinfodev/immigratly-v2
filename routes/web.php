@@ -1388,6 +1388,18 @@ Route::group(array('prefix' => 'admin'), function () {
             Route::get('/case-chats', [App\Http\Controllers\Admin\MessagesCenterController::class, 'caseChats']);
             Route::get('/document-chats', [App\Http\Controllers\Admin\MessagesCenterController::class, 'documentChats']);
         });
+
+        Route::group(array('prefix' => 'global-stages'), function () {
+            Route::get('/', [App\Http\Controllers\Admin\GlobalStagesController::class, 'index']);
+            Route::post('/ajax-list', [App\Http\Controllers\Admin\GlobalStagesController::class, 'getAjaxList']);
+            Route::get('/add', [App\Http\Controllers\Admin\GlobalStagesController::class, 'add']);
+            Route::post('/save', [App\Http\Controllers\Admin\GlobalStagesController::class, 'save']);
+            Route::get('/edit/{id}', [App\Http\Controllers\Admin\GlobalStagesController::class, 'edit']);
+            Route::post('/update/{id}', [App\Http\Controllers\Admin\GlobalStagesController::class, 'update']);
+            Route::get('/delete/{id}', [App\Http\Controllers\Admin\GlobalStagesController::class, 'deleteSingle']);
+            Route::post('/delete-multiple', [App\Http\Controllers\Admin\GlobalStagesController::class, 'deleteMultiple']);
+        });
+        
         Route::group(array('prefix' => 'cases'), function () {
             Route::get('/', [App\Http\Controllers\Admin\CasesController::class, 'cases']);
             Route::post('/ajax-list', [App\Http\Controllers\Admin\CasesController::class, 'getAjaxList']);
@@ -1484,6 +1496,7 @@ Route::group(array('prefix' => 'admin'), function () {
  
             Route::group(array('prefix' => 'stages'), function () {
                 Route::get('/list/{id}', [App\Http\Controllers\Admin\CasesController::class, 'stages']);
+                Route::get('/stage-start/{id}', [App\Http\Controllers\Admin\CasesController::class, 'stageStart']);
                 Route::post('/ajax-list', [App\Http\Controllers\Admin\CasesController::class, 'getStagesList']);
                 Route::get('/add/{id}', [App\Http\Controllers\Admin\CasesController::class, 'addNewStage']);
                 Route::post('/add/{id}', [App\Http\Controllers\Admin\CasesController::class, 'saveStage']);

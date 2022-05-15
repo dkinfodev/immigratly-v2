@@ -1,6 +1,6 @@
 @foreach($records as $key => $record)
 <div class="card mb-3" >
-  <div class="card-header stage-header p-2 {{($case->stage_profile == 'custom' && $case->stage_profile_id == $record->unique_id)?'bg-success':''}} {{($case->stage_profile == 'default' && $record->stage_type == 'default')?'bg-success':''}}">
+  <div class="card-header stage-header p-2">
     <div class="row" >
       <div class="col-md-4" >
         <h5 class="cards-title pt-3 pb-2 mb-0">{{ ucwords($record->name) }}</h5>
@@ -59,11 +59,11 @@
               </a>
               @if($record->stage_type == 'custom')
               <div class="hs-unfold">
-                <a class="js-hs-action btn btn-sm btn-white" href="javascript:;"
+                <a class="js-hs-action btn btn-sm btn-white p-2" href="javascript:;"
                   data-hs-unfold-options='{
                     "target": "#action-{{$record->unique_id}}",
                     "type": "css-animation"
-                  }'>More  <i class="tio-chevron-down ml-1"></i>
+                  }'><i class="tio-more-vertical ml-1"></i>
                 </a>
                 <div id="action-{{$record->unique_id}}" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right">
                  

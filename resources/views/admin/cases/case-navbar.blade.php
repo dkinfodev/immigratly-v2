@@ -25,12 +25,13 @@
 
             <div class="row align-items-center">
               <div class="col-auto">
-                <span>Professional:</span>
+                <span>Client:</span>
                 <?php
-                    $professional = professionalDetail($subdomain);
+                    // $professional = professionalDetail($subdomain);
+                    $client = $record->Client($record->client_id);
                 ?>
-                @if(!empty($professional))
-                <a href="javascript:;">{{ $professional->company_name  }}</a>
+                @if(!empty($client))
+                <a href="javascript:;">{{ $client->first_name." ".$client->last_name  }}</a>
                 @else
                 <a href="javascript:;" class="text-danger">N/A</a>
                 @endif

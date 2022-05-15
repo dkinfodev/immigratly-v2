@@ -41,6 +41,9 @@ use App\Models\QuestionOptions;
 use App\Models\ComponentQuestionIds;
 use App\Models\ProfessionalReview;
 use App\Models\CaseStages;
+use App\Models\CaseSubStages;
+use App\Models\GlobalStages;
+use App\Models\GlobalSubStages;
 
 if (! function_exists('getFileType')) {
     function getFileType($ext) {
@@ -2909,6 +2912,32 @@ if(!function_exists("createDefaultStages")){
             $object->name = $stage->name;
             $object->stage_type = 'default';
             $object->save();
+        }
+    }
+}
+if(!function_exists("createStages")){
+    function createStages($case_id,$client_id,$stage_profile_id){
+        $stages = GlobalStages::where('profile_id',$stage_profile_id)->get();
+        foreach($stages as $stage){
+            $object = new CaseStages();
+            $object->unique_id = randomNumber();
+            $object->client_id = $client_id;
+            $object->case_id = $case_id;
+            $object->name = $stage->name;
+            $object->stage_type = 'default';
+            $object->save();
+            $stage_id = $object->unique_id;
+            $sub_stages = $stage->SubStages;
+            foreach($sub_stages as $sub_stage){
+                $object = new CaseSubStages();
+                $object->unique_id = randomNumber();
+                $object->client_id = $client_id;
+                $object->case_id = $case_id;
+                $object->stage_id = $stage_id;
+                $object->name = $sub_stage->name;
+                $object->stage_type = $sub_stage->stage_type;
+                $object->save();
+            }
         }
     }
 }

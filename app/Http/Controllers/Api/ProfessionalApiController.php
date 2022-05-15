@@ -1402,13 +1402,13 @@ class ProfessionalApiController extends Controller
                         ->orderBy('id',"desc")
                         ->where("client_id",$request->input("client_id"))
                         ->where("case_id",$request->input("case_id"))
-                        ->where(function($query) use($case){
-                            if($case->stage_type == 'default'){
-                                $query->where("stage_type",'default');
-                            }else{
-                                $query->where("unique_id",$case->stage_profile_id);
-                            }
-                        })
+                        // ->where(function($query) use($case){
+                        //     if($case->stage_type == 'default'){
+                        //         $query->where("stage_type",'default');
+                        //     }else{
+                        //         $query->where("unique_id",$case->stage_profile_id);
+                        //     }
+                        // })
                         ->paginate(5);
             $data['records'] = $records->items();
             $data['last_page'] = $records->lastPage();

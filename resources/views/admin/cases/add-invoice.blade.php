@@ -144,7 +144,7 @@
               <!-- End Content -->
             </div>
             <!-- End Add Phone Input Field -->
-        </div>
+          </div>
 
           <hr class="my-5">
 

@@ -127,6 +127,12 @@
             </a>
           </li>
           <li class="navbar-vertical-aside-has-menu">
+            <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'global_stages'){ echo "active"; } } ?>" href="{{ baseUrl('/global-stages') }}">
+              <i class="tio-book-opened nav-icon"></i>
+              <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Global Stages</span>
+            </a>
+          </li>
+          <li class="navbar-vertical-aside-has-menu">
               <a class="js-navbar-vertical-aside-menu-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'global-forms'){ echo "active"; } } ?>" href="{{ baseUrl('/global-forms') }}">
                 <i class="tio-book-opened nav-icon"></i>
                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Forms</span>
