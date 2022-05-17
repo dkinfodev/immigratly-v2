@@ -65,6 +65,13 @@
           <!-- <a href="{{ url('/quick-eligibility') }}" class="btn btn-primary float-right mt-3">Click for Quick Eligibility</a> -->
           <div class="clearfix"></div>
             <div class="w-100 pt-10 pt-lg-7 pb-7">
+
+            @if (Session::has('message'))
+                   <div class="alert alert-success" role="alert">
+                      {{ Session::get('message') }}
+                  </div>
+              @endif
+              
               <!-- Form -->
               <form class="js-validate" action="{{ route('user.login') }}" method="post">
                 @csrf
