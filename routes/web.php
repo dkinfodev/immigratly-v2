@@ -121,6 +121,14 @@ Route::group(array('middleware' => 'frontend'), function () {
 });
 // Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 
+
+ Route::post('/forgot-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'submitForgotPassword']);
+
+ Route::get('/reset-password/{token}', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showResetPassword']);
+
+ Route::post('/reset-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'submitResetPassword']);
+
+
 Route::get('/random_number', [App\Http\Controllers\HomeController::class, 'random_number']);
 Route::get('/professional-registered-successfully', [App\Http\Controllers\HomeController::class, 'welcome_page']);
 Route::get('/dbupgrade', [App\Http\Controllers\HomeController::class, 'dbupgrade']);

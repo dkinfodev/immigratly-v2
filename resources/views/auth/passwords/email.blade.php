@@ -121,15 +121,14 @@
           <div class="col-lg-6 d-flex justify-content-center align-items-center min-vh-lg-100">
             <div class="w-100 pt-10 pt-lg-7 pb-7" style="max-width: 25rem;">
 
-
-                @if (session('status'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('status') }}
-                    </div>
-                @endif
+              @if (Session::has('message'))
+                   <div class="alert alert-success" role="alert">
+                      {{ Session::get('message') }}
+                  </div>
+              @endif
 
               <!-- Form -->
-              <form class="js-validate" method="POST" action="{{ route('password.email') }}">
+              <form class="js-validate" method="POST" action="{{ url('forgot-password') }}">
 
                 @csrf
 
