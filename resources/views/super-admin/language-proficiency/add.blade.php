@@ -27,32 +27,7 @@
 </style>
 <!-- Content -->
 <div class="language_proficiency">
-    <!-- Page Header -->
-    <div class="page-header">
-        <div class="row align-items-end">
-            <div class="col-sm mb-2 mb-sm-0">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb breadcrumb-no-gutter">
-                        <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ baseUrl('/') }}">Dashboard</a>
-                        </li>
-                        <li class="breadcrumb-item"><a class="breadcrumb-link"
-                                href="{{ baseUrl('/language-proficiency') }}">Language Proficiency</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Add</li>
-                    </ol>
-                </nav>
-                <h1 class="page-title">{{$pageTitle}}</h1>
-            </div>
-
-            <div class="col-sm-auto">
-                <a class="btn btn-primary" href="{{baseUrl('language-proficiency')}}">
-                    <i class="tio mr-1"></i> Back
-                </a>
-            </div>
-        </div>
-        <!-- End Row -->
-    </div>
-    <!-- End Page Header -->
-
+   
     <!-- Card -->
     <div class="card">
 

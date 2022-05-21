@@ -23,7 +23,7 @@ class UserController extends Controller
 
     public function index()
     {
-        $viewData['pageTitle'] = "Users";
+        $viewData['pageTitle'] = "User";
         $viewData['activeTab'] = "users";
         return view(roleFolder().'.user.lists',$viewData);
     } 
@@ -150,6 +150,7 @@ class UserController extends Controller
     public function edit($id,Request $request){
         $id = base64_decode($id);
         $viewData['pageTitle'] = "Edit User";
+
         $record = User::where("id",$id)->first();
         $record2 = UserDetails::where("user_id",$record->unique_id)->first();
 
@@ -176,7 +177,7 @@ class UserController extends Controller
        
         $countries = Countries::get();
         $viewData['countries'] = $countries;
-    
+        $viewData['activeTab'] = "users";
         return view(roleFolder().'.user.edit',$viewData);
     }
 

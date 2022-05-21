@@ -63,6 +63,14 @@
 
           <div class="col-lg-6 pt-5 mt-5 min-vh-lg-100">
           <!-- <a href="{{ url('/quick-eligibility') }}" class="btn btn-primary float-right mt-3">Click for Quick Eligibility</a> -->
+
+           @if (Session::has('message'))
+                   <div class="alert alert-success" role="alert">
+                      {{ Session::get('message') }}
+                  </div>
+              @endif
+
+
           <div class="clearfix"></div>
             <div class="w-100 pt-10 pt-lg-7 pb-7">
               <!-- Form -->

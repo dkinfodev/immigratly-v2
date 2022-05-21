@@ -9,20 +9,16 @@
 <!-- End Content -->
 @endsection
 
-
-
-
 @section('content')
 <!-- Content -->
-<div class="visa_services">
- 
+<div class="assessments">
 
   <!-- Card -->
   <div class="card">
     <!-- Header -->
     <div class="card-header">
       <div class="row justify-content-between align-items-center flex-grow-1">
-        <div class="col-sm-5 col-md-4 mb-3 mb-sm-0">
+        <div class="col-sm-6 col-md-4 mb-3 mb-sm-0">
           <form>
             <!-- Search -->
             <div class="input-group input-group-merge input-group-flush">
@@ -31,12 +27,12 @@
                   <i class="tio-search"></i>
                 </div>
               </div>
-              <input id="datatableSearch" type="search" class="form-control" placeholder="Search visa services" aria-label="Search visa service">
+              <input id="datatableSearch" type="search" class="form-control" placeholder="Search" aria-label="Search Assessment">
             </div>
             <!-- End Search -->
           </form>
         </div>
-       
+
         <div class="col-sm-5">
           <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
             <!-- Datatable Info -->
@@ -46,7 +42,7 @@
                   <span id="datatableCounter">0</span>
                   Selected
                 </span>
-                <a class="btn btn-sm btn-outline-danger" data-href="{{ baseUrl('visa-services/delete-multiple') }}" onclick="deleteMultiple(this)" href="javascript:;">
+                <a class="btn btn-sm btn-outline-danger" data-href="{{ baseUrl('my-cases/delete-multiple') }}" onclick="deleteMultiple(this)" href="javascript:;">
                   <i class="tio-delete-outlined"></i> Delete
                 </a>
               </div>
@@ -54,12 +50,11 @@
           </div>
         </div>
 
+
         <div class="col-sm-2">
-         <div class="col-sm-auto">
-          <a class="btn btn-primary float-right" href="{{ baseUrl('/visa-services/add') }}">
+          <a class="btn btn-primary float-right" href="{{ baseUrl('/my-cases/add') }}">
             <i class="tio-add mr-1"></i> Add 
           </a>
-        </div>
         </div>
       </div>
       <!-- End Row -->
@@ -78,9 +73,8 @@
                   <label class="custom-control-label" for="datatableCheckAll"></label>
                 </div>
               </th>
-              <th scope="col" class="table-column-pl-0">Name</th>
-              <th scope="col" class="table-column-pl-0">CV Type</th>
-              <th scope="col" class="table-column-pl-0">Eligible Type</th>
+              <th scope="col" class="table-column-pl-0">Case Name</th>
+              <th scope="col" class="table-column-pl-0">Visa Service</th>
               <th scope="col">Action</th>
             </tr>
           </thead>
@@ -154,7 +148,7 @@ function loadData(page=1){
     var search = $("#datatableSearch").val();
     $.ajax({
         type: "POST",
-        url: BASEURL + '/visa-services/ajax-list?page='+page,
+        url: BASEURL + '/my-cases/ajax-list?page='+page,
         data:{
             _token:csrf_token,
             search:search

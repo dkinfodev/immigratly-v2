@@ -121,6 +121,14 @@ Route::group(array('middleware' => 'frontend'), function () {
 });
 // Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 
+
+ Route::post('/forgot-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'submitForgotPassword']);
+
+ Route::get('/reset-password/{token}', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showResetPassword']);
+
+ Route::post('/reset-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'submitResetPassword']);
+
+
 Route::get('/random_number', [App\Http\Controllers\HomeController::class, 'random_number']);
 Route::get('/professional-registered-successfully', [App\Http\Controllers\HomeController::class, 'welcome_page']);
 Route::get('/dbupgrade', [App\Http\Controllers\HomeController::class, 'dbupgrade']);
@@ -1114,6 +1122,24 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
             Route::post('/send-comment', [App\Http\Controllers\User\ProfessionalCasesController::class, 'sendTaskComment']);
         });
 
+    });
+
+      Route::group(array('prefix' => 'my-cases'), function () {
+         Route::get('/', [App\Http\Controllers\User\UserCasesController::class, 'index']);
+        Route::post('/ajax-list', [App\Http\Controllers\User\UserCasesController::class, 'getAjaxList']);
+        Route::get('/add', [App\Http\Controllers\User\UserCasesController::class, 'addcase']);
+        Route::post('/save', [App\Http\Controllers\User\UserCasesController::class, 'saveCase']);
+         Route::get('/edit/{id}', [App\Http\Controllers\User\UserCasesController::class, 'editcase']);
+        Route::post('/update', [App\Http\Controllers\User\UserCasesController::class, 'updateCase']);
+        Route::get('/delete-multiple', [App\Http\Controllers\User\UserCasesController::class, 'deleteMultiple']);
+
+
+
+        //Route::get('/pending', [App\Http\Controllers\User\ProfessionalCasesController::class, 'pendingCases']);
+        //Route::get('/start-case/{subdomain}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'startCase']);
+        //Route::post('/start-case/{subdomain}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'saveCaseWithProfessional']);
+        
+        
     });
 });
 
