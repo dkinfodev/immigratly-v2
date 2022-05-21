@@ -86,6 +86,12 @@
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Cases</span>
                         </a>
                     </li>
+                    <li class="nav-item ">
+                        <a class="js-nav-tooltip-link nav-link <?php if(isset($activeTab)){ if($activeTab == 'my-cases'){ echo "active"; } } ?>" href="{{ baseUrl('/my-cases') }}" data-placement="left">
+                            <i class="tio-documents nav-icon"></i>
+                            <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">My Cases</span>
+                        </a>
+                    </li>
 
 
                     <li class="nav-item">

@@ -1123,6 +1123,24 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
         });
 
     });
+
+      Route::group(array('prefix' => 'my-cases'), function () {
+         Route::get('/', [App\Http\Controllers\User\UserCasesController::class, 'index']);
+        Route::post('/ajax-list', [App\Http\Controllers\User\UserCasesController::class, 'getAjaxList']);
+        Route::get('/add', [App\Http\Controllers\User\UserCasesController::class, 'addcase']);
+        Route::post('/save', [App\Http\Controllers\User\UserCasesController::class, 'saveCase']);
+         Route::get('/edit/{id}', [App\Http\Controllers\User\UserCasesController::class, 'editcase']);
+        Route::post('/update', [App\Http\Controllers\User\UserCasesController::class, 'updateCase']);
+        Route::get('/delete-multiple', [App\Http\Controllers\User\UserCasesController::class, 'deleteMultiple']);
+
+
+
+        //Route::get('/pending', [App\Http\Controllers\User\ProfessionalCasesController::class, 'pendingCases']);
+        //Route::get('/start-case/{subdomain}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'startCase']);
+        //Route::post('/start-case/{subdomain}', [App\Http\Controllers\User\ProfessionalCasesController::class, 'saveCaseWithProfessional']);
+        
+        
+    });
 });
 
 // Professional Admin
