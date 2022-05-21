@@ -60,7 +60,7 @@
                   data-hs-add-field-options='{
                       "template": "#addStagesTemplate",
                       "container": "#addStagesContainer",
-                      "defaultCreated": 0
+                      "defaultCreated": 1
                     }'>
                 <!-- Title -->
                 <div class="bg-light border-bottom p-2 mb-3">
@@ -87,9 +87,9 @@
                         <input type="text" class="form-control mb-3 stage_name" placeholder="Stage Name" aria-label="Stage Name">
                       </div>
                       <div class="col-md-3">
-                        <a href="javascript:;" onclick="addSubStages(this)" class="form-link p-2 mt-2 btn btn-sm btn-no-focus btn-ghost-primary">
+                        <!-- <a href="javascript:;" onclick="addSubStages(this)" class="form-link p-2 mt-2 btn btn-sm btn-no-focus btn-ghost-primary">
                           <i class="tio-add"></i> Add Sub Stages
-                        </a>
+                        </a> -->
                       </div>
                       <div class="col-md-12">
                           <div class="sub-stages">

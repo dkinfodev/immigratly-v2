@@ -57,6 +57,7 @@
 <script src="assets/vendor/formBuilder/dist/form-builder.min.js"></script>
 <script src="assets/vendor/formBuilder/dist/form-render.min.js"></script>
 <script src="assets/vendor/jquery-ui/jquery-ui.js"></script>
+<!-- <link href="assets/vendor/formBuilder/dist/form-builder.css" /> -->
 <script>
 jQuery(($) => {
   const fbEditor = document.getElementById("build-wrap");

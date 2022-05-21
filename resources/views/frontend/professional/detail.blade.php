@@ -189,20 +189,24 @@
                   <tr>
                     <td>{{$location->address}}</td>
                     <td align="right">
-                        @if(Auth::check())
-                        @php 
+                    @php 
                         $checkHours = locationHours($subdomain,$location->unique_id);
                         
                         @endphp
+                        @if(Auth::check())
+                        
                         @if(count($checkHours) > 0)
                         <a href="{{ baseUrl('professional/'.$subdomain.'/appointment-services/'.$location->unique_id) }}" class="btn btn-primary btn-sm">Book Appointment</a>
                         @else
                         <span class="text-danger">No Schedule Available</span>
                         @endif
                         @else
-                        
-                        <a href="{{ url('login') }}?redirect_back={{ url()->current() }}" class="text-primary">Login to Book Appointment</a>
-                        @endif
+                            @if(count($checkHours) > 0)
+                            <a href="{{ url('login') }}?redirect_back={{ url('user/professional/'.$subdomain.'/appointment-services/'.$location->unique_id) }}" class="btn btn-primary btn-sm"> Book Appointment</a>
+                            @else
+                            <span class="text-danger">No Schedule Available</span>
+                            @endif
+                          @endif
                     </td>
                   </tr>
                   @endforeach

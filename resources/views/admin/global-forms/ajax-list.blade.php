@@ -28,6 +28,10 @@
           <i class="tio-envelope dropdown-item-icon"></i>
           Send Assessment Link
           </a> -->
+          <a class="dropdown-item" href="{{baseUrl('global-forms/preview/'.$record->unique_id)}}">
+          <i class="tio-pages-outlined dropdown-item-icon"></i>
+            Preview
+          </a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item text-danger" href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('global-forms/delete/'.base64_encode($record->id))}}">
           <i class="tio-delete-outlined dropdown-item-icon"></i>

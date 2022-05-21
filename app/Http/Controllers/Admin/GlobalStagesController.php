@@ -91,6 +91,7 @@ class GlobalStagesController extends Controller
             $object->visa_service_id = $request->input("visa_service_id");
         }
         $object->save();
+        $id = $object->id;
         $stage_profile_id = $object->unique_id;
         $items = $request->input("items");
         foreach($items as $stages){
@@ -99,25 +100,25 @@ class GlobalStagesController extends Controller
             $object2->profile_id = $stage_profile_id;
             $object2->name = $stages['stage_name'];
             $object2->save();
-            $stage_id = $object2->unique_id;
+            // $stage_id = $object2->unique_id;
 
-            $sub_stages = $stages['sub_stages'];
-            foreach($sub_stages as $sub_stage){
-                $object3 = new GlobalSubStages();
-                $object3->unique_id = randomNumber();
-                $object3->name = $sub_stage['name'];
-                $object3->stage_id = $stage_id;
-                $object3->stage_type = $sub_stage['stage_type'];
-                $object3->save();
-            }
+            // $sub_stages = $stages['sub_stages'];
+            // foreach($sub_stages as $sub_stage){
+            //     $object3 = new GlobalSubStages();
+            //     $object3->unique_id = randomNumber();
+            //     $object3->name = $sub_stage['name'];
+            //     $object3->stage_id = $stage_id;
+            //     $object3->stage_type = $sub_stage['stage_type'];
+            //     $object3->save();
+            // }
         }
         $response['status'] = true;
-        if($request->input("redirect_back")){
-            $response['redirect_back'] = $request->input("redirect_back");
-        }else{
-            $response['redirect_back'] = baseUrl('global-stages');
-        }
-        
+        // if($request->input("redirect_back")){
+        //     $response['redirect_back'] = $request->input("redirect_back");
+        // }else{
+        //     $response['redirect_back'] = baseUrl('global-stages');
+        // }
+        $response['redirect_back'] = baseUrl('global-stages/edit/'.base64_encode($id));
         $response['message'] = "Stage Profile added sucessfully";
         
         return response()->json($response);

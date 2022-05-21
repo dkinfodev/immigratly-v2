@@ -1219,6 +1219,7 @@ Route::group(array('prefix' => 'admin'), function () {
                 Route::get('/delete/{id}', [App\Http\Controllers\Admin\GlobalFormController::class, 'deleteFormSingle']);
                 Route::post('/delete-multiple', [App\Http\Controllers\Admin\GlobalFormController::class, 'deleteFormMultiple']);
                 Route::get('/view/{id}', [App\Http\Controllers\Admin\GlobalFormController::class, 'viewForm']);
+                Route::get('/preview/{id}', [App\Http\Controllers\Admin\GlobalFormController::class, 'previewForm']);
                 //Route::get('/send-form/{id}', [App\Http\Controllers\Admin\GlobalFormController::class, 'sendAssessmentToMail']);
                 //Route::post('/send-form/{id}', [App\Http\Controllers\Admin\GlobalFormController::class, 'sendAssessmentLink']);
             });
