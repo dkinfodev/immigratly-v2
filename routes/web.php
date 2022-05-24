@@ -1129,9 +1129,11 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
         Route::post('/ajax-list', [App\Http\Controllers\User\UserCasesController::class, 'getAjaxList']);
         Route::get('/add', [App\Http\Controllers\User\UserCasesController::class, 'addcase']);
         Route::post('/save', [App\Http\Controllers\User\UserCasesController::class, 'saveCase']);
-         Route::get('/edit/{id}', [App\Http\Controllers\User\UserCasesController::class, 'editcase']);
+        Route::get('/edit/{id}', [App\Http\Controllers\User\UserCasesController::class, 'editcase']);
+        Route::get('/view/{id}', [App\Http\Controllers\User\UserCasesController::class, 'viewcase']);
         Route::post('/update', [App\Http\Controllers\User\UserCasesController::class, 'updateCase']);
         Route::get('/delete-multiple', [App\Http\Controllers\User\UserCasesController::class, 'deleteMultiple']);
+        Route::get('/delete/{id}', [App\Http\Controllers\User\UserCasesController::class, 'deleteSingle']);
 
 
 
@@ -1173,6 +1175,7 @@ Route::group(array('prefix' => 'admin'), function () {
         Route::post('/send-file-to-support', [App\Http\Controllers\Admin\ProfileController::class, 'saveDocumentChatFile']);
     }); 
     Route::group(array('middleware' => 'admin'), function () {
+        
         Route::get('/connect-apps', [App\Http\Controllers\Admin\DashboardController::class, 'connectApps']);
         Route::get('/google-auth', [App\Http\Controllers\Admin\DashboardController::class, 'googleAuthention']);
         Route::get('/connect-google', [App\Http\Controllers\Admin\DashboardController::class, 'connectGoogle']);
@@ -1426,7 +1429,13 @@ Route::group(array('prefix' => 'admin'), function () {
             Route::get('/delete/{id}', [App\Http\Controllers\Admin\GlobalStagesController::class, 'deleteSingle']);
             Route::post('/delete-multiple', [App\Http\Controllers\Admin\GlobalStagesController::class, 'deleteMultiple']);
         });
-        
+        Route::group(array('prefix' => 'users-cases'), function () {
+            Route::get('/', [App\Http\Controllers\Admin\CasesController::class, 'userCases']);
+            Route::post('/ajax-list', [App\Http\Controllers\Admin\CasesController::class, 'getUserCaseList']);
+            Route::get('/detail/{id}', [App\Http\Controllers\Admin\CasesController::class, 'userCaseDetail']);
+            Route::post('/post-comment/{id}', [App\Http\Controllers\Admin\CasesController::class, 'postComments']);
+            
+        });
         Route::group(array('prefix' => 'cases'), function () {
             Route::get('/', [App\Http\Controllers\Admin\CasesController::class, 'cases']);
             Route::post('/ajax-list', [App\Http\Controllers\Admin\CasesController::class, 'getAjaxList']);

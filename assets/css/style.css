@@ -183,3 +183,9 @@ span.select2-selection.custom-select {
 .stage-header {
     background-color: #cad8f4;
 }
+.comment-block {
+    box-shadow: 0px 0px 5px #eee;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #fdfdfd;
+}

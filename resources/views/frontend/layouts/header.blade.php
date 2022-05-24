@@ -136,6 +136,7 @@
                 <a class="nav-link" href="{{url('/professionals')}}" role="button">Professionals</a>
               </li>
 
+
               <li class="nav-item">
                 <a class="nav-link" href="{{url('/discussions')}}">Discussions</a>
               </li>
