@@ -1134,7 +1134,11 @@ Route::group(array('prefix' => 'user', 'middleware' => 'user'), function () {
         Route::post('/update', [App\Http\Controllers\User\UserCasesController::class, 'updateCase']);
         Route::get('/delete-multiple', [App\Http\Controllers\User\UserCasesController::class, 'deleteMultiple']);
         Route::get('/delete/{id}', [App\Http\Controllers\User\UserCasesController::class, 'deleteSingle']);
-
+        Route::get('/start-case/{id}/{subdomain}', [App\Http\Controllers\User\UserCasesController::class, 'startCaseWithProfessional']);
+        Route::post('/post-comment/{id}', [App\Http\Controllers\User\UserCasesController::class, 'postComments']);
+            Route::get('/edit-comment/{id}', [App\Http\Controllers\User\UserCasesController::class, 'editComment']);
+            Route::post('/edit-comment/{id}', [App\Http\Controllers\User\UserCasesController::class, 'updateComment']);
+            Route::get('/delete-comment/{id}', [App\Http\Controllers\User\UserCasesController::class, 'deleteComment']);
 
 
         //Route::get('/pending', [App\Http\Controllers\User\ProfessionalCasesController::class, 'pendingCases']);
@@ -1434,7 +1438,9 @@ Route::group(array('prefix' => 'admin'), function () {
             Route::post('/ajax-list', [App\Http\Controllers\Admin\CasesController::class, 'getUserCaseList']);
             Route::get('/detail/{id}', [App\Http\Controllers\Admin\CasesController::class, 'userCaseDetail']);
             Route::post('/post-comment/{id}', [App\Http\Controllers\Admin\CasesController::class, 'postComments']);
-            
+            Route::get('/edit-comment/{id}', [App\Http\Controllers\Admin\CasesController::class, 'editComment']);
+            Route::post('/edit-comment/{id}', [App\Http\Controllers\Admin\CasesController::class, 'updateComment']);
+            Route::get('/delete-comment/{id}', [App\Http\Controllers\Admin\CasesController::class, 'deleteComment']);
         });
         Route::group(array('prefix' => 'cases'), function () {
             Route::get('/', [App\Http\Controllers\Admin\CasesController::class, 'cases']);

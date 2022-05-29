@@ -13,9 +13,9 @@ class UserCases extends Model
         UserCases::where("id",$id)->delete();
     }
 
-    public function UserCasesBids()
+    public function UserCaseComments()
     {
-        return $this->hasMany('App\Models\UserCasesBids','case_idd','unique_id');
+        return $this->hasMany('App\Models\UserCaseComments','case_idd','unique_id');
     }
     public function VisaService()
     {

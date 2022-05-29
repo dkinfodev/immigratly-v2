@@ -2723,7 +2723,7 @@ class CasesController extends Controller
     {
         $search = $request->input("search");
         $case_by = $request->input("case_by");
-        $records = \DB::table(MAIN_DATABASE.".user_cases")->paginate(5);
+        $records = \DB::table(MAIN_DATABASE.".user_cases")->orderBy('id','desc')->paginate(5);
 
         $viewData['records'] = $records;
         $view = View::make(roleFolder().'.users-cases.ajax-list',$viewData);
@@ -2739,8 +2739,9 @@ class CasesController extends Controller
         $viewData['pageTitle'] = "Case Detail";
         $record = \DB::table(MAIN_DATABASE.".user_cases")->where('unique_id',$id)->first();
         $viewData['record'] = $record;
-        $comment = \DB::table(MAIN_DATABASE.".user_cases_bids")->where("case_id",$id)->where("professional",\Session::get("subdomain"))->first();
-        $viewData['comment'] = $comment;
+        
+        $comments = \DB::table(MAIN_DATABASE.".user_case_comments")->where("case_id",$id)->where("professional",\Session::get("subdomain"))->get();
+        $viewData['comments'] = $comments;
         return view(roleFolder().'.users-cases.case-detail',$viewData);        
     }
 
@@ -2770,19 +2771,16 @@ class CasesController extends Controller
         $insData['case_id'] = $case_id;
         $insData['user_id'] = $record->user_id;
         $insData['status'] = 0;
-        if($request->input("id")) {
-            $insData['updated_at'] = date("Y-m-d H:i:s");
-            \DB::table(MAIN_DATABASE.".user_cases_bids")->where("unique_id",$request->input("id"))->update($insData);
-        }else{
-            $insData['created_at'] = date("Y-m-d H:i:s");
-            $insData['updated_at'] = date("Y-m-d H:i:s");
-            \DB::table(MAIN_DATABASE.".user_cases_bids")->insert($insData);
-        }
+        $insData['send_by'] = 'professional';
+        $insData['added_by'] = \Auth::user()->unique_id;
+        $insData['created_at'] = date("Y-m-d H:i:s");
+        $insData['updated_at'] = date("Y-m-d H:i:s");
+        \DB::table(MAIN_DATABASE.".user_case_comments")->insert($insData);
         $user = DB::table(MAIN_DATABASE.".users")->where("unique_id",$record->user_id)->first();
         $professional = ProfessionalDetails::first();
-        $mail_message = "<p>Hello ".$user->first_name." ".$user->last_name.",<br>".$professional->company_name." has sennd his comment for case posted by you. Please have a look.</p>";
+        $mail_message = "<p>Hello ".$user->first_name." ".$user->last_name.",<br>".$professional->company_name." has send his comment for case posted by you. Please have a look.</p>";
         $mail_message .= "<p><a href='".url('user/my-cases/view/'.$case_id)."' style='display:inline-block;text-decoration:none;margin-top:10px;padding:10px 20px;background-color:#377dff;color:#FFF'>Click to view case</a></p>";
-        $parameter['subject'] = "New case added to your profile. ";
+        $parameter['subject'] = "Comment added to your case. ";
         $mailData['mail_message'] = $mail_message;
         $view = View::make('emails.notification',$mailData);
   
@@ -2798,5 +2796,48 @@ class CasesController extends Controller
         $response['message'] = "Your comment posted successfully";
         return response()->json($response);
 
+    }
+
+    public function editComment($id,Request $request){
+        $record = \DB::table(MAIN_DATABASE.".user_case_comments")->where("unique_id",$id)->first();
+        $viewData['pageTitle'] = "Edit Comment";
+        $viewData['record'] = $record;
+        $view = View::make(roleFolder().'.users-cases.modal.edit-comment',$viewData);
+        $contents = $view->render();
+        $response['contents'] = $contents;
+        $response['status'] = true;
+        return response()->json($response);
+    }
+
+    public function updateComment($id,Request $request){
+        $validator = Validator::make($request->all(), [
+            'comments' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            $response['status'] = false;
+            $response['error_type'] = 'validation';
+            $error = $validator->errors()->toArray();
+            $errMsg = array();
+            
+            foreach($error as $key => $err){
+                $errMsg[$key] = $err[0];
+            }
+            $response['message'] = $errMsg;
+            return response()->json($response);
+        }
+        $insData['comments'] = $request->input("comments");
+        $insData['updated_at'] = date("Y-m-d H:i:s");
+        \DB::table(MAIN_DATABASE.".user_case_comments")->where('unique_id',$id)->update($insData);
+       
+        
+        $response['status'] = true;
+        $response['message'] = "Your comment edited successfully";
+        return response()->json($response);
+    }
+
+    public function deleteComment($id){
+        \DB::table(MAIN_DATABASE.".user_case_comments")->where("unique_id",$id)->delete();
+        return redirect()->back()->with("success","Comment deleted successfully");
     }
 }

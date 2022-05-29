@@ -65,7 +65,16 @@ jQuery(($) => {
   var options = {
     dataType: 'json',
     defaultFields:datajson,
-    disableFields: ['button','hidden','starRating']
+    disableFields: ['button','hidden','starRating'],
+    layoutTemplates: {
+      default: function(field, label, help, data) {
+        help = $('<div/>')
+          .addClass('helpme')
+          .attr('id', 'row-' + data.id)
+          .append(help);
+        return $('<div/>').append(label, field, help);
+      }
+    }
   };
   var formBuilder = $(fbEditor).formBuilder(options);
   document.getElementById("saveData").addEventListener("click", () => {

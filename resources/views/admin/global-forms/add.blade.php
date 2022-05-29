@@ -63,7 +63,16 @@ jQuery(($) => {
   const fbEditor = document.getElementById("build-wrap");
   var options = {
     dataType: 'json',
-    disableFields: ['button','hidden','starRating']
+    disableFields: ['button','hidden','starRating'],
+    layoutTemplates: {
+      default: function(field, label, help, data) {
+        help = $('<div/>')
+          .addClass('helpme')
+          .attr('id', 'row-' + data.id)
+          .append(help);
+        return $('<div/>').append(label, field, help);
+      }
+    }
   };
   var formBuilder = $(fbEditor).formBuilder(options);
 

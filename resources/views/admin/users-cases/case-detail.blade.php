@@ -30,29 +30,57 @@
             <p class="card-text">{!! $record->description !!}</p>
         </div>
     </div>
-    <form id="form" action="{{ baseUrl('users-cases/post-comment/'.$record->unique_id) }}" method="post">
-        @csrf
-        @if(!empty($comment))
-          <input type="hidden" name="id" value="{{ $comment->unique_id }}" />
+    @if(count($comments) > 0)
+            <div class="card">
+                <div class="card-header p-0 pl-5">
+                    <h5 class="card-header-title">Professionals Comments</h5>
+                </div>
+                <div class="card-body">
+                    @foreach($comments as $comment)
+                        <div class="comment-block">
+                            <div class="comment-header">
+                                <div class="card-title float-left">
+                                    @php 
+                                        $company_data = professionalDetail($comment->professional);
+                                        echo $company_data->company_name
+                                    @endphp
+                                </div>
+                                <div class="float-right">
+                                    <div class="text-muted">Date Posted: {{dateFormat($comment->created_at) }}</div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="comment-body">
+                                {!! $comment->comments !!}
+                            </div>
+                            <div class="text-right">
+                                @if($comment->added_by == Auth::user()->unique_id)
+                                <a href="javascript:;" onclick="showPopup('<?php echo baseUrl('users-cases/edit-comment/'.$comment->unique_id); ?>')" class="btn btn-primary btn-sm">Edit</a>
+                                <a  href="javascript:;" onclick="confirmAction(this)" data-href="{{baseUrl('users-cases/delete-comment/'.$comment->unique_id) }}" class="btn btn-danger btn-sm">Delete</a>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
         @endif
-        <div class="card">
-            <div class="card-header p-0 pl-5">
-                <h5 class="card-header-title">Post your comment</h5>
+        <form id="form" action="{{ baseUrl('users-cases/post-comment/'.$record->unique_id) }}" method="post">
+            @csrf
+    
+            <div class="card">
+                <div class="card-header p-0 pl-5">
+                    <h5 class="card-header-title">Post your comment</h5>
+                </div>
+                <div class="card-body">
+                <div class=" js-form-message">
+                    <textarea class="form-control" id="comments" name="comments"></textarea>
+                </div>
+                </div>
+                <div class="card-footer text-center">
+                    <button class="btn btn-primary">Save</button>
+                </div>
             </div>
-            <div class="card-body">
-              <div class=" js-form-message">
-                <textarea class="form-control" id="comments" name="comments">
-                @if(!empty($comment))
-                  {!! $comment->comments !!}
-                @endif
-                </textarea>
-              </div>
-            </div>
-            <div class="card-footer text-center">
-                  <button class="btn btn-primary">Save</button>
-            </div>
-        </div>
-    </form>
+        </form>
 </div>
 <!-- End Content -->
 @endsection

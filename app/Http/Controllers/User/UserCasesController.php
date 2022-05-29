@@ -12,7 +12,8 @@ use App\Models\User;
 use App\Models\UserCases;
 use App\Models\VisaServices;
 use App\Models\UserDetails;
-use App\Models\UserCasesBids;
+use App\Models\UserCaseComments;
+use App\Models\UserWithProfessional;
 
 class UserCasesController extends Controller
 {
@@ -120,7 +121,12 @@ class UserCasesController extends Controller
         $viewData['activeTab'] = "my-cases";
         $visa_services = VisaServices::get();
         $viewData['visa_services'] = $visa_services;
-        $comments = UserCasesBids::where("user_id",\Auth::user()->unique_id)->where('case_id',$id)->get();
+        $comments = UserCaseComments::where("user_id",\Auth::user()->unique_id)
+                                ->where('case_id',$id)
+                                ->groupBy("professional")
+                                ->orderBy("id","desc")
+                                ->with("caseComments")
+                                ->get();
         $viewData['comments'] = $comments;
         return view(roleFolder().'.cases.my-cases.view',$viewData);
     }
@@ -191,6 +197,10 @@ class UserCasesController extends Controller
         $api_response = professionalCurl('cases/create-case',$subdomain,$apiData);
        
         if(isset($api_response['status']) && $api_response['status'] == 'success'){
+            $record->assign_case = 1;
+            $record->assign_to = $subdomain;
+            $record->save();
+
             $check = UserWithProfessional::where("professional",$subdomain)->where("user_id",\Auth::user()->unique_id)->count();
             // $user = UserWithProfessional::firstOrNew(array('professional' => $subdomain,"user_id"=>\Auth::user()->unique_id));
             if($check == 0){
@@ -199,13 +209,106 @@ class UserCasesController extends Controller
                 $object->user_id = \Auth::user()->unique_id;
                 $object->save();
             }
-            $response['status'] = true;
-            $response['redirect_back'] = baseUrl('cases/pending');
-            $response['message'] = "Case posted successfully";
+            return redirect(baseUrl('cases/pending'))->with("success","Case posted with professional successfully");
         }else{
-            $response['status'] = false;
-            $response['message'] = "Something went wrong while posting case. Try again";
+            return redirect()->back()->with("error","Something went wrong while posting case. Try again");
         }
+        // return response()->json($response);
+    }
+
+    public function postComments($case_id,Request $request){
+        $validator = Validator::make($request->all(), [
+            'comments' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            $response['status'] = false;
+            $response['error_type'] = 'validation';
+            $error = $validator->errors()->toArray();
+            $errMsg = array();
+            
+            foreach($error as $key => $err){
+                $errMsg[$key] = $err[0];
+            }
+            $response['message'] = $errMsg;
+            return response()->json($response);
+        }
+        $record = \DB::table(MAIN_DATABASE.".user_cases")->where('unique_id',$case_id)->first();
+
+        
+        $insData['comments'] = $request->input("comments");
+        $insData['professional'] = $request->input("professional");
+        $insData['unique_id'] = randomNumber();
+        $insData['case_id'] = $case_id;
+        $insData['user_id'] = $record->user_id;
+        $insData['status'] = 0;
+        $insData['send_by'] = 'client';
+        $insData['added_by'] = \Auth::user()->unique_id;
+        $insData['created_at'] = date("Y-m-d H:i:s");
+        $insData['updated_at'] = date("Y-m-d H:i:s");
+        \DB::table(MAIN_DATABASE.".user_case_comments")->insert($insData);
+        $user = DB::table(MAIN_DATABASE.".users")->where("unique_id",$record->user_id)->first();
+        $professional = professionalDetail($request->input("professional"));
+        $mail_message = "<p>Hello ".$professional->company_name."<br>Client has send his comment for case $record->case_title. Please have a look.</p>";
+        $mail_message .= "<p><a href='".url('admin/users-cases/view/'.$case_id)."' style='display:inline-block;text-decoration:none;margin-top:10px;padding:10px 20px;background-color:#377dff;color:#FFF'>Click to view case</a></p>";
+        $parameter['subject'] = "Comment added to your user case. ";
+        $mailData['mail_message'] = $mail_message;
+        $view = View::make('emails.notification',$mailData);
+  
+        $message = $view->render();
+        $parameter['to'] = $user->email;
+        $parameter['to_name'] = $user->first_name." ".$user->last_name;
+        $parameter['message'] = $message;
+        $parameter['view'] = "emails.notification";
+        $parameter['data'] = $mailData;
+        $mailRes = sendMail($parameter);
+        
+        $response['status'] = true;
+        $response['message'] = "Your comment posted successfully";
         return response()->json($response);
+
+    }
+
+    public function editComment($id,Request $request){
+        $record = \DB::table(MAIN_DATABASE.".user_case_comments")->where("unique_id",$id)->first();
+        $viewData['pageTitle'] = "Edit Comment";
+        $viewData['record'] = $record;
+        $view = View::make(roleFolder().'.users-cases.modal.edit-comment',$viewData);
+        $contents = $view->render();
+        $response['contents'] = $contents;
+        $response['status'] = true;
+        return response()->json($response);
+    }
+
+    public function updateComment($id,Request $request){
+        $validator = Validator::make($request->all(), [
+            'comments' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            $response['status'] = false;
+            $response['error_type'] = 'validation';
+            $error = $validator->errors()->toArray();
+            $errMsg = array();
+            
+            foreach($error as $key => $err){
+                $errMsg[$key] = $err[0];
+            }
+            $response['message'] = $errMsg;
+            return response()->json($response);
+        }
+        $insData['comments'] = $request->input("comments");
+        $insData['updated_at'] = date("Y-m-d H:i:s");
+        \DB::table(MAIN_DATABASE.".user_case_comments")->where('unique_id',$id)->update($insData);
+       
+        
+        $response['status'] = true;
+        $response['message'] = "Your comment edited successfully";
+        return response()->json($response);
+    }
+
+    public function deleteComment($id){
+        \DB::table(MAIN_DATABASE.".user_case_comments")->where("unique_id",$id)->delete();
+        return redirect()->back()->with("success","Comment deleted successfully");
     }
 }

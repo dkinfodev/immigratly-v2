@@ -110,6 +110,16 @@ class GlobalFormController extends Controller
         
     }
 
+    public function previewForm($id,Request $request){
+        
+        $viewData['pageTitle'] = "Preview Form";
+        
+        $viewData['activeTab'] = 'global-forms';
+        $viewData['record'] = GlobalForms::where('unique_id',$id)->first();    
+        return view(roleFolder().'.global-forms.view',$viewData);
+        
+    }
+
     public function updateForm($id,Request $request)
     {
         $validator = Validator::make($request->all(), [
